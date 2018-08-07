@@ -34,7 +34,7 @@ module.exports = {
 
     extend (config, { isDev, isClient }) {
       // Build specifically to deploy on a web server somewhere
-      config.output.publicPath = process.env.PUBLIC_URL || 'http://localhost:3000/_nuxt/'
+      config.output.publicPath = (process.env.PUBLIC_URL || 'http://localhost:3000') + '/_nuxt/'
 
       // Run ESLint on save
       if (isDev && isClient) {
