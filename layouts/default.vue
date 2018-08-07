@@ -1,7 +1,7 @@
 <template>
   <v-app>
 
-    <v-toolbar v-if="!!dataFairConfig" app scroll-off-screen>
+    <v-toolbar v-if="!!dataFairConfig && !embed" app scroll-off-screen>
       <v-toolbar-title v-if="appDef"><nuxt-link to="/">{{ appDef.title }}</nuxt-link></v-toolbar-title>
       <v-spacer />
       <v-toolbar-items>
@@ -38,7 +38,9 @@ const TWEEN = require('tween.js')
 export default {
   components: {},
   data() {
-    return {}
+    return {
+      embed: this.$route.query.embed === 'true'
+    }
   },
   computed: {
     ...mapState('data-fair', ['dataFairConfig', 'appConfig', 'appDef']),
