@@ -4,6 +4,7 @@
   "description": "Nuxt.js project",
   "author": "Alban Mouton <alban.mouton@gmail.com>",
   "private": true,
+  "homepage": "https://koumoul-dev.github.io/data-fair-charts/",
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",

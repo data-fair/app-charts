@@ -1,22 +1,18 @@
 # data-fair-charts
 
-> Nuxt.js project
+A simple charting application for data-fair. Also used as an example for the documentation and to bootstrap other applications.
 
-## Build Setup
+[Check it out](https://koumoul-dev.github.io/data-fair-charts/).
+
+## Development Setup
+
+TODO: docker-compose to run local data-fair
 
 ``` bash
-# install dependencies
-$ npm install # Or yarn install
+npm i
 
 # serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm start
-
-# generate static project
-$ npm run generate
+npm run dev
 ```
 
 For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
