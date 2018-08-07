@@ -19,4 +19,4 @@ after_success:
   # Do not deploy code from pull requests
   - if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then exit; fi
   # Deploy by pushing to a subdirectory in gh-pages branch based on current branch/tag
-  - ./node_modules/.bin/gh-pages-multi deploy -v -s dist -t $TRAVIS_BRANCH --no-history --better-target --remote $GITHUB_TOKEN@github.com:koumoul-dev/data-fair-charts.git
+  - ./node_modules/.bin/gh-pages-multi deploy -v -s dist -t $TRAVIS_BRANCH --no-history --better-target --remote https://$GITHUB_TOKEN@github.com/koumoul-dev/data-fair-charts.git
