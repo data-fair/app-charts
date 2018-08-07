@@ -2,7 +2,7 @@
   <v-container fluid>
     <!-- Display a banner if application is opened from its original web server instead
     of through a data application's proxy -->
-    <v-jumbotron v-if="!dataFairConfig" color="primary">
+    <v-jumbotron v-if="!dataFairConfig">
       <v-container fill-height>
         <v-layout align-center>
           <v-flex text-xs-center>

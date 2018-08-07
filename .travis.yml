@@ -13,8 +13,7 @@ install:
 script:
   - npm run lint
   - TARGET="$(gh-pages-multi better-target $TRAVIS_BRANCH)"
-  - PUBLIC_URL=https://koumoul-dev.github.io/data-fair-charts/$TARGET npm run generate
-  - touch dist/.nojekyll
+  - PUBLIC_URL=https://koumoul-dev.github.io/data-fair-charts/$TARGET DEFAULT_DATA_FAIR=https://koumoul.com/s/data-fair npm run generate
 
 after_success:
   # Do not deploy code from pull requests

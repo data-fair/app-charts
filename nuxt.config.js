@@ -50,6 +50,6 @@ module.exports = {
   plugins: ['~plugins/init', '~plugins/vuetify', '~plugins/v-tooltip'],
   modules: ['@nuxtjs/axios'],
   env: {
-    defaultDataFair: process.env.NODE_ENV === 'production' ? 'https://koumoul.com/s/data-fair' : 'http://localhost:5600'
+    defaultDataFair: process.env.DEFAULT_DATA_FAIR || 'http://localhost:5600'
   }
 }
