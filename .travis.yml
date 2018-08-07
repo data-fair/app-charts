@@ -7,10 +7,11 @@ install:
 
 script:
   - npm run lint
-  - npm run generate
+  - TARGET="$(gh-pages-multi better-target $TRAVIS_BRANCH)"
+  - PUBLIC_URL=https://koumoul-dev.github.io/data-fair-charts/$TARGET/ npm run generate
 
 after_success:
   # Do not deploy code from pull requests
   - if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then exit; fi
   # Deploy by pushing to a subdirectory in gh-pages branch based on current branch/tag
-  - ./node_modules/.bin/gh-pages-multi deploy -v -s dist -t $TRAVIS_BRANCH --no-history
+  - ./node_modules/.bin/gh-pages-multi deploy -v -s dist -t $TRAVIS_BRANCH --no-history --better-target

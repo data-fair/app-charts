@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html {{ HTML_ATTRS }}>
+  <head>
+    {{ HEAD }}
+    <!-- Capture a global variable defined by data-fair's reverse proxy.
+    The rest is juste a copy of nuxt default template, cf https://fr.nuxtjs.org/guide/views/ -->
+    <script type="text/javascript">window.DATA_FAIR_CONFIG=%DATA_FAIR_CONFIG%;</script>
+  </head>
+  <body {{ BODY_ATTRS }}>
+    {{ APP }}
+  </body>
+</html>
