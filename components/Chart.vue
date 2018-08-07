@@ -1,8 +1,8 @@
 <template lang="html">
   <v-container fluid>
-    <p v-if="incompleteConfig">La configuration est insuffisante.</p>
-    <data-table v-else-if="appConfig.chartType === 'table'" :result="result" />
-    <bar-chart v-else-if="appConfig.chartType === 'bars'" :result="result" :size="size" />
+    <p v-if="incompleteConfig">La configuration est insuffisante pour présenter un graphique.</p>
+    <data-table v-else-if="appConfig && appConfig.chartType === 'table'" :result="result" />
+    <bar-chart v-else-if="appConfig && appConfig.chartType === 'bars'" :result="result" :size="size" />
   </v-container>
 </template>
 
@@ -78,9 +78,6 @@ export default {
       this.heightTween = new TWEEN.Tween(this.size)
         .to({height: this.size.width * 0.6}, 350)
         .easing(TWEEN.Easing.Cubic.Out)
-        .onUpdate(() => {
-          console.log('TWEEN!')
-        })
         .start()
     }
   }
