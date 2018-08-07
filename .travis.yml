@@ -1,3 +1,8 @@
+env:
+  global:
+    # GITHUB_TOKEN
+    - secure: "fMCZAXHlkr8SQLKyj0cM7uEhgz2WeGotl26bo4Oap267h89I7t01Zp+SHtMy97kZlR2y38uF3ZA7MIBWCQTjwJrk8HxRkjovoYri6BTXBv39+KOnLme5ytIcik+Z3aeycJQPJyYPbt9KgbrX9mrUSgSlrqJ9Dql4MePKPMfo0VZorKAqA8L3K+KHkRsULmbG9mByL+6+J0hwlRg29zJHbFobH2HKSohQidalR3TWCdEBlfu5Qz17YhoWbanl/JSUl16NqjydE7QtLsyw73cEy4RPOBkjXvdBboNI+6MljpitiiuoKvQyKkYAf+UKUlYZ2p1JReLmeRfH5Gl8Oop9lb4jG8oZDsx6hMp0MtOETDmikzH9GQ0UlcdpES/cS2LXR+ZbO7k+mHgUO4QaNKDaVEzYoSGN4Vm1aFN+PeWifrWHVtLiYWzPMMy3OCGI4OHdirKHgyrca7eXrWWHRdnM8Emj15X8109m1Nat6NCkebpqzUBC+nhs8H9Jy0BUcdyY4T5oxT9vEqh1EpfmzquUVJxmZJRheBrs69UEpfUkUMKlgPLuffdt3uGNqeG/yijrc12yYDDQhIA/XDzEQEplLog46uFzAEOGuEvV3L7+/eK1/Gxm1aFwgoPRNmMMMUFhRBH1MU8/xQYscFQepcYn2pHXgZb9k9xczbVFgZsXRqo="
+
 language: node_js
 node_js:
   - '10'
@@ -14,4 +19,4 @@ after_success:
   # Do not deploy code from pull requests
   - if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then exit; fi
   # Deploy by pushing to a subdirectory in gh-pages branch based on current branch/tag
-  - ./node_modules/.bin/gh-pages-multi deploy -v -s dist -t $TRAVIS_BRANCH --no-history --better-target
+  - ./node_modules/.bin/gh-pages-multi deploy -v -s dist -t $TRAVIS_BRANCH --no-history --better-target --remote $GITHUB_TOKEN@github.com:koumoul-dev/data-fair-charts.git
