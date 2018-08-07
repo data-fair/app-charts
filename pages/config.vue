@@ -1,7 +1,7 @@
 <template lang="html">
   <v-container>
     <v-layout row>
-      <v-flex xs12 md6>
+      <v-flex v-if="editConfig" xs12 md6>
         <v-layout column>
           <v-autocomplete
             :items="datasetsRefs"
