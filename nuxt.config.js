@@ -47,7 +47,7 @@ module.exports = {
       }
     }
   },
-  plugins: ['~plugins/init', '~plugins/vuetify', '~plugins/v-tooltip'],
+  plugins: ['~plugins/init', '~plugins/vuetify'],
   modules: ['@nuxtjs/axios'],
   env: {
     defaultDataFair: process.env.DEFAULT_DATA_FAIR || 'http://localhost:5600'

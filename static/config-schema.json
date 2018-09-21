@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "required": ["datasets", "valueField"],
+  "properties": {
+    "datasets": {
+      "type": "array",
+      "items": [{
+        "title": "Jeu de données",
+        "type": "object",
+        "x-fromUrl": "api/v1/datasets?status=finalized&q={q}",
+        "x-itemsProp": "results",
+        "x-itemTitle": "title",
+        "x-itemKey": "href",
+        "properties": {
+          "href": {"type": "string"},
+          "title": {"type": "string"},
+          "page": {"type": "string"}
+        }
+      }]
+    },
+    "valueField": {
+      "type": "object",
+      "title": "Valeur numérique",
+      "description": "La colonne contenant la valeur numérique à afficher ou sur laquelle calculer une métrique.",
+      "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "groupByField": {
+      "type": "object",
+      "title":"Grouper par",
+      "description": "La colonne sur laquelle grouper les valeurs (optionel).",
+      "x-fromUrl": "{datasets.0.href}/schema",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "metricType": {
+      "type": "string",
+      "title": "Calcul à appliquer",
+      "default": "count",
+      "oneOf": [
+        {"const": "count", "title": "Nombre d'occurences"},
+        {"const": "avg", "title": "Moyenne"},
+        {"const": "min", "title": "Valeur minimale"},
+        {"const": "max", "title": "Valeur maximale"},
+        {"const": "sum", "title": "Sum"}
+      ]
+    },
+    "chart": {
+      "type": "object",
+      "title": "Type de visualisation",
+      "default": {
+        "type": "table"
+      },
+      "x-itemKey": "type",
+      "oneOf": [{
+        "title": "Table de données",
+        "properties": {
+          "type": {
+            "const": "table"
+          }
+        }
+      }, {
+        "title": "Histogramme",
+        "properties": {
+          "type": {
+            "const": "bar"
+          }
+        }
+      }, {
+        "title": "Camembert",
+        "properties": {
+          "type": {
+            "const": "pie"
+          }
+        }
+      }]
+    }
+  }
+}
