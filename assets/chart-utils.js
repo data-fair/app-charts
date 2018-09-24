@@ -55,4 +55,4 @@ function prepareChart(config, data) {
   }
 }
 
-export default { prepareChart }
+export default { prepareChart, metricLabel }

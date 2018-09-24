@@ -17,11 +17,12 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+import chartUtils from '../assets/chart-utils.js'
 
 export default {
   props: ['result'],
   computed: {
-    ...mapGetters(['metricLabel', 'config']),
+    ...mapGetters(['config']),
     ...mapState(['application', 'data']),
     headers() {
       const headers = [{ value: 'value', text: 'Valeur' }, { value: 'total', text: 'Nombre de documents' }]
@@ -34,6 +35,9 @@ export default {
     items() {
       if (!this.data) return []
       return this.data.aggs.concat([{ value: 'Autres', total: this.data.total_other }])
+    },
+    metricLabel() {
+      return chartUtils.metricLabel(this.config)
     }
   }
 }
