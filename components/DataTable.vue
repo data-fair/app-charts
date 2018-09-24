@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   props: ['result'],
@@ -24,16 +24,16 @@ export default {
     ...mapGetters(['metricLabel', 'config']),
     ...mapState(['application', 'data']),
     headers() {
-      const headers = [{value: 'value', text: 'Valeur'}, {value: 'total', text: 'Nombre de documents'}]
+      const headers = [{ value: 'value', text: 'Valeur' }, { value: 'total', text: 'Nombre de documents' }]
       if (this.config.metricType === 'count') {
         return headers
       } else {
-        return headers.concat([{value: 'metric', text: this.metricLabel}])
+        return headers.concat([{ value: 'metric', text: this.metricLabel }])
       }
     },
     items() {
       if (!this.data) return []
-      return this.data.aggs.concat([{value: 'Autres', total: this.data.total_other}])
+      return this.data.aggs.concat([{ value: 'Autres', total: this.data.total_other }])
     }
   }
 }

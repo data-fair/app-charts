@@ -9,12 +9,13 @@ node_js:
 cache:
   directories:
     - node_modules
-    
+
 install:
   - npm install
 
 script:
   - npm run lint
+  # Build specifically for deployment on gh-pages
   - TARGET="$(gh-pages-multi better-target $TRAVIS_BRANCH)"
   - PUBLIC_URL=https://koumoul-dev.github.io/data-fair-charts/$TARGET DEFAULT_DATA_FAIR=https://koumoul.com/s/data-fair npm run generate
 

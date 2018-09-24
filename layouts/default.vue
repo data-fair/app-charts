@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   components: {},
@@ -26,6 +26,9 @@ export default {
 
 </script>
 <style lang="less">
+html {
+  overflow-y: auto !important;
+}
 body .application {
   font-family: 'Nunito', sans-serif;
 }

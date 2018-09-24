@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0">
     <!-- Display a banner if application is opened from its original web server instead
     of through a data application's proxy -->
     <v-jumbotron v-if="!application">
@@ -15,18 +15,18 @@
         </v-layout>
       </v-container>
     </v-jumbotron>
-
     <!-- Actually render the application -->
-    <chart v-else />
+    <chart v-else/>
+
   </v-container>
 </template>
 
 <script>
-import {mapState, mapGetters} from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Chart from '../components/Chart'
 
 export default {
-  components: {Chart},
+  components: { Chart },
   computed: {
     ...mapState(['env', 'application']),
     ...mapGetters(['defaultDataFairUrl', 'defaultConfigureUrl'])
