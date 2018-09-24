@@ -1,5 +1,5 @@
 const URL = require('url').URL
-
+const cors = require('cors')
 module.exports = {
   // No server side rendering in our case, the deployment target is some static web server.
   mode: 'spa',
@@ -23,15 +23,6 @@ module.exports = {
   },
   build: {
     extractCSS: true,
-    vendor: ['babel-polyfill'],
-    // Use babel polyfill, not runtime transform to support Array.includes and other methods
-    // cf https://github.com/nuxt/nuxt.js/issues/93
-    babel: {
-      presets: [
-        ['vue-app', {useBuiltIns: true, targets: { ie: 11, uglify: true }}]
-      ]
-    },
-
     extend (config, { isDev, isClient }) {
       // Build specifically to deploy on a web server somewhere
       config.output.publicPath = (process.env.PUBLIC_URL || 'http://localhost:3000') + '/_nuxt/'
@@ -51,5 +42,23 @@ module.exports = {
   modules: ['@nuxtjs/axios'],
   env: {
     defaultDataFair: process.env.DEFAULT_DATA_FAIR || 'http://localhost:5600'
+  },
+  hooks: {
+    build: {
+      compile({ name, compiler }) {
+        if (name === 'client') {
+          // Replace the webpack hot module replacement for the webpack hot middleware
+          // Necessary to support re-exposing the dev server behind a reverse proxy (as done by data-fair)
+          const appEntry = compiler.options.entry.app
+          appEntry[0] = appEntry[0].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3000'}/__webpack_hmr`)
+        }
+      }
+    },
+    render: {
+      setupMiddleware(app) {
+        // Also necessary for livereload through a reverse-proxy
+        app.use(cors())
+      }
+    }
   }
 }

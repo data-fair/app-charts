@@ -6,35 +6,37 @@
   "private": true,
   "homepage": "https://koumoul-dev.github.io/data-fair-charts/",
   "scripts": {
-    "dev": "nuxt",
+    "dev": "PUBLIC_URL=http://localhost:3000 nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "gh-pages-multi deploy -s dist --no-history",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "analyze": "nuxt build --analyze"
   },
   "dependencies": {
     "@koumoul/gh-pages-multi": "^0.6.0",
     "@koumoul/notif-vue": "^0.1.0",
     "@nuxtjs/axios": "^5.3.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
+    "chart.js": "^2.7.2",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",
-    "nuxt": "^1.4.2",
-    "tween.js": "^16.6.0",
+    "nuxt": "^2.0.0",
     "v-tooltip": "^2.0.0-rc.33",
     "vuetify": "^1.1.9"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "eslint": "^4.15.0",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-vue": "^4.0.0"
+    "babel-eslint": "^9.0.0",
+    "cors": "^2.8.4",
+    "eslint": "^5.6.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^4.7.1"
   }
 }
