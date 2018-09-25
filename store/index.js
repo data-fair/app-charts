@@ -10,7 +10,6 @@ export default () => {
       error: null,
       env: null,
       application: window.APPLICATION,
-
       data: null
     },
     getters: {
@@ -24,7 +23,8 @@ export default () => {
         if (!state.application) return false
         const config = state.application.configuration
         if (
-          !config.datasets[0] || !config.datasets[0].href ||
+          !config ||
+          !config.datasets || !config.datasets[0] || !config.datasets[0].href ||
           !config.valueField || !config.valueField.key ||
           !config.groupByField || !config.groupByField.key
         ) {
