@@ -20,6 +20,7 @@ This technical stack is just an example of what can be used to build an applicat
   - [vuejs](https://vuejs.org/): our favorite framework for client-side code
   - [nuxt](https://nuxtjs.org/guide): a higher level framework on top of vuejs for creating full applications (integrates [webpack](https://webpack.js.org/) and other tools)
   - [vuetify](https://vuetifyjs.com/en/): a material design UI framework for vuejs
+  - [chartjs](https://www.chartjs.org/): simple charting library
 
 ## Development Setup
 
