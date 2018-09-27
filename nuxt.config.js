@@ -54,7 +54,7 @@ module.exports = {
   plugins: ['~plugins/init', '~plugins/vuetify', '~plugins/moment'],
   modules: ['@nuxtjs/axios'],
   env: {
-    defaultDataFair: process.env.DEFAULT_DATA_FAIR || 'http://localhost:5600'
+    defaultDataFair: process.env.DEFAULT_DATA_FAIR || 'http://localhost:8080'
   },
   hooks: {
     build: {
