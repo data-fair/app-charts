@@ -14,6 +14,7 @@ services:
     image: koumoul/simple-directory:latest
     environment:
       - PUBLIC_URL=http://localhost:5640
+      - STORAGE_MONGO_URL=mongodb://mongodb/simple-directory
       - MAILDEV_ACTIVE=true
       - LIST_ENTITIES_MODE=anonymous
     ports:
@@ -22,7 +23,7 @@ services:
 
   # database for data-fair and simple-directory
   mongodb:
-    image: mongo:3.2
+    image: mongo:4.1
     ports:
       - 27017:27017
 

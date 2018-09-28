@@ -24,10 +24,16 @@ This technical stack is just an example of what can be used to build an applicat
 
 ## Development Setup
 
+Start by downloading, cloning or forking this repository:
+
+    git clone git@github.com:koumoul-dev/data-fair-charts.git
+    cd data-fair-charts
+
 You need to have a running Docker daemon and a recent docker-compose command installed on your system. You also need a nodejs/npm setup.
 
-Run data-fair and dependencies:
+Run data-fair and dependencies in the background:
 
+    docker-compose pull
     docker-compose up -d
 
 After a few seconds you can check that data-fair is up at [this url](http://localhost:8080). You can click on the links to log in with a new user, emails will be sent to a virtual mail server that you can access [here](http://localhost:1080/#/).
@@ -42,17 +48,34 @@ Run the development server and serve the application with hot reload [here](http
 
     npm run dev
 
-You can now add an application configuration pointing to http://localhost:3000. Edit the configuration, edit the code source, etc.
+You can now add an application configuration pointing to http://localhost:3000 in your data-fair instance. Edit the configuration, edit the code source, etc.
 
 ## Project overview
 
-TODO: most important = JSON schema based configuration.
+The project contains some application level logic code, some boilerplate code related to our choice of frameworks and tools.
+The folowing are some key elements, that are integral to developping an application DataFair.
+
+### static/config-schema.json
+
+A JSON schema file that describes the expected configuration. DataFair expects this file to be found at the precise path %MY APP%/config-schema.json.
+
+The content of this JSON schema is extended with some annotations used by DataFair to automatically create a configuration form. The details of these annotations can be found in demo of the library we maintain to create these forms:  [vuetify-jsonschema-form](https://github.com/koumoul-dev/vuetify-jsonschema-form).
+
+### app.html
+
+This the root template used to generate the HTML pages of this application. The key element here is this line:
+
+    <script type="text/javascript">window.APPLICATION=%APPLICATION%;</script>
+
+The string %APPLICATION% will be replaced automaticaly by the actual content of the configuration, when this application is re-exposed by DataFair. Later code can use the global variable APPLICATION to start interacting with the DataFair API.
 
 ## Deployment
 
-This project is configured to use [gh-pages-multi](https://github.com/koumoul-dev/gh-pages-multi) to push the built application to [GitHub Pages](https://pages.github.com/).
+This project is configured to use [gh-pages-multi](https://github.com/koumoul-dev/gh-pages-multi) to push the built application to [GitHub Pages](https://pages.github.com/). Basically it is a free, fast, static Web server for Open Source projects. If you fork this application to create your own you are encouraged to follow the same pattern.
 
-Deploy manually in a "latest" subdirectory:
+Deploying manually to a "latest" subdirectory:
 
     PUBLIC_URL=https://koumoul-dev.github.io/data-fair-charts/latest/ npm run generate
     npm run deploy
+
+Setting up an automatic deployment process is easy thanks to [Travis CI](travis-ci.org). The .travis.yml file in this repository is an example. Every commit to master triggers a push to the "latest" subdirectory of the Web server, and every tag is pushed in a MAJOR.x subdirectory.

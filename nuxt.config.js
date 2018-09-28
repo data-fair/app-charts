@@ -24,6 +24,7 @@ module.exports = {
     base: process.env.PUBLIC_URL ? new URL(process.env.PUBLIC_URL).pathname : '/'
   },
   build: {
+    transpile: [/^vuetify/],
     babel: {
       // Necessary for "à la carte" import of vuetify components
       plugins: [['transform-imports', {
@@ -47,7 +48,7 @@ module.exports = {
         })
       }
 
-      // Ignore all locale files of moment.js, those we want are load in plugins/moment.js
+      // Ignore all locale files of moment.js, those we want are loaded in plugins/moment.js
       config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
     }
   },

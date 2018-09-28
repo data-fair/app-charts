@@ -9,18 +9,20 @@ import 'vuetify/dist/vuetify.min.css'
 import {
   Vuetify,
   VApp,
-  VGrid,
+  VAlert,
   VBtn,
-  VDataTable
+  VDataTable,
+  VGrid
 } from 'vuetify'
 require('vuetify/src/stylus/app.styl')
 
 Vue.use(Vuetify, {
   components: {
     VApp,
-    VGrid,
+    VAlert,
     VBtn,
-    VDataTable
+    VDataTable,
+    VGrid
   },
   theme: {
     primary: colors.blue.darken1,

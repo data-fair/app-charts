@@ -1,9 +1,11 @@
 <template>
   <v-app :class="embed ? 'embed' : ''">
     <v-content>
-      <v-alert v-if="!!error" :value="!!error" type="error">
-        {{ error.message || error }}
-      </v-alert>
+      <v-container v-if="!!error">
+        <v-alert :value="!!error" type="error">
+          {{ error.message || error }}
+        </v-alert>
+      </v-container>
       <nuxt v-else/>
     </v-content>
   </v-app>
