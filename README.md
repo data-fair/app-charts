@@ -1,6 +1,6 @@
 # data-fair-charts
 
-A simple charting application for [DataFair](https://koumoul-dev.github.io/data-fair/). Also used as an example for the documentation and to bootstrap other applications.
+A simple charting application for [DataFair](https://koumoul-dev.github.io/data-fair/). Also used as an [example for the documentation](https://koumoul-dev.github.io/data-fair/interoperate/applications) and to bootstrap other applications. 
 
 It is hosted [here](https://koumoul-dev.github.io/data-fair-charts/).
 
@@ -53,6 +53,10 @@ You can now add an application configuration pointing to http://localhost:3000 i
 ## DataFair application specificity
 
 A DataFair application is mostly like any Web application. You can consume DataFair APIs from any framework for example. But for a seamless integration and multi-configuration management by DataFair you need to respect a few conventions. The following sections are a focus on the files that implement these conventions.
+
+#### nuxt.config.js
+
+The configuration file for the Nuxt framework. The important part for DataFair is the presence of the meta properties "title" and "description".
 
 #### static/config-schema.json
 
