@@ -50,18 +50,17 @@ Run the development server and serve the application with hot reload [here](http
 
 You can now add an application configuration pointing to http://localhost:3000 in your data-fair instance. Edit the configuration, edit the code source, etc.
 
-## Project overview
+## DataFair application specificity
 
-The project contains some application level logic code, some boilerplate code related to our choice of frameworks and tools.
-The folowing are some key elements, that are integral to developping an application DataFair.
+A DataFair application is mostly like any Web application. You can consume DataFair APIs from any framework for example. But for a seamless integration and multi-configuration management by DataFair you need to respect a few conventions. The following sections are a focus on the files that implement these conventions.
 
-### static/config-schema.json
+#### static/config-schema.json
 
 A JSON schema file that describes the expected configuration. DataFair expects this file to be found at the precise path %MY APP%/config-schema.json.
 
 The content of this JSON schema is extended with some annotations used by DataFair to automatically create a configuration form. The details of these annotations can be found in demo of the library we maintain to create these forms:  [vuetify-jsonschema-form](https://github.com/koumoul-dev/vuetify-jsonschema-form).
 
-### app.html
+#### app.html
 
 This the root template used to generate the HTML pages of this application. The key element here is this line:
 
