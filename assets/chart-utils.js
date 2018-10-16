@@ -59,6 +59,7 @@ chartOptions.bar = (config) => {
     type: 'bar',
     options: {
       title: { display: true, text: metricLabel(config) },
+      legend: { display: false },
       scales: {
         yAxes: [{
           ticks: {
