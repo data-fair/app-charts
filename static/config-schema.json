@@ -7,7 +7,7 @@
       "items": [{
         "title": "Jeu de données",
         "type": "object",
-        "x-fromUrl": "api/v1/datasets?status=finalized&q={q}",
+        "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}",
         "x-itemsProp": "results",
         "x-itemTitle": "title",
         "x-itemKey": "href",
@@ -39,12 +39,29 @@
       "title": "Calcul à appliquer",
       "default": "count",
       "oneOf": [
-        {"const": "count", "title": "Nombre d'occurences"},
-        {"const": "avg", "title": "Moyenne"},
-        {"const": "min", "title": "Valeur minimale"},
-        {"const": "max", "title": "Valeur maximale"},
-        {"const": "sum", "title": "Sum"}
+        {"const": "count", "title": "nombre d'occurences"},
+        {"const": "avg", "title": "moyenne"},
+        {"const": "min", "title": "valeur minimale"},
+        {"const": "max", "title": "valeur maximale"},
+        {"const": "sum", "title": "somme"}
       ]
+    },
+    "sort": {
+      "type": "string",
+      "title": "Trier par",
+      "default": "-metric",
+      "oneOf": [
+        {"const": "-metric", "title": "la valeur de la métrique (descendant)"},
+        {"const": "metric", "title": "la valeur de la métrique (ascendant)"},
+        {"const": "-count", "title": "le nombre de documents (descendant)"},
+        {"const": "key", "title": "la clé (ascendant)"},
+        {"const": "-key", "title": "la clé (descendant)"}
+      ]
+    },
+    "size": {
+      "type": "integer",
+      "title": "Nombre maximal de résultats",
+      "default": 10
     },
     "chart": {
       "type": "object",
@@ -65,6 +82,28 @@
         "properties": {
           "type": {
             "const": "bar"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Histogramme empilé",
+        "required": ["secondGroupByField"],
+        "properties": {
+          "type": {
+            "const": "stacked-bar"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Empiler par",
+            "description": "La colonne sur laquelle séparer les éléments de la pile.",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
           }
         }
       }, {
@@ -72,9 +111,116 @@
         "properties": {
           "type": {
             "const": "pie"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
           }
         }
       }]
+    },
+    "staticFilters": {
+      "title": "Filtres statiques",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "value"],
+        "properties": {
+          "field": {
+            "type": "object",
+            "title": "Colonne de filtre",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "value": {
+            "type": "string",
+            "title": "Valeur"
+          }
+        }
+      }
+    },
+    "filters": {
+      "title": "Filtres dynamiques",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field"],
+        "properties": {
+          "field": {
+            "type": "object",
+            "title": "Colonne de filtre",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "colorscheme": {
+      "type": "object",
+      "default": {
+        "type": "monochrome"
+      },
+      "x-itemKey": "type",
+      "oneOf": [{
+        "title": "Monochrome",
+        "properties": {
+          "type": {
+            "const": "monochrome"
+          },
+          "mainColor": {
+            "$ref": "#/definitions/defaultColor"
+          }
+        }
+      }, {
+        "title": "Manuelle",
+        "properties": {
+          "type": {
+            "const": "manual"
+          },
+          "colors": {
+            "title": "Couleurs",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "$ref": "#/definitions/defaultColor"
+                },
+                "value": {
+                  "type": "string",
+                  "x-fromData": "groupByField.enum"
+                }
+              }
+            }
+          }
+        }
+      }, {
+        "title": "6 couleurs analogues",
+        "properties": {
+          "type": {
+            "const": "analogous"
+          },
+          "mainColor": {
+            "$ref": "#/definitions/defaultColor"
+          }
+        }
+      }, {
+        "title": "Material",
+        "properties": {
+          "type": {
+            "const": "material"
+          }
+        }
+      }]
+    },
+    "defaultColor": {
+      "type": "string",
+      "format": "hexcolor",
+      "title": "Couleur",
+      "default": "#03A9F4"
     }
   }
 }

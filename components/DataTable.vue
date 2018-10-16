@@ -20,7 +20,7 @@ import { mapGetters, mapState } from 'vuex'
 import chartUtils from '../assets/chart-utils.js'
 
 export default {
-  props: ['result'],
+  props: [],
   computed: {
     ...mapGetters(['config']),
     ...mapState(['application', 'data']),

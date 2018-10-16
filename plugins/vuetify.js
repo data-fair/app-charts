@@ -12,7 +12,9 @@ import {
   VAlert,
   VBtn,
   VDataTable,
-  VGrid
+  VGrid,
+  VForm,
+  VAutocomplete
 } from 'vuetify'
 require('vuetify/src/stylus/app.styl')
 
@@ -22,7 +24,9 @@ Vue.use(Vuetify, {
     VAlert,
     VBtn,
     VDataTable,
-    VGrid
+    VGrid,
+    VForm,
+    VAutocomplete
   },
   theme: {
     primary: colors.blue.darken1,

@@ -6,7 +6,7 @@
   "private": true,
   "homepage": "https://koumoul-dev.github.io/data-fair-charts/",
   "scripts": {
-    "dev": "PUBLIC_URL=http://localhost:3000 nuxt",
+    "dev": "PUBLIC_URL=http://localhost:3001 nuxt -p 3001",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -20,6 +20,8 @@
     "@koumoul/notif-vue": "^0.1.0",
     "@nuxtjs/axios": "^5.3.1",
     "chart.js": "^2.7.2",
+    "color-js": "^1.0.4",
+    "debounce": "^1.2.0",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",
     "nuxt": "^2.0.0",

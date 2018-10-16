@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import debounce from 'debounce'
 
 Vue.use(Vuex)
 
@@ -10,7 +11,8 @@ export default () => {
       error: null,
       env: null,
       application: window.APPLICATION,
-      data: null
+      data: null,
+      filters: []
     },
     getters: {
       defaultDataFairUrl(state) {
@@ -51,25 +53,40 @@ export default () => {
           if (!getters.incompleteConfig) dispatch('fetchData')
         }
       },
-      async fetchData({ state, commit }) {
+      fetchData: debounce(async function({ state, commit }) {
         const config = state.application.configuration
 
         const params = {
           field: config.groupByField.key,
-          agg_size: 10
+          agg_size: config.size,
+          sort: config.sort
+        }
+        if (config.chart && config.chart.secondGroupByField) {
+          params.field = `${params.field};${config.chart.secondGroupByField.key}`
         }
         if (config.metricType !== 'count') {
           params.metric = config.metricType
           params.metric_field = config.valueField.key
         }
+
+        const filters = {}
+        config.staticFilters.forEach(sf => {
+          filters[sf.field.key] = sf.value
+        })
+        state.filters.forEach(f => {
+          filters[f.field.key] = f.value
+        })
+        params.qs = Object.keys(filters)
+          .filter(key => ![null, undefined, ''].includes(filters[key]))
+          .map(key => `${key}:${filters[key]}`).join(' AND ')
+
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/values_agg', { params })
           commit('setAny', { data })
         } catch (error) {
           commit('setAny', { error })
-          console.error(error)
         }
-      },
+      }, 10),
       setError({ commit }, error) {
         commit('setAny', { error })
       }
