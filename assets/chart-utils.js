@@ -37,7 +37,8 @@ function prepareData(config, data) {
             key: secondLevel.value,
             label: secondLevel.value,
             data: [],
-            borderWidth: 1
+            // borderWidth: 10,
+            borderColor: 'rgba(0, 0, 0, 0)'
           }
           datasets.push(dataset)
         }
@@ -74,6 +75,7 @@ chartOptions['stacked-bar'] = (config) => {
     type: 'bar',
     options: {
       title: { display: true, text: metricLabel(config) },
+      tooltips: { mode: 'index', intersect: false },
       scales: {
         xAxes: [{
           stacked: true
