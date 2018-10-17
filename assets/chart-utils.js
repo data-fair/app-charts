@@ -42,7 +42,8 @@ function prepareData(config, data) {
           }
           datasets.push(dataset)
         }
-        dataset.data[i] = config.metricType !== 'count' ? secondLevel.metric : secondLevel.total
+        // dataset.data[i] = config.metricType !== 'count' ? secondLevel.metric : secondLevel.total
+        dataset.data.push({ x: secondLevel.value, y: config.metricType !== 'count' ? secondLevel.metric : secondLevel.total })
       })
     })
     datasets.sort((a, b) => a.key < b.key ? -1 : 1)
