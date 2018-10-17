@@ -29,7 +29,7 @@ services:
 
   # indexation engine for data-fair
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2
+    image: koumoul/data-fair-elasticsearch:latest
     environment:
       - discovery.type=single-node
     ports:
