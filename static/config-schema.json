@@ -107,6 +107,87 @@
           }
         }
       }, {
+        "title": "Ligne",
+        "required": [],
+        "properties": {
+          "type": {
+            "const": "line"
+          },
+          "colorscheme": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "monochrome"
+              },
+              "mainColor": {
+                "$ref": "#/definitions/defaultColor"
+              }
+            }
+          }
+        }
+      }, {
+        "title": "Lignes multiples",
+        "required": ["secondGroupByField"],
+        "properties": {
+          "type": {
+            "const": "multi-lines"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer par",
+            "description": "La colonne sur laquelle séparer les éléments en lignes distinctes.",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "showTotal": {
+            "type": "boolean",
+            "title": "Montrer le total",
+            "default": true
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Aire",
+        "required": [],
+        "properties": {
+          "type": {
+            "const": "area"
+          },
+          "colorscheme": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "monochrome"
+              },
+              "mainColor": {
+                "$ref": "#/definitions/defaultColor"
+              }
+            }
+          }
+        }
+      }, {
+        "title": "Aires empilées",
+        "required": ["secondGroupByField"],
+        "properties": {
+          "type": {
+            "const": "stacked-area"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Empiler par",
+            "description": "La colonne sur laquelle séparer les éléments de la pile.",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
         "title": "Camembert",
         "properties": {
           "type": {

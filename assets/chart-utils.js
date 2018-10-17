@@ -21,43 +21,51 @@ function prepareData(config, data) {
       labels: data.aggs.map(agg => agg.value),
       datasets: [{
         data: data.aggs.map(agg => config.metricType !== 'count' ? agg.metric : agg.total),
-        borderWidth: 1,
-        backgroundColor
+        backgroundColor,
+        borderColor: backgroundColor
       }]
     }
   } else {
     const labels = []
     const datasets = []
+    const totalDataset = { label: 'Total', data: [] }
     data.aggs.forEach((firstLevel, i) => {
       labels.push(firstLevel.value)
+      totalDataset.data.push(config.metricType !== 'count' ? firstLevel.metric : firstLevel.total)
       firstLevel.aggs.forEach(secondLevel => {
         let dataset = datasets.find(d => d.key === secondLevel.value)
         if (!dataset) {
           dataset = {
             key: secondLevel.value,
             label: secondLevel.value,
-            data: [],
-            // borderWidth: 10,
-            borderColor: 'rgba(0, 0, 0, 0)'
+            data: []
           }
           datasets.push(dataset)
         }
-        // dataset.data[i] = config.metricType !== 'count' ? secondLevel.metric : secondLevel.total
-        dataset.data.push({ x: secondLevel.value, y: config.metricType !== 'count' ? secondLevel.metric : secondLevel.total })
+        dataset.data[i] = config.metricType !== 'count' ? secondLevel.metric : secondLevel.total
       })
     })
     datasets.sort((a, b) => a.key < b.key ? -1 : 1)
     datasets.forEach((d, i) => {
       d.backgroundColor = Array.isArray(backgroundColor) ? backgroundColor[i] : backgroundColor
+      d.borderColor = d.backgroundColor
+      // Fill empty slots in the array with 0 values
+      // WARNING: depending on the metric (min ?) this might not make sense
+      // But we can't use sparse syntax ({x:.., y:..}) for a "Category" x axis
+      for (let i = 0; i < labels.length; i++) {
+        if (d.data[i] === undefined) d.data[i] = 0
+      }
     })
+    if (config.chart.showTotal) datasets.push(totalDataset)
     return { labels, datasets }
   }
 }
 
 const chartOptions = {}
-chartOptions.bar = (config) => {
+chartOptions.bar = (config, data) => {
   return {
     type: 'bar',
+    data,
     options: {
       title: { display: true, text: metricLabel(config) },
       legend: { display: false },
@@ -72,9 +80,10 @@ chartOptions.bar = (config) => {
   }
 }
 
-chartOptions['stacked-bar'] = (config) => {
+chartOptions['stacked-bar'] = (config, data) => {
   return {
     type: 'bar',
+    data,
     options: {
       title: { display: true, text: metricLabel(config) },
       tooltips: { mode: 'index', intersect: false },
@@ -93,11 +102,100 @@ chartOptions['stacked-bar'] = (config) => {
   }
 }
 
-chartOptions.pie = (config) => {
+chartOptions.pie = (config, data) => {
   return {
     type: 'pie',
+    data,
     options: {
       title: { display: true, text: metricLabel(config) }
+    }
+  }
+}
+
+chartOptions.line = (config, data) => {
+  data.datasets.forEach(dataset => {
+    dataset.fill = false
+  })
+  return {
+    type: 'line',
+    data,
+    options: {
+      legend: { display: false },
+      title: { display: true, text: metricLabel(config) },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  }
+}
+
+chartOptions['multi-lines'] = (config, data) => {
+  data.datasets.forEach(dataset => {
+    dataset.fill = false
+  })
+  return {
+    type: 'line',
+    data,
+    options: {
+      title: { display: true, text: metricLabel(config) },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  }
+}
+
+chartOptions.area = (config, data) => {
+  data.datasets.forEach(dataset => {
+    dataset.backgroundColor = Color(dataset.borderColor).setAlpha(0.5).toCSS()
+  })
+  return {
+    type: 'line',
+    data,
+    options: {
+      legend: { display: false },
+      title: { display: true, text: metricLabel(config) },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  }
+}
+
+chartOptions['stacked-area'] = (config, data) => {
+  data.datasets.forEach(dataset => {
+    // dataset.backgroundColor = Color(dataset.backgroundColor).lightenByRatio(0.05).toCSS()
+    dataset.borderColor = Color(dataset.borderColor).darkenByRatio(0.25).toCSS()
+  })
+  return {
+    type: 'line',
+    data,
+    options: {
+      title: { display: true, text: metricLabel(config) },
+      tooltips: { mode: 'index', intersect: false },
+      scales: {
+        xAxes: [{
+          stacked: true
+        }],
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
     }
   }
 }
@@ -120,9 +218,7 @@ function metricLabel(config) {
 
 function prepareChart(config, data) {
   if (!chartOptions[config.chart.type]) new Error('Unsupported chart type ' + config.chart.type)
-  const c = chartOptions[config.chart.type](config)
-  c.data = prepareData(config, data)
-  return c
+  return chartOptions[config.chart.type](config, prepareData(config, data))
 }
 
 export default { prepareChart, prepareData, metricLabel }
