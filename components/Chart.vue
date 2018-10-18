@@ -59,6 +59,7 @@ export default {
           this.chart.update()
         }
       } catch (err) {
+        console.error(err)
         return this.$store.dispatch('setError', err)
       }
     }

@@ -26,14 +26,6 @@
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
-    "groupByField": {
-      "type": "object",
-      "title":"Grouper par",
-      "description": "La colonne sur laquelle grouper les valeurs (optionel).",
-      "x-fromUrl": "{datasets.0.href}/schema",
-      "x-itemTitle": "label",
-      "x-itemKey": "key"
-    },
     "metricType": {
       "type": "string",
       "title": "Calcul à appliquer",
@@ -62,6 +54,74 @@
       "type": "integer",
       "title": "Nombre maximal de résultats",
       "default": 10
+    },
+    "groupBy": {
+      "type": "object",
+      "title": "Grouper par",
+      "default": {
+        "type": "value"
+      },
+      "x-itemKey": "type",
+      "oneOf": [{
+        "title": "Valeur exacte",
+        "properties": {
+          "type": {
+            "const": "value"
+          },
+          "field": {
+            "type": "object",
+            "title":"sur cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          }
+        }
+      }, {
+        "title": "Interval de date",
+        "properties": {
+          "type": {
+            "const": "date"
+          },
+          "field": {
+            "type": "object",
+            "title":"sur cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema?format=date,date-time",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "interval": {
+            "type": "string",
+            "title": "interval",
+            "default": "day",
+            "oneOf": [
+              {"const": "hour", "title": "Heure"},
+              {"const": "day", "title": "Jour"},
+              {"const": "week", "title": "Semaine"},
+              {"const": "month", "title": "Mois"},
+              {"const": "year", "title": "Année"}
+            ]
+          }
+        }
+      }, {
+        "title": "Interval de valeur numérique",
+        "properties": {
+          "type": {
+            "const": "number"
+          },
+          "field": {
+            "type": "object",
+            "title":"sur cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "interval": {
+            "type": "integer",
+            "title": "interval",
+            "default": 100
+          }
+        }
+      }]
     },
     "chart": {
       "type": "object",
@@ -269,10 +329,6 @@
               "properties": {
                 "color": {
                   "$ref": "#/definitions/defaultColor"
-                },
-                "value": {
-                  "type": "string",
-                  "x-fromData": "groupByField.enum"
                 }
               }
             }

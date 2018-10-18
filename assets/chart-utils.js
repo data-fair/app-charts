@@ -10,10 +10,14 @@ function prepareData(config, data) {
     } else if (colorscheme.type === 'analogous') {
       backgroundColor = new Color(colorscheme.mainColor).analogousScheme().map(c => c.toCSS())
     } else if (colorscheme.type === 'manual') {
-      backgroundColor = colorscheme.colors
+      backgroundColor = colorscheme.colors.map(c => c.color)
     } else if (colorscheme.type === 'material') {
       backgroundColor = colors.material
     }
+  }
+
+  if (data.aggs.length > 1000) {
+    throw new Error(`Nombre d'éléments à afficher trop important. Abandon.`)
   }
 
   if (!config.chart.secondGroupByField) {
@@ -61,6 +65,14 @@ function prepareData(config, data) {
   }
 }
 
+function getXAxes(config) {
+  if (config.groupBy && config.groupBy.type === 'date') {
+    return { type: 'time', time: { unit: config.groupBy.interval } }
+  } else {
+    return {}
+  }
+}
+
 const chartOptions = {}
 chartOptions.bar = (config, data) => {
   return {
@@ -70,6 +82,7 @@ chartOptions.bar = (config, data) => {
       title: { display: true, text: metricLabel(config) },
       legend: { display: false },
       scales: {
+        xAxes: [getXAxes(config)],
         yAxes: [{
           ticks: {
             beginAtZero: true
@@ -89,7 +102,8 @@ chartOptions['stacked-bar'] = (config, data) => {
       tooltips: { mode: 'index', intersect: false },
       scales: {
         xAxes: [{
-          stacked: true
+          stacked: true,
+          ...getXAxes(config)
         }],
         yAxes: [{
           stacked: true,
@@ -123,6 +137,7 @@ chartOptions.line = (config, data) => {
       legend: { display: false },
       title: { display: true, text: metricLabel(config) },
       scales: {
+        xAxes: [getXAxes(config)],
         yAxes: [{
           ticks: {
             beginAtZero: true
@@ -143,6 +158,7 @@ chartOptions['multi-lines'] = (config, data) => {
     options: {
       title: { display: true, text: metricLabel(config) },
       scales: {
+        xAxes: [getXAxes(config)],
         yAxes: [{
           ticks: {
             beginAtZero: true
@@ -211,7 +227,7 @@ const metricTypes = [
 function metricLabel(config) {
   const metricType = metricTypes.find(m => m.value === config.metricType)
   let label = metricType.value === 'count' ? metricType.text : metricType.text + ' de ' + config.valueField.label
-  if (config.groupByField) label += ' par ' + config.groupByField.label
+  if (config.groupBy && config.groupBy.field) label += ' par ' + config.groupBy.field.label
   if (config.chart.secondGroupByField) label += ' et par ' + config.chart.secondGroupByField.label
   return label
 }

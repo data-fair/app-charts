@@ -28,7 +28,7 @@ export default () => {
           !config ||
           !config.datasets || !config.datasets[0] || !config.datasets[0].href ||
           !config.valueField || !config.valueField.key ||
-          !config.groupByField || !config.groupByField.key
+          !config.groupBy || !config.groupBy.field || !config.groupBy.field.key
         ) {
           return true
         }
@@ -57,9 +57,12 @@ export default () => {
         const config = state.application.configuration
 
         const params = {
-          field: config.groupByField.key,
+          field: config.groupBy.field.key,
           agg_size: config.size,
           sort: config.sort
+        }
+        if (config.groupBy.interval) {
+          params.interval = config.groupBy.interval
         }
         if (config.chart && config.chart.secondGroupByField) {
           params.field = `${params.field};${config.chart.secondGroupByField.key}`
@@ -83,8 +86,8 @@ export default () => {
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/values_agg', { params })
           commit('setAny', { data })
-        } catch (error) {
-          commit('setAny', { error })
+        } catch (err) {
+          commit('setAny', { error: (err.response && err.response.data) || err.message })
         }
       }, 10),
       setError({ commit }, error) {
