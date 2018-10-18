@@ -69,8 +69,8 @@ export default () => {
           params.metric_field = config.valueField.key
         }
 
-        const filters = {}
-        config.staticFilters.forEach(sf => {
+        const filters = {};
+        (config.staticFilters || []).forEach(sf => {
           filters[sf.field.key] = sf.value
         })
         state.filters.forEach(f => {

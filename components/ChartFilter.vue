@@ -57,8 +57,8 @@ export default {
       const appliedFilters = {}
       this.higherFilters.forEach(f => {
         appliedFilters[f.field.key] = f.value
-      })
-      this.config.staticFilters.forEach(sf => {
+      });
+      (this.config.staticFilters || []).forEach(sf => {
         appliedFilters[sf.field.key] = sf.value
       })
       if (this.search) {
