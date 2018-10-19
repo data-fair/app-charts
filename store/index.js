@@ -27,7 +27,7 @@ export default () => {
         if (
           !config ||
           !config.datasets || !config.datasets[0] || !config.datasets[0].href ||
-          !config.valueField || !config.valueField.key ||
+          (config.metricType !== 'count' && (!config.valueField || !config.valueField.key)) ||
           !config.groupBy || !config.groupBy.field || !config.groupBy.field.key
         ) {
           return true

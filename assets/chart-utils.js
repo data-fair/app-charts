@@ -116,6 +116,27 @@ chartOptions['stacked-bar'] = (config, data) => {
   }
 }
 
+chartOptions['grouped-bar'] = (config, data) => {
+  return {
+    type: 'bar',
+    data,
+    options: {
+      title: { display: true, text: metricLabel(config) },
+      tooltips: { mode: 'index', intersect: false },
+      scales: {
+        xAxes: [{
+          ...getXAxes(config)
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  }
+}
+
 chartOptions.pie = (config, data) => {
   return {
     type: 'pie',

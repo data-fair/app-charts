@@ -7,7 +7,7 @@
       "items": [{
         "title": "Jeu de données",
         "type": "object",
-        "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}",
+        "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&owner={context.owner.type}:{context.owner.id}",
         "x-itemsProp": "results",
         "x-itemTitle": "title",
         "x-itemKey": "href",
@@ -158,6 +158,25 @@
             "type": "object",
             "title":"Empiler par",
             "description": "La colonne sur laquelle séparer les éléments de la pile.",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Histogramme groupé",
+        "required": ["secondGroupByField"],
+        "properties": {
+          "type": {
+            "const": "grouped-bar"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer groupes par",
+            "description": "La colonne sur laquelle séparer les groupes.",
             "x-fromUrl": "{datasets.0.href}/schema",
             "x-itemTitle": "label",
             "x-itemKey": "key"
