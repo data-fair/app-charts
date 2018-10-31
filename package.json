@@ -16,7 +16,7 @@
     "analyze": "nuxt build --analyze"
   },
   "dependencies": {
-    "@koumoul/gh-pages-multi": "^0.6.0",
+    "@koumoul/gh-pages-multi": "^0.7.1",
     "@koumoul/notif-vue": "^0.1.0",
     "@nuxtjs/axios": "^5.3.1",
     "chart.js": "^2.7.2",
