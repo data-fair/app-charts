@@ -37,7 +37,7 @@ export default {
   },
   created() {
     if (this.incompleteConfig) {
-      this.$store.commit('setAny', { error: new Error('La configuration est insuffisante pour présenter un graphique') })
+      this.$store.dispatch('setError', new Error('La configuration est insuffisante pour présenter un graphique'))
     }
   },
   async mounted() {
@@ -59,7 +59,6 @@ export default {
           this.chart.update()
         }
       } catch (err) {
-        console.error(err)
         return this.$store.dispatch('setError', err)
       }
     }

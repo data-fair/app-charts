@@ -1,11 +1,12 @@
 {
   "type": "object",
-  "required": ["datasets", "valueField"],
+  "required": ["datasets", "valueField", "metricType", "groupBy", "sort", "chart"],
   "properties": {
     "datasets": {
       "type": "array",
       "items": [{
         "title": "Jeu de données",
+        "description": "Doit contenir au moins une valeur numérique",
         "type": "object",
         "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&owner={context.owner.type}:{context.owner.id}",
         "x-itemsProp": "results",
@@ -64,6 +65,7 @@
       "x-itemKey": "type",
       "oneOf": [{
         "title": "Valeur exacte",
+        "required": ["field"],
         "properties": {
           "type": {
             "const": "value"
@@ -78,6 +80,7 @@
         }
       }, {
         "title": "Interval de date",
+        "required": ["field", "interval"],
         "properties": {
           "type": {
             "const": "date"
@@ -104,6 +107,7 @@
         }
       }, {
         "title": "Interval de valeur numérique",
+        "required": ["field", "interval"],
         "properties": {
           "type": {
             "const": "number"
@@ -139,6 +143,7 @@
         }
       }, {
         "title": "Histogramme",
+        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "bar"
@@ -149,7 +154,7 @@
         }
       }, {
         "title": "Histogramme empilé",
-        "required": ["secondGroupByField"],
+        "required": ["secondGroupByField", "colorscheme"],
         "properties": {
           "type": {
             "const": "stacked-bar"
@@ -168,7 +173,7 @@
         }
       }, {
         "title": "Histogramme groupé",
-        "required": ["secondGroupByField"],
+        "required": ["secondGroupByField", "colorscheme"],
         "properties": {
           "type": {
             "const": "grouped-bar"
@@ -187,7 +192,7 @@
         }
       }, {
         "title": "Ligne",
-        "required": [],
+        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "line"
@@ -206,7 +211,7 @@
         }
       }, {
         "title": "Lignes multiples",
-        "required": ["secondGroupByField"],
+        "required": ["secondGroupByField", "colorscheme"],
         "properties": {
           "type": {
             "const": "multi-lines"
@@ -230,7 +235,7 @@
         }
       }, {
         "title": "Aire",
-        "required": [],
+        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "area"
@@ -249,7 +254,7 @@
         }
       }, {
         "title": "Aires empilées",
-        "required": ["secondGroupByField"],
+        "required": ["secondGroupByField", "colorscheme"],
         "properties": {
           "type": {
             "const": "stacked-area"
@@ -268,6 +273,7 @@
         }
       }, {
         "title": "Camembert",
+        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "pie"

@@ -53,7 +53,7 @@ export default () => {
           if (!getters.incompleteConfig) dispatch('fetchData')
         }
       },
-      fetchData: debounce(async function({ state, commit }) {
+      fetchData: debounce(async function({ state, commit, dispatch }) {
         const config = state.application.configuration
 
         const params = {
@@ -87,11 +87,17 @@ export default () => {
           const data = await this.$axios.$get(config.datasets[0].href + '/values_agg', { params })
           commit('setAny', { data })
         } catch (err) {
-          commit('setAny', { error: (err.response && err.response.data) || err.message })
+          dispatch('setError', (err.response && err.response.data) || err.message)
         }
       }, 10),
-      setError({ commit }, error) {
+      async setError({ state, commit }, error) {
         commit('setAny', { error })
+        try {
+          console.log(state.application.href)
+          this.$axios.$post(state.application.href + '/error', { message: error.message || error })
+        } catch (err) {
+          console.log('Failed to report error', err)
+        }
       }
     }
   })
