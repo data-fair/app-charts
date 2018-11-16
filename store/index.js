@@ -93,7 +93,6 @@ export default () => {
       async setError({ state, commit }, error) {
         commit('setAny', { error })
         try {
-          console.log(state.application.href)
           this.$axios.$post(state.application.href + '/error', { message: error.message || error })
         } catch (err) {
           console.log('Failed to report error', err)
