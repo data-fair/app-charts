@@ -101,11 +101,11 @@ const tooltips = {
     title(tooltipItems, data) {
       const value = data.labels[tooltipItems[0].index]
       // title might be truncated in tooltip, but not as much as in xAxis labels
-      return formatValue(value, 24)
+      return formatValue(value, 40)
     },
     label(tooltipItem, data) {
       const value = tooltipItem.yLabel
-      return formatValue(value, 24)
+      return formatValue(value, 40)
     }
   }
 }
