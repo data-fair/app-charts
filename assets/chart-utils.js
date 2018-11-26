@@ -65,11 +65,48 @@ function prepareData(config, data) {
   }
 }
 
+function formatValue(value, maxLength) {
+  if (typeof value === 'number') return value.toLocaleString()
+  const str = '' + value
+  return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
+}
+
 function getXAxes(config) {
   if (config.groupBy && config.groupBy.type === 'date') {
     return { type: 'time', time: { unit: config.groupBy.interval } }
   } else {
-    return {}
+    return {
+      ticks: {
+        callback(value) {
+          return formatValue(value, 12)
+        }
+      }
+    }
+  }
+}
+
+function getYAxes(config) {
+  return {
+    ticks: {
+      beginAtZero: true,
+      callback(value) {
+        return formatValue(value, 12)
+      }
+    }
+  }
+}
+
+const tooltips = {
+  callbacks: {
+    title(tooltipItems, data) {
+      const value = data.labels[tooltipItems[0].index]
+      // title might be truncated in tooltip, but not as much as in xAxis labels
+      return formatValue(value, 24)
+    },
+    label(tooltipItem, data) {
+      const value = tooltipItem.yLabel
+      return formatValue(value, 24)
+    }
   }
 }
 
@@ -83,12 +120,9 @@ chartOptions.bar = (config, data) => {
       legend: { display: false },
       scales: {
         xAxes: [getXAxes(config)],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
+        yAxes: [getYAxes(config)]
+      },
+      tooltips
     }
   }
 }
@@ -99,7 +133,7 @@ chartOptions['stacked-bar'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: metricLabel(config) },
-      tooltips: { mode: 'index', intersect: false },
+      tooltips: { mode: 'index', intersect: false, ...tooltips },
       scales: {
         xAxes: [{
           stacked: true,
@@ -107,9 +141,7 @@ chartOptions['stacked-bar'] = (config, data) => {
         }],
         yAxes: [{
           stacked: true,
-          ticks: {
-            beginAtZero: true
-          }
+          ...getYAxes(config)
         }]
       }
     }
@@ -122,16 +154,10 @@ chartOptions['grouped-bar'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: metricLabel(config) },
-      tooltips: { mode: 'index', intersect: false },
+      tooltips: { mode: 'index', intersect: false, ...tooltips },
       scales: {
-        xAxes: [{
-          ...getXAxes(config)
-        }],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
+        xAxes: [getXAxes(config)],
+        yAxes: [getYAxes(config)]
       }
     }
   }
@@ -142,7 +168,8 @@ chartOptions.pie = (config, data) => {
     type: 'pie',
     data,
     options: {
-      title: { display: true, text: metricLabel(config) }
+      title: { display: true, text: metricLabel(config) },
+      tooltips
     }
   }
 }
@@ -159,12 +186,9 @@ chartOptions.line = (config, data) => {
       title: { display: true, text: metricLabel(config) },
       scales: {
         xAxes: [getXAxes(config)],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
+        yAxes: [getYAxes(config)]
+      },
+      tooltips
     }
   }
 }
@@ -180,12 +204,9 @@ chartOptions['multi-lines'] = (config, data) => {
       title: { display: true, text: metricLabel(config) },
       scales: {
         xAxes: [getXAxes(config)],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
+        yAxes: [getYAxes(config)]
+      },
+      tooltips
     }
   }
 }
@@ -201,12 +222,10 @@ chartOptions.area = (config, data) => {
       legend: { display: false },
       title: { display: true, text: metricLabel(config) },
       scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
+        xAxes: [getXAxes(config)],
+        yAxes: [getYAxes(config)]
+      },
+      tooltips
     }
   }
 }
@@ -221,16 +240,15 @@ chartOptions['stacked-area'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: metricLabel(config) },
-      tooltips: { mode: 'index', intersect: false },
+      tooltips: { mode: 'index', intersect: false, callbacks: tooltips.callbacks },
       scales: {
         xAxes: [{
-          stacked: true
+          stacked: true,
+          ...getXAxes(config)
         }],
         yAxes: [{
           stacked: true,
-          ticks: {
-            beginAtZero: true
-          }
+          ...getYAxes(config)
         }]
       }
     }
