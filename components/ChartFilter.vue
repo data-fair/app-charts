@@ -6,6 +6,7 @@
     :loading="loading"
     :search-input.sync="search"
     :clearable="true"
+    :filter="() => true"
     hide-no-data
     placeholder="Saisissez une valeur"
     @change="fetchData()"
@@ -61,20 +62,17 @@ export default {
       (this.config.staticFilters || []).forEach(sf => {
         appliedFilters[sf.field.key] = sf.value
       })
-      if (this.search) {
-        appliedFilters[this.configFilter.field.key] = this.search
-        if (this.configFilter.field.type === 'string') appliedFilters[this.configFilter.field.key] += '*'
-      }
-      let qs = Object.keys(appliedFilters)
-        .filter(key => ![null, undefined, ''].includes(appliedFilters[key]))
-        .map(key => `${key}:${appliedFilters[key]}`).join(' AND ')
 
-      this.items = (await this.$axios.$get(this.config.datasets[0].href + '/values_agg', { params: {
-        field: this.configFilter.field.key,
-        sort: 'key',
-        agg_size: 5,
-        qs
-      } })).aggs.map(agg => agg.value)
+      const qs = Object.keys(appliedFilters)
+        .filter(key => ![null, undefined, ''].includes(appliedFilters[key]))
+        .map(key => `${key}:${appliedFilters[key]}`)
+        .join(' AND ')
+
+      this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + this.configFilter.field.key, { params: {
+        size: 10,
+        qs,
+        q: this.search ? this.search + '*' : ''
+      } })
       this.loading = false
     }
   }
