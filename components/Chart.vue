@@ -1,22 +1,20 @@
 <template lang="html">
-  <v-container fluid class="pa-0">
+  <v-container fluid class="pa-1">
     <template v-if="!incompleteConfig">
       <filters v-if="config.filters.dynamicFilters.length"/>
-      <data-table v-if="config.chart.type === 'table'" />
-      <canvas v-else id="myChart" :height="dimension.height" :width="dimension.width"/>
+      <canvas id="myChart" :height="dimension.height" :width="dimension.width"/>
     </template>
   </v-container>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import DataTable from './DataTable'
 import Filters from './Filters'
 import Chart from 'chart.js'
 import chartUtils from '../assets/chart-utils.js'
 
 export default {
-  components: { DataTable, Filters },
+  components: { Filters },
   data() {
     return { ready: false, chartTop: 0, chart: null }
   },

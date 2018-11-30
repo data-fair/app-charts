@@ -1,6 +1,7 @@
 const URL = require('url').URL
 const cors = require('cors')
 const webpack = require('webpack')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
   // No server side rendering in our case, the deployment target is some static web server.
@@ -25,24 +26,17 @@ module.exports = {
   },
   build: {
     transpile: [/^vuetify/],
-    babel: {
-      // Necessary for "à la carte" import of vuetify components
-      plugins: [['transform-imports', {
-        vuetify: {
-          transform: 'vuetify/es5/components/${member}',
-          preventFullImport: true
-        }
-      }]]
-    },
     extend (config, { isDev, isClient }) {
       // Build specifically to deploy on a web server somewhere
       config.output.publicPath = (process.env.PUBLIC_URL || 'http://localhost:3001') + '/_nuxt/'
 
       // Ignore all locale files of moment.js, those we want are loaded in plugins/moment.js
       config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
+
+      config.plugins.push(new VuetifyLoaderPlugin())
     }
   },
-  plugins: ['~plugins/init', '~plugins/vuetify', '~plugins/moment'],
+  plugins: ['~plugins/init', '~plugins/vuetify'],
   modules: ['@nuxtjs/axios'],
   env: {
     defaultDataFair: process.env.DEFAULT_DATA_FAIR || 'http://localhost:8080'

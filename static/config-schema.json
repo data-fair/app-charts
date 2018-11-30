@@ -184,17 +184,10 @@
       "type": "object",
       "title": "Type de visualisation",
       "default": {
-        "type": "table"
+        "type": "bar"
       },
       "x-itemKey": "type",
       "oneOf": [{
-        "title": "Table de données",
-        "properties": {
-          "type": {
-            "const": "table"
-          }
-        }
-      }, {
         "title": "Histogramme",
         "required": ["colorscheme"],
         "properties": {

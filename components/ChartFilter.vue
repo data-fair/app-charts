@@ -8,6 +8,7 @@
     :clearable="true"
     :multiple="true"
     :filter="() => true"
+    class="chart-filter"
     hide-no-data
     placeholder="Saisissez une valeur"
     @change="fetchData()"
@@ -67,4 +68,7 @@ export default {
 </script>
 
 <style lang="css">
+.chart-filter .v-text-field__details {
+  display: none;
+}
 </style>
