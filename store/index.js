@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import debounce from 'debounce'
+import { filters2qs } from '../assets/filters-utils'
 
 Vue.use(Vuex)
 
@@ -11,8 +12,7 @@ export default () => {
       error: null,
       env: null,
       application: window.APPLICATION,
-      data: null,
-      filters: []
+      data: null
     },
     getters: {
       defaultDataFairUrl(state) {
@@ -50,6 +50,11 @@ export default () => {
           // hackish way of exposing a nuxt application on various base urls
           this.$router.options.base = this.$router.history.base = new URL(state.application.exposedUrl).pathname
 
+          if (getters.config.filters && getters.config.filters.dynamicFilters) {
+            getters.config.filters.dynamicFilters.forEach(f => {
+              f.values = f.defaultValues
+            })
+          }
           if (!getters.incompleteConfig) dispatch('fetchData')
         }
       },
@@ -58,7 +63,7 @@ export default () => {
 
         const params = {
           field: config.groupBy.field.key,
-          agg_size: config.size,
+          agg_size: config.groupBy.size,
           sort: config.sort
         }
         if (config.groupBy.interval) {
@@ -66,22 +71,16 @@ export default () => {
         }
         if (config.chart && config.chart.secondGroupByField) {
           params.field = `${params.field};${config.chart.secondGroupByField.key}`
+          params.agg_size = `${params.agg_size};${config.chart.secondSize}`
         }
-        if (config.metricType !== 'count') {
+        if (config.metricType === 'count') {
+          params.sort = params.sort.replace('metric', 'count')
+        } else {
           params.metric = config.metricType
           params.metric_field = config.valueField.key
         }
 
-        const filters = {};
-        (config.staticFilters || []).forEach(sf => {
-          filters[sf.field.key] = sf.value
-        })
-        state.filters.forEach(f => {
-          filters[f.field.key] = f.value
-        })
-        params.qs = Object.keys(filters)
-          .filter(key => ![null, undefined, ''].includes(filters[key]))
-          .map(key => `${key}:${filters[key]}`).join(' AND ')
+        params.qs = filters2qs((config.filters.staticFilters).concat(config.filters.dynamicFilters))
 
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/values_agg', { params })
@@ -91,7 +90,7 @@ export default () => {
         }
       }, 10),
       async setError({ state, commit }, error) {
-        commit('setAny', { error })
+        // commit('setAny', { error })
         try {
           this.$axios.$post(state.application.href + '/error', { message: error.message || error })
         } catch (err) {

@@ -18,316 +18,42 @@
           "id": {"type": "string"}
         }
       }]
+    }
+  },
+  "dependencies": {
+    "datasets.0.id": {
+      "properties": {
+        "valueField": {"$ref": "#/definitions/valueField"}
+      }
     },
+    "valueField.key": {
+      "properties": {
+        "groupBy": {"$ref": "#/definitions/groupBy"}
+      }
+    },
+    "groupBy.field.key": {
+      "properties": {
+        "metricType": {"$ref": "#/definitions/metricType"},
+        "sort": {"$ref": "#/definitions/sort"},
+        "chart": {"$ref": "#/definitions/chart"},
+        "filters": {"$ref": "#/definitions/filters"}
+      }
+    }
+  },
+  "definitions": {
     "valueField": {
       "type": "object",
-      "title": "Valeur numérique",
+      "title": "Colonne de valeur numérique",
       "description": "La colonne contenant la valeur numérique à afficher ou sur laquelle calculer une métrique.",
       "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
-    "metricType": {
-      "type": "string",
-      "title": "Calcul à appliquer",
-      "default": "count",
-      "oneOf": [
-        {"const": "count", "title": "nombre d'occurences"},
-        {"const": "avg", "title": "moyenne"},
-        {"const": "min", "title": "valeur minimale"},
-        {"const": "max", "title": "valeur maximale"},
-        {"const": "sum", "title": "somme"}
-      ]
-    },
-    "sort": {
-      "type": "string",
-      "title": "Trier par",
-      "default": "-metric",
-      "oneOf": [
-        {"const": "-metric", "title": "la valeur de la métrique (descendant)"},
-        {"const": "metric", "title": "la valeur de la métrique (ascendant)"},
-        {"const": "-count", "title": "le nombre de documents (descendant)"},
-        {"const": "key", "title": "la clé (ascendant)"},
-        {"const": "-key", "title": "la clé (descendant)"}
-      ]
-    },
-    "size": {
-      "type": "integer",
-      "title": "Nombre maximal de résultats",
-      "default": 10
-    },
-    "groupBy": {
-      "type": "object",
-      "title": "Grouper par",
-      "default": {
-        "type": "value"
-      },
-      "x-itemKey": "type",
-      "oneOf": [{
-        "title": "Valeur exacte",
-        "required": ["field"],
-        "properties": {
-          "type": {
-            "const": "value"
-          },
-          "field": {
-            "type": "object",
-            "title":"sur cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          }
-        }
-      }, {
-        "title": "Interval de date",
-        "required": ["field", "interval"],
-        "properties": {
-          "type": {
-            "const": "date"
-          },
-          "field": {
-            "type": "object",
-            "title":"sur cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?format=date,date-time",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "interval": {
-            "type": "string",
-            "title": "interval",
-            "default": "day",
-            "oneOf": [
-              {"const": "hour", "title": "Heure"},
-              {"const": "day", "title": "Jour"},
-              {"const": "week", "title": "Semaine"},
-              {"const": "month", "title": "Mois"},
-              {"const": "year", "title": "Année"}
-            ]
-          }
-        }
-      }, {
-        "title": "Interval de valeur numérique",
-        "required": ["field", "interval"],
-        "properties": {
-          "type": {
-            "const": "number"
-          },
-          "field": {
-            "type": "object",
-            "title":"sur cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "interval": {
-            "type": "integer",
-            "title": "interval",
-            "default": 100
-          }
-        }
-      }]
-    },
-    "chart": {
-      "type": "object",
-      "title": "Type de visualisation",
-      "default": {
-        "type": "table"
-      },
-      "x-itemKey": "type",
-      "oneOf": [{
-        "title": "Table de données",
-        "properties": {
-          "type": {
-            "const": "table"
-          }
-        }
-      }, {
-        "title": "Histogramme",
-        "required": ["colorscheme"],
-        "properties": {
-          "type": {
-            "const": "bar"
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
-        }
-      }, {
-        "title": "Histogramme empilé",
-        "required": ["secondGroupByField", "colorscheme"],
-        "properties": {
-          "type": {
-            "const": "stacked-bar"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Empiler par",
-            "description": "La colonne sur laquelle séparer les éléments de la pile.",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
-        }
-      }, {
-        "title": "Histogramme groupé",
-        "required": ["secondGroupByField", "colorscheme"],
-        "properties": {
-          "type": {
-            "const": "grouped-bar"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer groupes par",
-            "description": "La colonne sur laquelle séparer les groupes.",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
-        }
-      }, {
-        "title": "Ligne",
-        "required": ["colorscheme"],
-        "properties": {
-          "type": {
-            "const": "line"
-          },
-          "colorscheme": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "monochrome"
-              },
-              "mainColor": {
-                "$ref": "#/definitions/defaultColor"
-              }
-            }
-          }
-        }
-      }, {
-        "title": "Lignes multiples",
-        "required": ["secondGroupByField", "colorscheme"],
-        "properties": {
-          "type": {
-            "const": "multi-lines"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer par",
-            "description": "La colonne sur laquelle séparer les éléments en lignes distinctes.",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "showTotal": {
-            "type": "boolean",
-            "title": "Montrer le total",
-            "default": true
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
-        }
-      }, {
-        "title": "Aire",
-        "required": ["colorscheme"],
-        "properties": {
-          "type": {
-            "const": "area"
-          },
-          "colorscheme": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "monochrome"
-              },
-              "mainColor": {
-                "$ref": "#/definitions/defaultColor"
-              }
-            }
-          }
-        }
-      }, {
-        "title": "Aires empilées",
-        "required": ["secondGroupByField", "colorscheme"],
-        "properties": {
-          "type": {
-            "const": "stacked-area"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Empiler par",
-            "description": "La colonne sur laquelle séparer les éléments de la pile.",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
-        }
-      }, {
-        "title": "Camembert",
-        "required": ["colorscheme"],
-        "properties": {
-          "type": {
-            "const": "pie"
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
-        }
-      }]
-    },
-    "staticFilters": {
-      "title": "Filtres statiques",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["field", "value"],
-        "properties": {
-          "field": {
-            "type": "object",
-            "title": "Colonne de filtre",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "value": {
-            "type": "string",
-            "title": "Valeur"
-          }
-        }
-      }
-    },
-    "filters": {
-      "title": "Filtres dynamiques",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["field"],
-        "properties": {
-          "field": {
-            "type": "object",
-            "title": "Colonne de filtre",
-            "x-fromUrl": "{datasets.0.href}/schema",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          }
-        }
-      }
-    }
-  },
-  "definitions": {
     "colorscheme": {
       "type": "object",
+      "title": "Palette de couleurs",
       "default": {
-        "type": "monochrome"
+        "type": "material"
       },
       "x-itemKey": "type",
       "oneOf": [{
@@ -383,6 +109,373 @@
       "format": "hexcolor",
       "title": "Couleur",
       "default": "#03A9F4"
+    },
+    "groupBy": {
+      "type": "object",
+      "title": "Grouper par",
+      "x-itemKey": "type",
+      "required": ["type"],
+      "oneOf": [{
+        "title": "Valeurs exactes d'une colonne",
+        "required": ["field"],
+        "properties": {
+          "type": { "const": "value" },
+          "field": {"$ref": "#/definitions/groupField"},
+          "size": {"$ref": "#/definitions/size"}
+        }
+      }, {
+        "title": "Intervalles d'une colonne de type date",
+        "required": ["field", "interval"],
+        "properties": {
+          "type": { "const": "date" },
+          "field": {"$ref": "#/definitions/groupFieldDate"},
+          "interval": {
+            "type": "string",
+            "title": "Taille des intervalles",
+            "default": "day",
+            "oneOf": [
+              {"const": "hour", "title": "Heure"},
+              {"const": "day", "title": "Jour"},
+              {"const": "week", "title": "Semaine"},
+              {"const": "month", "title": "Mois"},
+              {"const": "year", "title": "Année"}
+            ]
+          }
+        }
+      }, {
+        "title": "Intervalles d'une colonne numérique",
+        "required": ["field", "interval"],
+        "properties": {
+          "type": { "const": "number" },
+          "field": {"$ref": "#/definitions/groupFieldNumber"},
+          "interval": {
+            "type": "integer",
+            "title": "Taille des intervalles",
+            "default": 100
+          }
+        }
+      }]
+    },
+    "metricType": {
+      "type": "string",
+      "title": "Calcul à appliquer",
+      "default": "sum",
+      "oneOf": [
+        {"const": "count", "title": "nombre d'éléments dans le groupe"},
+        {"const": "avg", "title": "moyenne"},
+        {"const": "min", "title": "valeur minimale"},
+        {"const": "max", "title": "valeur maximale"},
+        {"const": "sum", "title": "somme"}
+      ]
+    },
+    "sort": {
+      "type": "string",
+      "title": "Trier par",
+      "default": "-metric",
+      "oneOf": [
+        {"const": "-metric", "title": "le résultat du calcul (descendant)"},
+        {"const": "metric", "title": "le résultat du calcul (ascendant)"},
+        {"const": "-count", "title": "le nombre d'éléments dans le groupe (descendant)"},
+        {"const": "key", "title": "la clé du groupe (ascendant)"},
+        {"const": "-key", "title": "la clé du groupe (descendant)"}
+      ]
+    },
+    "chart": {
+      "type": "object",
+      "title": "Type de visualisation",
+      "default": {
+        "type": "table"
+      },
+      "x-itemKey": "type",
+      "oneOf": [{
+        "title": "Table de données",
+        "properties": {
+          "type": {
+            "const": "table"
+          }
+        }
+      }, {
+        "title": "Histogramme",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "bar"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Histogramme empilé",
+        "required": ["secondGroupByField", "colorscheme"],
+        "properties": {
+          "type": {
+            "const": "stacked-bar"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer les piles par les valeurs de cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "secondSize": {
+            "type": "integer",
+            "title": "Nombre maximal d'éléments dans la pile",
+            "default": 10
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Histogramme groupé",
+        "required": ["secondGroupByField", "colorscheme"],
+        "properties": {
+          "type": {
+            "const": "grouped-bar"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer les groupes par les valeurs de cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "secondSize": {
+            "type": "integer",
+            "title": "Nombre maximal de groupes",
+            "default": 10
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Ligne",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "line"
+          },
+          "colorscheme": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "monochrome"
+              },
+              "mainColor": {
+                "$ref": "#/definitions/defaultColor"
+              }
+            }
+          }
+        }
+      }, {
+        "title": "Lignes multiples",
+        "required": ["secondGroupByField", "colorscheme"],
+        "properties": {
+          "type": {
+            "const": "multi-lines"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer les lignes par les valeurs de cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "showTotal": {
+            "type": "boolean",
+            "title": "Montrer le total",
+            "default": true
+          },
+          "secondSize": {
+            "type": "integer",
+            "title": "Nombre maximal de lignes",
+            "default": 10
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Aire",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "area"
+          },
+          "colorscheme": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "monochrome"
+              },
+              "mainColor": {
+                "$ref": "#/definitions/defaultColor"
+              }
+            }
+          }
+        }
+      }, {
+        "title": "Aires empilées",
+        "required": ["secondGroupByField", "colorscheme"],
+        "properties": {
+          "type": {
+            "const": "stacked-area"
+          },
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer les aires par les valeurs de cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "secondSize": {
+            "type": "integer",
+            "title": "Nombre maximal d'aires empilées",
+            "default": 10
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }, {
+        "title": "Camembert",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "pie"
+          },
+          "colorscheme": {
+            "$ref": "#/definitions/colorscheme"
+          }
+        }
+      }]
+    },
+    "filters": {
+      "title": "Gestion des filtres",
+      "type": "object",
+      "properties": {
+        "staticFilters": {
+          "title": "Filtres statiques",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "default": {
+              "type": "in"
+            },
+            "x-itemKey": "type",
+            "oneOf": [{
+              "title": "Restreindre à des valeurs",
+              "properties": {
+                "type": {
+                  "const": "in"
+                },
+                "required": ["field", "values"],
+                "field": {"$ref": "#/definitions/filterField"},
+                "values": {
+                  "type": "array",
+                  "title": "Valeurs",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }, {
+              "title": "Restreindre à un interval de valeurs",
+              "properties": {
+                "type": {
+                  "const": "interval"
+                },
+                "required": ["field", "values"],
+                "field": {"$ref": "#/definitions/filterField"},
+                "minValue": {
+                  "type": "string",
+                  "title": "Valeur min"
+                },
+                "maxValue": {
+                  "type": "string",
+                  "title": "Valeur max"
+                }
+              }
+            }, {
+              "title": "Exclure des valeurs",
+              "properties": {
+                "type": {
+                  "const": "out"
+                },
+                "required": ["field", "values"],
+                "field": {"$ref": "#/definitions/filterField"},
+                "values": {
+                  "type": "array",
+                  "title": "Valeurs à exclure",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }]
+          }
+        },
+        "dynamicFilters": {
+          "title": "Filtres dynamiques",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field"],
+            "properties": {
+              "field": {
+                "type": "object",
+                "title": "Colonne de filtre",
+                "x-fromUrl": "{datasets.0.href}/schema",
+                "x-itemTitle": "label",
+                "x-itemKey": "key"
+              },
+              "defaultValues": {
+                "type": "array",
+                "title": "Valeurs par défaut",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "size": {
+      "type": "integer",
+      "title": "Nombre maximal de groupes",
+      "default": 10
+    },
+    "groupField":  {
+      "type": "object",
+      "title":"Grouper en fonction de cette colonne",
+      "x-fromUrl": "{datasets.0.href}/schema",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "groupFieldDate":  {
+      "type": "object",
+      "title":"Grouper en fonction de cette colonne",
+      "x-fromUrl": "{datasets.0.href}/schema?format=date,date-time",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "groupFieldNumber":  {
+      "type": "object",
+      "title":"Grouper en fonction de cette colonne",
+      "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "filterField": {
+      "type": "object",
+      "title": "Colonne de filtre",
+      "x-fromUrl": "{datasets.0.href}/schema",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
     }
   }
 }

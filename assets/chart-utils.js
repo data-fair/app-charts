@@ -101,13 +101,25 @@ const tooltips = {
     title(tooltipItems, data) {
       const value = data.labels[tooltipItems[0].index]
       // title might be truncated in tooltip, but not as much as in xAxis labels
-      return formatValue(value, 40)
+      return formatValue(value, 50)
     },
     label(tooltipItem, data) {
       const value = tooltipItem.yLabel
-      return formatValue(value, 40)
+      let label
+      if (tooltipItem.datasetIndex !== undefined) {
+        label = data.datasets[tooltipItem.datasetIndex].label
+      }
+      if (label) return `${formatValue(label, 20)}: ${formatValue(value, 40)}`
+      else return formatValue(value, 40)
     }
   }
+}
+
+function getStackedTooltips(data) {
+  // when there are many items, better not to generate a huge tooltip
+  if (data.datasets.length > 10) return tooltips
+  // otherwise an aggregated tooltip is handy
+  return { mode: 'index', intersect: false, ...tooltips }
 }
 
 const chartOptions = {}
@@ -133,7 +145,7 @@ chartOptions['stacked-bar'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: metricLabel(config) },
-      tooltips: { mode: 'index', intersect: false, ...tooltips },
+      tooltips: getStackedTooltips(data),
       scales: {
         xAxes: [{
           stacked: true,
@@ -154,7 +166,7 @@ chartOptions['grouped-bar'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: metricLabel(config) },
-      tooltips: { mode: 'index', intersect: false, ...tooltips },
+      tooltips,
       scales: {
         xAxes: [getXAxes(config)],
         yAxes: [getYAxes(config)]
@@ -206,7 +218,7 @@ chartOptions['multi-lines'] = (config, data) => {
         xAxes: [getXAxes(config)],
         yAxes: [getYAxes(config)]
       },
-      tooltips
+      tooltips: getStackedTooltips(data)
     }
   }
 }
@@ -240,7 +252,7 @@ chartOptions['stacked-area'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: metricLabel(config) },
-      tooltips: { mode: 'index', intersect: false, callbacks: tooltips.callbacks },
+      tooltips: getStackedTooltips(data),
       scales: {
         xAxes: [{
           stacked: true,

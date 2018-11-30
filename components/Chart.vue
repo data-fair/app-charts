@@ -1,7 +1,7 @@
 <template lang="html">
   <v-container fluid class="pa-0">
     <template v-if="!incompleteConfig">
-      <filters v-if="config.filters && config.filters.length"/>
+      <filters v-if="config.filters.dynamicFilters.length"/>
       <data-table v-if="config.chart.type === 'table'" />
       <canvas v-else id="myChart" :height="dimension.height" :width="dimension.width"/>
     </template>
@@ -55,7 +55,7 @@ export default {
         if (!this.chart) {
           this.chart = new Chart(document.getElementById('myChart'), chartUtils.prepareChart(this.config, this.data))
         } else {
-          this.chart.data = chartUtils.prepareData(this.config, this.data)
+          this.chart.data = chartUtils.prepareChart(this.config, this.data).data
           this.chart.update()
         }
       } catch (err) {

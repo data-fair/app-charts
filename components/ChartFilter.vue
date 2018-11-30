@@ -1,11 +1,12 @@
 <template lang="html">
   <v-autocomplete
-    :items="items"
-    v-model="filter.value"
-    :label="`Filtrer par ${configFilter.field.label}`"
+    :items="dynamicFilter.values.concat(items)"
+    v-model="dynamicFilter.values"
+    :label="`Filtrer par ${dynamicFilter.field.label}`"
     :loading="loading"
     :search-input.sync="search"
     :clearable="true"
+    :multiple="true"
     :filter="() => true"
     hide-no-data
     placeholder="Saisissez une valeur"
@@ -15,6 +16,7 @@
 
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex'
+import { filters2qs } from '../assets/filters-utils'
 export default {
   props: ['indice'],
   data() {
@@ -23,14 +25,11 @@ export default {
   computed: {
     ...mapGetters(['config']),
     ...mapState(['filters']),
-    configFilter() {
-      return this.config.filters && this.config.filters[this.indice]
-    },
-    filter() {
-      return this.filters && this.filters[this.indice]
+    dynamicFilter() {
+      return this.config.filters.dynamicFilters[this.indice]
     },
     higherFilters() {
-      return this.filters.filter((f, i) => i < this.indice)
+      return this.config.filters.dynamicFilters.slice(0, this.indice)
     }
   },
   watch: {
@@ -40,7 +39,7 @@ export default {
     },
     higherFilters: {
       handler() {
-        this.filter.value = null
+        this.dynamicFilter.values = this.dynamicFilter.defaultValues || []
         this.search = ''
         this.fetchItems()
       },
@@ -48,27 +47,15 @@ export default {
     }
   },
   created() {
-    this.$set(this.filter, 'value', null)
+    this.$set(this.dynamicFilter, 'values', this.dynamicFilter.defaultValues || [])
   },
   methods: {
     ...mapActions(['fetchData']),
     async fetchItems() {
       if (this.loading) return
       this.loading = true
-      const appliedFilters = {}
-      this.higherFilters.forEach(f => {
-        appliedFilters[f.field.key] = f.value
-      });
-      (this.config.staticFilters || []).forEach(sf => {
-        appliedFilters[sf.field.key] = sf.value
-      })
-
-      const qs = Object.keys(appliedFilters)
-        .filter(key => ![null, undefined, ''].includes(appliedFilters[key]))
-        .map(key => `${key}:${appliedFilters[key]}`)
-        .join(' AND ')
-
-      this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + this.configFilter.field.key, { params: {
+      const qs = filters2qs(this.config.filters.staticFilters.concat(this.higherFilters))
+      this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + this.dynamicFilter.field.key, { params: {
         size: 10,
         qs,
         q: this.search ? this.search + '*' : ''
