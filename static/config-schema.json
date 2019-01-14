@@ -342,7 +342,6 @@
     },
     "chartAgg": {
       "type": "object",
-      "title": "Type de visualisation",
       "default": {
         "type": "bar"
       },
@@ -352,7 +351,8 @@
         "required": ["colorscheme"],
         "properties": {
           "type": {
-            "const": "bar"
+            "const": "bar",
+            "title": "Type de visualisation"
           },
           "horizontal": {"$ref": "#/definitions/horizontal"},
           "colorscheme": {
