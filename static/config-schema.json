@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["datasets", "valueField", "metricType", "groupBy", "sort", "chart"],
+  "required": ["datasets", "type"],
   "properties": {
     "datasets": {
       "type": "array",
@@ -20,47 +20,123 @@
       }]
     }
   },
+  "default": {
+    "type": "linesBased"
+  },
+  "x-itemKey": "type",
   "dependencies": {
     "datasets.0.id": {
-      "properties": {
-        "valueField": {"$ref": "#/definitions/valueField"}
-      }
-    },
-    "valueField.key": {
-      "properties": {
-        "groupBy": {"$ref": "#/definitions/groupBy"}
-      }
-    },
-    "groupBy.field.key": {
-      "properties": {
-        "metricType": {"$ref": "#/definitions/metricType"},
-        "sort": {"$ref": "#/definitions/sort"},
-        "chart": {"$ref": "#/definitions/chart"},
-        "filters": {"$ref": "#/definitions/filters"}
-      }
+      "title": {
+        "type": "string",
+        "title": "Titre"
+      },
+      "oneOf": [{"$ref": "#/definitions/linesBasedChart"}, {"$ref": "#/definitions/aggBasedChart"}]
     }
   },
   "definitions": {
-    "valueField": {
+    "linesBasedChart": {
+      "title": "Graphique basé sur les lignes de données",
+      "type": "object",
+      "required": ["sortBy", "sortOrder", "size", "chart", "labelsField"],
+      "properties": {
+        "type": {
+          "title": "Représentation des données",
+          "const": "linesBased"
+        },
+        "labelsField": {
+          "type": "object",
+          "title": "Colonne de libellés",
+          "description": "La colonne contenant les libellés à présenter en légende.",
+          "x-fromUrl": "{datasets.0.href}/schema",
+          "x-itemTitle": "label",
+          "x-itemKey": "key"
+        },
+        "valuesFields": {
+          "type": "array",
+          "title": "Colonnes de valeurs à présenter",
+          "items": {
+            "type": "object",
+            "required": ["field", "colorscheme"],
+            "properties": {
+              "field": {"$ref": "#/definitions/valueFieldLines"},
+              "colorscheme": {"$ref": "#/definitions/fieldColorScheme"}
+            }
+          }
+        },
+        "size": {"$ref": "#/definitions/size"},
+        "sortBy": {"$ref": "#/definitions/sortBy"}
+      },
+      "dependencies": {
+        "sortBy": {
+          "properties": {
+            "sortOrder": {"$ref": "#/definitions/sortOrder"},
+            "chart": {"$ref": "#/definitions/chartLines"},
+            "filters": {"$ref": "#/definitions/filters"}
+          }
+        }
+      }
+    },
+    "aggBasedChart": {
+      "title": "Graphique basé sur un calcul",
+      "type": "object",
+      "required": ["valueField", "metricType", "groupBy", "sort", "chart"],
+      "properties": {
+        "type": {
+          "const": "aggBased"
+        },
+        "valueField": {"$ref": "#/definitions/valueFieldAgg"}
+      },
+      "dependencies": {
+        "valueField.key": {
+          "properties": {
+            "groupBy": {"$ref": "#/definitions/groupBy"}
+          }
+        },
+        "groupBy.field.key": {
+          "properties": {
+            "metricType": {"$ref": "#/definitions/metricType"},
+            "sort": {"$ref": "#/definitions/sortAgg"},
+            "chart": {"$ref": "#/definitions/chartAgg"},
+            "filters": {"$ref": "#/definitions/filters"}
+          }
+        }
+      }
+    },
+    "valueFieldAgg": {
       "type": "object",
       "title": "Colonne de valeur numérique",
-      "description": "La colonne contenant la valeur numérique à afficher ou sur laquelle calculer une métrique.",
+      "description": "La colonne contenant la valeur numérique sur laquelle effectuer un calcul.",
       "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "valueFieldLines": {
+      "type": "object",
+      "title": "Colonne de valeur numérique",
+      "description": "La colonne contenant une des valeurs numériques à présenter.",
+      "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
+    },
+    "sortBy": {
+      "type": "object",
+      "title": "Trier par les valeurs d'une colonne",
+      "x-fromUrl": "{datasets.0.href}/schema",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
     "colorscheme": {
       "type": "object",
-      "title": "Palette de couleurs",
       "default": {
         "type": "material"
       },
-      "x-itemKey": "type",
+      "required": ["type"],
       "oneOf": [{
         "title": "Monochrome",
         "properties": {
           "type": {
-            "const": "monochrome"
+            "const": "monochrome",
+            "title": "Type de palette de couleurs"
           },
           "mainColor": {
             "$ref": "#/definitions/defaultColor"
@@ -104,6 +180,32 @@
         }
       }]
     },
+    "fieldColorScheme": {
+      "type": "object",
+      "default": {
+        "type": "material"
+      },
+      "required": ["type"],
+      "oneOf": [{
+        "title": "Manuelle",
+        "properties": {
+          "type": {
+            "const": "manual",
+            "title": "Type de palette de couleurs"
+          },
+          "color": {
+            "$ref": "#/definitions/defaultColor"
+          }
+        }
+      }, {
+        "title": "Material",
+        "properties": {
+          "type": {
+            "const": "material"
+          }
+        }
+      }]
+    },
     "defaultColor": {
       "type": "string",
       "format": "hexcolor",
@@ -112,14 +214,12 @@
     },
     "groupBy": {
       "type": "object",
-      "title": "Grouper par",
-      "x-itemKey": "type",
       "required": ["type"],
       "oneOf": [{
         "title": "Valeurs exactes d'une colonne",
         "required": ["field"],
         "properties": {
-          "type": { "const": "value" },
+          "type": { "const": "value", "title": "Grouper par" },
           "field": {"$ref": "#/definitions/groupField"},
           "size": {"$ref": "#/definitions/size"}
         }
@@ -168,7 +268,7 @@
         {"const": "sum", "title": "somme"}
       ]
     },
-    "sort": {
+    "sortAgg": {
       "type": "string",
       "title": "Trier par",
       "default": "-metric",
@@ -180,13 +280,73 @@
         {"const": "-key", "title": "la clé du groupe (descendant)"}
       ]
     },
-    "chart": {
+    "sortOrder": {
+      "type": "string",
+      "title": "Ordre",
+      "default": "desc",
+      "oneOf": [
+        {"const": "asc", "title": "Ascendant"},
+        {"const": "desc", "title": "Descendant"}
+      ]
+    },
+    "chartLines": {
+      "type": "object",
+      "default": {
+        "type": "multi-lines"
+      },
+      "required": ["type"],
+      "oneOf": [{
+        "title": "Histogramme empilé",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "stacked-bar",
+            "title": "Type de visualisation"
+          },
+          "horizontal": {"$ref": "#/definitions/horizontal"}
+        }
+      }, {
+        "title": "Histogramme groupé",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "grouped-bar"
+          },
+          "horizontal": {"$ref": "#/definitions/horizontal"}
+        }
+      }, {
+        "title": "Lignes",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "multi-lines"
+          }
+        }
+      }, {
+        "title": "Aires",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "stacked-area"
+          }
+        }
+      }, {
+        "title": "Camembert",
+        "required": ["colorscheme"],
+        "properties": {
+          "type": {
+            "const": "pie"
+          }
+        }
+      }]
+    },
+    "chartAgg": {
       "type": "object",
       "title": "Type de visualisation",
       "default": {
         "type": "bar"
       },
-      "x-itemKey": "type",
+      "required": ["type"],
       "oneOf": [{
         "title": "Histogramme",
         "required": ["colorscheme"],
@@ -194,6 +354,7 @@
           "type": {
             "const": "bar"
           },
+          "horizontal": {"$ref": "#/definitions/horizontal"},
           "colorscheme": {
             "$ref": "#/definitions/colorscheme"
           }
@@ -205,6 +366,7 @@
           "type": {
             "const": "stacked-bar"
           },
+          "horizontal": {"$ref": "#/definitions/horizontal"},
           "secondGroupByField": {
             "type": "object",
             "title":"Séparer les piles par les valeurs de cette colonne",
@@ -228,6 +390,7 @@
           "type": {
             "const": "grouped-bar"
           },
+          "horizontal": {"$ref": "#/definitions/horizontal"},
           "secondGroupByField": {
             "type": "object",
             "title":"Séparer les groupes par les valeurs de cette colonne",
@@ -358,7 +521,7 @@
             "default": {
               "type": "in"
             },
-            "x-itemKey": "type",
+            "required": ["type"],
             "oneOf": [{
               "title": "Restreindre à des valeurs",
               "properties": {
@@ -439,7 +602,7 @@
     },
     "size": {
       "type": "integer",
-      "title": "Nombre maximal de groupes",
+      "title": "Nombre maximal de valeurs",
       "default": 10
     },
     "groupField":  {
@@ -469,6 +632,10 @@
       "x-fromUrl": "{datasets.0.href}/schema",
       "x-itemTitle": "label",
       "x-itemKey": "key"
+    },
+    "horizontal": {
+      "type": "boolean",
+      "title": "Affichage en lignes"
     }
   }
 }

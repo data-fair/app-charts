@@ -1,7 +1,7 @@
 <template lang="html">
   <v-container fluid class="pa-1">
     <template v-if="!incompleteConfig">
-      <filters v-if="config.filters.dynamicFilters.length"/>
+      <filters v-if="config.filters && config.filters.dynamicFilters && config.filters.dynamicFilters.length"/>
       <canvas id="myChart" :height="dimension.height" :width="dimension.width"/>
     </template>
   </v-container>
@@ -35,7 +35,7 @@ export default {
   },
   created() {
     if (this.incompleteConfig) {
-      this.$store.dispatch('setError', new Error('La configuration est insuffisante pour présenter un graphique'))
+      this.$store.dispatch('setError', new Error(this.incompleteConfig))
     }
   },
   async mounted() {

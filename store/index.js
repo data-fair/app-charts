@@ -24,13 +24,12 @@ export default () => {
       incompleteConfig(state) {
         if (!state.application) return false
         const config = state.application.configuration
-        if (
-          !config ||
-          !config.datasets || !config.datasets[0] || !config.datasets[0].href ||
-          (config.metricType !== 'count' && (!config.valueField || !config.valueField.key)) ||
-          !config.groupBy || !config.groupBy.field || !config.groupBy.field.key
-        ) {
-          return true
+        if (!config) return 'Configuration absente'
+        if (!(config.datasets && config.datasets[0] && config.datasets[0].href)) {
+          return 'Pas de jeu de données configuré'
+        }
+        if (config.type === 'linesBased' && (!config.valuesFields || !config.valuesFields.length)) {
+          return 'Pas de colonne avec valeur numérique à présenter dans la configuration'
         }
         return false
       },
@@ -55,10 +54,17 @@ export default () => {
               f.values = f.defaultValues
             })
           }
-          if (!getters.incompleteConfig) dispatch('fetchData')
+          if (!getters.incompleteConfig) {
+            dispatch('fetchData')
+          }
         }
       },
       fetchData: debounce(async function({ state, commit, dispatch }) {
+        const config = state.application.configuration
+        if (config.type === 'linesBased') dispatch('fetchLinesData')
+        else dispatch('fetchAggData')
+      }, 10),
+      async fetchAggData({ state, commit, dispatch }) {
         const config = state.application.configuration
 
         const params = {
@@ -79,7 +85,6 @@ export default () => {
           params.metric = config.metricType
           params.metric_field = config.valueField.key
         }
-
         params.qs = filters2qs((config.filters.staticFilters).concat(config.filters.dynamicFilters))
 
         try {
@@ -88,9 +93,29 @@ export default () => {
         } catch (err) {
           dispatch('setError', (err.response && err.response.data) || err.message)
         }
-      }, 10),
+      },
+      async fetchLinesData({ state, commit, dispatch }) {
+        const config = state.application.configuration
+
+        const params = {
+          select: config.valuesFields.map(f => f.field.key).concat([config.labelsField.key]).join(','),
+          size: config.size,
+          sort: (config.sortOrder === 'desc' ? '-' : '') + config.sortBy.key
+        }
+        console.log('CONFIG', config)
+
+        params.qs = filters2qs((config.filters.staticFilters).concat(config.filters.dynamicFilters))
+
+        try {
+          const data = await this.$axios.$get(config.datasets[0].href + '/lines', { params })
+          commit('setAny', { data })
+        } catch (err) {
+          dispatch('setError', (err.response && err.response.data) || err.message)
+        }
+      },
       async setError({ state, commit }, error) {
         // commit('setAny', { error })
+        console.error(error)
         try {
           this.$axios.$post(state.application.href + '/error', { message: error.message || error })
         } catch (err) {

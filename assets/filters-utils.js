@@ -9,7 +9,7 @@ export function filter2qs(filter) {
     return filter.values.map(v => `!(${filter.field.key}:${v})`).join(' AND ')
   } else if (filter.type === 'interval') {
     if (!filter.minValue || !filter.maxValue) return null
-    return `[${filter.minValue} TO ${filter.maxValue}]`
+    return `${filter.field.key}:[${filter.minValue} TO ${filter.maxValue}]`
   }
 }
 
