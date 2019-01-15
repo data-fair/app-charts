@@ -17,7 +17,7 @@ script:
   - npm run lint
   # Build specifically for deployment on gh-pages
   - TARGET="$(./node_modules/.bin/gh-pages-multi better-target $TRAVIS_BRANCH)"
-  - PUBLIC_URL=https://cdn.jsdelivr.net/gh/koumoul-dev/data-fair-charts@gh-pages/$TARGET DEFAULT_DATA_FAIR=https://koumoul.com/s/data-fair npm run generate
+  - PUBLIC_URL=https://cdn.jsdelivr.net/gh/koumoul-dev/data-fair-charts@gh-pages/$TARGET BASE_PATH=/data-fair-charts/$TARGET/ DEFAULT_DATA_FAIR=https://koumoul.com/s/data-fair npm run generate
 
 after_success:
   # Do not deploy code from pull requests

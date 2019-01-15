@@ -22,7 +22,7 @@ module.exports = {
   loading: { color: '#3B8070' },
   router: {
     // Build specifically to deploy on a web server somewhere
-    base: process.env.PUBLIC_URL ? new URL(process.env.PUBLIC_URL).pathname : '/'
+    base: process.env.BASE_PATH || '/'
   },
   build: {
     transpile: [/^vuetify/],
