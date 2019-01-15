@@ -6,7 +6,7 @@
       "type": "array",
       "items": [{
         "title": "Jeu de données",
-        "description": "Doit contenir au moins une valeur numérique",
+        "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
         "type": "object",
         "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&owner={context.owner.type}:{context.owner.id}",
         "x-itemsProp": "results",
@@ -20,10 +20,6 @@
       }]
     }
   },
-  "default": {
-    "type": "linesBased"
-  },
-  "x-itemKey": "type",
   "dependencies": {
     "datasets.0.id": {
       "title": {
@@ -35,38 +31,48 @@
   },
   "definitions": {
     "linesBasedChart": {
-      "title": "Graphique basé sur les lignes de données",
+      "title": "valeurs simples",
       "type": "object",
       "required": ["sortBy", "sortOrder", "size", "chart", "labelsField"],
       "properties": {
         "type": {
-          "title": "Représentation des données",
+          "title": "Préparation des données",
+          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n  - **valeurs simples**: les valeurs sont lues directement depuis chaque ligne du jeu de données.\n  - **calculs**: les valeurs sont obtenues par agrégation des lignes du jeu de données et calcul (somme, moyenne, etc.)",
           "const": "linesBased"
         },
         "labelsField": {
           "type": "object",
-          "title": "Colonne de libellés",
-          "description": "La colonne contenant les libellés à présenter en légende.",
+          "title": "Libellés",
+          "description": "Choisissez la colonne contenant les libellés à présenter en légende.",
           "x-fromUrl": "{datasets.0.href}/schema",
           "x-itemTitle": "label",
           "x-itemKey": "key"
-        },
-        "valuesFields": {
-          "type": "array",
-          "title": "Colonnes de valeurs à présenter",
-          "items": {
-            "type": "object",
-            "required": ["field", "colorscheme"],
-            "properties": {
-              "field": {"$ref": "#/definitions/valueFieldLines"},
-              "colorscheme": {"$ref": "#/definitions/fieldColorScheme"}
+        }
+      },
+      "dependencies": {
+        "labelsField": {
+          "properties": {
+            "valuesFields": {
+              "type": "array",
+              "title": "Valeurs",
+              "description": "Choisissez une ou plusieurs colonnes de valeurs numériques à présenter dans le graphique.",
+              "items": {
+                "type": "object",
+                "required": ["field", "colorscheme"],
+                "properties": {
+                  "field": {"$ref": "#/definitions/valueFieldLines"},
+                  "colorscheme": {"$ref": "#/definitions/fieldColorScheme"}
+                }
+              }
             }
           }
         },
-        "size": {"$ref": "#/definitions/size"},
-        "sortBy": {"$ref": "#/definitions/sortBy"}
-      },
-      "dependencies": {
+        "valuesFields.0.field": {
+          "properties": {
+            "size": {"$ref": "#/definitions/size"},
+            "sortBy": {"$ref": "#/definitions/sortBy"}
+          }
+        },
         "sortBy": {
           "properties": {
             "sortOrder": {"$ref": "#/definitions/sortOrder"},
@@ -77,7 +83,7 @@
       }
     },
     "aggBasedChart": {
-      "title": "Graphique basé sur un calcul",
+      "title": "calculs",
       "type": "object",
       "required": ["valueField", "metricType", "groupBy", "sort", "chart"],
       "properties": {
@@ -104,7 +110,7 @@
     },
     "valueFieldAgg": {
       "type": "object",
-      "title": "Colonne de valeur numérique",
+      "title": "Valeurs",
       "description": "La colonne contenant la valeur numérique sur laquelle effectuer un calcul.",
       "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
       "x-itemTitle": "label",
@@ -112,7 +118,7 @@
     },
     "valueFieldLines": {
       "type": "object",
-      "title": "Colonne de valeur numérique",
+      "title": "Valeur",
       "description": "La colonne contenant une des valeurs numériques à présenter.",
       "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
       "x-itemTitle": "label",
@@ -120,7 +126,7 @@
     },
     "sortBy": {
       "type": "object",
-      "title": "Trier par les valeurs d'une colonne",
+      "title": "Trier par",
       "x-fromUrl": "{datasets.0.href}/schema",
       "x-itemTitle": "label",
       "x-itemKey": "key"
@@ -136,7 +142,7 @@
         "properties": {
           "type": {
             "const": "monochrome",
-            "title": "Type de palette de couleurs"
+            "title": "Palette de couleurs"
           },
           "mainColor": {
             "$ref": "#/definitions/defaultColor"
@@ -191,7 +197,7 @@
         "properties": {
           "type": {
             "const": "manual",
-            "title": "Type de palette de couleurs"
+            "title": "Palette de couleur"
           },
           "color": {
             "$ref": "#/definitions/defaultColor"
@@ -510,11 +516,11 @@
       }]
     },
     "filters": {
-      "title": "Gestion des filtres",
       "type": "object",
       "properties": {
         "staticFilters": {
           "title": "Filtres statiques",
+          "description": "Ces filtres seront appliquées à tous les affichages de ce graphique de manière transparente pour l'utilisateur",
           "type": "array",
           "items": {
             "type": "object",
@@ -526,7 +532,8 @@
               "title": "Restreindre à des valeurs",
               "properties": {
                 "type": {
-                  "const": "in"
+                  "const": "in",
+                  "title": "Type de filtre"
                 },
                 "required": ["field", "values"],
                 "field": {"$ref": "#/definitions/filterField"},
@@ -576,6 +583,7 @@
         },
         "dynamicFilters": {
           "title": "Filtres dynamiques",
+          "description": "Ces filtres seront proposés à l'utilisateur sous forme de formulaire en haut du graphique",
           "type": "array",
           "items": {
             "type": "object",
@@ -602,7 +610,7 @@
     },
     "size": {
       "type": "integer",
-      "title": "Nombre maximal de valeurs",
+      "title": "Nombre maximal d'éléments",
       "default": 10
     },
     "groupField":  {
@@ -635,7 +643,7 @@
     },
     "horizontal": {
       "type": "boolean",
-      "title": "Affichage en lignes"
+      "title": "Inverser l'affichage"
     }
   }
 }
