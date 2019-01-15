@@ -1,4 +1,3 @@
-const URL = require('url').URL
 const cors = require('cors')
 const webpack = require('webpack')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
