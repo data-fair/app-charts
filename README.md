@@ -1,8 +1,8 @@
 # data-fair-charts
 
-A simple charting application for [DataFair](https://koumoul-dev.github.io/data-fair/). Also used as an [example for the documentation](https://koumoul-dev.github.io/data-fair/interoperate/applications) and to bootstrap other applications. 
+A simple charting application for [DataFair](https://koumoul-dev.github.io/data-fair/). Also used as an [example for the documentation](https://koumoul-dev.github.io/data-fair/interoperate/applications) and to bootstrap other applications.
 
-It is hosted [here](https://koumoul-dev.github.io/data-fair-charts/).
+It is hosted [by npm and the jsdelivr CDN](https://cdn.jsdelivr.net/npm/@koumoul/data-fair-charts).
 
 An example configuration can be found [here](https://koumoul.com/s/data-fair/application/data-fair-charts/config), it uses [this dataset](https://koumoul.com/s/data-fair/dataset/population-communes/description).
 
