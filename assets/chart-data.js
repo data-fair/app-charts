@@ -1,21 +1,21 @@
-const Color = require('color-js')
-const colors = require('./colors')
+import getColors from './colors'
 
 // From data-fair response data to the data object expected by chartjs
 export default function prepareData(config, data) {
-  if (config.type === 'linesBased') return prepareLinesData(config, data)
+  if (config.chart.type === 'linesBased') return prepareLinesData(config, data)
   else return prepareAggData(config, data)
 }
 
 function prepareLinesData(config, data) {
+  const colors = getColors(config.colorscheme, config.chart.valuesFields.length)
   return {
-    labels: data.results.map(r => r[config.labelsField.key]),
-    datasets: config.valuesFields.map((f, i) => {
-      const backgroundColor = f.colorscheme.type === 'material' ? colors.material[i] : f.colorscheme.color
+    labels: data.results.map(r => r[config.chart.labelsField.key]),
+    datasets: config.chart.valuesFields.map((f, i) => {
+      const backgroundColor = colors[i]
       return {
-        data: data.results.map(r => r[f.field.key]),
-        key: f.field.key,
-        label: f.field.label,
+        data: data.results.map(r => r[f.key]),
+        key: f.key,
+        label: f.label,
         backgroundColor,
         borderColor: backgroundColor
       }
@@ -24,29 +24,17 @@ function prepareLinesData(config, data) {
 }
 
 function prepareAggData(config, data) {
-  let backgroundColor
-  const colorscheme = config.chart && config.chart.colorscheme
-  if (colorscheme) {
-    if (colorscheme.type === 'monochrome') {
-      backgroundColor = colorscheme.mainColor
-    } else if (colorscheme.type === 'analogous') {
-      backgroundColor = new Color(colorscheme.mainColor).analogousScheme().map(c => c.toCSS())
-    } else if (colorscheme.type === 'manual') {
-      backgroundColor = colorscheme.colors.map(c => c.color)
-    } else if (colorscheme.type === 'material') {
-      backgroundColor = colors.material
-    }
-  }
-
   if (data.aggs.length > 1000) {
     throw new Error(`Nombre d'éléments à afficher trop important. Abandon.`)
   }
-
-  if (!config.chart.secondGroupByField) {
+  const rType = config.chart.render.type
+  const twoLevels = rType.startsWith('stacked') || rType.startsWith('grouped') || rType.startsWith('multi')
+  if (!twoLevels) {
+    const backgroundColor = config.chart.render.type === 'pie' ? getColors(config.colorscheme, data.aggs.length) : getColors(config.colorscheme, 1)[0]
     return {
       labels: data.aggs.map(agg => agg.value),
       datasets: [{
-        data: data.aggs.map(agg => config.metricType !== 'count' ? agg.metric : agg.total),
+        data: data.aggs.map(agg => config.chart.type !== 'countBased' ? agg.metric : agg.total),
         backgroundColor,
         borderColor: backgroundColor
       }]
@@ -57,7 +45,7 @@ function prepareAggData(config, data) {
     const totalDataset = { label: 'Total', data: [] }
     data.aggs.forEach((firstLevel, i) => {
       labels.push(firstLevel.value)
-      totalDataset.data.push(config.metricType !== 'count' ? firstLevel.metric : firstLevel.total)
+      totalDataset.data.push(config.chart.type !== 'countBased' ? firstLevel.metric : firstLevel.total)
       firstLevel.aggs.forEach(secondLevel => {
         let dataset = datasets.find(d => d.key === secondLevel.value)
         if (!dataset) {
@@ -68,12 +56,13 @@ function prepareAggData(config, data) {
           }
           datasets.push(dataset)
         }
-        dataset.data[i] = config.metricType !== 'count' ? secondLevel.metric : secondLevel.total
+        dataset.data[i] = config.chart.type !== 'countBased' ? secondLevel.metric : secondLevel.total
       })
     })
     datasets.sort((a, b) => a.key < b.key ? -1 : 1)
+    const colors = getColors(config.colorscheme, datasets.length)
     datasets.forEach((d, i) => {
-      d.backgroundColor = Array.isArray(backgroundColor) ? backgroundColor[i] : backgroundColor
+      d.backgroundColor = colors[i]
       d.borderColor = d.backgroundColor
       // Fill empty slots in the array with 0 values
       // WARNING: depending on the metric (min ?) this might not make sense
@@ -82,7 +71,7 @@ function prepareAggData(config, data) {
         if (d.data[i] === undefined) d.data[i] = 0
       }
     })
-    if (config.chart.showTotal) datasets.push(totalDataset)
+    if (config.chart.render.showTotal) datasets.push(totalDataset)
     return { labels, datasets }
   }
 }

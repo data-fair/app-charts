@@ -28,7 +28,7 @@ export default () => {
         if (!(config.datasets && config.datasets[0] && config.datasets[0].href)) {
           return 'Pas de jeu de données configuré'
         }
-        if (config.type === 'linesBased' && (!config.valuesFields || !config.valuesFields.length)) {
+        if (config.chart.type === 'linesBased' && (!config.chart.valuesFields || !config.chart.valuesFields.length)) {
           return 'Pas de colonne avec valeur numérique à présenter dans la configuration'
         }
         return false
@@ -61,29 +61,29 @@ export default () => {
       },
       fetchData: debounce(async function({ state, commit, dispatch }) {
         const config = state.application.configuration
-        if (config.type === 'linesBased') dispatch('fetchLinesData')
+        if (config.chart.type === 'linesBased') dispatch('fetchLinesData')
         else dispatch('fetchAggData')
       }, 10),
       async fetchAggData({ state, commit, dispatch }) {
         const config = state.application.configuration
 
         const params = {
-          field: config.groupBy.field.key,
-          agg_size: config.groupBy.size,
-          sort: config.sort
+          field: config.chart.groupBy.field.key,
+          agg_size: config.chart.groupBy.size,
+          sort: config.chart.sort
         }
-        if (config.groupBy.interval) {
-          params.interval = config.groupBy.interval
+        if (config.chart.groupBy.type !== 'value') {
+          params.interval = config.chart.groupBy.interval
         }
-        if (config.chart && config.chart.secondGroupByField) {
-          params.field = `${params.field};${config.chart.secondGroupByField.key}`
-          params.agg_size = `${params.agg_size};${config.chart.secondSize}`
+        const rType = config.chart.render.type
+        const twoLevels = rType.startsWith('stacked') || rType.startsWith('grouped') || rType.startsWith('multi')
+        if (twoLevels) {
+          params.field = `${params.field};${config.chart.render.secondGroupByField.key}`
+          params.agg_size = `${params.agg_size};${config.chart.render.secondSize}`
         }
-        if (config.metricType === 'count') {
-          params.sort = params.sort.replace('metric', 'count')
-        } else {
-          params.metric = config.metricType
-          params.metric_field = config.valueField.key
+        if (config.chart.type === 'metricBased') {
+          params.metric = config.chart.metricType
+          params.metric_field = config.chart.valueField.key
         }
         params.qs = filters2qs((config.filters.staticFilters).concat(config.filters.dynamicFilters))
 
@@ -98,9 +98,9 @@ export default () => {
         const config = state.application.configuration
 
         const params = {
-          select: config.valuesFields.map(f => f.field.key).concat([config.labelsField.key]).join(','),
-          size: config.size,
-          sort: (config.sortOrder === 'desc' ? '-' : '') + config.sortBy.key
+          select: config.chart.valuesFields.map(f => f.key).concat([config.chart.labelsField.key]).join(','),
+          size: config.chart.size,
+          sort: (config.chart.sortOrder === 'desc' ? '-' : '') + config.chart.sortBy.key
         }
         console.log('CONFIG', config)
 

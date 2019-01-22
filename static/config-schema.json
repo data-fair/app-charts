@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["datasets", "type"],
+  "required": ["datasets"],
   "properties": {
     "datasets": {
       "type": "array",
@@ -22,22 +22,30 @@
   },
   "dependencies": {
     "datasets.0.id": {
-      "title": {
-        "type": "string",
-        "title": "Titre"
-      },
-      "oneOf": [{"$ref": "#/definitions/linesBasedChart"}, {"$ref": "#/definitions/aggBasedChart"}]
+      "required": ["chart", "colorscheme"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "Titre"
+        },
+        "chart": {
+          "type": "object",
+          "oneOf": [{"$ref": "#/definitions/linesBasedChart"}, {"$ref": "#/definitions/countBasedChart"}, {"$ref": "#/definitions/metricBasedChart"}]
+        },
+        "colorscheme": {"$ref": "#/definitions/colorscheme"},
+        "filters": {"$ref": "#/definitions/filters"}
+      }
     }
   },
   "definitions": {
     "linesBasedChart": {
       "title": "valeurs simples",
       "type": "object",
-      "required": ["sortBy", "sortOrder", "size", "chart", "labelsField"],
+      "required": ["sortBy", "sortOrder", "size", "render", "labelsField"],
       "properties": {
         "type": {
           "title": "Préparation des données",
-          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n  - **valeurs simples**: les valeurs sont lues directement depuis chaque ligne du jeu de données.\n  - **calculs**: les valeurs sont obtenues par agrégation des lignes du jeu de données et calcul (somme, moyenne, etc.)",
+          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n  - **valeurs simples**: les valeurs sont lues directement depuis chaque ligne du jeu de données.\n  - **comptage sur groupes de ligne**: les lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n  - **calculs sur groupes de lignes**: les lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
           "const": "linesBased"
         },
         "labelsField": {
@@ -46,7 +54,10 @@
           "description": "Choisissez la colonne contenant les libellés à présenter en légende.",
           "x-fromUrl": "{datasets.0.href}/schema",
           "x-itemTitle": "label",
-          "x-itemKey": "key"
+          "x-itemKey": "key",
+          "default": {
+            "key": "_i"
+          }
         }
       },
       "dependencies": {
@@ -56,18 +67,16 @@
               "type": "array",
               "title": "Valeurs",
               "description": "Choisissez une ou plusieurs colonnes de valeurs numériques à présenter dans le graphique.",
+              "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+              "x-itemTitle": "label",
+              "x-itemKey": "key",
               "items": {
-                "type": "object",
-                "required": ["field", "colorscheme"],
-                "properties": {
-                  "field": {"$ref": "#/definitions/valueFieldLines"},
-                  "colorscheme": {"$ref": "#/definitions/fieldColorScheme"}
-                }
+                "type": "object"
               }
             }
           }
         },
-        "valuesFields.0.field": {
+        "valuesFields.0": {
           "properties": {
             "size": {"$ref": "#/definitions/size"},
             "sortBy": {"$ref": "#/definitions/sortBy"}
@@ -76,34 +85,56 @@
         "sortBy": {
           "properties": {
             "sortOrder": {"$ref": "#/definitions/sortOrder"},
-            "chart": {"$ref": "#/definitions/chartLines"},
-            "filters": {"$ref": "#/definitions/filters"}
+            "render": {"$ref": "#/definitions/renderLines"}
           }
         }
       }
     },
-    "aggBasedChart": {
-      "title": "calculs",
+    "countBasedChart": {
+      "title": "comptage sur groupes de lignes",
       "type": "object",
-      "required": ["valueField", "metricType", "groupBy", "sort", "chart"],
+      "required": ["groupBy", "sort", "render"],
       "properties": {
         "type": {
-          "const": "aggBased"
+          "const": "countBased"
         },
-        "valueField": {"$ref": "#/definitions/valueFieldAgg"}
+        "groupBy": {"$ref": "#/definitions/groupBy"}
       },
       "dependencies": {
-        "valueField.key": {
-          "properties": {
-            "groupBy": {"$ref": "#/definitions/groupBy"}
-          }
-        },
         "groupBy.field.key": {
           "properties": {
-            "metricType": {"$ref": "#/definitions/metricType"},
-            "sort": {"$ref": "#/definitions/sortAgg"},
-            "chart": {"$ref": "#/definitions/chartAgg"},
-            "filters": {"$ref": "#/definitions/filters"}
+            "sort": {"$ref": "#/definitions/sortCount"},
+            "render": {"$ref": "#/definitions/renderAgg"}
+          }
+        }
+      }
+    },
+    "metricBasedChart": {
+      "title": "calculs sur groupes de lignes",
+      "type": "object",
+      "required": ["valueField", "metricType", "groupBy", "sort", "render"],
+      "properties": {
+        "type": {
+          "const": "metricBased"
+        },
+        "groupBy": {"$ref": "#/definitions/groupBy"}
+
+      },
+      "dependencies": {
+        "groupBy.field.key": {
+          "properties": {
+            "metricType": {"$ref": "#/definitions/metricType"}
+          }
+        },
+        "metricType": {
+          "properties": {
+            "valueField": {"$ref": "#/definitions/valueFieldAgg"}
+          }
+        },
+        "valueField.key": {
+          "properties": {
+            "sort": {"$ref": "#/definitions/sortMetric"},
+            "render": {"$ref": "#/definitions/renderAgg"}
           }
         }
       }
@@ -116,121 +147,139 @@
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
-    "valueFieldLines": {
-      "type": "object",
-      "title": "Valeur",
-      "description": "La colonne contenant une des valeurs numériques à présenter.",
-      "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
-      "x-itemTitle": "label",
-      "x-itemKey": "key"
-    },
     "sortBy": {
       "type": "object",
       "title": "Trier par",
       "x-fromUrl": "{datasets.0.href}/schema",
       "x-itemTitle": "label",
-      "x-itemKey": "key"
+      "x-itemKey": "key",
+      "default": {
+        "key": "_i"
+      }
     },
     "colorscheme": {
       "type": "object",
+      "title": "Palette de couleurs",
       "default": {
-        "type": "material"
+        "type": "qualitative"
       },
-      "required": ["type"],
       "oneOf": [{
-        "title": "Monochrome",
+        "title": "Qualitative",
+        "required": ["name"],
         "properties": {
           "type": {
-            "const": "monochrome",
-            "title": "Palette de couleurs"
+            "const": "qualitative",
+            "title": "Type",
+            "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d’une valeur faible à une valeur forte (gradient)"
           },
-          "mainColor": {
-            "$ref": "#/definitions/defaultColor"
+          "name": {
+            "type": "string",
+            "oneOf": [
+              {"const": "Accent", "title": "Accent"},
+              {"const": "Dark2", "title": "Foncé"},
+              {"const": "Paired", "title": "Paires"},
+              {"const": "Set1", "title": "Ensemble 1"},
+              {"const": "Set2", "title": "Ensemble 2"}
+            ],
+            "default": "Dark2",
+            "title": "Nom"
           }
         }
       }, {
-        "title": "Manuelle",
+        "title": "Divergente",
         "properties": {
           "type": {
-            "const": "manual"
+            "const": "diverging"
           },
-          "colors": {
-            "title": "Couleurs",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "color": {
-                  "$ref": "#/definitions/defaultColor"
-                }
-              }
-            }
+          "name": {
+            "type": "string",
+            "oneOf": [
+              {"const": "BrBG", "title": "Marron-Bleu-Vert"},
+              {"const": "PRGn", "title": "Violet-Vert"},
+              {"const": "PiYG", "title": "Rose-Vaune-Vert"},
+              {"const": "PuOr", "title": "Orange-Violet"},
+              {"const": "RdBu", "title": "Rouge-Bleu"},
+              {"const": "RdGy", "title": "Rouge-Gris"},
+              {"const": "RdYlBu", "title": "Rouge-Jaune-Bleu"},
+              {"const": "RdYlBu", "title": "Rouge-jaune-Vert"},
+              {"const": "RdYlBu", "title": "Spectral"}
+            ],
+            "default": "RdYlGn",
+            "title": "Nom"
+          },
+          "reverse": {
+            "type": "boolean",
+            "title": "Inverser"
           }
         }
       }, {
-        "title": "6 couleurs analogues",
+        "title": "Séquentielle",
         "properties": {
           "type": {
-            "const": "analogous"
+            "const": "sequential"
           },
-          "mainColor": {
-            "$ref": "#/definitions/defaultColor"
-          }
-        }
-      }, {
-        "title": "Material",
-        "properties": {
-          "type": {
-            "const": "material"
+          "name": {
+            "type": "string",
+            "oneOf": [
+              {"const": "Blues", "title": "Bleu"},
+              {"const": "BuGn", "title": "Bleu-Vert"},
+              {"const": "BuPu", "title": "Bleu-Violet"},
+              {"const": "GnBu", "title": "Vert-Bleu"},
+              {"const": "Greens", "title": "Vert"},
+              {"const": "Greys", "title": "Gris"},
+              {"const": "OrRd", "title": "Orange-Rouge"},
+              {"const": "Oranges", "title": "Orange"},
+              {"const": "PuBu", "title": "Violet-Bleu"},
+              {"const": "PuBuGn", "title": "Violet-Bleu-Vert"},
+              {"const": "PuRd", "title": "Violet-Rouge"},
+              {"const": "Purples", "title": "Violet"},
+              {"const": "RdPu", "title": "Rouge-Violet"},
+              {"const": "Reds", "title": "Rouge"},
+              {"const": "YlGn", "title": "Jaune-Vert"},
+              {"const": "YlGnBu", "title": "Jaune-Vert-Bleu"},
+              {"const": "YlOrBr", "title": "Jaune-Orange-Marron"},
+              {"const": "Oranges", "title": "Orange"},
+              {"const": "YlOrRd", "title": "Jaune-Orange-Marron"}
+            ],
+            "default": "YlOrRd",
+            "title": "Nom"
+          },
+          "reverse": {
+            "type": "boolean",
+            "title": "Inverser"
+          },
+          "subset": {
+            "type": "string",
+            "title": "Sous-ensemble",
+            "oneOf": [
+              {"const": "all", "title": "Route"},
+              {"const": "light", "title": "Clair"},
+              {"const": "dark", "title": "Foncé"}
+            ],
+            "default": "Tout"
           }
         }
       }]
-    },
-    "fieldColorScheme": {
-      "type": "object",
-      "default": {
-        "type": "material"
-      },
-      "required": ["type"],
-      "oneOf": [{
-        "title": "Manuelle",
-        "properties": {
-          "type": {
-            "const": "manual",
-            "title": "Palette de couleur"
-          },
-          "color": {
-            "$ref": "#/definitions/defaultColor"
-          }
-        }
-      }, {
-        "title": "Material",
-        "properties": {
-          "type": {
-            "const": "material"
-          }
-        }
-      }]
-    },
-    "defaultColor": {
-      "type": "string",
-      "format": "hexcolor",
-      "title": "Couleur",
-      "default": "#03A9F4"
     },
     "groupBy": {
       "type": "object",
       "required": ["type"],
       "oneOf": [{
-        "title": "Valeurs exactes d'une colonne",
+        "title": "valeurs exactes d'une colonne",
         "required": ["field"],
         "properties": {
           "type": { "const": "value", "title": "Grouper par" },
-          "field": {"$ref": "#/definitions/groupField"},
-          "size": {"$ref": "#/definitions/size"}
+          "field": {"$ref": "#/definitions/groupField"}
+        },
+        "dependencies": {
+          "field.key": {
+            "properties": {
+              "size": {"$ref": "#/definitions/nbGroups"}
+            }
+          }
         }
       }, {
-        "title": "Intervalles d'une colonne de type date",
+        "title": "intervalles d'une colonne de type date",
         "required": ["field", "interval"],
         "properties": {
           "type": { "const": "date" },
@@ -249,7 +298,7 @@
           }
         }
       }, {
-        "title": "Intervalles d'une colonne numérique",
+        "title": "intervalles d'une colonne numérique",
         "required": ["field", "interval"],
         "properties": {
           "type": { "const": "number" },
@@ -274,7 +323,7 @@
         {"const": "sum", "title": "somme"}
       ]
     },
-    "sortAgg": {
+    "sortMetric": {
       "type": "string",
       "title": "Trier par",
       "default": "-metric",
@@ -286,16 +335,26 @@
         {"const": "-key", "title": "la clé du groupe (descendant)"}
       ]
     },
+    "sortCount": {
+      "type": "string",
+      "title": "Trier par",
+      "default": "-count",
+      "oneOf": [
+        {"const": "-count", "title": "le nombre d'éléments dans le groupe (descendant)"},
+        {"const": "key", "title": "la clé du groupe (ascendant)"},
+        {"const": "-key", "title": "la clé du groupe (descendant)"}
+      ]
+    },
     "sortOrder": {
       "type": "string",
       "title": "Ordre",
-      "default": "desc",
+      "default": "asc",
       "oneOf": [
         {"const": "asc", "title": "Ascendant"},
         {"const": "desc", "title": "Descendant"}
       ]
     },
-    "chartLines": {
+    "renderLines": {
       "type": "object",
       "default": {
         "type": "multi-lines"
@@ -303,7 +362,6 @@
       "required": ["type"],
       "oneOf": [{
         "title": "Histogramme empilé",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "stacked-bar",
@@ -313,7 +371,6 @@
         }
       }, {
         "title": "Histogramme groupé",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "grouped-bar"
@@ -322,7 +379,6 @@
         }
       }, {
         "title": "Lignes",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "multi-lines"
@@ -330,7 +386,6 @@
         }
       }, {
         "title": "Aires",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "stacked-area"
@@ -338,7 +393,6 @@
         }
       }, {
         "title": "Camembert",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "pie"
@@ -346,28 +400,25 @@
         }
       }]
     },
-    "chartAgg": {
+    "renderAgg": {
       "type": "object",
+      "title": "Présentation",
       "default": {
         "type": "bar"
       },
       "required": ["type"],
       "oneOf": [{
         "title": "Histogramme",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "bar",
             "title": "Type de visualisation"
           },
-          "horizontal": {"$ref": "#/definitions/horizontal"},
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
-          }
+          "horizontal": {"$ref": "#/definitions/horizontal"}
         }
       }, {
         "title": "Histogramme empilé",
-        "required": ["secondGroupByField", "colorscheme"],
+        "required": ["secondGroupByField"],
         "properties": {
           "type": {
             "const": "stacked-bar"
@@ -376,7 +427,7 @@
           "secondGroupByField": {
             "type": "object",
             "title":"Séparer les piles par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
             "x-itemTitle": "label",
             "x-itemKey": "key"
           },
@@ -384,14 +435,11 @@
             "type": "integer",
             "title": "Nombre maximal d'éléments dans la pile",
             "default": 10
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
           }
         }
       }, {
         "title": "Histogramme groupé",
-        "required": ["secondGroupByField", "colorscheme"],
+        "required": ["secondGroupByField"],
         "properties": {
           "type": {
             "const": "grouped-bar"
@@ -400,7 +448,7 @@
           "secondGroupByField": {
             "type": "object",
             "title":"Séparer les groupes par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
             "x-itemTitle": "label",
             "x-itemKey": "key"
           },
@@ -408,33 +456,18 @@
             "type": "integer",
             "title": "Nombre maximal de groupes",
             "default": 10
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
           }
         }
       }, {
         "title": "Ligne",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "line"
-          },
-          "colorscheme": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "monochrome"
-              },
-              "mainColor": {
-                "$ref": "#/definitions/defaultColor"
-              }
-            }
           }
         }
       }, {
         "title": "Lignes multiples",
-        "required": ["secondGroupByField", "colorscheme"],
+        "required": ["secondGroupByField"],
         "properties": {
           "type": {
             "const": "multi-lines"
@@ -442,7 +475,7 @@
           "secondGroupByField": {
             "type": "object",
             "title":"Séparer les lignes par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
             "x-itemTitle": "label",
             "x-itemKey": "key"
           },
@@ -455,33 +488,18 @@
             "type": "integer",
             "title": "Nombre maximal de lignes",
             "default": 10
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
           }
         }
       }, {
         "title": "Aire",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "area"
-          },
-          "colorscheme": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "monochrome"
-              },
-              "mainColor": {
-                "$ref": "#/definitions/defaultColor"
-              }
-            }
           }
         }
       }, {
         "title": "Aires empilées",
-        "required": ["secondGroupByField", "colorscheme"],
+        "required": ["secondGroupByField"],
         "properties": {
           "type": {
             "const": "stacked-area"
@@ -489,7 +507,7 @@
           "secondGroupByField": {
             "type": "object",
             "title":"Séparer les aires par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
             "x-itemTitle": "label",
             "x-itemKey": "key"
           },
@@ -497,26 +515,47 @@
             "type": "integer",
             "title": "Nombre maximal d'aires empilées",
             "default": 10
+          }
+        }
+      }, {
+        "title": "Radar",
+        "properties": {
+          "type": {
+            "const": "radar"
+          }
+        }
+      }, {
+        "title": "Radars à lignes multiples",
+        "required": ["secondGroupByField"],
+        "properties": {
+          "type": {
+            "const": "multi-radars"
           },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
+          "secondGroupByField": {
+            "type": "object",
+            "title":"Séparer les lignes par les valeurs de cette colonne",
+            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "secondSize": {
+            "type": "integer",
+            "title": "Nombre maximal de lignes",
+            "default": 10
           }
         }
       }, {
         "title": "Camembert",
-        "required": ["colorscheme"],
         "properties": {
           "type": {
             "const": "pie"
-          },
-          "colorscheme": {
-            "$ref": "#/definitions/colorscheme"
           }
         }
       }]
     },
     "filters": {
       "type": "object",
+      "title": "Filtrage",
       "properties": {
         "staticFilters": {
           "title": "Filtres statiques",
@@ -607,6 +646,11 @@
           }
         }
       }
+    },
+    "nbGroups": {
+      "type": "integer",
+      "title": "Nombre maximal de groupes",
+      "default": 10
     },
     "size": {
       "type": "integer",
