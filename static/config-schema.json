@@ -196,13 +196,13 @@
             "oneOf": [
               {"const": "BrBG", "title": "Marron-Bleu-Vert"},
               {"const": "PRGn", "title": "Violet-Vert"},
-              {"const": "PiYG", "title": "Rose-Vaune-Vert"},
+              {"const": "PiYG", "title": "Rose-Jaune-Vert"},
               {"const": "PuOr", "title": "Orange-Violet"},
               {"const": "RdBu", "title": "Rouge-Bleu"},
               {"const": "RdGy", "title": "Rouge-Gris"},
               {"const": "RdYlBu", "title": "Rouge-Jaune-Bleu"},
-              {"const": "RdYlBu", "title": "Rouge-jaune-Vert"},
-              {"const": "RdYlBu", "title": "Spectral"}
+              {"const": "RdYlGn", "title": "Rouge-jaune-Vert"},
+              {"const": "Spectral", "title": "Spectral"}
             ],
             "default": "RdYlGn",
             "title": "Nom"
