@@ -1,6 +1,7 @@
 const cors = require('cors')
 const webpack = require('webpack')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const pjson = require('./package.json')
 
 module.exports = {
   // No server side rendering in our case, the deployment target is some static web server.
@@ -11,6 +12,8 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'version', name: 'version', content: process.env.NODE_ENV === 'development' ? 'development' : pjson.version },
+      { hid: 'application', name: 'application-name', content: 'Charts' },
       { hid: 'description', name: 'description', content: 'Une application simple de graphiques pour data-fair.' }
     ],
     link: [
