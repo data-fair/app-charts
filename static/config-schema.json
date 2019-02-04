@@ -1,147 +1,229 @@
 {
   "type": "object",
-  "required": ["datasets"],
-  "properties": {
-    "datasets": {
-      "type": "array",
-      "items": [{
-        "title": "Jeu de données",
-        "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
-        "type": "object",
-        "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&owner={context.owner.type}:{context.owner.id}",
-        "x-itemsProp": "results",
-        "x-itemTitle": "title",
-        "x-itemKey": "href",
-        "properties": {
-          "href": {"type": "string"},
-          "title": {"type": "string"},
-          "id": {"type": "string"}
-        }
-      }]
-    }
-  },
-  "dependencies": {
-    "datasets.0.id": {
-      "required": ["chart", "colorscheme"],
+  "required": [
+    "datasets"
+  ],
+  "allOf": [
+    {
+      "title": "Source de données",
       "properties": {
-        "title": {
-          "type": "string",
-          "title": "Titre"
+        "datasets": {
+          "$ref": "#/definitions/datasets"
         },
-        "chart": {
+        "staticFilters": {
+          "$ref": "#/definitions/filters"
+        }
+      }
+    },
+    {
+      "title": "Préparation des données",
+      "properties": {
+        "dataType": {
           "type": "object",
-          "oneOf": [{"$ref": "#/definitions/linesBasedChart"}, {"$ref": "#/definitions/countBasedChart"}, {"$ref": "#/definitions/metricBasedChart"}]
+          "required": [
+            "type"
+          ],
+          "default": {
+            "type": "linesBased"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/linesBasedData"
+            },
+            {
+              "$ref": "#/definitions/countBasedChart"
+            },
+            {
+              "$ref": "#/definitions/metricBasedChart"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Présentation",
+      "properties": {
+        "chartType": {
+          "$ref": "#/definitions/chartType"
         },
-        "colorscheme": {"$ref": "#/definitions/colorscheme"},
-        "filters": {"$ref": "#/definitions/filters"}
+        "colorscheme": {
+          "$ref": "#/definitions/colorscheme"
+        },
+        "dynamicFilters": {
+          "$ref": "#/definitions/dynamicFilters"
+        }
       }
     }
-  },
+  ],
   "definitions": {
-    "linesBasedChart": {
+    "datasets": {
+      "type": "array",
+      "items": [
+        {
+          "title": "Jeu de données",
+          "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
+          "type": "object",
+          "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&owner={context.owner.type}:{context.owner.id}",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href",
+          "properties": {
+            "href": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "linesBasedData": {
       "title": "valeurs simples",
       "type": "object",
-      "required": ["sortBy", "sortOrder", "size", "render", "labelsField"],
+      "required": [
+        "sortBy",
+        "sortOrder",
+        "size",
+        "render",
+        "labelsField",
+        "valuesFields"
+      ],
       "properties": {
         "type": {
-          "title": "Préparation des données",
-          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n  - **valeurs simples**: les valeurs sont lues directement depuis chaque ligne du jeu de données.\n  - **comptage sur groupes de ligne**: les lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n  - **calculs sur groupes de lignes**: les lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+          "title": "Type de préparation des données",
+          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n  - **valeurs simples**: les valeurs sont lues directement depuis chaque élément du jeu de données.\n  - **grouper les éléments et les compter**: les lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n  - **grouper les éléments et calculer des valeurs dans ces groupes**: les lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
           "const": "linesBased"
         },
         "labelsField": {
           "type": "object",
-          "title": "Libellés",
-          "description": "Choisissez la colonne contenant les libellés à présenter en légende.",
+          "title": "Colonne de libellés",
+          "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
           "x-fromUrl": "{datasets.0.href}/schema",
           "x-itemTitle": "label",
           "x-itemKey": "key",
           "default": {
             "key": "_i"
           }
-        }
-      },
-      "dependencies": {
-        "labelsField": {
-          "properties": {
-            "valuesFields": {
-              "type": "array",
-              "title": "Valeurs",
-              "description": "Choisissez une ou plusieurs colonnes de valeurs numériques à présenter dans le graphique.",
-              "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
-              "x-itemTitle": "label",
-              "x-itemKey": "key",
-              "items": {
-                "type": "object"
-              }
-            }
+        },
+        "valuesFields": {
+          "type": "array",
+          "title": "Colonnes de valeurs",
+          "description": "Choisissez une ou plusieurs colonnes de valeurs numériques à présenter dans le graphique. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en ordonnée.",
+          "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+          "x-itemTitle": "label",
+          "x-itemKey": "key",
+          "minItems": 1,
+          "items": {
+            "type": "object"
           }
         },
-        "valuesFields.0": {
-          "properties": {
-            "size": {"$ref": "#/definitions/size"},
-            "sortBy": {"$ref": "#/definitions/sortBy"}
-          }
+        "size": {
+          "$ref": "#/definitions/size"
         },
         "sortBy": {
-          "properties": {
-            "sortOrder": {"$ref": "#/definitions/sortOrder"},
-            "render": {"$ref": "#/definitions/renderLines"}
-          }
+          "$ref": "#/definitions/sortBy"
+        },
+        "sortOrder": {
+          "$ref": "#/definitions/sortOrder"
+        },
+        "render": {
+          "$ref": "#/definitions/renderLines"
         }
       }
     },
     "countBasedChart": {
-      "title": "comptage sur groupes de lignes",
+      "title": "grouper les éléments et les compter",
       "type": "object",
-      "required": ["groupBy", "sort", "render"],
       "properties": {
         "type": {
           "const": "countBased"
-        },
-        "groupBy": {"$ref": "#/definitions/groupBy"}
+        }
       },
-      "dependencies": {
-        "groupBy.field.key": {
+      "allOf": [
+        {
+          "title": "1er niveau de groupes",
+          "description": "Dans le cas d'un diagramme en ligne, ce 1er niveau de groupes va correspondre aux valeurs présentées en abscisse.",
+          "required": [
+            "groupBy",
+            "sort"
+          ],
           "properties": {
-            "sort": {"$ref": "#/definitions/sortCount"},
-            "render": {"$ref": "#/definitions/renderAgg"}
+            "groupBy": {
+              "$ref": "#/definitions/groupBy"
+            },
+            "sort": {
+              "$ref": "#/definitions/sortCount"
+            }
+          }
+        },
+        {
+          "title": "2ème niveau de groupes",
+          "description": "Ce 2ème niveau est optionnel. Dans le cas d'un diagramme en ligne il s'agira du critère de séparation des lignes en séries multiples.",
+          "properties": {
+            "secondGroupBy": {
+              "$ref": "#/definitions/groupBy"
+            }
           }
         }
-      }
+      ]
     },
     "metricBasedChart": {
-      "title": "calculs sur groupes de lignes",
+      "title": "grouper les éléments et calculer des valeurs dans ces groupes",
       "type": "object",
-      "required": ["valueField", "metricType", "groupBy", "sort", "render"],
+      "required": [
+        "valueField",
+        "metricType",
+        "groupBy",
+        "sort"
+      ],
       "properties": {
         "type": {
           "const": "metricBased"
-        },
-        "groupBy": {"$ref": "#/definitions/groupBy"}
-
+        }
       },
-      "dependencies": {
-        "groupBy.field.key": {
+      "allOf": [
+        {
+          "title": "1er niveau de groupes",
+          "description": "Dans le cas d'un diagramme en ligne, ce 1er niveau de groupes va correspondre aux valeurs présentées en abscisse.",
           "properties": {
-            "metricType": {"$ref": "#/definitions/metricType"}
+            "groupBy": {
+              "$ref": "#/definitions/groupBy"
+            },
+            "sort": {
+              "$ref": "#/definitions/sortMetric"
+            }
           }
         },
-        "metricType": {
+        {
+          "title": "2ème niveau de groupes",
+          "description": "Ce 2ème niveau est optionnel. Dans le cas d'un diagramme en ligne il s'agira du critère de séparation des lignes en séries multiples.",
           "properties": {
-            "valueField": {"$ref": "#/definitions/valueFieldAgg"}
+            "secondGroupBy": {
+              "$ref": "#/definitions/groupBy"
+            }
           }
         },
-        "valueField.key": {
+        {
+          "title": "Calcul à effectuer",
+          "description": "Le résultat de ce calcul pour chaque groupe sera utilisé comme valeur numérique à visualiser. Dans le cas d'un diagramme en ligne il s'agira des valeurs présentées en ordonnée.",
           "properties": {
-            "sort": {"$ref": "#/definitions/sortMetric"},
-            "render": {"$ref": "#/definitions/renderAgg"}
+            "metricType": {
+              "$ref": "#/definitions/metricType"
+            },
+            "valueField": {
+              "$ref": "#/definitions/valueFieldAgg"
+            }
           }
         }
-      }
+      ]
     },
     "valueFieldAgg": {
       "type": "object",
-      "title": "Valeurs",
+      "title": "Colonne de valeurs",
       "description": "La colonne contenant la valeur numérique sur laquelle effectuer un calcul.",
       "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
       "x-itemTitle": "label",
@@ -159,168 +241,336 @@
     },
     "colorscheme": {
       "type": "object",
-      "title": "Palette de couleurs",
       "default": {
         "type": "qualitative"
       },
-      "oneOf": [{
-        "title": "Qualitative",
-        "required": ["name"],
-        "properties": {
-          "type": {
-            "const": "qualitative",
-            "title": "Type",
-            "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d’une valeur faible à une valeur forte (gradient)"
-          },
-          "name": {
-            "type": "string",
-            "oneOf": [
-              {"const": "Accent", "title": "Accent"},
-              {"const": "Dark2", "title": "Foncé"},
-              {"const": "Paired", "title": "Paires"},
-              {"const": "Set1", "title": "Ensemble 1"},
-              {"const": "Set2", "title": "Ensemble 2"}
-            ],
-            "default": "Dark2",
-            "title": "Nom"
+      "oneOf": [
+        {
+          "title": "Qualitative",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "type": {
+              "const": "qualitative",
+              "title": "Type de la palette",
+              "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d’une valeur faible à une valeur forte (gradient)"
+            },
+            "name": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "Accent",
+                  "title": "Accent"
+                },
+                {
+                  "const": "Dark2",
+                  "title": "Foncé"
+                },
+                {
+                  "const": "Paired",
+                  "title": "Paires"
+                },
+                {
+                  "const": "Set1",
+                  "title": "Ensemble 1"
+                },
+                {
+                  "const": "Set2",
+                  "title": "Ensemble 2"
+                }
+              ],
+              "default": "Dark2",
+              "title": "Nom de la palette"
+            }
           }
-        }
-      }, {
-        "title": "Divergente",
-        "properties": {
-          "type": {
-            "const": "diverging"
-          },
-          "name": {
-            "type": "string",
-            "oneOf": [
-              {"const": "BrBG", "title": "Marron-Bleu-Vert"},
-              {"const": "PRGn", "title": "Violet-Vert"},
-              {"const": "PiYG", "title": "Rose-Jaune-Vert"},
-              {"const": "PuOr", "title": "Orange-Violet"},
-              {"const": "RdBu", "title": "Rouge-Bleu"},
-              {"const": "RdGy", "title": "Rouge-Gris"},
-              {"const": "RdYlBu", "title": "Rouge-Jaune-Bleu"},
-              {"const": "RdYlGn", "title": "Rouge-jaune-Vert"},
-              {"const": "Spectral", "title": "Spectral"}
-            ],
-            "default": "RdYlGn",
-            "title": "Nom"
-          },
-          "reverse": {
-            "type": "boolean",
-            "title": "Inverser"
-          }
-        }
-      }, {
-        "title": "Séquentielle",
-        "properties": {
-          "type": {
-            "const": "sequential"
-          },
-          "name": {
-            "type": "string",
-            "oneOf": [
-              {"const": "Blues", "title": "Bleu"},
-              {"const": "BuGn", "title": "Bleu-Vert"},
-              {"const": "BuPu", "title": "Bleu-Violet"},
-              {"const": "GnBu", "title": "Vert-Bleu"},
-              {"const": "Greens", "title": "Vert"},
-              {"const": "Greys", "title": "Gris"},
-              {"const": "OrRd", "title": "Orange-Rouge"},
-              {"const": "Oranges", "title": "Orange"},
-              {"const": "PuBu", "title": "Violet-Bleu"},
-              {"const": "PuBuGn", "title": "Violet-Bleu-Vert"},
-              {"const": "PuRd", "title": "Violet-Rouge"},
-              {"const": "Purples", "title": "Violet"},
-              {"const": "RdPu", "title": "Rouge-Violet"},
-              {"const": "Reds", "title": "Rouge"},
-              {"const": "YlGn", "title": "Jaune-Vert"},
-              {"const": "YlGnBu", "title": "Jaune-Vert-Bleu"},
-              {"const": "YlOrBr", "title": "Jaune-Orange-Marron"},
-              {"const": "Oranges", "title": "Orange"},
-              {"const": "YlOrRd", "title": "Jaune-Orange-Marron"}
-            ],
-            "default": "YlOrRd",
-            "title": "Nom"
-          },
-          "reverse": {
-            "type": "boolean",
-            "title": "Inverser"
-          },
-          "subset": {
-            "type": "string",
-            "title": "Sous-ensemble",
-            "oneOf": [
-              {"const": "all", "title": "Route"},
-              {"const": "light", "title": "Clair"},
-              {"const": "dark", "title": "Foncé"}
-            ],
-            "default": "Tout"
-          }
-        }
-      }]
-    },
-    "groupBy": {
-      "type": "object",
-      "required": ["type"],
-      "oneOf": [{
-        "title": "valeurs exactes d'une colonne",
-        "required": ["field"],
-        "properties": {
-          "type": { "const": "value", "title": "Grouper par" },
-          "field": {"$ref": "#/definitions/groupField"}
         },
-        "dependencies": {
-          "field.key": {
-            "properties": {
-              "size": {"$ref": "#/definitions/nbGroups"}
+        {
+          "title": "Divergente",
+          "properties": {
+            "type": {
+              "const": "diverging"
+            },
+            "name": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "BrBG",
+                  "title": "Marron-Bleu-Vert"
+                },
+                {
+                  "const": "PRGn",
+                  "title": "Violet-Vert"
+                },
+                {
+                  "const": "PiYG",
+                  "title": "Rose-Jaune-Vert"
+                },
+                {
+                  "const": "PuOr",
+                  "title": "Orange-Violet"
+                },
+                {
+                  "const": "RdBu",
+                  "title": "Rouge-Bleu"
+                },
+                {
+                  "const": "RdGy",
+                  "title": "Rouge-Gris"
+                },
+                {
+                  "const": "RdYlBu",
+                  "title": "Rouge-Jaune-Bleu"
+                },
+                {
+                  "const": "RdYlGn",
+                  "title": "Rouge-jaune-Vert"
+                },
+                {
+                  "const": "Spectral",
+                  "title": "Spectral"
+                }
+              ],
+              "default": "RdYlGn",
+              "title": "Nom de la palette"
+            },
+            "reverse": {
+              "type": "boolean",
+              "title": "Inverser"
+            }
+          }
+        },
+        {
+          "title": "Séquentielle",
+          "properties": {
+            "type": {
+              "const": "sequential"
+            },
+            "name": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "Blues",
+                  "title": "Bleu"
+                },
+                {
+                  "const": "BuGn",
+                  "title": "Bleu-Vert"
+                },
+                {
+                  "const": "BuPu",
+                  "title": "Bleu-Violet"
+                },
+                {
+                  "const": "GnBu",
+                  "title": "Vert-Bleu"
+                },
+                {
+                  "const": "Greens",
+                  "title": "Vert"
+                },
+                {
+                  "const": "Greys",
+                  "title": "Gris"
+                },
+                {
+                  "const": "OrRd",
+                  "title": "Orange-Rouge"
+                },
+                {
+                  "const": "Oranges",
+                  "title": "Orange"
+                },
+                {
+                  "const": "PuBu",
+                  "title": "Violet-Bleu"
+                },
+                {
+                  "const": "PuBuGn",
+                  "title": "Violet-Bleu-Vert"
+                },
+                {
+                  "const": "PuRd",
+                  "title": "Violet-Rouge"
+                },
+                {
+                  "const": "Purples",
+                  "title": "Violet"
+                },
+                {
+                  "const": "RdPu",
+                  "title": "Rouge-Violet"
+                },
+                {
+                  "const": "Reds",
+                  "title": "Rouge"
+                },
+                {
+                  "const": "YlGn",
+                  "title": "Jaune-Vert"
+                },
+                {
+                  "const": "YlGnBu",
+                  "title": "Jaune-Vert-Bleu"
+                },
+                {
+                  "const": "YlOrBr",
+                  "title": "Jaune-Orange-Marron"
+                },
+                {
+                  "const": "Oranges",
+                  "title": "Orange"
+                },
+                {
+                  "const": "YlOrRd",
+                  "title": "Jaune-Orange-Marron"
+                }
+              ],
+              "default": "YlOrRd",
+              "title": "Nom de la palette"
+            },
+            "reverse": {
+              "type": "boolean",
+              "title": "Inverser"
+            },
+            "subset": {
+              "type": "string",
+              "title": "Sous-ensemble",
+              "oneOf": [
+                {
+                  "const": "all",
+                  "title": "Route"
+                },
+                {
+                  "const": "light",
+                  "title": "Clair"
+                },
+                {
+                  "const": "dark",
+                  "title": "Foncé"
+                }
+              ],
+              "default": "Tout"
             }
           }
         }
-      }, {
-        "title": "intervalles d'une colonne de type date",
-        "required": ["field", "interval"],
-        "properties": {
-          "type": { "const": "date" },
-          "field": {"$ref": "#/definitions/groupFieldDate"},
-          "interval": {
-            "type": "string",
-            "title": "Taille des intervalles",
-            "default": "day",
-            "oneOf": [
-              {"const": "hour", "title": "Heure"},
-              {"const": "day", "title": "Jour"},
-              {"const": "week", "title": "Semaine"},
-              {"const": "month", "title": "Mois"},
-              {"const": "year", "title": "Année"}
-            ]
+      ]
+    },
+    "groupBy": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "default": {
+        "type": "value"
+      },
+      "oneOf": [
+        {
+          "title": "valeurs exactes d'une colonne",
+          "properties": {
+            "type": {
+              "const": "value",
+              "title": "Grouper par"
+            },
+            "field": {
+              "$ref": "#/definitions/groupField"
+            }
+          },
+          "dependencies": {
+            "field.key": {
+              "properties": {
+                "size": {
+                  "$ref": "#/definitions/nbGroups"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "intervalles d'une colonne de type date",
+          "required": [
+            "field",
+            "interval"
+          ],
+          "properties": {
+            "type": {
+              "const": "date"
+            },
+            "field": {
+              "$ref": "#/definitions/groupFieldDate"
+            },
+            "interval": {
+              "type": "string",
+              "title": "Taille des intervalles",
+              "default": "day",
+              "oneOf": [
+                {
+                  "const": "hour",
+                  "title": "Heure"
+                },
+                {
+                  "const": "day",
+                  "title": "Jour"
+                },
+                {
+                  "const": "week",
+                  "title": "Semaine"
+                },
+                {
+                  "const": "month",
+                  "title": "Mois"
+                },
+                {
+                  "const": "year",
+                  "title": "Année"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "intervalles d'une colonne numérique",
+          "required": [
+            "field",
+            "interval"
+          ],
+          "properties": {
+            "type": {
+              "const": "number"
+            },
+            "field": {
+              "$ref": "#/definitions/groupFieldNumber"
+            },
+            "interval": {
+              "type": "integer",
+              "title": "Taille des intervalles",
+              "default": 100
+            }
           }
         }
-      }, {
-        "title": "intervalles d'une colonne numérique",
-        "required": ["field", "interval"],
-        "properties": {
-          "type": { "const": "number" },
-          "field": {"$ref": "#/definitions/groupFieldNumber"},
-          "interval": {
-            "type": "integer",
-            "title": "Taille des intervalles",
-            "default": 100
-          }
-        }
-      }]
+      ]
     },
     "metricType": {
       "type": "string",
-      "title": "Calcul à appliquer",
+      "title": "Type de calcul",
       "default": "sum",
       "oneOf": [
-        {"const": "count", "title": "nombre d'éléments dans le groupe"},
-        {"const": "avg", "title": "moyenne"},
-        {"const": "min", "title": "valeur minimale"},
-        {"const": "max", "title": "valeur maximale"},
-        {"const": "sum", "title": "somme"}
+        {
+          "const": "avg",
+          "title": "moyenne"
+        },
+        {
+          "const": "min",
+          "title": "valeur minimale"
+        },
+        {
+          "const": "max",
+          "title": "valeur maximale"
+        },
+        {
+          "const": "sum",
+          "title": "somme"
+        }
       ]
     },
     "sortMetric": {
@@ -328,11 +578,26 @@
       "title": "Trier par",
       "default": "-metric",
       "oneOf": [
-        {"const": "-metric", "title": "le résultat du calcul (descendant)"},
-        {"const": "metric", "title": "le résultat du calcul (ascendant)"},
-        {"const": "-count", "title": "le nombre d'éléments dans le groupe (descendant)"},
-        {"const": "key", "title": "la clé du groupe (ascendant)"},
-        {"const": "-key", "title": "la clé du groupe (descendant)"}
+        {
+          "const": "-metric",
+          "title": "le résultat du calcul (descendant)"
+        },
+        {
+          "const": "metric",
+          "title": "le résultat du calcul (ascendant)"
+        },
+        {
+          "const": "-count",
+          "title": "le nombre d'éléments dans le groupe (descendant)"
+        },
+        {
+          "const": "key",
+          "title": "la clé du groupe (ascendant)"
+        },
+        {
+          "const": "-key",
+          "title": "la clé du groupe (descendant)"
+        }
       ]
     },
     "sortCount": {
@@ -340,9 +605,18 @@
       "title": "Trier par",
       "default": "-count",
       "oneOf": [
-        {"const": "-count", "title": "le nombre d'éléments dans le groupe (descendant)"},
-        {"const": "key", "title": "la clé du groupe (ascendant)"},
-        {"const": "-key", "title": "la clé du groupe (descendant)"}
+        {
+          "const": "-count",
+          "title": "le nombre d'éléments dans le groupe (descendant)"
+        },
+        {
+          "const": "key",
+          "title": "la clé du groupe (ascendant)"
+        },
+        {
+          "const": "-key",
+          "title": "la clé du groupe (descendant)"
+        }
       ]
     },
     "sortOrder": {
@@ -350,301 +624,183 @@
       "title": "Ordre",
       "default": "asc",
       "oneOf": [
-        {"const": "asc", "title": "Ascendant"},
-        {"const": "desc", "title": "Descendant"}
+        {
+          "const": "asc",
+          "title": "Ascendant"
+        },
+        {
+          "const": "desc",
+          "title": "Descendant"
+        }
       ]
     },
-    "renderLines": {
+    "chartType": {
       "type": "object",
       "default": {
-        "type": "multi-lines"
+        "type": "line"
       },
-      "required": ["type"],
-      "oneOf": [{
-        "title": "Histogramme empilé",
-        "properties": {
-          "type": {
-            "const": "stacked-bar",
-            "title": "Type de visualisation"
-          },
-          "horizontal": {"$ref": "#/definitions/horizontal"}
-        }
-      }, {
-        "title": "Histogramme groupé",
-        "properties": {
-          "type": {
-            "const": "grouped-bar"
-          },
-          "horizontal": {"$ref": "#/definitions/horizontal"}
-        }
-      }, {
-        "title": "Lignes",
-        "properties": {
-          "type": {
-            "const": "multi-lines"
-          }
-        }
-      }, {
-        "title": "Aires",
-        "properties": {
-          "type": {
-            "const": "stacked-area"
-          }
-        }
-      }, {
-        "title": "Camembert",
-        "properties": {
-          "type": {
-            "const": "pie"
-          }
-        }
-      }]
-    },
-    "renderAgg": {
-      "type": "object",
-      "title": "Présentation",
-      "default": {
-        "type": "bar"
-      },
-      "required": ["type"],
-      "oneOf": [{
-        "title": "Histogramme",
-        "properties": {
-          "type": {
-            "const": "bar",
-            "title": "Type de visualisation"
-          },
-          "horizontal": {"$ref": "#/definitions/horizontal"}
-        }
-      }, {
-        "title": "Histogramme empilé",
-        "required": ["secondGroupByField"],
-        "properties": {
-          "type": {
-            "const": "stacked-bar"
-          },
-          "horizontal": {"$ref": "#/definitions/horizontal"},
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer les piles par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "secondSize": {
-            "type": "integer",
-            "title": "Nombre maximal d'éléments dans la pile",
-            "default": 10
-          }
-        }
-      }, {
-        "title": "Histogramme groupé",
-        "required": ["secondGroupByField"],
-        "properties": {
-          "type": {
-            "const": "grouped-bar"
-          },
-          "horizontal": {"$ref": "#/definitions/horizontal"},
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer les groupes par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "secondSize": {
-            "type": "integer",
-            "title": "Nombre maximal de groupes",
-            "default": 10
-          }
-        }
-      }, {
-        "title": "Ligne",
-        "properties": {
-          "type": {
-            "const": "line"
-          }
-        }
-      }, {
-        "title": "Lignes multiples",
-        "required": ["secondGroupByField"],
-        "properties": {
-          "type": {
-            "const": "multi-lines"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer les lignes par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "showTotal": {
-            "type": "boolean",
-            "title": "Montrer le total",
-            "default": true
-          },
-          "secondSize": {
-            "type": "integer",
-            "title": "Nombre maximal de lignes",
-            "default": 10
-          }
-        }
-      }, {
-        "title": "Aire",
-        "properties": {
-          "type": {
-            "const": "area"
-          }
-        }
-      }, {
-        "title": "Aires empilées",
-        "required": ["secondGroupByField"],
-        "properties": {
-          "type": {
-            "const": "stacked-area"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer les aires par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "secondSize": {
-            "type": "integer",
-            "title": "Nombre maximal d'aires empilées",
-            "default": 10
-          }
-        }
-      }, {
-        "title": "Radar",
-        "properties": {
-          "type": {
-            "const": "radar"
-          }
-        }
-      }, {
-        "title": "Radars à lignes multiples",
-        "required": ["secondGroupByField"],
-        "properties": {
-          "type": {
-            "const": "multi-radars"
-          },
-          "secondGroupByField": {
-            "type": "object",
-            "title":"Séparer les lignes par les valeurs de cette colonne",
-            "x-fromUrl": "{datasets.0.href}/schema?enum=true",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "secondSize": {
-            "type": "integer",
-            "title": "Nombre maximal de lignes",
-            "default": 10
-          }
-        }
-      }, {
-        "title": "Camembert",
-        "properties": {
-          "type": {
-            "const": "pie"
-          }
-        }
-      }]
-    },
-    "filters": {
-      "type": "object",
-      "title": "Filtrage",
-      "properties": {
-        "staticFilters": {
-          "title": "Filtres statiques",
-          "description": "Ces filtres seront appliquées à tous les affichages de ce graphique de manière transparente pour l'utilisateur",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "default": {
-              "type": "in"
+      "required": [
+        "type"
+      ],
+      "oneOf": [
+        {
+          "title": "Histogramme",
+          "properties": {
+            "type": {
+              "const": "bar",
+              "title": "Type de visualisation"
             },
-            "required": ["type"],
-            "oneOf": [{
-              "title": "Restreindre à des valeurs",
-              "properties": {
-                "type": {
-                  "const": "in",
-                  "title": "Type de filtre"
-                },
-                "required": ["field", "values"],
-                "field": {"$ref": "#/definitions/filterField"},
-                "values": {
-                  "type": "array",
-                  "title": "Valeurs",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }, {
-              "title": "Restreindre à un interval de valeurs",
-              "properties": {
-                "type": {
-                  "const": "interval"
-                },
-                "required": ["field", "values"],
-                "field": {"$ref": "#/definitions/filterField"},
-                "minValue": {
-                  "type": "string",
-                  "title": "Valeur min"
-                },
-                "maxValue": {
-                  "type": "string",
-                  "title": "Valeur max"
-                }
-              }
-            }, {
-              "title": "Exclure des valeurs",
-              "properties": {
-                "type": {
-                  "const": "out"
-                },
-                "required": ["field", "values"],
-                "field": {"$ref": "#/definitions/filterField"},
-                "values": {
-                  "type": "array",
-                  "title": "Valeurs à exclure",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }]
+            "horizontal": {
+              "$ref": "#/definitions/horizontal"
+            },
+            "split": {
+              "$ref": "#/definitions/split"
+            }
           }
         },
-        "dynamicFilters": {
-          "title": "Filtres dynamiques",
-          "description": "Ces filtres seront proposés à l'utilisateur sous forme de formulaire en haut du graphique",
-          "type": "array",
-          "items": {
+        {
+          "title": "Lignes",
+          "properties": {
+            "type": {
+              "const": "line"
+            }
+          }
+        },
+        {
+          "title": "Aires",
+          "properties": {
+            "type": {
+              "const": "area"
+            }
+          }
+        },
+        {
+          "title": "Radar",
+          "properties": {
+            "type": {
+              "const": "radar"
+            }
+          }
+        },
+        {
+          "title": "Camembert",
+          "properties": {
+            "type": {
+              "const": "pie"
+            }
+          }
+        }
+      ]
+    },
+    "dynamicFilters": {
+      "title": "Filtres interactifs",
+      "description": "Ces filtres seront proposés à l'utilisateur sous forme de formulaire en haut du graphique",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "field"
+        ],
+        "properties": {
+          "field": {
             "type": "object",
-            "required": ["field"],
+            "title": "Colonne de filtre",
+            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-itemTitle": "label",
+            "x-itemKey": "key"
+          },
+          "defaultValues": {
+            "type": "array",
+            "title": "Valeurs par défaut",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "filters": {
+      "title": "Filtres",
+      "description": "Ces filtres seront appliquées à tous les affichages de ce graphique de manière transparente pour l'utilisateur",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "default": {
+          "type": "in"
+        },
+        "required": [
+          "type"
+        ],
+        "oneOf": [
+          {
+            "title": "Restreindre à des valeurs",
             "properties": {
-              "field": {
-                "type": "object",
-                "title": "Colonne de filtre",
-                "x-fromUrl": "{datasets.0.href}/schema",
-                "x-itemTitle": "label",
-                "x-itemKey": "key"
+              "type": {
+                "const": "in",
+                "title": "Type de filtre"
               },
-              "defaultValues": {
+              "required": [
+                "field",
+                "values"
+              ],
+              "field": {
+                "$ref": "#/definitions/filterField"
+              },
+              "values": {
                 "type": "array",
-                "title": "Valeurs par défaut",
+                "title": "Valeurs",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "title": "Restreindre à un interval de valeurs",
+            "properties": {
+              "type": {
+                "const": "interval"
+              },
+              "required": [
+                "field",
+                "values"
+              ],
+              "field": {
+                "$ref": "#/definitions/filterField"
+              },
+              "minValue": {
+                "type": "string",
+                "title": "Valeur min"
+              },
+              "maxValue": {
+                "type": "string",
+                "title": "Valeur max"
+              }
+            }
+          },
+          {
+            "title": "Exclure des valeurs",
+            "properties": {
+              "type": {
+                "const": "out"
+              },
+              "required": [
+                "field",
+                "values"
+              ],
+              "field": {
+                "$ref": "#/definitions/filterField"
+              },
+              "values": {
+                "type": "array",
+                "title": "Valeurs à exclure",
                 "items": {
                   "type": "string"
                 }
               }
             }
           }
-        }
+        ]
       }
     },
     "nbGroups": {
@@ -657,23 +813,23 @@
       "title": "Nombre maximal d'éléments",
       "default": 10
     },
-    "groupField":  {
+    "groupField": {
       "type": "object",
-      "title":"Grouper en fonction de cette colonne",
+      "title": "Grouper en fonction de cette colonne",
       "x-fromUrl": "{datasets.0.href}/schema",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
-    "groupFieldDate":  {
+    "groupFieldDate": {
       "type": "object",
-      "title":"Grouper en fonction de cette colonne",
+      "title": "Grouper en fonction de cette colonne",
       "x-fromUrl": "{datasets.0.href}/schema?format=date,date-time",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
-    "groupFieldNumber":  {
+    "groupFieldNumber": {
       "type": "object",
-      "title":"Grouper en fonction de cette colonne",
+      "title": "Grouper en fonction de cette colonne",
       "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
       "x-itemTitle": "label",
       "x-itemKey": "key"
@@ -688,6 +844,11 @@
     "horizontal": {
       "type": "boolean",
       "title": "Inverser l'affichage"
+    },
+    "split": {
+      "type": "boolean",
+      "title": "Séparer les barres",
+      "description": "Cette option n'aura d'effet que si vous avez renseigné le 2ème niveau de groupes dans la section de préparation des données."
     }
   }
 }

@@ -27,10 +27,10 @@ export default {
     ...mapGetters(['config']),
     ...mapState(['filters']),
     dynamicFilter() {
-      return this.config.filters.dynamicFilters[this.indice]
+      return this.config.dynamicFilters[this.indice]
     },
     higherFilters() {
-      return this.config.filters.dynamicFilters.slice(0, this.indice)
+      return this.config.dynamicFilters.slice(0, this.indice)
     }
   },
   watch: {
@@ -55,7 +55,7 @@ export default {
     async fetchItems() {
       if (this.loading) return
       this.loading = true
-      const qs = filters2qs(this.config.filters.staticFilters.concat(this.higherFilters))
+      const qs = filters2qs(this.config.staticFilters.concat(this.higherFilters))
       this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + this.dynamicFilter.field.key, { params: {
         size: 10,
         qs,

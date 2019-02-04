@@ -8,8 +8,8 @@ function formatValue(value, maxLength) {
 }
 
 function getXAxes(config) {
-  if (config.chart.groupBy && config.chart.groupBy.type === 'date') {
-    return { type: 'time', time: { unit: config.chart.groupBy.interval } }
+  if (config.dataType.groupBy && config.dataType.groupBy.type === 'date') {
+    return { type: 'time', time: { unit: config.dataType.groupBy.interval } }
   } else {
     return {
       ticks: {
@@ -40,7 +40,7 @@ const tooltips = {
       return formatValue(value, 50)
     },
     label(tooltipItem, data) {
-      const value = tooltipItem.yLabel
+      const value = tooltipItem.yLabel || data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
       let label
       if (tooltipItem.datasetIndex !== undefined) {
         label = data.datasets[tooltipItem.datasetIndex].label
@@ -61,7 +61,7 @@ function getStackedTooltips(data) {
 const chartOptions = {}
 chartOptions.bar = (config, data) => {
   return {
-    type: config.chart.render.horizontal ? 'horizontalBar' : 'bar',
+    type: config.chartType.horizontal ? 'horizontalBar' : 'bar',
     data,
     options: {
       title: { display: true, text: chartTitle(config) },
@@ -75,9 +75,9 @@ chartOptions.bar = (config, data) => {
   }
 }
 
-chartOptions['stacked-bar'] = (config, data) => {
+chartOptions['multi-bar'] = (config, data) => {
   return {
-    type: config.chart.render.horizontal ? 'horizontalBar' : 'bar',
+    type: config.chartType.horizontal ? 'horizontalBar' : 'bar',
     data,
     options: {
       title: { display: true, text: chartTitle(config) },
@@ -98,7 +98,7 @@ chartOptions['stacked-bar'] = (config, data) => {
 
 chartOptions['grouped-bar'] = (config, data) => {
   return {
-    type: config.chart.render.horizontal ? 'horizontalBar' : 'bar',
+    type: config.chartType.horizontal ? 'horizontalBar' : 'bar',
     data,
     options: {
       title: { display: true, text: chartTitle(config) },
@@ -122,6 +122,10 @@ chartOptions.pie = (config, data) => {
   }
 }
 
+chartOptions['multi-pie'] = (config, data) => {
+  return {}
+}
+
 chartOptions.line = (config, data) => {
   data.datasets.forEach(dataset => {
     dataset.fill = false
@@ -141,7 +145,7 @@ chartOptions.line = (config, data) => {
   }
 }
 
-chartOptions['multi-lines'] = (config, data) => {
+chartOptions['multi-line'] = (config, data) => {
   data.datasets.forEach(dataset => {
     dataset.fill = false
   })
@@ -178,7 +182,7 @@ chartOptions.area = (config, data) => {
   }
 }
 
-chartOptions['stacked-area'] = (config, data) => {
+chartOptions['multi-area'] = (config, data) => {
   data.datasets.forEach(dataset => {
     // dataset.backgroundColor = Color(dataset.backgroundColor).lightenByRatio(0.05).toCSS()
     dataset.borderColor = Color(dataset.borderColor).darkenByRatio(0.25).toCSS()
@@ -213,16 +217,12 @@ chartOptions.radar = (config, data) => {
     options: {
       legend: { display: false },
       title: { display: true, text: chartTitle(config) },
-      scales: {
-        xAxes: [getXAxes(config)],
-        yAxes: [getYAxes(config)]
-      },
       tooltips
     }
   }
 }
 
-chartOptions['multi-radars'] = (config, data) => {
+chartOptions['multi-radar'] = (config, data) => {
   data.datasets.forEach(dataset => {
     dataset.fill = false
   })
@@ -231,10 +231,6 @@ chartOptions['multi-radars'] = (config, data) => {
     data,
     options: {
       title: { display: true, text: chartTitle(config) },
-      scales: {
-        xAxes: [getXAxes(config)],
-        yAxes: [getYAxes(config)]
-      },
       tooltips
     }
   }
@@ -250,18 +246,23 @@ const metricTypes = [
 
 function chartTitle(config) {
   if (config.title) return config.title
-  if (config.chart.type === 'linesBased') return ''
-  if (config.chart.type === 'countBased') return 'Nombre de documents'
-  const metricType = metricTypes.find(m => m.value === config.chart.metricType)
-  let label = metricType.text + ' de ' + config.chart.valueField.label
-  if (config.chart.groupBy && config.chart.groupBy.field) label += ' par ' + config.chart.groupBy.field.label
-  if (config.chart.secondGroupByField) label += ' et par ' + config.chart.secondGroupByField.label
+  if (config.dataType.type === 'linesBased') return ''
+  if (config.dataType.type === 'countBased') return 'Nombre de documents'
+  const metricType = metricTypes.find(m => m.value === config.dataType.metricType)
+  let label = metricType.text + ' de ' + config.dataType.valueField.label
+  if (config.dataType.groupBy && config.dataType.groupBy.field) label += ' par ' + config.dataType.groupBy.field.label
+  if (config.dataType.secondGroupByField) label += ' et par ' + config.dataType.secondGroupByField.label
   return label
 }
 
 function prepareChart(config, data) {
-  if (!chartOptions[config.chart.render.type]) new Error('Type de graphique non supporté ' + config.chart.render.type)
-  return chartOptions[config.chart.render.type](config, prepareData(config, data))
+  let renderType = config.chartType.type
+  if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
+    if (renderType === 'bar' && config.chartType.split) renderType = 'grouped-bar'
+    else renderType = 'multi-' + renderType
+  }
+  if (!chartOptions[renderType]) throw new Error('Type de graphique non supporté ' + renderType)
+  return chartOptions[renderType](config, prepareData(config, data))
 }
 
 export default { prepareChart, prepareData, chartTitle }

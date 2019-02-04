@@ -28,7 +28,7 @@ export default () => {
         if (!(config.datasets && config.datasets[0] && config.datasets[0].href)) {
           return 'Pas de jeu de données configuré'
         }
-        if (config.chart.type === 'linesBased' && (!config.chart.valuesFields || !config.chart.valuesFields.length)) {
+        if (config.dataType.type === 'linesBased' && (!config.dataType.valuesFields || !config.dataType.valuesFields.length)) {
           return 'Pas de colonne avec valeur numérique à présenter dans la configuration'
         }
         return false
@@ -49,8 +49,8 @@ export default () => {
           // hackish way of exposing a nuxt application on various base urls
           this.$router.options.base = this.$router.history.base = new URL(state.application.exposedUrl).pathname
 
-          if (getters.config.filters && getters.config.filters.dynamicFilters) {
-            getters.config.filters.dynamicFilters.forEach(f => {
+          if (getters.config.filters && getters.config.dynamicFilters) {
+            getters.config.dynamicFilters.forEach(f => {
               f.values = f.defaultValues
             })
           }
@@ -61,31 +61,28 @@ export default () => {
       },
       fetchData: debounce(async function({ state, commit, dispatch }) {
         const config = state.application.configuration
-        if (config.chart.type === 'linesBased') dispatch('fetchLinesData')
+        if (config.dataType.type === 'linesBased') dispatch('fetchLinesData')
         else dispatch('fetchAggData')
       }, 10),
       async fetchAggData({ state, commit, dispatch }) {
         const config = state.application.configuration
 
         const params = {
-          field: config.chart.groupBy.field.key,
-          agg_size: config.chart.groupBy.size,
-          sort: config.chart.sort
+          field: config.dataType.groupBy.field.key,
+          agg_size: config.dataType.groupBy.size,
+          sort: config.dataType.sort,
+          interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval
         }
-        if (config.chart.groupBy.type !== 'value') {
-          params.interval = config.chart.groupBy.interval
+        if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
+          params.field = `${params.field};${config.dataType.secondGroupBy.field.key}`
+          params.agg_size = `${params.agg_size};${config.dataType.secondGroupBy.size}`
+          params.interval = `${params.interval};${config.dataType.secondGroupBy.type === 'value' ? 'value' : config.dataType.secondGroupBy.interval}`
         }
-        const rType = config.chart.render.type
-        const twoLevels = rType.startsWith('stacked') || rType.startsWith('grouped') || rType.startsWith('multi')
-        if (twoLevels) {
-          params.field = `${params.field};${config.chart.render.secondGroupByField.key}`
-          params.agg_size = `${params.agg_size};${config.chart.render.secondSize}`
+        if (config.dataType.type === 'metricBased') {
+          params.metric = config.dataType.metricType
+          params.metric_field = config.dataType.valueField.key
         }
-        if (config.chart.type === 'metricBased') {
-          params.metric = config.chart.metricType
-          params.metric_field = config.chart.valueField.key
-        }
-        params.qs = filters2qs((config.filters.staticFilters).concat(config.filters.dynamicFilters))
+        params.qs = filters2qs((config.staticFilters).concat(config.dynamicFilters))
 
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/values_agg', { params })
@@ -98,13 +95,13 @@ export default () => {
         const config = state.application.configuration
 
         const params = {
-          select: config.chart.valuesFields.map(f => f.key).concat([config.chart.labelsField.key]).join(','),
-          size: config.chart.size,
-          sort: (config.chart.sortOrder === 'desc' ? '-' : '') + config.chart.sortBy.key
+          select: config.dataType.valuesFields.map(f => f.key).concat([config.dataType.labelsField.key]).join(','),
+          size: config.dataType.size,
+          sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key
         }
         console.log('CONFIG', config)
 
-        params.qs = filters2qs((config.filters.staticFilters).concat(config.filters.dynamicFilters))
+        params.qs = filters2qs((config.staticFilters).concat(config.dynamicFilters))
 
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/lines', { params })

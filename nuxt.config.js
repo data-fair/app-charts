@@ -49,8 +49,12 @@ module.exports = {
         if (name === 'client') {
           // Replace the webpack hot module replacement for the webpack hot middleware
           // Necessary to support re-exposing the dev server behind a reverse proxy (as done by data-fair)
-          const appEntry = compiler.options.entry.app
-          appEntry[0] = appEntry[0].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3001'}/__webpack_hmr`)
+
+          // TODO fix this
+          // temporarily commented as it creates bugs
+          // "pending" queries to webpack_hmr block the requests queues in chrome
+          // const appEntry = compiler.options.entry.app
+          // appEntry[0] = appEntry[0].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3001'}/__webpack_hmr`)
         }
       }
     },
