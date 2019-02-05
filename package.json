@@ -6,7 +6,8 @@
   "homepage": "https://koumoul-dev.github.io/data-fair-charts/",
   "scripts": {
     "dev": "NODE_ENV=development PUBLIC_URL=http://localhost:3001 nuxt -p 3001",
-    "generate": "nuxt generate",
+    "start": "NODE_ENV=production PUBLIC_URL=http://localhost:3001 nuxt -p 3001",
+    "generate": "nuxt",
     "prepublish": "PUBLIC_URL=https://cdn.jsdelivr.net/npm/@koumoul/data-fair-charts@${npm_package_version}/dist npm run generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",

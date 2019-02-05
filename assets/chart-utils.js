@@ -262,7 +262,9 @@ function prepareChart(config, data) {
     else renderType = 'multi-' + renderType
   }
   if (!chartOptions[renderType]) throw new Error('Type de graphique non supporté ' + renderType)
-  return chartOptions[renderType](config, prepareData(config, data))
+  const chart = chartOptions[renderType](config, prepareData(config, data))
+  chart.options.responsive = false
+  return chart
 }
 
 export default { prepareChart, prepareData, chartTitle }

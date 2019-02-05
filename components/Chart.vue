@@ -42,13 +42,17 @@ export default {
     if (chartEl) this.chartTop = chartEl.getBoundingClientRect().top
     window.addEventListener('resize', () => this.refresh(), true)
     this.refresh()
-    await this.$nextTick()
-    this.renderChart()
   },
   methods: {
-    refresh() {
+    async refresh() {
       this.height = window.innerHeight - this.chartTop
       this.width = window.innerWidth
+      if (this.chart) {
+        this.chart.destroy()
+        this.chart = null
+      }
+      await this.$nextTick()
+      this.renderChart()
     },
     renderChart() {
       if (!this.ready || !this.data || this.incompleteConfig) return
