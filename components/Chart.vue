@@ -1,7 +1,7 @@
 <template lang="html">
   <v-container fluid class="pa-1">
     <template v-if="!incompleteConfig">
-      <filters v-if="config.filters && config.dynamicFilters && config.dynamicFilters.length"/>
+      <filters v-if="config.dynamicFilters && config.dynamicFilters.length"/>
       <canvas id="myChart" :height="height" :width="width"/>
     </template>
   </v-container>
