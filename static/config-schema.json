@@ -16,6 +16,14 @@
       }
     },
     {
+      "title": "Type de visualisation",
+      "properties": {
+        "chartType": {
+          "$ref": "#/definitions/chartType"
+        }
+      }
+    },
+    {
       "title": "Préparation des données",
       "properties": {
         "dataType": {
@@ -23,9 +31,6 @@
           "required": [
             "type"
           ],
-          "default": {
-            "type": "linesBased"
-          },
           "oneOf": [
             {
               "$ref": "#/definitions/linesBasedData"
@@ -43,12 +48,14 @@
     {
       "title": "Présentation",
       "properties": {
-        "chartType": {
-          "$ref": "#/definitions/chartType"
-        },
         "colorscheme": {
           "$ref": "#/definitions/colorscheme"
-        },
+        }
+      }
+    },
+    {
+      "title": "Navigation",
+      "properties": {
         "dynamicFilters": {
           "$ref": "#/definitions/dynamicFilters"
         }
@@ -82,7 +89,7 @@
       ]
     },
     "linesBasedData": {
-      "title": "valeurs simples",
+      "title": "lire les lignes une par une",
       "type": "object",
       "required": [
         "sortBy",
@@ -95,19 +102,8 @@
       "properties": {
         "type": {
           "title": "Type de préparation des données",
-          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n  - **valeurs simples**: les valeurs sont lues directement depuis chaque élément du jeu de données.\n  - **grouper les éléments et les compter**: les lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n  - **grouper les éléments et calculer des valeurs dans ces groupes**: les lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
           "const": "linesBased"
-        },
-        "labelsField": {
-          "type": "object",
-          "title": "Colonne de libellés",
-          "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
-          "x-fromUrl": "{datasets.0.href}/schema",
-          "x-itemTitle": "label",
-          "x-itemKey": "key",
-          "default": {
-            "key": "_i"
-          }
         },
         "valuesFields": {
           "type": "array",
@@ -121,8 +117,16 @@
             "type": "object"
           }
         },
-        "size": {
-          "$ref": "#/definitions/size"
+        "labelsField": {
+          "type": "object",
+          "title": "Colonne de libellés",
+          "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
+          "x-fromUrl": "{datasets.0.href}/schema",
+          "x-itemTitle": "label",
+          "x-itemKey": "key",
+          "default": {
+            "key": "_i"
+          }
         },
         "sortBy": {
           "$ref": "#/definitions/sortBy"
@@ -130,13 +134,13 @@
         "sortOrder": {
           "$ref": "#/definitions/sortOrder"
         },
-        "render": {
-          "$ref": "#/definitions/renderLines"
+        "size": {
+          "$ref": "#/definitions/size"
         }
       }
     },
     "countBasedChart": {
-      "title": "grouper les éléments et les compter",
+      "title": "grouper les lignes et les compter",
       "type": "object",
       "properties": {
         "type": {
@@ -172,7 +176,7 @@
       ]
     },
     "metricBasedChart": {
-      "title": "grouper les éléments et calculer des valeurs dans ces groupes",
+      "title": "grouper les lignes et calculer des valeurs dans ces groupes",
       "type": "object",
       "required": [
         "valueField",
@@ -588,7 +592,7 @@
         },
         {
           "const": "-count",
-          "title": "le nombre d'éléments dans le groupe (descendant)"
+          "title": "le nombre de lignes dans le groupe (descendant)"
         },
         {
           "const": "key",
@@ -607,7 +611,7 @@
       "oneOf": [
         {
           "const": "-count",
-          "title": "le nombre d'éléments dans le groupe (descendant)"
+          "title": "le nombre de lignes dans le groupe (descendant)"
         },
         {
           "const": "key",
@@ -810,7 +814,7 @@
     },
     "size": {
       "type": "integer",
-      "title": "Nombre maximal d'éléments",
+      "title": "Nombre maximal de lignes",
       "default": 10
     },
     "groupField": {
