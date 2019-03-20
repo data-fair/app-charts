@@ -31,6 +31,7 @@
           "required": [
             "type"
           ],
+          "x-itemKey": "type",
           "oneOf": [
             {
               "$ref": "#/definitions/linesBasedData"
@@ -214,7 +215,7 @@
         {
           "title": "Calcul à effectuer",
           "description": "Le résultat de ce calcul pour chaque groupe sera utilisé comme valeur numérique à visualiser. Dans le cas d'un diagramme en ligne il s'agira des valeurs présentées en ordonnée.",
-          "required": ["metricType", "valueField"],
+          "required": ["metricType"],
           "properties": {
             "metricType": {
               "$ref": "#/definitions/metricType"

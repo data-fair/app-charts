@@ -31,6 +31,9 @@ export default () => {
         if (config.dataType.type === 'linesBased' && (!config.dataType.valuesFields || !config.dataType.valuesFields.length)) {
           return 'Pas de colonne avec valeur numérique à présenter dans la configuration'
         }
+        if (config.dataType.type === 'metricBased' && !config.dataType.valueField) {
+          return 'Pour ce type de préparation de données vous devez configurer la colonne sur laquelle effectuer un calcul.'
+        }
         return false
       },
       config(state) {
