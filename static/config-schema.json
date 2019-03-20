@@ -214,6 +214,7 @@
         {
           "title": "Calcul à effectuer",
           "description": "Le résultat de ce calcul pour chaque groupe sera utilisé comme valeur numérique à visualiser. Dans le cas d'un diagramme en ligne il s'agira des valeurs présentées en ordonnée.",
+          "required": ["metricType", "valueField"],
           "properties": {
             "metricType": {
               "$ref": "#/definitions/metricType"

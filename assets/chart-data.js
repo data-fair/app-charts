@@ -54,7 +54,8 @@ function prepare2levelAggData(config, data) {
       dataset.data[i] = config.dataType.type !== 'countBased' ? secondLevel.metric : secondLevel.total
     })
   })
-  if (labels.length > 50) throw new Error(`Le graphique essaie d'afficher un nombre trop important de séries (${labels.length})`)
+  console.log('datasets', datasets.map(d => d.key))
+  if (datasets.length > 50) throw new Error(`Le graphique essaie d'afficher un nombre trop important de séries (${labels.length})`)
   datasets.sort((a, b) => a.key < b.key ? -1 : 1)
   const colors = getColors(config.colorscheme, datasets.length)
   datasets.forEach((d, i) => {

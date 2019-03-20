@@ -49,7 +49,7 @@ export default () => {
           // hackish way of exposing a nuxt application on various base urls
           this.$router.options.base = this.$router.history.base = new URL(state.application.exposedUrl).pathname
 
-          if (getters.config.filters && getters.config.dynamicFilters) {
+          if (getters.config && getters.config.filters && getters.config.dynamicFilters) {
             getters.config.dynamicFilters.forEach(f => {
               f.values = f.defaultValues
             })
@@ -71,18 +71,20 @@ export default () => {
           field: config.dataType.groupBy.field.key,
           agg_size: config.dataType.groupBy.size,
           sort: config.dataType.sort,
-          interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval
+          interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval,
+          qs: filters2qs((config.staticFilters).concat(config.dynamicFilters))
         }
+
+        if (config.dataType.type === 'metricBased') {
+          params.metric = config.dataType.metricType
+          params.metric_field = config.dataType.valueField.key
+        }
+
         if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
           params.field = `${params.field};${config.dataType.secondGroupBy.field.key}`
           params.agg_size = `${params.agg_size};${config.dataType.secondGroupBy.size}`
           params.interval = `${params.interval};${config.dataType.secondGroupBy.type === 'value' ? 'value' : config.dataType.secondGroupBy.interval}`
         }
-        if (config.dataType.type === 'metricBased') {
-          params.metric = config.dataType.metricType
-          params.metric_field = config.dataType.valueField.key
-        }
-        params.qs = filters2qs((config.staticFilters).concat(config.dynamicFilters))
 
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/values_agg', { params })
@@ -99,7 +101,6 @@ export default () => {
           size: config.dataType.size,
           sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key
         }
-        console.log('CONFIG', config)
 
         params.qs = filters2qs((config.staticFilters).concat(config.dynamicFilters))
 
