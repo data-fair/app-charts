@@ -75,7 +75,8 @@ export default () => {
           agg_size: config.dataType.groupBy.size,
           sort: config.dataType.sort,
           interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval,
-          qs: filters2qs((config.staticFilters).concat(config.dynamicFilters))
+          qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
+          finalizedAt: config.datasets[0].finalizedAt // for better caching
         }
 
         if (config.dataType.type === 'metricBased') {
@@ -102,7 +103,8 @@ export default () => {
         const params = {
           select: config.dataType.valuesFields.map(f => f.key).concat([config.dataType.labelsField.key]).join(','),
           size: config.dataType.size,
-          sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key
+          sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key,
+          finalizedAt: config.datasets[0].finalizedAt // for better caching
         }
 
         params.qs = filters2qs((config.staticFilters).concat(config.dynamicFilters))

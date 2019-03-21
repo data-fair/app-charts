@@ -18,7 +18,6 @@ function prepareLinesData(config, data) {
     labels: data.results.map(r => r[config.dataType.labelsField.key]),
     datasets: config.dataType.valuesFields.map((f, i) => {
       const backgroundColor = colors[i]
-      console.log('results', data.results)
       return {
         data: data.results.map(r => r[f.key]),
         key: f.key,
@@ -54,7 +53,6 @@ function prepare2levelAggData(config, data) {
       dataset.data[i] = config.dataType.type !== 'countBased' ? secondLevel.metric : secondLevel.total
     })
   })
-  console.log('datasets', datasets.map(d => d.key))
   if (datasets.length > 50) throw new Error(`Le graphique essaie d'afficher un nombre trop important de séries (${labels.length})`)
   datasets.sort((a, b) => a.key < b.key ? -1 : 1)
   const colors = getColors(config.colorscheme, datasets.length)
