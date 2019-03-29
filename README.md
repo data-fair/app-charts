@@ -78,3 +78,7 @@ Simply publish the project on the global npm registry (you need to be member of 
 
     npm version PATCH|MINOR|MAJOR
     npm publish
+
+If the release is a bug fix and you don't want to wait 24h (the cache delay of jsdelivr), you can purge the cache for the index.html file of the minor version in the CDN:
+
+    curl https://purge.jsdelivr.net/npm/@koumoul/data-fair-charts@0.8/dist/index.html
