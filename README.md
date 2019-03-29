@@ -46,7 +46,7 @@ Install nodejs dependencies for the development environment:
 
 Run the development server and serve the application with hot reload [here](http://localhost:3000):
 
-    yarn run dev
+    npm run dev
 
 You can now add an application configuration pointing to http://localhost:3000 in your data-fair instance. Edit the configuration, edit the code source, etc.
 
@@ -76,5 +76,5 @@ The string %APPLICATION% will be replaced automaticaly by the actual content of 
 
 Simply publish the project on the global npm registry (you need to be member of the owner organization).
 
-    yarn version PATCH|MINOR|MAJOR
-    yarn publish
+    npm version PATCH|MINOR|MAJOR
+    npm publish
