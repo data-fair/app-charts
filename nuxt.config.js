@@ -27,7 +27,7 @@ module.exports = {
     base: process.env.BASE_PATH || '/'
   },
   build: {
-    transpile: [/^vuetify/],
+    transpile: [/vuetify/],
     extend (config, { isDev, isClient }) {
       // Build specifically to deploy on a web server somewhere
       config.output.publicPath = (process.env.PUBLIC_URL || 'http://localhost:3001') + '/_nuxt/'
@@ -51,10 +51,11 @@ module.exports = {
           // Necessary to support re-exposing the dev server behind a reverse proxy (as done by data-fair)
 
           // TODO fix this
-          // temporarily commented as it creates bugs
           // "pending" queries to webpack_hmr block the requests queues in chrome
-          // const appEntry = compiler.options.entry.app
-          // appEntry[0] = appEntry[0].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3001'}/__webpack_hmr`)
+          const appEntry = compiler.options.entry.app
+          for (let i = 0; i < appEntry.length; i++) {
+            appEntry[i] = appEntry[i].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3001'}/__webpack_hmr`)
+          }
         }
       }
     },

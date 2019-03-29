@@ -42,11 +42,11 @@ Create a dataset in your data-fair instance. You can use this [public dataset](h
 
 Install nodejs dependencies for the development environment:
 
-    npm i
+    yarn
 
 Run the development server and serve the application with hot reload [here](http://localhost:3000):
 
-    npm run dev
+    yarn run dev
 
 You can now add an application configuration pointing to http://localhost:3000 in your data-fair instance. Edit the configuration, edit the code source, etc.
 
@@ -74,11 +74,7 @@ The string %APPLICATION% will be replaced automaticaly by the actual content of 
 
 ## Deployment
 
-This project is configured to use [gh-pages-multi](https://github.com/koumoul-dev/gh-pages-multi) to push the built application to [GitHub Pages](https://pages.github.com/). Basically it is a free, fast, static Web server for Open Source projects. If you fork this application to create your own you are encouraged to follow the same pattern.
+Simply publish the project on the global npm registry (you need to be member of the owner organization).
 
-Deploying manually to a "latest" subdirectory:
-
-    PUBLIC_URL=https://koumoul-dev.github.io/data-fair-charts/latest/ npm run generate
-    npm run deploy
-
-Setting up an automatic deployment process is easy thanks to [Travis CI](travis-ci.org). The .travis.yml file in this repository is an example. Every commit to master triggers a push to the "latest" subdirectory of the Web server, and every tag is pushed in a MAJOR.x subdirectory.
+    yarn version PATCH|MINOR|MAJOR
+    yarn publish
