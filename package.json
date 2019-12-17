@@ -5,10 +5,9 @@
   "author": "Alban Mouton <alban.mouton@gmail.com>",
   "homepage": "https://koumoul-dev.github.io/data-fair-charts/",
   "scripts": {
-    "dev": "NODE_ENV=development nuxt -p 3001",
-    "start": "NODE_ENV=production nuxt -p 3001",
-    "generate": "nuxt generate",
-    "prepublish": "PUBLIC_URL=https://cdn.jsdelivr.net/npm/@koumoul/data-fair-charts@${npm_package_version}/dist npm run generate",
+    "dev": "df-dev-server",
+    "dev-src": "nuxt",
+    "prepublish": "PUBLIC_URL=https://cdn.jsdelivr.net/npm/@koumoul/data-fair-charts@${npm_package_version}/dist nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
     "analyze": "nuxt build --analyze"
@@ -22,7 +21,7 @@
     "google-palette": "^1.1.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
-    "nuxt": "^2.5.1",
+    "nuxt": "^2.11.0",
     "stylus": "^0.54.5",
     "url": "^0.11.0",
     "url-parse": "^1.4.4",
@@ -31,6 +30,7 @@
     "vuetify-loader": "^1.2.1"
   },
   "devDependencies": {
+    "@koumoul/df-dev-server": "^0.1.11",
     "babel-eslint": "^9.0.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "cors": "^2.8.5",

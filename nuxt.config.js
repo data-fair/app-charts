@@ -30,7 +30,7 @@ module.exports = {
     transpile: [/vuetify/],
     extend (config, { isDev, isClient }) {
       // Build specifically to deploy on a web server somewhere
-      config.output.publicPath = (process.env.PUBLIC_URL || 'http://localhost:3001') + '/_nuxt/'
+      config.output.publicPath = (process.env.PUBLIC_URL || 'http://localhost:3000') + '/_nuxt/'
 
       // Ignore all locale files of moment.js, those we want are loaded in plugins/moment.js
       config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
@@ -54,7 +54,7 @@ module.exports = {
           // "pending" queries to webpack_hmr block the requests queues in chrome
           const appEntry = compiler.options.entry.app
           for (let i = 0; i < appEntry.length; i++) {
-            appEntry[i] = appEntry[i].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3001'}/__webpack_hmr`)
+            appEntry[i] = appEntry[i].replace('path=/__webpack_hmr', `path=${process.env.PUBLIC_URL || 'http://localhost:3000'}/__webpack_hmr`)
           }
         }
       }

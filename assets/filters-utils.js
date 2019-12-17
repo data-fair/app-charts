@@ -15,6 +15,7 @@ export function filter2qs(filter) {
 
 export function filters2qs(filters) {
   return filters
+    .filter(f => !!f)
     .map(filter2qs)
     .filter(f => !!f)
     .map(f => `(${f})`).join(' AND ')
