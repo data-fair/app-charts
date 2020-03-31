@@ -30,7 +30,7 @@
     "vuetify-loader": "^1.2.1"
   },
   "devDependencies": {
-    "@koumoul/df-dev-server": "^0.1.11",
+    "@koumoul/df-dev-server": "^0.1.12",
     "babel-eslint": "^9.0.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "cors": "^2.8.5",

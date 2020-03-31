@@ -16,7 +16,6 @@ DataFair comes with functionalities to facilitate the development, deployment an
 
 This technical stack is just an example of what can be used to build an application for DataFair. It is a quite rich stack for a state of the art development environment. For an application with a more minimalist stack, you can see [data-fair-minimal](https://github.com/koumoul-dev/data-fair-minimal).
 
-  - [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/): use it to run DataFair and its system dependencies as easily as possible
   - [vuejs](https://vuejs.org/): our favorite framework for client-side code
   - [nuxt](https://nuxtjs.org/guide): a higher level framework on top of vuejs for creating full applications (integrates [webpack](https://webpack.js.org/) and other tools)
   - [vuetify](https://vuetifyjs.com/en/): a material design UI framework for vuejs
@@ -28,13 +27,6 @@ Start by downloading, cloning or forking this repository:
 
     git clone git@github.com:koumoul-dev/data-fair-charts.git
     cd data-fair-charts
-
-You need to have a running Docker daemon and a recent docker-compose command installed on your system. You also need a nodejs/npm setup.
-
-Run data-fair and dependencies in the background:
-
-    docker-compose pull
-    docker-compose up -d
 
 After a few seconds you can check that data-fair is up at [this url](http://localhost:8080). You can click on the links to log in with a new user, emails will be sent to a virtual mail server that you can access [here](http://localhost:1080/#/).
 
