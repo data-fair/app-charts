@@ -28,10 +28,8 @@
       "properties": {
         "dataType": {
           "type": "object",
-          "required": [
-            "type"
-          ],
-          "x-itemKey": "type",
+          "title": "Type de préparation des données",
+          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
           "oneOf": [
             {
               "$ref": "#/definitions/linesBasedData"
@@ -96,14 +94,12 @@
         "sortBy",
         "sortOrder",
         "size",
-        "render",
         "labelsField",
         "valuesFields"
       ],
       "properties": {
         "type": {
-          "title": "Type de préparation des données",
-          "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+          "type": "string",
           "const": "linesBased"
         },
         "valuesFields": {
@@ -145,6 +141,7 @@
       "type": "object",
       "properties": {
         "type": {
+          "type": "string",
           "const": "countBased"
         }
       },
@@ -187,6 +184,7 @@
       ],
       "properties": {
         "type": {
+          "type": "string",
           "const": "metricBased"
         }
       },
@@ -740,15 +738,14 @@
         "oneOf": [
           {
             "title": "Restreindre à des valeurs",
+            "required": [
+              "field"
+            ],
             "properties": {
               "type": {
                 "const": "in",
                 "title": "Type de filtre"
               },
-              "required": [
-                "field",
-                "values"
-              ],
               "field": {
                 "$ref": "#/definitions/filterField"
               },
@@ -763,14 +760,13 @@
           },
           {
             "title": "Restreindre à un interval de valeurs",
+            "required": [
+              "field"
+            ],
             "properties": {
               "type": {
                 "const": "interval"
               },
-              "required": [
-                "field",
-                "values"
-              ],
               "field": {
                 "$ref": "#/definitions/filterField"
               },
@@ -786,14 +782,13 @@
           },
           {
             "title": "Exclure des valeurs",
+            "required": [
+              "field"
+            ],
             "properties": {
               "type": {
                 "const": "out"
               },
-              "required": [
-                "field",
-                "values"
-              ],
               "field": {
                 "$ref": "#/definitions/filterField"
               },

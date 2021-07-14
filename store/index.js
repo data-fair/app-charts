@@ -26,10 +26,10 @@ export default () => {
         const config = state.application.configuration
         if (!config) return 'Configuration absente'
         if (!(config.datasets && config.datasets[0] && config.datasets[0].href)) {
-          return 'Pas de jeu de données configuré'
+          return 'Pas de jeu de données configuré.'
         }
         if (config.dataType.type === 'linesBased' && (!config.dataType.valuesFields || !config.dataType.valuesFields.length)) {
-          return 'Pas de colonne avec valeur numérique à présenter dans la configuration'
+          return 'Pas de colonnes de valeurs sélectionnées.'
         }
         if (config.dataType.type === 'metricBased' && !config.dataType.valueField) {
           return 'Pour ce type de préparation de données vous devez configurer la colonne sur laquelle effectuer un calcul.'
