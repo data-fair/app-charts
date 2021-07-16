@@ -50,13 +50,18 @@ function prepare2levelAggData(config, data) {
         }
         datasets.push(dataset)
       }
-      dataset.data[i] = config.dataType.type !== 'countBased' ? secondLevel.metric : secondLevel.total
-      dataset.total = (dataset.total || 0) + dataset.data[i]
+      if (config.dataType.type === 'countBased') {
+        dataset.data[i] = secondLevel.total
+      } else {
+        dataset.data[i] = secondLevel.metric
+      }
+      dataset.totalSort = (dataset.totalCount || 0) + dataset.data[i]
     })
   })
   if (datasets.length > 60) throw new Error(`Le graphique essaie d'afficher un nombre trop important de séries (${datasets.length})`)
-  const sort = config.dataType.secondSort || '-count'
-  if (sort === '-count') datasets.sort((a, b) => a.total < b.total ? 1 : -1)
+  const sort = config.dataType.secondSort || (config.dataType.type === 'countBased' ? '-count' : '-metric')
+  if (sort === '-count' || sort === '-metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
+  if (sort === 'metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
   else if (sort === 'key') datasets.sort((a, b) => a.key < b.key ? -1 : 1)
   else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
   const colors = getColors(config.colorscheme, datasets.length)

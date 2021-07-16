@@ -212,7 +212,7 @@
               "$ref": "#/definitions/groupBy"
             },
             "secondSort": {
-              "$ref": "#/definitions/sortCount"
+              "$ref": "#/definitions/sortMetric"
             }
           }
         },
