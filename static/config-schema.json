@@ -168,6 +168,9 @@
           "properties": {
             "secondGroupBy": {
               "$ref": "#/definitions/groupBy"
+            },
+            "secondSort": {
+              "$ref": "#/definitions/sortCount"
             }
           }
         }
@@ -207,6 +210,9 @@
           "properties": {
             "secondGroupBy": {
               "$ref": "#/definitions/groupBy"
+            },
+            "secondSort": {
+              "$ref": "#/definitions/sortCount"
             }
           }
         },
