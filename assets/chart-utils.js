@@ -76,6 +76,10 @@ chartOptions.bar = (config, data) => {
 }
 
 chartOptions['multi-bar'] = (config, data) => {
+  data.datasets.forEach(dataset => {
+    dataset.borderColor = Color(dataset.backgroundColor).setAlpha(0.25).toCSS()
+    dataset.borderWidth = 1
+  })
   return {
     type: config.chartType.horizontal ? 'horizontalBar' : 'bar',
     data,
@@ -97,6 +101,10 @@ chartOptions['multi-bar'] = (config, data) => {
 }
 
 chartOptions['grouped-bar'] = (config, data) => {
+  data.datasets.forEach(dataset => {
+    dataset.borderColor = Color(dataset.backgroundColor).setAlpha(0.5).toCSS()
+    dataset.borderWidth = 1
+  })
   return {
     type: config.chartType.horizontal ? 'horizontalBar' : 'bar',
     data,
