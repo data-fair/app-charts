@@ -77,7 +77,7 @@ chartOptions.bar = (config, data) => {
 
 chartOptions['multi-bar'] = (config, data) => {
   data.datasets.forEach(dataset => {
-    dataset.borderColor = Color(dataset.backgroundColor).setAlpha(0.25).toCSS()
+    dataset.borderColor = 'white'
     dataset.borderWidth = 1
   })
   return {

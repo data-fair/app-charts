@@ -1,4 +1,11 @@
 const palette = require('google-palette')
+const Color = require('color-js')
+
+// use a simple greysacle to complete color palettes, always better than a single grey color
+const greyscale = []
+for (let i = 5; i < 25; i++) {
+  greyscale.push(Color('#000000').setLightness(i / 30).toCSS())
+}
 
 export default (colorscheme, size) => {
   const typeMax = {
@@ -14,5 +21,5 @@ export default (colorscheme, size) => {
     if (colorscheme.subset === 'dark') colors = colors.slice(offset)
   }
   if (colorscheme.reverse) colors.reverse()
-  return colors
+  return colors.concat(greyscale)
 }
