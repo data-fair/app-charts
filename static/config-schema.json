@@ -449,7 +449,7 @@
               "oneOf": [
                 {
                   "const": "all",
-                  "title": "Route"
+                  "title": "Tout"
                 },
                 {
                   "const": "light",
@@ -460,7 +460,7 @@
                   "title": "Foncé"
                 }
               ],
-              "default": "Tout"
+              "default": "all"
             }
           }
         }
