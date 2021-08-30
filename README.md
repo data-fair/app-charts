@@ -1,20 +1,20 @@
-# data-fair-charts
+# data-fair/charts
 
-A simple charting application for [DataFair](https://koumoul-dev.github.io/data-fair/). Also used as an [example for the documentation](https://koumoul-dev.github.io/data-fair/interoperate/applications) and to bootstrap other applications.
+A simple charting application for [DataFair](https://data-fair.github.io/2/). Also used as an [example for the documentation](https://data-fair.github.io/2/interoperate/applications).
 
-It is hosted [by npm and the jsdelivr CDN](https://cdn.jsdelivr.net/npm/@koumoul/data-fair-charts).
+It is hosted [by npm and the jsdelivr CDN](https://cdn.jsdelivr.net/npm/@data-fair/app-charts).
 
 An example configuration can be found [here](https://koumoul.com/s/data-fair/application/data-fair-charts/config), it uses [this dataset](https://koumoul.com/s/data-fair/dataset/population-communes/description).
 
 ## Context
 
-[DataFair](https://koumoul-dev.github.io/data-fair/) is an Open Source Web software developped by [Koumoul](https://koumoul.com) for publishing data online with complete search and aggregation capabilities, metadata management, mapping functionalities, access control, etc. It can be used as a back office for Open Data platforms, data visualizations , custom search engines and other applications.
+[DataFair](https://data-fair.github.io/2/) is an Open Source Web software developped by [Koumoul](https://koumoul.com) for publishing data online with complete search and aggregation capabilities, metadata management, mapping functionalities, access control, etc. It can be used as a back office for Open Data platforms, data visualizations , custom search engines and other applications.
 
 DataFair comes with functionalities to facilitate the development, deployment and configuration of small data consuming applications. data-fair-charts is an example of such an application.
 
 ## Technical stack
 
-This technical stack is just an example of what can be used to build an application for DataFair. It is a quite rich stack for a state of the art development environment. For an application with a more minimalist stack, you can see [data-fair-minimal](https://github.com/koumoul-dev/data-fair-minimal).
+This technical stack is just an example of what can be used to build an application for DataFair. It is a quite rich stack for a state of the art development environment. For an application with a more minimalist stack, you can see [app-minimal](https://github.com/data-fair/app-minimal). For a state of the art application generator see the [vue-cli plugin](https://github.com/data-fair/vue-cli-plugin-app).
 
   - [vuejs](https://vuejs.org/): our favorite framework for client-side code
   - [nuxt](https://nuxtjs.org/guide): a higher level framework on top of vuejs for creating full applications (integrates [webpack](https://webpack.js.org/) and other tools)
@@ -25,8 +25,8 @@ This technical stack is just an example of what can be used to build an applicat
 
 Start by downloading, cloning or forking this repository:
 
-    git clone git@github.com:koumoul-dev/data-fair-charts.git
-    cd data-fair-charts
+    git clone git@github.com:data-fair/app-charts.git
+    cd app-charts
 
 After a few seconds you can check that data-fair is up at [this url](http://localhost:8080). You can click on the links to log in with a new user, emails will be sent to a virtual mail server that you can access [here](http://localhost:1080/#/).
 
@@ -74,11 +74,11 @@ Simply publish the project on the global npm registry (you need to be member of 
 
 If the release is a bug fix and you don't want to wait 24h (the cache delay of jsdelivr), you can purge the cache for the index.html file of the minor version in the CDN:
 
-    curl https://purge.jsdelivr.net/npm/@koumoul/data-fair-charts@0.8/dist/index.html
+    curl https://purge.jsdelivr.net/npm/@data-fair/app-charts@0.8/dist/index.html
 
 To publish a version for testing purposes you can tag it as a pre-release and publish it with the tag "staging".
 
     npm version prerelease --preid=staging
     npm publish --tag staging
-    curl https://purge.jsdelivr.net/npm/@koumoul/data-fair-charts@staging/dist/index.html
+    curl https://purge.jsdelivr.net/npm/@data-fair/app-charts@staging/dist/index.html
     git push && git push --tags

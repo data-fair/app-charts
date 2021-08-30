@@ -3,7 +3,7 @@
   "version": "0.9.0",
   "description": "Nuxt.js project",
   "author": "Alban Mouton <alban.mouton@gmail.com>",
-  "homepage": "https://koumoul-dev.github.io/data-fair-charts/",
+  "homepage": "https://data-fair.github.io/app-charts/",
   "scripts": {
     "dev": "df-dev-server",
     "dev-src": "nuxt",
