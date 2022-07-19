@@ -106,7 +106,7 @@
           "type": "array",
           "title": "Colonnes de valeurs",
           "description": "Choisissez une ou plusieurs colonnes de valeurs numériques à présenter dans le graphique. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en ordonnée.",
-          "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
           "x-itemTitle": "label",
           "x-itemKey": "key",
           "minItems": 1,
@@ -118,7 +118,7 @@
           "type": "object",
           "title": "Colonne de libellés",
           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
-          "x-fromUrl": "{datasets.0.href}/schema",
+          "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
           "x-itemTitle": "label",
           "x-itemKey": "key",
           "default": {
@@ -235,14 +235,14 @@
       "type": "object",
       "title": "Colonne de valeurs",
       "description": "La colonne contenant la valeur numérique sur laquelle effectuer un calcul.",
-      "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
     "sortBy": {
       "type": "object",
       "title": "Trier par",
-      "x-fromUrl": "{datasets.0.href}/schema",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
       "x-itemTitle": "label",
       "x-itemKey": "key",
       "default": {
@@ -715,7 +715,7 @@
           "field": {
             "type": "object",
             "title": "Colonne de filtre",
-            "x-fromUrl": "{datasets.0.href}/schema",
+            "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
             "x-itemTitle": "label",
             "x-itemKey": "key"
           },
@@ -730,27 +730,24 @@
       }
     },
     "filters": {
-      "title": "Filtres",
-      "description": "Ces filtres seront appliquées à tous les affichages de ce graphique de manière transparente pour l'utilisateur",
+      "title": "Filtres prédéfinis",
       "type": "array",
       "items": {
         "type": "object",
         "default": {
           "type": "in"
         },
-        "required": [
-          "type"
-        ],
+        "x-itemKey": "type",
         "oneOf": [
           {
             "title": "Restreindre à des valeurs",
             "required": [
-              "field"
+              "field",
+              "values"
             ],
             "properties": {
               "type": {
-                "const": "in",
-                "title": "Type de filtre"
+                "const": "in"
               },
               "field": {
                 "$ref": "#/definitions/filterField"
@@ -760,7 +757,8 @@
                 "title": "Valeurs",
                 "items": {
                   "type": "string"
-                }
+                },
+                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
               }
             }
           },
@@ -778,18 +776,21 @@
               },
               "minValue": {
                 "type": "string",
-                "title": "Valeur min"
+                "title": "Valeur min",
+                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
               },
               "maxValue": {
                 "type": "string",
-                "title": "Valeur max"
+                "title": "Valeur max",
+                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
               }
             }
           },
           {
             "title": "Exclure des valeurs",
             "required": [
-              "field"
+              "field",
+              "values"
             ],
             "properties": {
               "type": {
@@ -803,12 +804,20 @@
                 "title": "Valeurs à exclure",
                 "items": {
                   "type": "string"
-                }
+                },
+                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
               }
             }
           }
         ]
       }
+    },
+    "filterField": {
+      "type": "object",
+      "title": "Colonne de filtre",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
     },
     "nbGroups": {
       "type": "integer",
@@ -824,28 +833,21 @@
     "groupField": {
       "type": "object",
       "title": "Grouper en fonction de cette colonne",
-      "x-fromUrl": "{datasets.0.href}/schema",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
     "groupFieldDate": {
       "type": "object",
       "title": "Grouper en fonction de cette colonne",
-      "x-fromUrl": "{datasets.0.href}/schema?format=date,date-time",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&format=date,date-time",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
     "groupFieldNumber": {
       "type": "object",
       "title": "Grouper en fonction de cette colonne",
-      "x-fromUrl": "{datasets.0.href}/schema?type=integer,number",
-      "x-itemTitle": "label",
-      "x-itemKey": "key"
-    },
-    "filterField": {
-      "type": "object",
-      "title": "Colonne de filtre",
-      "x-fromUrl": "{datasets.0.href}/schema",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
       "x-itemTitle": "label",
       "x-itemKey": "key"
     },
