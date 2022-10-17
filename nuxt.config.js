@@ -12,6 +12,8 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'df:overflow', content: 'false' },
+      { name: 'df:sync-state', content: 'false' },
       { hid: 'version', name: 'version', content: process.env.NODE_ENV === 'development' ? 'development' : pjson.version },
       { hid: 'application', name: 'application-name', content: 'Charts' },
       { hid: 'description', name: 'description', content: 'Une application simple de graphiques pour data-fair.' }
