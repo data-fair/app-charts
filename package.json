@@ -20,8 +20,8 @@
     "debounce": "^1.2.0",
     "google-palette": "^1.1.0",
     "less": "^3.9.0",
-    "less-loader": "^4.1.0",
-    "nuxt": "^2.11.0",
+    "less-loader": "^11.1.0",
+    "nuxt": "^3.0.0",
     "stylus": "^0.54.5",
     "url": "^0.11.0",
     "url-parse": "^1.4.4",
@@ -37,13 +37,13 @@
     "eslint": "^5.15.3",
     "eslint-config-standard": "^12.0.0",
     "eslint-friendly-formatter": "^4.0.1",
-    "eslint-loader": "^2.1.2",
+    "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^4.7.1",
-    "style-loader": "^0.23.1",
-    "stylus-loader": "^3.0.2"
+    "style-loader": "^3.3.1",
+    "stylus-loader": "^7.1.0"
   }
 }
