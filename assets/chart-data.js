@@ -7,7 +7,7 @@ export default function prepareData(config, data) {
 }
 
 function prepareLinesData(config, data) {
-  if (config.chartType.type && config.dataType.valuesFields.length > 1) {
+  if (config.chartType.type === 'pie' && config.dataType.valuesFields.length > 1) {
     throw new Error(`La visualisation camembert ne supporte pas d'afficher plusieurs niveaux.`)
   }
   const colors = config.chartType.type === 'pie'
