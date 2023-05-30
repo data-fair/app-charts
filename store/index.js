@@ -52,17 +52,24 @@ export default () => {
           // hackish way of exposing a nuxt application on various base urls
           this.$router.options.base = this.$router.history.base = new URL(state.application.exposedUrl).pathname
 
-          if (getters.config && getters.config.filters && getters.config.dynamicFilters) {
+          if (getters.config && getters.config.dynamicFilters) {
             getters.config.dynamicFilters.forEach(f => {
               f.values = f.defaultValues
             })
           }
-          if (!getters.incompleteConfig) {
-            dispatch('fetchData')
-          }
         }
       },
-      fetchData: debounce(async function({ state, commit, dispatch }) {
+      fetchData: debounce(async function({ state, commit, dispatch, getters }) {
+        if (getters.incompleteConfig) {
+          return
+        }
+        if (getters.config && getters.config.dynamicFilters) {
+          getters.config.dynamicFilters.forEach(f => {
+            if (this.$router.currentRoute.query[`${f.field.key}_in`]) {
+              Vue.set(f, 'values', JSON.parse(`[${this.$router.currentRoute.query[`${f.field.key}_in`]}]`))
+            }
+          })
+        }
         const config = state.application.configuration
         if (config.dataType.type === 'linesBased') dispatch('fetchLinesData')
         else dispatch('fetchAggData')

@@ -1,7 +1,7 @@
 <template lang="html">
   <v-autocomplete
     :items="dynamicFilter.values.concat(items)"
-    v-model="dynamicFilter.values"
+    :value="dynamicFilter.values"
     :label="`Filtrer par ${dynamicFilter.field.label}`"
     :loading="loading"
     :search-input.sync="search"
@@ -11,7 +11,7 @@
     class="chart-filter"
     hide-no-data
     placeholder="Saisissez une valeur"
-    @change="fetchData()"
+    @change="applyFilter"
   />
 </template>
 
@@ -62,6 +62,12 @@ export default {
         q: this.search ? this.search + '*' : ''
       } })
       this.loading = false
+    },
+    applyFilter(values) {
+      const newQuery = { ...this.$route.query }
+      if (values && values.length) newQuery[this.dynamicFilter.field.key + '_in'] = JSON.stringify(values).slice(1, -1)
+      else delete newQuery[this.dynamicFilter.field.key + '_in']
+      this.$router.replace({ query: newQuery })
     }
   }
 }

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@koumoul/gh-pages-multi": "^0.7.1",
+    "@koumoul/v-iframe": "^0.20.3",
     "@nuxtjs/axios": "^5.4.1",
     "chart.js": "^2.8.0",
     "color-js": "^1.0.5",
@@ -30,7 +31,7 @@
     "vuetify-loader": "^1.2.1"
   },
   "devDependencies": {
-    "@koumoul/df-dev-server": "^0.6.1",
+    "@data-fair/dev-server": "^1.9.0",
     "babel-eslint": "^9.0.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "cors": "^2.8.5",
