@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "df-dev-server",
     "dev-src": "nuxt",
-    "prepublish": "PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist nuxt generate",
+    "prepublishOnly": "PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
     "analyze": "nuxt build --analyze"
