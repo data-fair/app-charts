@@ -12,7 +12,8 @@ export default () => {
       error: null,
       env: null,
       application: window.APPLICATION,
-      data: null
+      data: null,
+      conceptFilters: {}
     },
     getters: {
       defaultDataFairUrl(state) {
@@ -83,6 +84,7 @@ export default () => {
           sort: config.dataType.sort,
           interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval,
           qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
+          ...state.conceptFilters,
           finalizedAt: config.datasets[0].finalizedAt // for better caching
         }
 
@@ -114,10 +116,11 @@ export default () => {
           select: config.dataType.valuesFields.map(f => f.key).concat([config.dataType.labelsField.key]).join(','),
           size: config.dataType.size,
           sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key,
+          qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
+          ...state.conceptFilters,
           finalizedAt: config.datasets[0].finalizedAt // for better caching
-        }
 
-        params.qs = filters2qs((config.staticFilters).concat(config.dynamicFilters))
+        }
 
         try {
           const data = await this.$axios.$get(config.datasets[0].href + '/lines', { params })

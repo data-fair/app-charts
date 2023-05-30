@@ -15,6 +15,13 @@ export default {
     '$route.query': {
       immediate: true,
       handler () {
+        const conceptFilters = {}
+        for (const key in this.$route.query) {
+          if (key.startsWith('_c_')) {
+            conceptFilters[key] = this.$route.query[key]
+          }
+        }
+        this.$store.commit('setAny', { conceptFilters })
         this.fetchData()
       }
     }

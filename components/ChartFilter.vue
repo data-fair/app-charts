@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     ...mapGetters(['config']),
-    ...mapState(['filters']),
+    ...mapState(['filters', 'conceptFilters']),
     dynamicFilter() {
       return this.config.dynamicFilters[this.indice]
     },
@@ -59,6 +59,7 @@ export default {
       this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + encodeURIComponent(this.dynamicFilter.field.key), { params: {
         size: 10,
         qs,
+        ...this.conceptFilters,
         q: this.search ? this.search + '*' : ''
       } })
       this.loading = false
