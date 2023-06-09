@@ -1,6 +1,6 @@
 {
   "name": "@data-fair/app-charts",
-  "version": "0.10.3-staging.1",
+  "version": "0.10.3",
   "description": "Nuxt.js project",
   "author": "Alban Mouton <alban.mouton@gmail.com>",
   "homepage": "https://data-fair.github.io/app-charts/",
