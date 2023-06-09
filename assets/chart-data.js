@@ -14,8 +14,9 @@ function prepareLinesData(config, data) {
     ? [getColors(config.colorscheme, data.results.length)]
     : getColors(config.colorscheme, config.dataType.valuesFields.length)
 
+  const xLabels = config.dataType.labelsField['x-labels']
   return {
-    labels: data.results.map(r => r[config.dataType.labelsField.key]),
+    labels: data.results.map(r => (xLabels && xLabels[r[config.dataType.labelsField.key]]) || r[config.dataType.labelsField.key]),
     datasets: config.dataType.valuesFields.map((f, i) => {
       const backgroundColor = colors[i]
       return {
@@ -37,15 +38,17 @@ function prepare2levelAggData(config, data) {
   const labels = []
   const datasets = []
   const totalDataset = { label: 'Total', data: [] }
+  const xLabels = config.dataType.groupBy.field['x-labels']
+  const secondaryXLabels = config.dataType.secondGroupBy.field['x-labels']
   data.aggs.forEach((firstLevel, i) => {
-    labels.push(firstLevel.value)
+    labels.push((xLabels && xLabels[firstLevel.value]) || firstLevel.value)
     totalDataset.data.push(config.dataType.type !== 'countBased' ? firstLevel.metric : firstLevel.total)
     firstLevel.aggs.forEach(secondLevel => {
       let dataset = datasets.find(d => d.key === secondLevel.value)
       if (!dataset) {
         dataset = {
           key: secondLevel.value,
-          label: secondLevel.value,
+          label: (secondaryXLabels && secondaryXLabels[secondLevel.value]) || secondLevel.value,
           data: []
         }
         datasets.push(dataset)
@@ -83,13 +86,13 @@ function prepareAggData(config, data) {
   if (data.aggs.length > 1000) {
     throw new Error('Nombre d\'éléments à afficher trop important. Abandon.')
   }
-
   if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
     return prepare2levelAggData(config, data)
   } else {
     const backgroundColor = config.chartType.type === 'pie' ? getColors(config.colorscheme, data.aggs.length) : getColors(config.colorscheme, 1)[0]
+    const xLabels = config.dataType.groupBy.field['x-labels']
     return {
-      labels: data.aggs.map(agg => agg.value),
+      labels: data.aggs.map(agg => (xLabels && xLabels[agg.value]) || agg.value),
       datasets: [{
         data: data.aggs.map(agg => config.dataType.type !== 'countBased' ? agg.metric : agg.total),
         backgroundColor,
