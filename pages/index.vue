@@ -1,5 +1,5 @@
 <template>
-  <chart v-if="application"/>
+  <chart v-if="application" />
 </template>
 
 <script>
@@ -16,6 +16,7 @@ export default {
       immediate: true,
       handler () {
         const conceptFilters = {}
+        // eslint-disable-next-line no-unused-vars
         for (const key in this.$route.query) {
           if (key.startsWith('_c_')) {
             conceptFilters[key] = this.$route.query[key]

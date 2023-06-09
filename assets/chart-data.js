@@ -8,7 +8,7 @@ export default function prepareData(config, data) {
 
 function prepareLinesData(config, data) {
   if (config.chartType.type === 'pie' && config.dataType.valuesFields.length > 1) {
-    throw new Error(`La visualisation camembert ne supporte pas d'afficher plusieurs niveaux.`)
+    throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
   }
   const colors = config.chartType.type === 'pie'
     ? [getColors(config.colorscheme, data.results.length)]
@@ -31,7 +31,7 @@ function prepareLinesData(config, data) {
 
 function prepare2levelAggData(config, data) {
   if (config.chartType.type === 'pie') {
-    throw new Error(`La visualisation camembert ne supporte pas d'afficher plusieurs niveaux.`)
+    throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
   }
 
   const labels = []
@@ -81,7 +81,7 @@ function prepare2levelAggData(config, data) {
 
 function prepareAggData(config, data) {
   if (data.aggs.length > 1000) {
-    throw new Error(`Nombre d'éléments à afficher trop important. Abandon.`)
+    throw new Error('Nombre d\'éléments à afficher trop important. Abandon.')
   }
 
   if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {

@@ -1,7 +1,7 @@
 <template>
   <v-app :class="embed ? 'embed' : ''">
     <v-content>
-      <nuxt/>
+      <nuxt />
     </v-content>
   </v-app>
 </template>

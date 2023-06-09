@@ -245,7 +245,7 @@ chartOptions['multi-radar'] = (config, data) => {
 }
 
 const metricTypes = [
-  { value: 'count', text: `Nombre de documents` },
+  { value: 'count', text: 'Nombre de documents' },
   { value: 'min', text: 'Valeur min' },
   { value: 'max', text: 'Valeur max' },
   { value: 'sum', text: 'Somme' },

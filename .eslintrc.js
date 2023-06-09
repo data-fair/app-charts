@@ -8,7 +8,7 @@ module.exports = {
     // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
     'standard',
     // https://github.com/vuejs/eslint-plugin-vue,
-     'plugin:vue/recommended'
+    'plugin:vue/recommended'
   ],
   plugins: [],
   // add your custom rules here
@@ -26,6 +26,7 @@ module.exports = {
     'vue/max-attributes-per-line': 'off',
     'vue/require-prop-types': 'off',
     'no-new': 'off',
-    'no-template-curly-in-string': 'off'
+    'no-template-curly-in-string': 'off',
+    'vue/multi-word-component-names': 'off'
   }
 }

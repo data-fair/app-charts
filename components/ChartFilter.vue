@@ -56,12 +56,14 @@ export default {
       if (this.loading) return
       this.loading = true
       const qs = filters2qs(this.config.staticFilters.concat(this.higherFilters))
-      this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + encodeURIComponent(this.dynamicFilter.field.key), { params: {
-        size: 10,
-        qs,
-        ...this.conceptFilters,
-        q: this.search ? this.search + '*' : ''
-      } })
+      this.items = await this.$axios.$get(this.config.datasets[0].href + '/values/' + encodeURIComponent(this.dynamicFilter.field.key), {
+        params: {
+          size: 10,
+          qs,
+          ...this.conceptFilters,
+          q: this.search ? this.search + '*' : ''
+        }
+      })
       this.loading = false
     },
     applyFilter(values) {

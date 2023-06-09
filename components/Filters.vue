@@ -1,7 +1,7 @@
 <template lang="html">
   <v-layout row wrap>
     <v-flex v-for="(dynamicFilter, i) in config.dynamicFilters" :key="i" xs12 sm6 md4>
-      <chart-filter :indice="i"/>
+      <chart-filter :indice="i" />
     </v-flex>
   </v-layout>
 </template>
