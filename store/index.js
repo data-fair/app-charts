@@ -119,7 +119,6 @@ export default () => {
           qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
           ...state.conceptFilters,
           finalizedAt: config.datasets[0].finalizedAt // for better caching
-
         }
 
         try {

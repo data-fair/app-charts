@@ -12,6 +12,10 @@
     "precommit": "npm run lint",
     "analyze": "nuxt build --analyze"
   },
+  "files": [
+    "/dist",
+    "/README.md"
+  ],
   "dependencies": {
     "@koumoul/gh-pages-multi": "^0.7.1",
     "@koumoul/v-iframe": "^0.20.3",
