@@ -47,6 +47,10 @@
     {
       "title": "Présentation",
       "properties": {
+        "title": {
+          "title": "Titre du graphique",
+          "type": "string"
+        },
         "colorscheme": {
           "$ref": "#/definitions/colorscheme"
         }
