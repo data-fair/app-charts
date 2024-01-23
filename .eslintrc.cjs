@@ -1,13 +1,14 @@
 /* eslint-env node */
 module.exports = {
   root: true,
+  env: {
+    node: true
+  },
   extends: [
     'plugin:vue/vue3-essential',
     'eslint:recommended',
     // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-    'standard',
-    // https://github.com/vuejs/eslint-plugin-vue
-    'plugin:vue/recommended'
+    'standard'
   ],
   parserOptions: {
     parser: '@babel/eslint-parser',
@@ -18,7 +19,6 @@ module.exports = {
     }
   },
   plugins: [],
-  // add your custom rules here
   rules: {
     // allow paren-less arrow functions
     'arrow-parens': 0,
