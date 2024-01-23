@@ -1,0 +1,10 @@
+{
+	"presets": [
+		"@babel/preset-env",
+		"vue"
+	],
+	"plugins": [
+		"@babel/plugin-transform-runtime",
+		"@babel/plugin-syntax-dynamic-import"
+	]
+}
