@@ -1,8 +1,20 @@
+import { createPinia } from 'pinia'
 import useMainStore from '@/stores/useMainStore'
 import 'url-polyfill'
 
-export function useInit(env, router) {
-  const store = useMainStore()
-  window.vIframeOptions = { router, reactiveParams: true }
-  store.init(env)
+const StorePlugin = {
+  install(app, options) {
+    const pinia = createPinia()
+    app.use(pinia)
+
+    const store = useMainStore()
+    store.init(options.environement)
+
+    window.vIframeOptions = { router: app.config.globalProperties.$router, reactiveParams: true }
+    app.provide('mainStore', store)
+
+    app.config.globalProperties.$mainStore = store
+  }
 }
+
+export default StorePlugin

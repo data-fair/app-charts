@@ -40,8 +40,6 @@ const useMainStore = defineStore('main', {
       this.setAny({ env })
 
       if (this.application) {
-        router.options.base = router.history.base = new URL(this.application.exposedUrl).pathname
-
         const config = this.config
         if (config && config.dynamicFilters) {
           config.dynamicFilters.forEach(f => {
@@ -120,7 +118,8 @@ const useMainStore = defineStore('main', {
       }
 
       try {
-        const data = await axios.get(config.datasets[0].href + '/lines', { params })
+        let data = await axios.get(config.datasets[0].href + '/lines', { params })
+        data = data.data
         this.setAny({ data })
       } catch (err) {
         this.setError((err.response && err.response.data) || err.message)

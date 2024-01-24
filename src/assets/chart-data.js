@@ -6,8 +6,7 @@ export default function prepareData(config, data) {
   else return prepareAggData(config, data)
 }
 
-function prepareLinesData(config, olddata) {
-  const data = olddata.data
+function prepareLinesData(config, data) {
   if (config.chartType.type === 'pie' && config.dataType.valuesFields.length > 1) {
     throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
   }
