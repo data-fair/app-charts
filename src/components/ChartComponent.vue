@@ -1,7 +1,7 @@
 <template lang="html">
   <v-container fluid class="pa-1">
     <template v-if="!incompleteConfig">
-      <Filters v-if="config.dynamicFilters && config.dynamicFilters.length" />
+      <FiltersComponent v-if="config.dynamicFilters && config.dynamicFilters.length" />
       <canvas ref="chartCanvas" :height="height" :width="width" />
     </template>
   </v-container>
@@ -11,11 +11,10 @@
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import useMainStore from '@/stores/useMainStore'
 import FiltersComponent from './FiltersComponent.vue'
-import Chart from 'chart.js/auto'
+import Chart from 'chart.js'
 import chartUtils from '../assets/chart-utils.js'
 
 export default {
-  // eslint-disable-next-line vue/no-unused-components
   components: { FiltersComponent },
   setup() {
     const store = useMainStore()

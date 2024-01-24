@@ -6,7 +6,8 @@ export default function prepareData(config, data) {
   else return prepareAggData(config, data)
 }
 
-function prepareLinesData(config, data) {
+function prepareLinesData(config, olddata) {
+  const data = olddata.data
   if (config.chartType.type === 'pie' && config.dataType.valuesFields.length > 1) {
     throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
   }
@@ -15,18 +16,27 @@ function prepareLinesData(config, data) {
     : getColors(config.colorscheme, config.dataType.valuesFields.length)
 
   const xLabels = config.dataType.labelsField['x-labels']
-  return {
-    labels: data.results.map(r => (xLabels && xLabels[r[config.dataType.labelsField.key]]) || r[config.dataType.labelsField.key]),
-    datasets: config.dataType.valuesFields.map((f, i) => {
-      const backgroundColor = colors[i]
-      return {
-        data: data.results.map(r => r[f.key]),
-        key: f.key,
-        label: f.label,
-        backgroundColor,
-        borderColor: backgroundColor
-      }
-    })
+  if (Array.isArray(config.dataType.valuesFields) && config.dataType.labelsField) {
+    if (!Array.isArray(data.results)) {
+      console.error('data.results is not an array')
+      return { labels: [], datasets: [] }
+    }
+    return {
+      labels: data.results.map(r => (xLabels && xLabels[r[config.dataType.labelsField.key]]) || r[config.dataType.labelsField.key]),
+      datasets: config.dataType.valuesFields.map((f, i) => {
+        const backgroundColor = colors[i]
+        return {
+          data: data.results.map(r => r[f.key]),
+          key: f.key,
+          label: f.label,
+          backgroundColor,
+          borderColor: backgroundColor
+        }
+      })
+    }
+  } else {
+    console.error('valuesFields or labelsField is undefined or not an array')
+    return { labels: [], datasets: [] }
   }
 }
 

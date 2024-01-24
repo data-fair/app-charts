@@ -15,15 +15,12 @@
   },
   "files": [
     "/dist",
-    "/public",
-    "/src",
-    "/index.html",
     "/README.md"
   ],
   "dependencies": {
     "@koumoul/gh-pages-multi": "^0.7.2",
     "axios": "^1.6.5",
-    "chart.js": "^3.0.0",
+    "chart.js": "^2.8.0",
     "color-js": "^1.0.5",
     "debounce": "^2.0.0",
     "google-palette": "^1.1.1",

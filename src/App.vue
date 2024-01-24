@@ -1,5 +1,4 @@
 <template>
-  <!-- Use the DefaultLayout as the main layout for your app -->
   <DefaultLayout />
 </template>
 
