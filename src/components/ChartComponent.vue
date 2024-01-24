@@ -11,8 +11,10 @@
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import useMainStore from '@/stores/useMainStore'
 import FiltersComponent from './FiltersComponent.vue'
-import Chart from 'chart.js'
+import { Chart, registerables } from 'chart.js'
 import chartUtils from '../assets/chart-utils.js'
+
+Chart.register(...registerables)
 
 export default {
   components: { FiltersComponent },
@@ -57,7 +59,7 @@ export default {
       if (!data.value || incompleteConfig.value) return
       try {
         if (!chart.value) {
-          chart.value = new Chart(chartCanvas.value, chartUtils.prepareChart(config.value, data.value))
+          chart.value = new Chart(chartCanvas.value.getContext('2d'), chartUtils.prepareChart(config.value, data.value))
         } else {
           chart.value.data = chartUtils.prepareChart(config.value, data.value).data
           chart.value.update()

@@ -119,7 +119,7 @@ const useMainStore = defineStore('main', {
 
       try {
         let data = await axios.get(config.datasets[0].href + '/lines', { params })
-        data = data.data
+        if (data.data) data = data.data
         this.setAny({ data })
       } catch (err) {
         this.setError((err.response && err.response.data) || err.message)

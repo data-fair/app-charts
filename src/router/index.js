@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import IndexPage from '../views/IndexPage.vue'
 
 const BASE_PATH = import.meta.env.BASE_URL ?? '/app/'
 const router = createRouter({
@@ -8,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: IndexPage
+      component: () => import('../views/IndexPage.vue')
     },
     {
       path: '/about',
