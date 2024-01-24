@@ -1,6 +1,5 @@
 <template>
   <ChartComponent v-if="application" />
-  <p v-else>L'application n'est pas disponible</p>
 </template>
 
 <script>

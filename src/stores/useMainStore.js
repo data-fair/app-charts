@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import debounce from 'debounce'
 import { filters2qs } from '../assets/filters-utils'
 import axios from 'axios'
+import debounce from 'debounce'
 import router from '../router/index.js'
 
 const useMainStore = defineStore('main', {

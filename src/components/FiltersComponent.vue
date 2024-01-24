@@ -1,9 +1,11 @@
 <template lang="html">
-  <v-layout row wrap>
-    <v-flex v-for="(dynamicFilter, i) in config.dynamicFilters" :key="i" xs12 sm6 md4>
-      <chart-filter :indice="i" />
-    </v-flex>
-  </v-layout>
+  <v-container>
+    <v-row>
+      <v-col v-for="(dynamicFilter, i) in config.dynamicFilters" :key="i" cols="12" sm="6" md="4">
+        <chart-filter :indice="i" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
