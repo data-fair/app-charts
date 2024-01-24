@@ -7,14 +7,14 @@ function formatValue(value, maxLength) {
   return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
 }
 
-function getXAxes(config) {
+function getXAxes(config, data) {
   if (config.dataType.groupBy && config.dataType.groupBy.type === 'date') {
     return { type: 'time', time: { unit: config.dataType.groupBy.interval } }
   } else {
     return {
       ticks: {
         callback(value) {
-          return formatValue(value, 12)
+          return formatValue(data.labels[value], 12)
         }
       }
     }
@@ -40,7 +40,7 @@ const tooltips = {
       return formatValue(value, 50)
     },
     label: (tooltipItem) => {
-      const label = ''
+      const label = tooltipItem.label || ''
       const value = tooltipItem.raw
       return `${formatValue(label, 20)}: ${formatValue(value, 40)}`
     }
@@ -57,7 +57,7 @@ function getStackedTooltips(data) {
 const chartOptions = {}
 chartOptions.bar = (config, data) => {
   return {
-    type: config.chartType.horizontal ? 'horizontalBar' : 'bar',
+    type: 'bar',
     data,
     options: {
       indexAxis: config.chartType.horizontal ? 'y' : 'x',
@@ -67,7 +67,7 @@ chartOptions.bar = (config, data) => {
         tooltip: tooltips
       },
       scales: {
-        x: getXAxes(config),
+        x: getXAxes(config, data),
         y: getYAxes(config)
       }
     }
@@ -91,7 +91,7 @@ chartOptions['multi-bar'] = (config, data) => {
       scales: {
         x: {
           stacked: true,
-          ...getXAxes(config)
+          ...getXAxes(config, data)
         },
         y: {
           stacked: true,
@@ -117,7 +117,7 @@ chartOptions['grouped-bar'] = (config, data) => {
         tooltip: tooltips
       },
       scales: {
-        x: getXAxes(config),
+        x: getXAxes(config, data),
         y: getYAxes(config)
       }
     }
@@ -153,7 +153,7 @@ chartOptions.line = (config, data) => {
         tooltip: tooltips
       },
       scales: {
-        x: getXAxes(config),
+        x: getXAxes(config, data),
         y: getYAxes(config)
       }
     }
@@ -173,7 +173,7 @@ chartOptions['multi-line'] = (config, data) => {
         tooltip: tooltips
       },
       scales: {
-        x: getXAxes(config),
+        x: getXAxes(config, data),
         y: getYAxes(config)
       }
     }
@@ -195,7 +195,7 @@ chartOptions.area = (config, data) => {
         tooltip: tooltips
       },
       scales: {
-        x: getXAxes(config),
+        x: getXAxes(config, data),
         y: getYAxes(config)
       }
     }
@@ -219,7 +219,7 @@ chartOptions['multi-area'] = (config, data) => {
       scales: {
         x: {
           stacked: true,
-          ...getXAxes(config)
+          ...getXAxes(config, data)
         },
         y: {
           stacked: true,

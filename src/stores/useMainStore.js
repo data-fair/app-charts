@@ -130,7 +130,7 @@ const useMainStore = defineStore('main', {
       try {
         await axios.post(this.application.href + '/error', { message: error.message || error })
       } catch (err) {
-        console.log('Failed to report error', err)
+        console.error('Failed to report error', err)
       }
     }
   }
