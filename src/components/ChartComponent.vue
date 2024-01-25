@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, watch, nextTick, shallowRef } from 'vue'
 import useMainStore from '@/stores/useMainStore'
 import FiltersComponent from './FiltersComponent.vue'
 import { Chart, registerables } from 'chart.js'
@@ -20,8 +20,8 @@ export default {
   components: { FiltersComponent },
   setup() {
     const store = useMainStore()
-    const chartCanvas = ref(null)
-    const chart = ref(null)
+    const chartCanvas = shallowRef(null)
+    const chart = shallowRef(null)
     const chartTop = ref(0)
     const height = ref(null)
     const width = ref(null)
@@ -33,7 +33,7 @@ export default {
     watch(data, async () => {
       await nextTick()
       renderChart()
-    }, { immediate: true })
+    }, { immediate: false })
 
     onMounted(async () => {
       await nextTick()

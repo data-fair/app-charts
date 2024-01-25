@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col v-for="(dynamicFilter, i) in config.dynamicFilters" :key="i" cols="12" sm="6" md="4">
-        <chart-filter :indice="i" />
+        <ChartFilter :indice="i" />
       </v-col>
     </v-row>
   </v-container>

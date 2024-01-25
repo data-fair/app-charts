@@ -8,7 +8,9 @@ const app = createApp(App)
 let env = import.meta.env
 
 if (env === undefined) {
-  env = {}
+  env = {
+    defaultDataFairUrl: process.env.DEFAULT_DATA_FAIR ?? 'http://localhost:5888'
+  }
 }
 
 app.use(StorePlugin, { environement: env })

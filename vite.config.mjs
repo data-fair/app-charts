@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import visualizer from 'rollup-plugin-visualizer'
+import { visualizer } from 'rollup-plugin-visualizer'
 import Unfonts from 'unplugin-fonts/vite'
 import { createVuetify } from 'vuetify/lib/framework.mjs'
 import commonjs from 'vite-plugin-commonjs'
@@ -30,7 +30,8 @@ export default defineConfig({
     process.env.ANALYZE && visualizer({
       open: true,
       gzipSize: true,
-      brotliSize: true
+      brotliSize: true,
+      template: 'treemap'
     }),
     commonjs({
       include: [

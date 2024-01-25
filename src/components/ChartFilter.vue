@@ -11,7 +11,7 @@
     class="chart-filter"
     hide-no-data
     placeholder="Saisissez une valeur"
-    @change="applyFilter"
+    @update:modelValue="applyFilter"
   />
 </template>
 
