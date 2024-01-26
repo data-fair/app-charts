@@ -10,13 +10,12 @@
 
 <script>
 import ChartFilter from './ChartFilter.vue'
-import useMainStore from '@/stores/useMainStore'
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, inject } from 'vue'
 
 export default defineComponent({
   components: { ChartFilter },
   setup() {
-    const store = useMainStore()
+    const store = inject('appInfo')
 
     const config = computed(() => store.config)
     const application = computed(() => store.application)

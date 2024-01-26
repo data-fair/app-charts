@@ -5,24 +5,23 @@ import './styles/settings.scss'
 import colors from 'vuetify/lib/util/colors'
 import App from './App.vue'
 import router from './router'
-import useMainStore from '@/stores/useMainStore'
+import useAppInfo from './composables/useAppInfo'
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import { createVuetify } from 'vuetify'
 import { VAutocomplete, VContainer, VRow, VCol } from 'vuetify/components'
 
-const StorePlugin = {
+const AppInfoPlugin = {
   install(app, options) {
-    const pinia = createPinia()
-    app.use(pinia)
+    const appInfo = useAppInfo()
+    appInfo.init(options.environement)
 
-    const store = useMainStore()
-    store.init(options.environement)
+    window.vIframeOptions = {
+      router: app.config.globalProperties.$router,
+      reactiveParams: true
+    }
 
-    window.vIframeOptions = { router: app.config.globalProperties.$router, reactiveParams: true }
-    app.provide('mainStore', store)
-
-    app.config.globalProperties.$mainStore = store
+    app.provide('appInfo', appInfo)
+    app.config.globalProperties.$appInfo = appInfo
   }
 }
 
@@ -55,7 +54,7 @@ if (env === undefined) {
   }
 }
 
-app.use(StorePlugin, { environement: env })
+app.use(AppInfoPlugin, { environement: env })
 app.use(router)
 app.use(vuetify)
 

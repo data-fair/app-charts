@@ -10,16 +10,15 @@
 <script>
 import chartUtils from '../assets/chart-utils.js'
 import FiltersComponent from './FiltersComponent.vue'
-import useMainStore from '@/stores/useMainStore'
 import { Chart, registerables } from 'chart.js'
-import { ref, computed, onMounted, watch, nextTick, shallowRef } from 'vue'
+import { ref, computed, onMounted, watch, nextTick, shallowRef, inject } from 'vue'
 
 Chart.register(...registerables)
 
 export default {
   components: { FiltersComponent },
   setup() {
-    const store = useMainStore()
+    const store = inject('appInfo')
     const chartCanvas = shallowRef(null)
     const chart = shallowRef(null)
     const chartTop = ref(0)

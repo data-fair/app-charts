@@ -17,15 +17,14 @@
 
 <script>
 import axios from 'axios'
-import useMainStore from '@/stores/useMainStore'
 import { filters2qs } from '../assets/filters-utils'
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
   props: ['indice'],
   setup(props) {
-    const store = useMainStore()
+    const store = inject('appInfo')
     const router = useRouter()
     const loading = ref(false)
     const search = ref('')

@@ -1,7 +1,7 @@
 {
   "name": "@data-fair/app-charts",
   "version": "0.11.0",
-  "description": "Nuxt.js project",
+  "description": "A simple charts application for data-fair",
   "author": "Alban Mouton <alban.mouton@gmail.com>",
   "homepage": "https://data-fair.github.io/3/user-guide-backoffice/charts",
   "scripts": {
@@ -25,7 +25,6 @@
     "color-js": "^1.0.5",
     "debounce": "^2.0.0",
     "google-palette": "^1.1.1",
-    "pinia": "^2.1.7",
     "url-polyfill": "^1.1.12",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",

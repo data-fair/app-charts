@@ -4,14 +4,13 @@
 
 <script>
 import ChartComponent from './components/ChartComponent.vue'
-import useMainStore from '@/stores/useMainStore'
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch, onMounted, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
   components: { ChartComponent },
   setup() {
-    const store = useMainStore()
+    const store = inject('appInfo')
     const route = useRoute()
 
     const application = computed(() => store.application)
