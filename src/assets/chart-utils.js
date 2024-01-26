@@ -1,4 +1,4 @@
-import Color from 'color-js'
+import { setAlpha, darkenByRatio } from './colors.js'
 import prepareData from './chart-data.js'
 
 function formatValue(value, maxLength) {
@@ -104,7 +104,7 @@ chartOptions['multi-bar'] = (config, data) => {
 
 chartOptions['grouped-bar'] = (config, data) => {
   data.datasets.forEach(dataset => {
-    dataset.borderColor = Color(dataset.backgroundColor).setAlpha(0.5).toCSS()
+    dataset.borderColor = setAlpha(dataset.backgroundColor, 0.5)
     dataset.borderWidth = 1
   })
   return {
@@ -182,7 +182,7 @@ chartOptions['multi-line'] = (config, data) => {
 
 chartOptions.area = (config, data) => {
   data.datasets.forEach(dataset => {
-    dataset.backgroundColor = Color(dataset.borderColor).setAlpha(0.5).toCSS()
+    dataset.backgroundColor = setAlpha(dataset.backgroundColor, 0.5)
     dataset.fill = true
   })
   return {
@@ -204,7 +204,7 @@ chartOptions.area = (config, data) => {
 
 chartOptions['multi-area'] = (config, data) => {
   data.datasets.forEach(dataset => {
-    dataset.borderColor = Color(dataset.borderColor).darkenByRatio(0.25).toCSS()
+    dataset.backgroundColor = darkenByRatio(dataset.backgroundColor, 0.25)
     dataset.fill = true
   })
   return {

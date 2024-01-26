@@ -1,13 +1,37 @@
-import Color from 'color-js'
 import palette from 'google-palette'
 
-// use a simple greysacle to complete color palettes, always better than a single grey color
-const greyscale = []
-for (let i = 5; i < 25; i++) {
-  greyscale.push(Color('#000000').setLightness(i / 30).toCSS())
+function parseColor(input) {
+  const div = document.createElement('div')
+  div.style.color = input
+  document.body.appendChild(div)
+  const m = getComputedStyle(div).color.match(/^rgb(a)?\((\d+),\s*(\d+),\s*(\d+)(,\s*(\d+.\d+))?\)$/)
+  document.body.removeChild(div)
+  if (m) return { r: m[2], g: m[3], b: m[4], a: m[6] ? m[6] : '1' }
+  else throw new Error('Color not parsed')
 }
 
-export default (colorscheme, size) => {
+export function setAlpha(color, alpha) {
+  const { r, g, b } = parseColor(color)
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
+export function darkenByRatio(color, ratio) {
+  const { r, g, b, a } = parseColor(color)
+  const darken = value => Math.round(value * (1 - ratio))
+  return `rgba(${darken(r)},${darken(g)},${darken(b)},${a})`
+}
+
+// use a simple greyscale to complete color palettes, always better than a single grey color
+function generateGreyscale(start, end, steps) {
+  const greyscale = []
+  for (let i = start; i <= end; i++) {
+    const lightness = Math.round((i / steps) * 255)
+    greyscale.push(`rgb(${lightness},${lightness},${lightness})`)
+  }
+  return greyscale
+}
+
+export default function getColors(colorscheme, size) {
   const typeMax = {
     qualitative: 8,
     diverging: 11,
@@ -21,5 +45,6 @@ export default (colorscheme, size) => {
     if (colorscheme.subset === 'dark') colors = colors.slice(offset)
   }
   if (colorscheme.reverse) colors.reverse()
-  return colors.concat(greyscale)
+  const greyscaleColors = generateGreyscale(5, 25, 30)
+  return colors.concat(greyscaleColors)
 }

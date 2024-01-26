@@ -10,10 +10,10 @@
 <script>
 import chartUtils from '../assets/chart-utils.js'
 import FiltersComponent from './FiltersComponent.vue'
-import { Chart, registerables } from 'chart.js'
+import { Chart, BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, RadarController, RadialLinearScale, Filler, Title, Tooltip } from 'chart.js'
 import { ref, computed, onMounted, watch, nextTick, shallowRef, inject } from 'vue'
 
-Chart.register(...registerables)
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, RadarController, RadialLinearScale, Filler, Title, Tooltip)
 
 export default {
   components: { FiltersComponent },

@@ -22,7 +22,6 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.6.7",
     "chart.js": "^4.4.1",
-    "color-js": "^1.0.5",
     "debounce": "^2.0.0",
     "google-palette": "^1.1.1",
     "url-polyfill": "^1.1.12",
