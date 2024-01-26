@@ -1,12 +1,11 @@
-import { fileURLToPath, URL } from 'node:url'
-
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { visualizer } from 'rollup-plugin-visualizer'
-import Unfonts from 'unplugin-fonts/vite'
-import { createVuetify } from 'vuetify/lib/framework.mjs'
 import commonjs from 'vite-plugin-commonjs'
+import Unfonts from 'unplugin-fonts/vite'
+import vue from '@vitejs/plugin-vue'
+import { createVuetify } from 'vuetify/lib/framework.mjs'
+import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
 import { transformAssetUrls } from 'vite-plugin-vuetify'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const BASE_PATH = process.env.PUBLIC_URL ?? '/app/'
 

@@ -1,5 +1,5 @@
-import palette from 'google-palette'
 import Color from 'color-js'
+import palette from 'google-palette'
 
 // use a simple greysacle to complete color palettes, always better than a single grey color
 const greyscale = []

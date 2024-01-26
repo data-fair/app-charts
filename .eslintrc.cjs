@@ -28,10 +28,5 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // This rule is required because atom vue-format package remove the space
     'space-before-function-paren': 0
-    // 'vue/max-attributes-per-line': 'off',
-    // 'vue/require-prop-types': 'off',
-    // 'no-new': 'off',
-    // 'no-template-curly-in-string': 'off',
-    // 'vue/multi-word-component-names': 'off'
   }
 }

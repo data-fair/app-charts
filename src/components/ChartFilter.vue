@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import { ref, computed, watch, onMounted } from 'vue'
-import useMainStore from '@/stores/useMainStore'
-import { useRouter } from 'vue-router'
 import axios from 'axios'
+import useMainStore from '@/stores/useMainStore'
 import { filters2qs } from '../assets/filters-utils'
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default {
   props: ['indice'],

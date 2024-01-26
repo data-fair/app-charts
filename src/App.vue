@@ -1,16 +1,51 @@
 <template>
-  <DefaultLayout />
+  <ChartComponent v-if="application" />
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import DefaultLayout from './layouts/DefaultLayout.vue'
+import ChartComponent from './components/ChartComponent.vue'
+import useMainStore from '@/stores/useMainStore'
+import { computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
-export default defineComponent({
-  components: {
-    DefaultLayout
+export default {
+  components: { ChartComponent },
+  setup() {
+    const store = useMainStore()
+    const route = useRoute()
+
+    const application = computed(() => store.application)
+
+    const fetchData = () => {
+      const conceptFilters = {}
+      for (const key in route.query) {
+        if (key.startsWith('_c_')) {
+          conceptFilters[key] = route.query[key]
+        }
+      }
+      store.conceptFilters = conceptFilters
+      store.fetchData()
+    }
+
+    watch(
+      () => route.query,
+      () => {
+        fetchData()
+      },
+      { immediate: true }
+    )
+
+    onMounted(() => {
+      if (!application.value) {
+        window.location.href = 'https://github.com/data-fair/app-charts'
+      }
+    })
+
+    return {
+      application
+    }
   }
-})
+}
 </script>
 
 <style>

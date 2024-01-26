@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch, nextTick, shallowRef } from 'vue'
-import useMainStore from '@/stores/useMainStore'
-import FiltersComponent from './FiltersComponent.vue'
-import { Chart, registerables } from 'chart.js'
 import chartUtils from '../assets/chart-utils.js'
+import FiltersComponent from './FiltersComponent.vue'
+import useMainStore from '@/stores/useMainStore'
+import { Chart, registerables } from 'chart.js'
+import { ref, computed, onMounted, watch, nextTick, shallowRef } from 'vue'
 
 Chart.register(...registerables)
 
@@ -33,7 +33,7 @@ export default {
     watch(data, async () => {
       await nextTick()
       renderChart()
-    }, { immediate: false })
+    }, { immediate: true })
 
     onMounted(async () => {
       await nextTick()

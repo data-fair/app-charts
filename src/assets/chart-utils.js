@@ -1,5 +1,5 @@
-import prepareData from './chart-data.js'
 import Color from 'color-js'
+import prepareData from './chart-data.js'
 
 function formatValue(value, maxLength) {
   if (typeof value === 'number') return value.toLocaleString()
@@ -204,7 +204,6 @@ chartOptions.area = (config, data) => {
 
 chartOptions['multi-area'] = (config, data) => {
   data.datasets.forEach(dataset => {
-    // dataset.backgroundColor = Color(dataset.backgroundColor).lightenByRatio(0.05).toCSS()
     dataset.borderColor = Color(dataset.borderColor).darkenByRatio(0.25).toCSS()
     dataset.fill = true
   })

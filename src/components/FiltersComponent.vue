@@ -10,8 +10,8 @@
 
 <script>
 import ChartFilter from './ChartFilter.vue'
-import { defineComponent, computed } from 'vue'
 import useMainStore from '@/stores/useMainStore'
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
   components: { ChartFilter },
