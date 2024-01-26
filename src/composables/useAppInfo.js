@@ -96,11 +96,11 @@ export default function useAppInfo() {
     }
 
     if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
-      params.field = `${params.field}${config.dataType.secondGroupBy.field.key}`
-      params.agg_size = `${params.agg_size}${config.dataType.secondGroupBy.size}`
-      params.interval = `${params.interval}${config.dataType.secondGroupBy.type === 'value' ? 'value' : config.dataType.secondGroupBy.interval}`
+      params.field = `${params.field};${config.dataType.secondGroupBy.field.key}`
+      params.agg_size = `${params.agg_size};${config.dataType.secondGroupBy.size}`
+      params.interval = `${params.interval};${config.dataType.secondGroupBy.type === 'value' ? 'value' : config.dataType.secondGroupBy.interval}`
       if (config.dataType.secondSort) {
-        params.sort = `${params.sort}${config.dataType.secondSort}`
+        params.sort = `${params.sort};${config.dataType.secondSort}`
       }
     }
 

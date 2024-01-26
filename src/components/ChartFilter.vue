@@ -7,11 +7,13 @@
     v-model:search="search"
     :clearable="true"
     :multiple="true"
-    :filter="() => true"
+    :filter="item => item !== null && item !== undefined"
     class="chart-filter"
     hide-no-data
+    hide-details
     placeholder="Saisissez une valeur"
     @update:modelValue="applyFilter"
+    @click:clear="clearFilter"
   />
 </template>
 
@@ -42,8 +44,7 @@ export default {
     })
 
     watch(higherFilters, async () => {
-      dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
-      search.value = ''
+      clearFilter()
       await fetchItems()
     }, { deep: true })
 
@@ -82,12 +83,20 @@ export default {
       router.replace({ query: newQuery })
     }
 
+    const clearFilter = () => {
+      applyFilter(null)
+      dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
+      search.value = ''
+      items.value = null
+    }
+
     return {
       search,
       loading,
       items,
       dynamicFilter,
-      applyFilter
+      applyFilter,
+      clearFilter
     }
   }
 }
@@ -95,6 +104,6 @@ export default {
 
 <style lang="css">
 .chart-filter .v-text-field__details {
-  display: none
+  display: none;
 }
 </style>
