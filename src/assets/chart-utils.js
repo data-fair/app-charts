@@ -21,7 +21,7 @@ function getXAxes(config, data) {
   }
 }
 
-function getYAxes(config) {
+function getYAxes() {
   return {
     ticks: {
       beginAtZero: true,
@@ -32,26 +32,42 @@ function getYAxes(config) {
   }
 }
 
-const tooltips = {
-  callbacks: {
-    title: (tooltipItems) => {
-      const value = tooltipItems[0].label
-      // title might be truncated in tooltip, but not as much as in xAxis labels
-      return formatValue(value, 50)
-    },
-    label: (tooltipItem) => {
-      const label = tooltipItem.label || ''
-      const value = tooltipItem.raw
-      return `${formatValue(label, 20)}: ${formatValue(value, 40)}`
+function title(tooltipItems, data) {
+  const value = data.labels[tooltipItems[0].datasetIndex]
+  // title might be truncated in tooltip, but not as much as in xAxis labels
+  return formatValue(value, 50)
+}
+
+function label(tooltipItem, data) {
+  const value = tooltipItem.yLabel || data.datasets[tooltipItem.datasetIndex].data[tooltipItem.dataIndex]
+  let label
+  if (tooltipItem.datasetIndex !== undefined) {
+    label = data.datasets[tooltipItem.datasetIndex].label
+  }
+  if (label) return `${formatValue(label, 20)}: ${formatValue(value, 40)}`
+  else return formatValue(value, 40)
+}
+
+function getSingleTooltips(data) {
+  return {
+    callbacks: {
+      title: (tooltipItems) => title(tooltipItems, data),
+      label: (tooltipItem) => label(tooltipItem, data)
     }
   }
 }
 
 function getStackedTooltips(data) {
+  const customTooltips = {
+    callbacks: {
+      title: (tooltipItems) => title(tooltipItems, data),
+      label: (tooltipItem) => label(tooltipItem, data)
+    }
+  }
   // when there are many items, better not to generate a huge tooltip
-  if (data.datasets.length > 10) return tooltips
+  if (data.datasets.length > 10) return customTooltips
   // otherwise an aggregated tooltip is handy
-  return { mode: 'index', intersect: false, ...tooltips }
+  return { mode: 'index', intersect: false, ...customTooltips }
 }
 
 const chartOptions = {}
@@ -64,11 +80,11 @@ chartOptions.bar = (config, data) => {
       plugins: {
         title: { display: true, text: chartTitle(config) },
         legend: { display: false },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       },
       scales: {
         x: getXAxes(config, data),
-        y: getYAxes(config)
+        y: getYAxes()
       }
     }
   }
@@ -95,7 +111,7 @@ chartOptions['multi-bar'] = (config, data) => {
         },
         y: {
           stacked: true,
-          ...getYAxes(config)
+          ...getYAxes()
         }
       }
     }
@@ -114,11 +130,11 @@ chartOptions['grouped-bar'] = (config, data) => {
       indexAxis: config.chartType.horizontal ? 'y' : 'x',
       plugins: {
         title: { display: true, text: chartTitle(config) },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       },
       scales: {
         x: getXAxes(config, data),
-        y: getYAxes(config)
+        y: getYAxes()
       }
     }
   }
@@ -130,7 +146,7 @@ chartOptions.pie = (config, data) => {
     data,
     options: {
       title: { display: true, text: chartTitle(config) },
-      tooltip: tooltips
+      tooltip: getSingleTooltips(data)
     }
   }
 }
@@ -150,11 +166,11 @@ chartOptions.line = (config, data) => {
       plugins: {
         legend: { display: false },
         title: { display: true, text: chartTitle(config) },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       },
       scales: {
         x: getXAxes(config, data),
-        y: getYAxes(config)
+        y: getYAxes()
       }
     }
   }
@@ -170,11 +186,11 @@ chartOptions['multi-line'] = (config, data) => {
     options: {
       plugins: {
         title: { display: true, text: chartTitle(config) },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       },
       scales: {
         x: getXAxes(config, data),
-        y: getYAxes(config)
+        y: getYAxes()
       }
     }
   }
@@ -192,11 +208,11 @@ chartOptions.area = (config, data) => {
       plugins: {
         legend: { display: false },
         title: { display: true, text: chartTitle(config) },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       },
       scales: {
         x: getXAxes(config, data),
-        y: getYAxes(config)
+        y: getYAxes()
       }
     }
   }
@@ -222,7 +238,7 @@ chartOptions['multi-area'] = (config, data) => {
         },
         y: {
           stacked: true,
-          ...getYAxes(config)
+          ...getYAxes()
         }
       }
     }
@@ -240,7 +256,7 @@ chartOptions.radar = (config, data) => {
       plugins: {
         legend: { display: false },
         title: { display: true, text: chartTitle(config) },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       }
     }
   }
@@ -256,7 +272,7 @@ chartOptions['multi-radar'] = (config, data) => {
     options: {
       plugins: {
         title: { display: true, text: chartTitle(config) },
-        tooltip: tooltips
+        tooltip: getSingleTooltips(data)
       }
     }
   }
