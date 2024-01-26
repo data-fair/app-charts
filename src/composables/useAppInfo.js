@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'redaxios'
 import debounce from 'debounce'
 import router from '../router/index.js'
 import { filters2qs } from '../assets/filters-utils'

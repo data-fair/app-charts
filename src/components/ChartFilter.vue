@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'redaxios'
 import { filters2qs } from '../assets/filters-utils'
 import { ref, computed, watch, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
