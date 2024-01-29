@@ -7,21 +7,29 @@ function formatValue(value, maxLength) {
   return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
 }
 
-function getXAxes(config, data) {
+function getXAxisLabels(config, data, value) {
+  if (config.dynamicFilters && config.dynamicFilters.values && config.dynamicFilters.values[value]) {
+    return formatValue(config.dynamicFilters.values[value], 12)
+  } else {
+    return formatValue(data.labels[value], 12)
+  }
+}
+
+function getXAxis(config, data) {
   if (config.dataType.groupBy && config.dataType.groupBy.type === 'date') {
     return { type: 'time', time: { unit: config.dataType.groupBy.interval } }
   } else {
     return {
       ticks: {
         callback(value) {
-          return formatValue(data.labels[value], 12)
+          return getXAxisLabels(config, data, value)
         }
       }
     }
   }
 }
 
-function getYAxes() {
+function getYAxis() {
   return {
     ticks: {
       beginAtZero: true,
@@ -32,14 +40,14 @@ function getYAxes() {
   }
 }
 
-function title(tooltipItems, data) {
-  const value = data.labels[tooltipItems[0].datasetIndex]
+function tooltipTitle(tooltipItems, data) {
+  const value = tooltipItems[0].label || data.labels[tooltipItems[0].datasetIndex]
   // title might be truncated in tooltip, but not as much as in xAxis labels
   return formatValue(value, 50)
 }
 
-function label(tooltipItem, data) {
-  const value = tooltipItem.yLabel || data.datasets[tooltipItem.datasetIndex].data[tooltipItem.dataIndex]
+function tooltipLabel(tooltipItem, data) {
+  const value = tooltipItem.raw || data.datasets[tooltipItem.datasetIndex].data[tooltipItem.dataIndex]
   let label
   if (tooltipItem.datasetIndex !== undefined) {
     label = data.datasets[tooltipItem.datasetIndex].label
@@ -51,8 +59,8 @@ function label(tooltipItem, data) {
 function getSingleTooltips(data) {
   return {
     callbacks: {
-      title: (tooltipItems) => title(tooltipItems, data),
-      label: (tooltipItem) => label(tooltipItem, data)
+      title: (tooltipItems) => tooltipTitle(tooltipItems, data),
+      label: (tooltipItem) => tooltipLabel(tooltipItem, data)
     }
   }
 }
@@ -60,8 +68,8 @@ function getSingleTooltips(data) {
 function getStackedTooltips(data) {
   const customTooltips = {
     callbacks: {
-      title: (tooltipItems) => title(tooltipItems, data),
-      label: (tooltipItem) => label(tooltipItem, data)
+      title: (tooltipItems) => tooltipTitle(tooltipItems, data),
+      label: (tooltipItem) => tooltipLabel(tooltipItem, data)
     }
   }
   // when there are many items, better not to generate a huge tooltip
@@ -83,8 +91,8 @@ chartOptions.bar = (config, data) => {
         tooltip: getSingleTooltips(data)
       },
       scales: {
-        x: getXAxes(config, data),
-        y: getYAxes()
+        x: getXAxis(config, data),
+        y: getYAxis()
       }
     }
   }
@@ -107,11 +115,11 @@ chartOptions['multi-bar'] = (config, data) => {
       scales: {
         x: {
           stacked: true,
-          ...getXAxes(config, data)
+          ...getXAxis(config, data)
         },
         y: {
           stacked: true,
-          ...getYAxes()
+          ...getYAxis()
         }
       }
     }
@@ -133,8 +141,8 @@ chartOptions['grouped-bar'] = (config, data) => {
         tooltip: getSingleTooltips(data)
       },
       scales: {
-        x: getXAxes(config, data),
-        y: getYAxes()
+        x: getXAxis(config, data),
+        y: getYAxis()
       }
     }
   }
@@ -169,8 +177,8 @@ chartOptions.line = (config, data) => {
         tooltip: getSingleTooltips(data)
       },
       scales: {
-        x: getXAxes(config, data),
-        y: getYAxes()
+        x: getXAxis(config, data),
+        y: getYAxis()
       }
     }
   }
@@ -189,8 +197,8 @@ chartOptions['multi-line'] = (config, data) => {
         tooltip: getSingleTooltips(data)
       },
       scales: {
-        x: getXAxes(config, data),
-        y: getYAxes()
+        x: getXAxis(config, data),
+        y: getYAxis()
       }
     }
   }
@@ -211,8 +219,8 @@ chartOptions.area = (config, data) => {
         tooltip: getSingleTooltips(data)
       },
       scales: {
-        x: getXAxes(config, data),
-        y: getYAxes()
+        x: getXAxis(config, data),
+        y: getYAxis()
       }
     }
   }
@@ -234,11 +242,11 @@ chartOptions['multi-area'] = (config, data) => {
       scales: {
         x: {
           stacked: true,
-          ...getXAxes(config, data)
+          ...getXAxis(config, data)
         },
         y: {
           stacked: true,
-          ...getYAxes()
+          ...getYAxis()
         }
       }
     }
