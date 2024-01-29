@@ -153,8 +153,10 @@ chartOptions.pie = (config, data) => {
     type: 'pie',
     data,
     options: {
-      title: { display: true, text: chartTitle(config) },
-      tooltip: getSingleTooltips(data)
+      plugins: {
+        title: { display: true, text: chartTitle(config) },
+        tooltip: getSingleTooltips(data)
+      }
     }
   }
 }
