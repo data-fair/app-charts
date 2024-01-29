@@ -21,13 +21,11 @@
 import axios from 'redaxios'
 import { filters2qs } from '../assets/filters-utils'
 import { ref, computed, watch, onMounted, inject } from 'vue'
-import { useRouter } from 'vue-router'
 
 export default {
   props: ['indice'],
   setup(props) {
     const store = inject('appInfo')
-    const router = useRouter()
     const loading = ref(false)
     const search = ref('')
     const items = ref(null)
@@ -74,13 +72,14 @@ export default {
     }
 
     const applyFilter = (values) => {
-      const newQuery = { ...router.currentRoute.value.query }
+      const newQuery = new URLSearchParams(window.location.search)
       if (values && values.length) {
-        newQuery[dynamicFilter.value.field.key + '_in'] = JSON.stringify(values).slice(1, -1)
+        newQuery.set(dynamicFilter.value.field.key + '_in', JSON.stringify(values).slice(1, -1))
       } else {
-        delete newQuery[dynamicFilter.value.field.key + '_in']
+        newQuery.delete(dynamicFilter.value.field.key + '_in')
       }
-      router.replace({ query: newQuery })
+      window.history.pushState({}, '', '?' + newQuery.toString())
+      store.fetchData()
     }
 
     const clearFilter = () => {

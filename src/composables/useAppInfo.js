@@ -1,6 +1,5 @@
 import axios from 'redaxios'
 import debounce from 'debounce'
-import router from '../router/index.js'
 import { filters2qs } from '../assets/filters-utils'
 import { reactive } from 'vue'
 
@@ -61,9 +60,24 @@ export default function useAppInfo() {
     const config = application.configuration
     if (config && config.dynamicFilters) {
       config.dynamicFilters.forEach(f => {
-        const queryParam = router.currentRoute.value.query[`${f.field.key}_in`]
-        if (queryParam) {
-          f.values = JSON.parse(`[${queryParam}]`)
+        const regex = new RegExp(`${f.field.key}_in=([^&]+)`)
+        const match = window.location.search.match(regex)
+        if (match && match[1]) {
+          const queryParam = decodeURIComponent(match[1]).replace(/"/g, '')
+
+          if (queryParam.startsWith('[') && queryParam.endsWith(']')) {
+            try {
+              f.values = JSON.parse(queryParam)
+            } catch (e) {
+              f.values = []
+            }
+          } else {
+            if (queryParam.includes(',')) {
+              f.values = queryParam.split(',').map(value => value.trim())
+            } else {
+              f.values = [queryParam]
+            }
+          }
         }
       })
     }

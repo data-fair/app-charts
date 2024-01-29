@@ -3,10 +3,8 @@ import 'url-polyfill'
 import 'vuetify/styles'
 import './styles/settings.scss'
 import colors from 'vuetify/lib/util/colors'
-import App from './App.vue'
-import router from './router'
 import useAppInfo from './composables/useAppInfo'
-import { createApp } from 'vue'
+import { createApp, defineAsyncComponent } from 'vue'
 import { createVuetify } from 'vuetify'
 import { VAutocomplete, VContainer, VRow, VCol } from 'vuetify/components'
 
@@ -45,7 +43,9 @@ const vuetify = createVuetify({
   }
 })
 
-const app = createApp(App)
+const asyncApp = defineAsyncComponent(() => import('./App.vue'))
+
+const app = createApp(asyncApp)
 let env = import.meta.env
 
 if (env === undefined) {
@@ -55,7 +55,6 @@ if (env === undefined) {
 }
 
 app.use(AppInfoPlugin, { environement: env })
-app.use(router)
 app.use(vuetify)
 
 app.mount('#app')

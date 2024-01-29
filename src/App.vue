@@ -4,39 +4,41 @@
 
 <script>
 import ChartComponent from './components/ChartComponent.vue'
-import { computed, watch, onMounted, inject } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, watch, onMounted, inject, ref } from 'vue'
 
 export default {
   components: { ChartComponent },
   setup() {
     const store = inject('appInfo')
-    const route = useRoute()
-
     const application = computed(() => store.application)
+    const urlSearchParams = ref(new URLSearchParams(window.location.search))
 
     const fetchData = () => {
       const conceptFilters = {}
-      for (const key in route.query) {
+      for (const key of urlSearchParams.value.keys()) {
         if (key.startsWith('_c_')) {
-          conceptFilters[key] = route.query[key]
+          conceptFilters[key] = urlSearchParams.value.get(key)
         }
       }
       store.conceptFilters = conceptFilters
       store.fetchData()
     }
 
-    watch(
-      () => route.query,
-      () => {
-        fetchData()
-      },
-      { immediate: true }
-    )
+    const updateSearchParams = () => {
+      urlSearchParams.value = ref(new URLSearchParams(window.location.search))
+    }
+
+    watch(urlSearchParams, (newParams) => {
+      fetchData()
+    }, { immediate: true })
+
+    window.addEventListener('popstate', updateSearchParams)
 
     onMounted(() => {
       if (!application.value) {
         window.location.href = 'https://github.com/data-fair/app-charts'
+      } else {
+        fetchData()
       }
     })
 
