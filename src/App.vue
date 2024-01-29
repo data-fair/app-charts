@@ -1,13 +1,15 @@
 <template>
   <ChartComponent v-if="application" />
+  <ColorsTest v-else />
 </template>
 
 <script>
 import ChartComponent from './components/ChartComponent.vue'
-import { computed, watch, onMounted, inject, ref } from 'vue'
+import ColorsTest from './components/ColorsTest.vue'
+import { computed, watch, /* onMounted, */ inject, ref } from 'vue'
 
 export default {
-  components: { ChartComponent },
+  components: { ChartComponent, ColorsTest },
   setup() {
     const store = inject('appInfo')
     const application = computed(() => store.application)
@@ -34,13 +36,13 @@ export default {
 
     window.addEventListener('popstate', updateSearchParams)
 
-    onMounted(() => {
+    /* onMounted(() => {
       if (!application.value) {
         window.location.href = 'https://github.com/data-fair/app-charts'
       } else {
         fetchData()
       }
-    })
+    }) */
 
     return {
       application

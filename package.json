@@ -18,9 +18,11 @@
     "/README.md"
   ],
   "dependencies": {
+    "@data-fair/lib": "^0.20.0",
     "@koumoul/gh-pages-multi": "^0.7.2",
     "@mdi/font": "^7.4.47",
     "chart.js": "^4.4.1",
+    "chroma-js": "^2.4.2",
     "debounce": "^2.0.0",
     "google-palette": "^1.1.1",
     "redaxios": "^0.5.1",

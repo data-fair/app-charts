@@ -1,4 +1,4 @@
-import { setAlpha, darkenByRatio } from './colors.js'
+import { darkenByRatio, setAlpha } from './colors.js'
 import prepareData from './chart-data.js'
 
 function formatValue(value, maxLength) {

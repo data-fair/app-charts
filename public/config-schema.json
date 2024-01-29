@@ -255,6 +255,8 @@
     },
     "colorscheme": {
       "type": "object",
+      "title": "Type de la palette",
+      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d'une valeur faible à une valeur forte (gradient)",
       "default": {
         "type": "qualitative"
       },
@@ -266,9 +268,7 @@
           ],
           "properties": {
             "type": {
-              "const": "qualitative",
-              "title": "Type de la palette",
-              "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d’une valeur faible à une valeur forte (gradient)"
+              "const": "qualitative"
             },
             "name": {
               "type": "string",

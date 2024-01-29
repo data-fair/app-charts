@@ -2,10 +2,10 @@ import '@mdi/font/css/materialdesignicons.css'
 import 'url-polyfill'
 import 'vuetify/styles'
 import './styles/settings.scss'
-import colors from 'vuetify/lib/util/colors'
 import useAppInfo from './composables/useAppInfo'
 import { createApp, defineAsyncComponent } from 'vue'
 import { createVuetify } from 'vuetify'
+import { defaultOptions } from '@data-fair/lib/vuetify.js'
 import { VAutocomplete, VContainer, VRow, VCol } from 'vuetify/components'
 
 const AppInfoPlugin = {
@@ -23,29 +23,20 @@ const AppInfoPlugin = {
   }
 }
 
-const vuetify = createVuetify({
-  components: {
-    VAutocomplete,
-    VContainer,
-    VRow,
-    VCol
-  },
-  theme: {
-    defaultTheme: 'myTheme',
-    themes: {
-      myTheme: {
-        colors: {
-          primary: colors.blue.darken1,
-          accent: colors.orange.base
-        }
-      }
-    }
-  }
-})
+const vuetifyOptions = defaultOptions(window.location.search)
+vuetifyOptions.components = {
+  VAutocomplete,
+  VContainer,
+  VRow,
+  VCol
+}
+
+const vuetify = createVuetify({ ...vuetifyOptions })
 
 const asyncApp = defineAsyncComponent(() => import('./App.vue'))
 
 const app = createApp(asyncApp)
+app.provide('vuetify', vuetify)
 let env = import.meta.env
 
 if (env === undefined) {
