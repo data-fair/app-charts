@@ -256,7 +256,7 @@
     "colorscheme": {
       "type": "object",
       "title": "Type de la palette",
-      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d'une valeur faible à une valeur forte (gradient)\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété",
+      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété",
       "default": {
         "type": "qualitative"
       },
@@ -292,6 +292,22 @@
                 {
                   "const": "Set2",
                   "title": "Ensemble 2"
+                },
+                {
+                  "const": "Set3",
+                  "title": "Ensemble 3"
+                },
+                {
+                  "const": "Set2",
+                  "title": "Ensemble 2"
+                },
+                {
+                  "const": "Pastel1",
+                  "title": "Pastel 1"
+                },
+                {
+                  "const": "Pastel2",
+                  "title": "Pastel 2"
                 }
               ],
               "default": "Dark2"
@@ -300,6 +316,9 @@
         },
         {
           "title": "Divergente",
+          "required": [
+            "name"
+          ],
           "properties": {
             "type": {
               "const": "diverging"
@@ -353,119 +372,6 @@
           }
         },
         {
-          "title": "Séquentielle",
-          "properties": {
-            "type": {
-              "const": "sequential"
-            },
-            "name": {
-              "type": "string",
-              "oneOf": [
-                {
-                  "const": "Blues",
-                  "title": "Bleu"
-                },
-                {
-                  "const": "BuGn",
-                  "title": "Bleu-Vert"
-                },
-                {
-                  "const": "BuPu",
-                  "title": "Bleu-Violet"
-                },
-                {
-                  "const": "GnBu",
-                  "title": "Vert-Bleu"
-                },
-                {
-                  "const": "Greens",
-                  "title": "Vert"
-                },
-                {
-                  "const": "Greys",
-                  "title": "Gris"
-                },
-                {
-                  "const": "OrRd",
-                  "title": "Orange-Rouge"
-                },
-                {
-                  "const": "Oranges",
-                  "title": "Orange"
-                },
-                {
-                  "const": "PuBu",
-                  "title": "Violet-Bleu"
-                },
-                {
-                  "const": "PuBuGn",
-                  "title": "Violet-Bleu-Vert"
-                },
-                {
-                  "const": "PuRd",
-                  "title": "Violet-Rouge"
-                },
-                {
-                  "const": "Purples",
-                  "title": "Violet"
-                },
-                {
-                  "const": "RdPu",
-                  "title": "Rouge-Violet"
-                },
-                {
-                  "const": "Reds",
-                  "title": "Rouge"
-                },
-                {
-                  "const": "YlGn",
-                  "title": "Jaune-Vert"
-                },
-                {
-                  "const": "YlGnBu",
-                  "title": "Jaune-Vert-Bleu"
-                },
-                {
-                  "const": "YlOrBr",
-                  "title": "Jaune-Orange-Marron"
-                },
-                {
-                  "const": "Oranges",
-                  "title": "Orange"
-                },
-                {
-                  "const": "YlOrRd",
-                  "title": "Jaune-Orange-Marron"
-                }
-              ],
-              "default": "YlOrRd"
-            },
-            "reverse": {
-              "type": "boolean",
-              "title": "Inverser"
-            },
-            "subset": {
-              "type": "string",
-              "title": "Sous-ensemble",
-              "oneOf": [
-                {
-                  "const": "all",
-                  "title": "Tout"
-                },
-                {
-                  "const": "light",
-                  "title": "Clair"
-                },
-                {
-                  "const": "dark",
-                  "title": "Foncé"
-                }
-              ],
-              "default": "all"
-            }
-          }
-        },
-        {
           "title": "Thème global",
           "properties": {
             "type": {
@@ -473,34 +379,29 @@
             },
             "useAccent": {
               "type": "boolean",
-              "title": "Utiliser la couleur d'Accent"
+              "title": "Ajouter la couleur d'accent"
             },
             "generatePalette": {
               "type": "boolean",
-              "title": "Générer Palette"
+              "title": "Générer une palette",
+              "description": "Génère des couleurs complémentaires à partir de celles de l'interface. Autrement utilise uniquement les couleurs de l'interface.",
+              "default": true
             },
             "paletteType": {
               "type": "string",
-              "title": "Type de Palette",
+              "title": "Couleur de palette",
+              "description": "Cette option n'aura d'effet que si vous avez coché l'option Générer une palette.",
               "oneOf": [
+                {
+                  "const": "hues",
+                  "title": "Teintes"
+                },
                 {
                   "const": "complementary",
                   "title": "Complémentaire"
-                },
-                {
-                  "const": "analogous",
-                  "title": "Analogue"
-                },
-                {
-                  "const": "triadic",
-                  "title": "Triadique"
-                },
-                {
-                  "const": "tetradic",
-                  "title": "Tétradique"
                 }
               ],
-              "default": "complementary"
+              "default": "hues"
             }
           }
         }

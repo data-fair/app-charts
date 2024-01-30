@@ -29,12 +29,13 @@ function getXAxis(config, data) {
   }
 }
 
-function getYAxis() {
+function getYAxis(config, data) {
   return {
     ticks: {
       beginAtZero: true,
       callback(value) {
-        return formatValue(value, 12)
+        const label = data.datasets[value] && data.datasets[value].label ? data.datasets[value].label : value
+        return formatValue(label, 12)
       }
     }
   }
@@ -92,7 +93,7 @@ chartOptions.bar = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis()
+        y: getYAxis(config, data)
       }
     }
   }
@@ -119,7 +120,7 @@ chartOptions['multi-bar'] = (config, data) => {
         },
         y: {
           stacked: true,
-          ...getYAxis()
+          ...getYAxis(config, data)
         }
       }
     }
@@ -142,7 +143,7 @@ chartOptions['grouped-bar'] = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis()
+        y: getYAxis(config, data)
       }
     }
   }
@@ -180,7 +181,7 @@ chartOptions.line = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis()
+        y: getYAxis(config, data)
       }
     }
   }
@@ -200,7 +201,7 @@ chartOptions['multi-line'] = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis()
+        y: getYAxis(config, data)
       }
     }
   }
@@ -222,7 +223,7 @@ chartOptions.area = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis()
+        y: getYAxis(config, data)
       }
     }
   }
@@ -248,7 +249,7 @@ chartOptions['multi-area'] = (config, data) => {
         },
         y: {
           stacked: true,
-          ...getYAxis()
+          ...getYAxis(config, data)
         }
       }
     }
