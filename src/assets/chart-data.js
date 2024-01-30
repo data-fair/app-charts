@@ -10,9 +10,10 @@ function prepareLinesData(config, data) {
   if (config.chartType.type === 'pie' && config.dataType.valuesFields.length > 1) {
     throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
   }
+  const vuetifyColors = config.vuetifyColors || null
   const colors = config.chartType.type === 'pie'
-    ? [getColors(config.colorscheme, data.results.length)]
-    : getColors(config.colorscheme, config.dataType.valuesFields.length)
+    ? [getColors(config.colorscheme, data.results.length, vuetifyColors)]
+    : getColors(config.colorscheme, config.dataType.valuesFields.length, vuetifyColors)
 
   const xLabels = config.dataType.labelsField['x-labels']
   if (Array.isArray(config.dataType.valuesFields) && config.dataType.labelsField) {
@@ -49,6 +50,7 @@ function prepare2levelAggData(config, data) {
   const totalDataset = { label: 'Total', data: [] }
   const xLabels = config.dataType.groupBy.field['x-labels']
   const secondaryXLabels = config.dataType.secondGroupBy.field['x-labels']
+  const vuetifyColors = config.vuetifyColors || null
   data.aggs.forEach((firstLevel, i) => {
     labels.push((xLabels && xLabels[firstLevel.value]) || firstLevel.value)
     totalDataset.data.push(config.dataType.type !== 'countBased' ? firstLevel.metric : firstLevel.total)
@@ -76,7 +78,7 @@ function prepare2levelAggData(config, data) {
   if (sort === 'metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
   else if (sort === 'key') datasets.sort((a, b) => a.key < b.key ? -1 : 1)
   else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
-  const colors = getColors(config.colorscheme, datasets.length)
+  const colors = getColors(config.colorscheme, datasets.length, vuetifyColors)
   datasets.forEach((d, i) => {
     d.backgroundColor = colors[i]
     d.borderColor = d.backgroundColor
@@ -98,7 +100,8 @@ function prepareAggData(config, data) {
   if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
     return prepare2levelAggData(config, data)
   } else {
-    const backgroundColor = config.chartType.type === 'pie' ? getColors(config.colorscheme, data.aggs.length) : getColors(config.colorscheme, 1)[0]
+    const vuetifyColors = config.vuetifyColors || null
+    const backgroundColor = config.chartType.type === 'pie' ? getColors(config.colorscheme, data.aggs.length, vuetifyColors) : getColors(config.colorscheme, 1, vuetifyColors)[0]
     const xLabels = config.dataType.groupBy.field['x-labels']
     return {
       labels: data.aggs.map(agg => (xLabels && xLabels[agg.value]) || agg.value),

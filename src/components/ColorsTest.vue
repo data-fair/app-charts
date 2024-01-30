@@ -10,7 +10,7 @@
       <br>
       <div class="palette-title">{{ vuetifyColorsKeys[index] }}</div>
       <div class="palette-colors">
-        <div class="palette-color" :key=palette :style="{ backgroundColor: palette }"></div>
+        <div class="palette-color" :style="{ backgroundColor: palette }"></div>
       </div>
     </div>
   </div>
@@ -26,14 +26,14 @@ export default {
 
     const config = computed(() => store.config)
     const vuetify = inject('vuetify')
-    const primaryColor = computed(() => vuetify.theme.themes.value.light.colors.primary)
-    const secondaryColor = computed(() => vuetify.theme.themes.value.light.colors.secondary)
-    const accentColor = computed(() => vuetify.theme.themes.value.light.colors.accent)
+    const primaryColor = computed(() => vuetify.theme.current.value.colors.primary)
+    const secondaryColor = computed(() => vuetify.theme.current.value.colors.secondary)
+    const accentColor = computed(() => vuetify.theme.current.value.colors.accent)
     const vuetifyColors = []
     const vuetifyColorsKeys = []
-    for (const key of Object.keys(vuetify.theme.themes.value.light.colors)) {
+    for (const key of Object.keys(vuetify.theme.current.value.colors)) {
       vuetifyColorsKeys.push(key)
-      vuetifyColors.push(vuetify.theme.themes.value.light.colors[key])
+      vuetifyColors.push(vuetify.theme.current.value.colors[key])
     }
 
     const palettes = ref([])
@@ -47,7 +47,7 @@ export default {
         { title: 'Default', colors: generatePalette() },
         { title: 'Hues From Color', colors: generateHuesFromColor(primaryColor.value) },
         { title: 'Hues From Color (CBF)', colors: generateHuesFromColor(primaryColor.value, true) },
-        { title: 'Color Blindness', colors: simulateColorBlindness(primaryColor.value) },
+        { title: 'Color Blindness (primary color)', colors: simulateColorBlindness(primaryColor.value) },
         { title: 'Palette from Primary color', colors: generatePaletteFromColor(primaryColor.value) },
         { title: 'Beautify Palette From Color', colors: beautifyPalette(generatePaletteFromColor(primaryColor.value)) },
         { title: 'Palette from Secondary color', colors: generatePaletteFromColor(primaryColor.value) },
@@ -81,6 +81,7 @@ export default {
   padding: 1rem;
   max-height: 100vh;
   overflow-y: auto;
+  background: #282A36;
 }
 
 .palette-title {
@@ -89,6 +90,7 @@ export default {
   margin-bottom: 1rem;
   width: 100%;
   text-align: center;
+  color: #F8F8F2;
 }
 
 .palette-colors {

@@ -256,7 +256,7 @@
     "colorscheme": {
       "type": "object",
       "title": "Type de la palette",
-      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d'une valeur faible à une valeur forte (gradient)",
+      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d'une valeur faible à une valeur forte (gradient)\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété",
       "default": {
         "type": "qualitative"
       },
@@ -294,8 +294,7 @@
                   "title": "Ensemble 2"
                 }
               ],
-              "default": "Dark2",
-              "title": "Nom de la palette"
+              "default": "Dark2"
             }
           }
         },
@@ -345,8 +344,7 @@
                   "title": "Spectral"
                 }
               ],
-              "default": "RdYlGn",
-              "title": "Nom de la palette"
+              "default": "RdYlGn"
             },
             "reverse": {
               "type": "boolean",
@@ -440,8 +438,7 @@
                   "title": "Jaune-Orange-Marron"
                 }
               ],
-              "default": "YlOrRd",
-              "title": "Nom de la palette"
+              "default": "YlOrRd"
             },
             "reverse": {
               "type": "boolean",
@@ -465,6 +462,45 @@
                 }
               ],
               "default": "all"
+            }
+          }
+        },
+        {
+          "title": "Thème global",
+          "properties": {
+            "type": {
+              "const": "vuetify-theme"
+            },
+            "useAccent": {
+              "type": "boolean",
+              "title": "Utiliser la couleur d'Accent"
+            },
+            "generatePalette": {
+              "type": "boolean",
+              "title": "Générer Palette"
+            },
+            "paletteType": {
+              "type": "string",
+              "title": "Type de Palette",
+              "oneOf": [
+                {
+                  "const": "complementary",
+                  "title": "Complémentaire"
+                },
+                {
+                  "const": "analogous",
+                  "title": "Analogue"
+                },
+                {
+                  "const": "triadic",
+                  "title": "Triadique"
+                },
+                {
+                  "const": "tetradic",
+                  "title": "Tétradique"
+                }
+              ],
+              "default": "complementary"
             }
           }
         }

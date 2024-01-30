@@ -19,6 +19,8 @@ export default {
   components: { FiltersComponent },
   setup() {
     const store = inject('appInfo')
+    const vuetify = inject('vuetify')
+    const vuetifyColors = computed(() => vuetify.theme.current.value.colors)
     const chartCanvas = shallowRef(null)
     const chart = shallowRef(null)
     const chartTop = ref(0)
@@ -28,6 +30,7 @@ export default {
     const data = computed(() => store.data)
     const incompleteConfig = computed(() => store.incompleteConfig)
     const config = computed(() => store.config)
+    config.value.vuetifyColors = vuetifyColors.value
 
     watch(data, async () => {
       await nextTick()

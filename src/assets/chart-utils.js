@@ -1,4 +1,4 @@
-import { darkenByRatio, setAlpha } from './colors.js'
+import { setAlpha } from './colors.js'
 import prepareData from './chart-data.js'
 
 function formatValue(value, maxLength) {
@@ -230,7 +230,7 @@ chartOptions.area = (config, data) => {
 
 chartOptions['multi-area'] = (config, data) => {
   data.datasets.forEach(dataset => {
-    dataset.backgroundColor = darkenByRatio(dataset.backgroundColor, 0.25)
+    dataset.backgroundColor = setAlpha(dataset.backgroundColor, 0.5)
     dataset.fill = true
   })
   return {

@@ -1,5 +1,6 @@
-import palette from 'google-palette'
+import blinder from 'color-blind'
 import chroma from 'chroma-js'
+import palette from 'google-palette'
 
 function parseColor(input) {
   const div = document.createElement('div')
@@ -16,12 +17,6 @@ export function setAlpha(color, alpha) {
   return `rgba(${r},${g},${b},${alpha})`
 }
 
-export function darkenByRatio(color, ratio) {
-  const { r, g, b, a } = parseColor(color)
-  const darken = value => Math.round(value * (1 - ratio))
-  return `rgba(${darken(r)},${darken(g)},${darken(b)},${a})`
-}
-
 // use a simple greyscale to complete color palettes, always better than a single grey color
 function generateGreyscale(start, end, steps) {
   const greyscale = []
@@ -32,7 +27,20 @@ function generateGreyscale(start, end, steps) {
   return greyscale
 }
 
-export default function getColors(colorscheme, size) {
+export default function getColors(colorscheme, size, vuetifyColors = null) {
+  if (colorscheme.type === 'vuetify-theme' && vuetifyColors) {
+    const baseColors = [vuetifyColors.primary, vuetifyColors.secondary]
+    if (colorscheme.useAccent) {
+      baseColors.push(vuetifyColors.accent)
+    }
+
+    if (colorscheme.generatePalette) {
+      return generateDynamicPalette(baseColors, colorscheme.paletteType, size)
+    } else {
+      return baseColors.slice(0, size)
+    }
+  }
+
   const typeMax = {
     qualitative: 8,
     diverging: 11,
@@ -50,27 +58,72 @@ export default function getColors(colorscheme, size) {
   return colors.concat(greyscaleColors)
 }
 
+function generateDynamicPalette(baseColors, paletteType, size) {
+  let colors = []
+
+  if (paletteType === 'complementary') {
+    baseColors.forEach(baseColor => {
+      const color = chroma(baseColor)
+      colors.push(color.hex())
+      colors.push(color.set('hsl.h', '+180').hex())
+    })
+  } else if (paletteType === 'analogous') {
+    baseColors.forEach(baseColor => {
+      const color = chroma(baseColor)
+      colors.push(color.hex())
+      for (let i = 1; i < size; i++) {
+        colors.push(color.set('hsl.h', `+${i * 30}`).hex())
+      }
+    })
+  } else if (paletteType === 'triadic') {
+    baseColors.forEach(baseColor => {
+      const color = chroma(baseColor)
+      colors.push(color.hex())
+      colors.push(color.set('hsl.h', '+120').hex())
+      colors.push(color.set('hsl.h', '+240').hex())
+    })
+  } else if (paletteType === 'tetradic') {
+    baseColors.forEach(baseColor => {
+      const color = chroma(baseColor)
+      colors.push(color.hex())
+      colors.push(color.set('hsl.h', '+90').hex())
+      colors.push(color.set('hsl.h', '+180').hex())
+      colors.push(color.set('hsl.h', '+270').hex())
+    })
+  }
+
+  colors = [...new Set(colors)]
+  if (colors.length > size) {
+    colors = colors.slice(0, size)
+  }
+
+  return colors
+}
+
 /**
  * Generates a color palette based on the specified type and number of colors.
  *
  * @param {string} type - The type of color palette to generate. Possible values are 'Qualitative', 'Divergente', and 'Sequentielle'.
+ * @param {string} [set='Set3'] - The color set to use for qualitative palettes. Defaults to 'Set3'. Possible values are 'Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2', and 'HCL'.
  * @param {number} [numColors=10] - The number of colors to include in the palette. Defaults to 10.
  * @returns {Array<string>} - An array of color values representing the generated palette.
  */
-export function generatePalette(type, numColors = 10) {
+export function generatePalette(type, vuetifyColors, set = 'Set3', numColors = 10) {
   let scale
+  const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2', 'HCL']
+  if (!set || !paletteSets[set]) set = 'Set3'
   switch (type) {
     case 'Qualitative':
-      scale = chroma.scale('Set3').colors(numColors)
+      scale = chroma.scale(set).colors(numColors)
       break
     case 'Divergente':
-      scale = chroma.scale(['red', 'white', 'blue']).mode('lch').colors(numColors)
+      scale = chroma.scale([vuetifyColors.primary, vuetifyColors.success, vuetifyColors.accent]).mode('lch').colors(numColors)
       break
     case 'Sequentielle':
-      scale = chroma.scale(['white', 'blue']).mode('lch').colors(numColors)
+      scale = chroma.scale([vuetifyColors.background, vuetifyColors.primary]).mode('lch').colors(numColors)
       break
     default:
-      scale = chroma.scale('Set3').colors(numColors)
+      scale = chroma.scale(set).colors(numColors)
   }
   return scale
 }
@@ -116,11 +169,11 @@ export function generateHuesFromColor(colorHex, colorBlindFriendly = false, numC
  * Generates a color palette based on a given base color.
  *
  * @param {string} colorHex - The base color in hexadecimal format.
- * @param {number} [numColors=10] - The number of colors to generate in the palette.
  * @param {boolean} [colorBlindFriendly=false] - Indicates whether the palette should be adjusted for color blindness.
+ * @param {number} [numColors=10] - The number of colors to generate in the palette.
  * @returns {string[]} An array of colors in hexadecimal format representing the generated palette.
  */
-export function generatePaletteFromColor(colorHex, numColors = 10, colorBlindFriendly = false) {
+export function generatePaletteFromColor(colorHex, colorBlindFriendly = false, numColors = 10) {
   const baseColor = chroma(colorHex)
   let colors = [baseColor.hex()]
 
@@ -155,24 +208,14 @@ export function generatePaletteFromColor(colorHex, numColors = 10, colorBlindFri
  * @returns {Array} - An array of color hex values representing the simulated color blindness versions of the input color.
  */
 export function simulateColorBlindness(colorHex) {
-  const normalColor = chroma(colorHex)
-  const cb = [normalColor.hex()]
+  const normalColor = chroma(colorHex).hex()
+  const cb = [normalColor]
 
-  // Simulate Protanopia (red-weak): Shift green and preserve blue
-  const protanopia = chroma(normalColor.get('rgb.g'), normalColor.get('rgb.b'), normalColor.get('rgb.b')).desaturate(1.2)
-  cb.push(protanopia.hex())
-
-  // Simulate Deuteranopia (green-weak): Shift red and preserve blue
-  const deuteranopia = chroma(normalColor.get('rgb.r'), normalColor.get('rgb.b'), normalColor.get('rgb.b')).desaturate(1.2)
-  cb.push(deuteranopia.hex())
-
-  // Simulate Tritanopia (blue-weak): Shift red and green, reduce blue
-  const tritanopia = chroma(normalColor.get('rgb.r'), normalColor.get('rgb.g'), Math.max(normalColor.get('rgb.b') - 80, 0)).desaturate(1.2)
-  cb.push(tritanopia.hex())
-
-  // Simulate Achromatopsia (black & white)
-  const achromatopsia = chroma(normalColor.get('luminance'), normalColor.get('luminance'), normalColor.get('luminance'))
-  cb.push(achromatopsia.hex())
+  const protanopia = blinder.protanopia(normalColor)
+  const deuteranopia = blinder.deuteranopia(normalColor)
+  const tritanopia = blinder.tritanopia(normalColor)
+  const achromatopsia = blinder.achromatopsia(normalColor)
+  cb.push(protanopia, deuteranopia, tritanopia, achromatopsia)
 
   return cb
 }
