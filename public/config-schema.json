@@ -256,7 +256,7 @@
     "colorscheme": {
       "type": "object",
       "title": "Type de la palette",
-      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété",
+      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété\n\n**Palette personnalisée** : choisissez vos propres couleurs",
       "default": {
         "type": "qualitative"
       },
@@ -341,6 +341,37 @@
                 }
               ],
               "default": "hues"
+            }
+          }
+        },
+        {
+          "title": "Palette personnalisée",
+          "properties": {
+            "type": {
+              "const": "custom"
+            },
+            "colors": {
+              "type": "array",
+              "title": "Couleurs",
+              "description": "Liste de couleurs au format hexadécimal. ",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "reverse": {
+              "type": "boolean",
+              "title": "Inverser"
+            },
+            "picker": {
+              "type": "object",
+              "properties": {
+                "colorProp": {
+                  "type": "string",
+                  "title": "Choisir une couleur",
+                  "format": "hexcolor"
+                }
+              }
             }
           }
         }

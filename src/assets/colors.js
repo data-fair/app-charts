@@ -15,7 +15,6 @@ export function setAlpha(color, alpha) {
   return `rgba(${r},${g},${b},${alpha})`
 }
 
-// use a simple greyscale to complete color palettes, always better than a single grey color
 function generateGreyscale(start, end, steps) {
   const greyscale = []
   for (let i = start; i <= end; i++) {
@@ -88,29 +87,46 @@ function generateDynamicPalette(baseColors, paletteType, size) {
   return colors
 }
 
-/**
- * Generates a color palette based on the specified type and number of colors.
- *
- * @param {string} [colorscheme] - The colorscheme object to use. Contains both the type and the name of the colorscheme to use.
- * @param {number} [numColors=10] - The number of colors to include in the palette. Defaults to 10.
- * @returns {Array<string>} - An array of color values representing the generated palette.
- */
 function generatePalette(colorscheme, numColors = 10) {
-  let set
+  let set = []
   if (colorscheme.type === 'qualitative') {
     const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2']
     set = paletteSets.includes(colorscheme.qualitativeName) ? colorscheme.qualitativeName : 'Dark2'
+  } else if (colorscheme.type === 'custom') {
+    for (let i = 0; i < colorscheme.colors.length; i++) {
+      const color = [colorscheme.colors[i].replaceAll(' ', '')]
+      if (color[i].includes(',')) {
+        const split = color[i].split(',')
+        for (let j = 0; j < split.length; j++) {
+          set.push(chroma(split[j]).hex())
+          color.splice(i, 1, chroma(split[j]).hex())
+        }
+      } else {
+        set.push(chroma(color[i]).hex())
+        color.splice(i, 1, chroma(color[i]).hex())
+      }
+      try {
+        colorscheme.colors = []
+        colorscheme.colors.push(color)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    if (set.length === 0) {
+      set = [
+        '#BD93F9',
+        '#FF79C6',
+        '#FF5555',
+        '#FFB86C',
+        '#F1FA8C',
+        '#8BE9FD',
+        '#50FA7B'
+      ]
+    }
   }
   return chroma.scale(set).mode('lch').colors(numColors)
 }
 
-/**
- * Generates a list of color hues based on a given base color.
- *
- * @param {string} colorHex - The hexadecimal representation of the base color.
- * @param {number} [numColors=10] - The number of color hues to generate.
- * @returns {string[]} An array of color hues in hexadecimal format.
- */
 function generateHuesFromColor(colorHex, numColors = 10) {
   const baseColor = chroma(colorHex)
   const colors = [baseColor.hex()]
@@ -122,13 +138,6 @@ function generateHuesFromColor(colorHex, numColors = 10) {
   return colors
 }
 
-/**
- * Generates a color palette based on a given base color.
- *
- * @param {string} colorHex - The base color in hexadecimal format.
- * @param {number} [numColors=10] - The number of colors to generate in the palette.
- * @returns {string[]} An array of colors in hexadecimal format representing the generated palette.
- */
 function generatePaletteFromColor(colorHex, numColors = 10) {
   const baseColor = chroma(colorHex)
   let colors = [baseColor.hex()]
