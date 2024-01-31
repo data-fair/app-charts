@@ -256,7 +256,7 @@
     "colorscheme": {
       "type": "object",
       "title": "Type de la palette",
-      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété",
+      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété",
       "default": {
         "type": "qualitative"
       },
@@ -307,63 +307,6 @@
                 }
               ],
               "default": "Dark2"
-            }
-          }
-        },
-        {
-          "title": "Divergente",
-          "required": [
-            "divergingName"
-          ],
-          "properties": {
-            "type": {
-              "const": "diverging"
-            },
-            "divergingName": {
-              "type": "string",
-              "oneOf": [
-                {
-                  "const": "BrBG",
-                  "title": "Marron-Bleu-Vert"
-                },
-                {
-                  "const": "PRGn",
-                  "title": "Violet-Vert"
-                },
-                {
-                  "const": "PiYG",
-                  "title": "Rose-Jaune-Vert"
-                },
-                {
-                  "const": "PuOr",
-                  "title": "Orange-Violet"
-                },
-                {
-                  "const": "RdBu",
-                  "title": "Rouge-Bleu"
-                },
-                {
-                  "const": "RdGy",
-                  "title": "Rouge-Gris"
-                },
-                {
-                  "const": "RdYlBu",
-                  "title": "Rouge-Jaune-Bleu"
-                },
-                {
-                  "const": "RdYlGn",
-                  "title": "Rouge-jaune-Vert"
-                },
-                {
-                  "const": "Spectral",
-                  "title": "Spectral"
-                }
-              ],
-              "default": "RdYlGn"
-            },
-            "reverse": {
-              "type": "boolean",
-              "title": "Inverser"
             }
           }
         },

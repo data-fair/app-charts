@@ -15,10 +15,8 @@
   },
   "files": [
     "/dist",
-    "/public",
-    "/src",
-    "index.html",
-    "vite.config.mjs"
+    "package.json",
+    "README.md"
   ],
   "dependencies": {
     "@data-fair/lib": "^0.20.0",

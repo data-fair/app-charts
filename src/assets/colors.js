@@ -91,7 +91,7 @@ function generateDynamicPalette(baseColors, paletteType, size) {
 /**
  * Generates a color palette based on the specified type and number of colors.
  *
- * @param {string} [colorscheme] - The colorscheme object to use. Contains both the type (qualitative or diverging) and the name of the colorscheme to use.
+ * @param {string} [colorscheme] - The colorscheme object to use. Contains both the type and the name of the colorscheme to use.
  * @param {number} [numColors=10] - The number of colors to include in the palette. Defaults to 10.
  * @returns {Array<string>} - An array of color values representing the generated palette.
  */
@@ -100,9 +100,6 @@ function generatePalette(colorscheme, numColors = 10) {
   if (colorscheme.type === 'qualitative') {
     const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2']
     set = paletteSets.includes(colorscheme.qualitativeName) ? colorscheme.qualitativeName : 'Dark2'
-  } else if (colorscheme.type === 'diverging') {
-    const paletteSets = ['BrBG', 'PRGn', 'PiYG', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral']
-    set = paletteSets.includes(colorscheme.divergingName) ? colorscheme.divergingName : 'RdYlGn'
   }
   return chroma.scale(set).mode('lch').colors(numColors)
 }
