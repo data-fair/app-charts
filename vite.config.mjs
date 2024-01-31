@@ -36,9 +36,7 @@ export default defineConfig({
       include: [
         'node_modules/@data-fair/lib/src/vuetify',
         'node_modules/chroma-js/chroma.js',
-        'node_modules/color-blind/lib/color-blind.js',
         'node_modules/debounce/index.js',
-        'node_modules/google-palette/index.js',
         'node_modules/vuetify/lib/vuetify.js'
       ]
     })
@@ -65,7 +63,7 @@ export default defineConfig({
       }
     },
     commonjsOptions: {
-      include: [/@data-fair/, /chroma-js/, /color-blind/, /debounce/, /google-palette/, /vuetify/]
+      include: [/@data-fair/, /chroma-js/, /debounce/, /vuetify/]
     }
   }
 })

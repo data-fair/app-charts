@@ -39,7 +39,7 @@ export default function getColors(colorscheme, size, vuetifyColors = null) {
     }
   }
 
-  const colors = generatePalette(colorscheme.name, size)
+  const colors = generatePalette(colorscheme, size)
   if (colorscheme.reverse) colors.reverse()
   const greyscaleColors = generateGreyscale(5, 25, 30)
   return colors.concat(greyscaleColors)
@@ -91,14 +91,19 @@ function generateDynamicPalette(baseColors, paletteType, size) {
 /**
  * Generates a color palette based on the specified type and number of colors.
  *
- * @param {string} type - The type of color palette to generate. Possible values are 'Qualitative', 'Divergente', and 'Sequentielle'.
- * @param {string} [set='Set3'] - The color set to use for qualitative palettes. Defaults to 'Set3'. Possible values are 'Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1' and 'Pastel2'.
+ * @param {string} [colorscheme] - The colorscheme object to use. Contains both the type (qualitative or diverging) and the name of the colorscheme to use.
  * @param {number} [numColors=10] - The number of colors to include in the palette. Defaults to 10.
  * @returns {Array<string>} - An array of color values representing the generated palette.
  */
-function generatePalette(set = 'Set3', numColors = 10) {
-  const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2', 'BrBG', 'PRGn', 'PiYG', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral']
-  if (!set || !paletteSets.includes(set)) set = 'Set3'
+function generatePalette(colorscheme, numColors = 10) {
+  let set
+  if (colorscheme.type === 'qualitative') {
+    const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2']
+    set = paletteSets.includes(colorscheme.qualitativeName) ? colorscheme.qualitativeName : 'Dark2'
+  } else if (colorscheme.type === 'diverging') {
+    const paletteSets = ['BrBG', 'PRGn', 'PiYG', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral']
+    set = paletteSets.includes(colorscheme.divergingName) ? colorscheme.divergingName : 'RdYlGn'
+  }
   return chroma.scale(set).mode('lch').colors(numColors)
 }
 

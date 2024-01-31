@@ -264,13 +264,13 @@
         {
           "title": "Qualitative",
           "required": [
-            "name"
+            "qualitativeName"
           ],
           "properties": {
             "type": {
               "const": "qualitative"
             },
-            "name": {
+            "qualitativeName": {
               "type": "string",
               "oneOf": [
                 {
@@ -298,10 +298,6 @@
                   "title": "Ensemble 3"
                 },
                 {
-                  "const": "Set2",
-                  "title": "Ensemble 2"
-                },
-                {
                   "const": "Pastel1",
                   "title": "Pastel 1"
                 },
@@ -317,13 +313,13 @@
         {
           "title": "Divergente",
           "required": [
-            "name"
+            "divergingName"
           ],
           "properties": {
             "type": {
               "const": "diverging"
             },
-            "name": {
+            "divergingName": {
               "type": "string",
               "oneOf": [
                 {
