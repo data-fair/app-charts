@@ -41,7 +41,7 @@ export default function getColors(colorscheme, size, vuetifyColors = null) {
 
   const colors = generatePalette(colorscheme, size)
   if (colorscheme.reverse) colors.reverse()
-  const greyscaleColors = generateGreyscale(5, 25, 30)
+  const greyscaleColors = generateGreyscale(0, size - colors.length - 1, size - colors.length)
   return colors.concat(greyscaleColors)
 }
 
