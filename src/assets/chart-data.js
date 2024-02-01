@@ -15,28 +15,18 @@ function prepareLinesData(config, data) {
     ? [getColors(config.colorscheme, data, data.results.length, vuetifyColors)]
     : getColors(config.colorscheme, data, config.dataType.valuesFields.length, vuetifyColors)
 
-  const xLabels = config.dataType.labelsField['x-labels']
-  if (Array.isArray(config.dataType.valuesFields) && config.dataType.labelsField) {
-    if (!Array.isArray(data.results)) {
-      console.error('data.results is not an array')
-      return { labels: [], datasets: [] }
-    }
-    return {
-      labels: data.results.map(r => (xLabels && xLabels[r[config.dataType.labelsField.key]]) || r[config.dataType.labelsField.key]),
-      datasets: config.dataType.valuesFields.map((f, i) => {
-        const backgroundColor = colors[i]
-        return {
-          data: data.results.map(r => r[f.key]),
-          key: f.key,
-          label: f.label,
-          backgroundColor,
-          borderColor: backgroundColor
-        }
-      })
-    }
-  } else {
-    console.error('valuesFields or labelsField is undefined or not an array')
-    return { labels: [], datasets: [] }
+  return {
+    labels: data.results.map(r => r[config.dataType.labelsField.key]),
+    datasets: config.dataType.valuesFields.map((f, i) => {
+      const backgroundColor = colors[i]
+      return {
+        data: data.results.map(r => r[f.key]),
+        key: f.key,
+        label: f.label,
+        backgroundColor,
+        borderColor: backgroundColor
+      }
+    })
   }
 }
 
@@ -48,18 +38,16 @@ function prepare2levelAggData(config, data) {
   const labels = []
   const datasets = []
   const totalDataset = { label: 'Total', data: [] }
-  const xLabels = config.dataType.groupBy.field['x-labels']
-  const secondaryXLabels = config.dataType.secondGroupBy.field['x-labels']
   const vuetifyColors = config.vuetifyColors || null
   data.aggs.forEach((firstLevel, i) => {
-    labels.push((xLabels && xLabels[firstLevel.value]) || firstLevel.value)
+    labels.push(firstLevel.value)
     totalDataset.data.push(config.dataType.type !== 'countBased' ? firstLevel.metric : firstLevel.total)
     firstLevel.aggs.forEach(secondLevel => {
       let dataset = datasets.find(d => d.key === secondLevel.value)
       if (!dataset) {
         dataset = {
           key: secondLevel.value,
-          label: (secondaryXLabels && secondaryXLabels[secondLevel.value]) || secondLevel.value,
+          label: secondLevel.value,
           data: []
         }
         datasets.push(dataset)
@@ -102,9 +90,8 @@ function prepareAggData(config, data) {
   } else {
     const vuetifyColors = config.vuetifyColors || null
     const backgroundColor = config.chartType.type === 'pie' ? getColors(config.colorscheme, data, data.aggs.length, vuetifyColors) : getColors(config.colorscheme, data, 1, vuetifyColors)[0]
-    const xLabels = config.dataType.groupBy.field['x-labels']
     return {
-      labels: data.aggs.map(agg => (xLabels && xLabels[agg.value]) || agg.value),
+      labels: data.aggs.map(agg => agg.value),
       datasets: [{
         data: data.aggs.map(agg => config.dataType.type !== 'countBased' ? agg.metric : agg.total),
         backgroundColor,
