@@ -90,6 +90,7 @@ function generatePalette(colorscheme, data, numColors = 10) {
   if (colorscheme.type === 'qualitative') {
     const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2']
     set = paletteSets.includes(colorscheme.qualitativeName) ? colorscheme.qualitativeName : 'Dark2'
+    return chroma.scale(set).mode('lch').colors(numColors)
   } else if (colorscheme.type === 'custom') {
     if (data.aggs) {
       data.aggs.forEach(value => {
@@ -104,8 +105,8 @@ function generatePalette(colorscheme, data, numColors = 10) {
     } else {
       set.push(colorscheme.defaultColor)
     }
+    return set
   }
-  return chroma.scale(set).mode('lch').colors(numColors)
 }
 
 function generateHuesFromColor(colorHex, numColors = 10) {
