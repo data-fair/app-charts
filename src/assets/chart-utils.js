@@ -7,14 +7,6 @@ function formatValue(value, maxLength) {
   return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
 }
 
-function getXAxisLabels(config, data, value) {
-  if (config.dynamicFilters && config.dynamicFilters.values && config.dynamicFilters.values[value]) {
-    return formatValue(config.dynamicFilters.values[value], 12)
-  } else {
-    return formatValue(data.labels[value], 12)
-  }
-}
-
 function getXAxis(config, data) {
   if (config.dataType.groupBy && config.dataType.groupBy.type === 'date') {
     return { type: 'time', time: { unit: config.dataType.groupBy.interval } }
@@ -22,14 +14,14 @@ function getXAxis(config, data) {
     return {
       ticks: {
         callback(value) {
-          return getXAxisLabels(config, data, value)
+          return formatValue(data.labels[value], 12)
         }
       }
     }
   }
 }
 
-function getYAxis(config, data) {
+function getYAxis(data) {
   return {
     ticks: {
       beginAtZero: true,
@@ -93,7 +85,7 @@ chartOptions.bar = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis(config, data)
+        y: getYAxis(data)
       }
     }
   }
@@ -120,7 +112,7 @@ chartOptions['multi-bar'] = (config, data) => {
         },
         y: {
           stacked: true,
-          ...getYAxis(config, data)
+          ...getYAxis(data)
         }
       }
     }
@@ -143,7 +135,7 @@ chartOptions['grouped-bar'] = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis(config, data)
+        y: getYAxis(data)
       }
     }
   }
@@ -181,7 +173,7 @@ chartOptions.line = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis(config, data)
+        y: getYAxis(data)
       }
     }
   }
@@ -201,7 +193,7 @@ chartOptions['multi-line'] = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis(config, data)
+        y: getYAxis(data)
       }
     }
   }
@@ -223,7 +215,7 @@ chartOptions.area = (config, data) => {
       },
       scales: {
         x: getXAxis(config, data),
-        y: getYAxis(config, data)
+        y: getYAxis(data)
       }
     }
   }
@@ -249,7 +241,7 @@ chartOptions['multi-area'] = (config, data) => {
         },
         y: {
           stacked: true,
-          ...getYAxis(config, data)
+          ...getYAxis(data)
         }
       }
     }
