@@ -256,7 +256,7 @@
     "colorscheme": {
       "type": "object",
       "title": "Type de la palette",
-      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété\n\n**Palette personnalisée** : choisissez vos propres couleurs",
+      "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété\n\n**Palette personnalisée** : choisissez vos propres couleurs, donne de mauvais résultats avec un diagramme camembert",
       "default": {
         "type": "qualitative"
       },
@@ -350,28 +350,31 @@
             "type": {
               "const": "custom"
             },
+            "colorField": {
+              "title": "Couleur par valeur d'un champ",
+              "description": "Les champs multivalués ou ayant plus de 12 valeurs différentes ne peuvent pas être utilisés",
+              "type": "string",
+              "x-fromUrl": "{datasets.0.href}/schema?calculated=false&separator=false&maxCardinality=12",
+              "x-itemTitle": "label",
+              "x-itemKey": "key"
+            },
             "colors": {
+              "x-if": "colorscheme.colorField",
+              "title": "Couleurs et ordre",
               "type": "array",
-              "title": "Couleurs",
-              "description": "Liste de couleurs au format hexadécimal. ",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
+              "x-fromUrl": "{datasets.0.href}/values_agg?field={colorscheme.colorField}",
+              "x-display": "list",
+              "x-itemTitle": "value",
+              "x-itemKey": "value",
+              "x-itemsProp": "aggs",
+              "items": {"$ref": "#/definitions/colorAndOrder"}
             },
-            "reverse": {
-              "type": "boolean",
-              "title": "Inverser"
-            },
-            "picker": {
-              "type": "object",
-              "properties": {
-                "colorProp": {
-                  "type": "string",
-                  "title": "Choisir une couleur",
-                  "format": "hexcolor"
-                }
-              }
+            "defaultColor": {
+              "title": "Couleur par défaut",
+              "type": "string",
+              "format": "hexcolor",
+              "default": "#828282",
+              "x-display": "color-picker"
             }
           }
         }
@@ -770,6 +773,22 @@
       "type": "boolean",
       "title": "Séparer les barres",
       "description": "Cette option n'aura d'effet que si vous avez renseigné le 2ème niveau de groupes dans la section de préparation des données."
+    },
+    "colorAndOrder": {
+      "type": "object",
+      "required": ["value", "color"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "x-display": "hidden"
+        },
+        "color": {
+          "type": "string",
+          "format": "hexcolor",
+          "default": "#828282",
+          "x-display": "color-picker"
+        }
+      }
     }
   }
 }

@@ -24,7 +24,7 @@ function generateGreyscale(start, end, steps) {
   return greyscale
 }
 
-export default function getColors(colorscheme, size, vuetifyColors = null) {
+export default function getColors(colorscheme, data, size, vuetifyColors = null) {
   if (colorscheme.type === 'vuetify-theme' && vuetifyColors) {
     const baseColors = [vuetifyColors.primary, vuetifyColors.secondary]
     if (colorscheme.useAccent) {
@@ -38,7 +38,7 @@ export default function getColors(colorscheme, size, vuetifyColors = null) {
     }
   }
 
-  const colors = generatePalette(colorscheme, size)
+  const colors = generatePalette(colorscheme, data, size)
   if (colorscheme.reverse) colors.reverse()
   const greyscaleColors = generateGreyscale(0, size - colors.length - 1, size - colors.length)
   return colors.concat(greyscaleColors)
@@ -48,8 +48,7 @@ function generateDynamicPalette(baseColors, paletteType, size) {
   let colors = []
   if (paletteType === 'hues') {
     const hues = []
-    const effectiveSize = Math.min(size, 20)
-    const length = Math.floor(effectiveSize / baseColors.length)
+    const length = Math.floor(size / baseColors.length)
     baseColors.forEach(baseColor => {
       hues.push(generateHuesFromColor(baseColor, length + 1))
     })
@@ -60,8 +59,7 @@ function generateDynamicPalette(baseColors, paletteType, size) {
     }
   } else if (paletteType === 'complementary') {
     const generatedColors = []
-    const effectiveSize = Math.min(size, 20)
-    const length = Math.floor(effectiveSize / baseColors.length)
+    const length = Math.floor(size / baseColors.length)
     baseColors.forEach(baseColor => {
       generatedColors.push(generatePaletteFromColor(baseColor, length + 1))
     })
@@ -87,41 +85,24 @@ function generateDynamicPalette(baseColors, paletteType, size) {
   return colors
 }
 
-function generatePalette(colorscheme, numColors = 10) {
+function generatePalette(colorscheme, data, numColors = 10) {
   let set = []
   if (colorscheme.type === 'qualitative') {
     const paletteSets = ['Set1', 'Set2', 'Set3', 'Dark2', 'Paired', 'Accent', 'Pastel1', 'Pastel2']
     set = paletteSets.includes(colorscheme.qualitativeName) ? colorscheme.qualitativeName : 'Dark2'
   } else if (colorscheme.type === 'custom') {
-    for (let i = 0; i < colorscheme.colors.length; i++) {
-      const color = [colorscheme.colors[i].replaceAll(' ', '')]
-      if (color[i].includes(',')) {
-        const split = color[i].split(',')
-        for (let j = 0; j < split.length; j++) {
-          set.push(chroma(split[j]).hex())
-          color.splice(i, 1, chroma(split[j]).hex())
+    if (data.aggs) {
+      data.aggs.forEach(value => {
+        if (value.aggs) {
+          value.aggs.forEach(val2 => {
+            set.push(colorscheme.colors.find(c => c.value === val2.value.toString()).color)
+          })
+        } else {
+          set.push(colorscheme.defaultColor)
         }
-      } else {
-        set.push(chroma(color[i]).hex())
-        color.splice(i, 1, chroma(color[i]).hex())
-      }
-      try {
-        colorscheme.colors = []
-        colorscheme.colors.push(color)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    if (set.length === 0) {
-      set = [
-        '#BD93F9',
-        '#FF79C6',
-        '#FF5555',
-        '#FFB86C',
-        '#F1FA8C',
-        '#8BE9FD',
-        '#50FA7B'
-      ]
+      })
+    } else {
+      set.push(colorscheme.defaultColor)
     }
   }
   return chroma.scale(set).mode('lch').colors(numColors)

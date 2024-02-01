@@ -12,8 +12,8 @@ function prepareLinesData(config, data) {
   }
   const vuetifyColors = config.vuetifyColors || null
   const colors = config.chartType.type === 'pie'
-    ? [getColors(config.colorscheme, data.results.length, vuetifyColors)]
-    : getColors(config.colorscheme, config.dataType.valuesFields.length, vuetifyColors)
+    ? [getColors(config.colorscheme, data, data.results.length, vuetifyColors)]
+    : getColors(config.colorscheme, data, config.dataType.valuesFields.length, vuetifyColors)
 
   const xLabels = config.dataType.labelsField['x-labels']
   if (Array.isArray(config.dataType.valuesFields) && config.dataType.labelsField) {
@@ -78,7 +78,7 @@ function prepare2levelAggData(config, data) {
   if (sort === 'metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
   else if (sort === 'key') datasets.sort((a, b) => a.key < b.key ? -1 : 1)
   else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
-  const colors = getColors(config.colorscheme, datasets.length, vuetifyColors)
+  const colors = getColors(config.colorscheme, data, datasets.length, vuetifyColors)
   datasets.forEach((d, i) => {
     d.backgroundColor = colors[i]
     d.borderColor = d.backgroundColor
@@ -101,7 +101,7 @@ function prepareAggData(config, data) {
     return prepare2levelAggData(config, data)
   } else {
     const vuetifyColors = config.vuetifyColors || null
-    const backgroundColor = config.chartType.type === 'pie' ? getColors(config.colorscheme, data.aggs.length, vuetifyColors) : getColors(config.colorscheme, 1, vuetifyColors)[0]
+    const backgroundColor = config.chartType.type === 'pie' ? getColors(config.colorscheme, data, data.aggs.length, vuetifyColors) : getColors(config.colorscheme, data, 1, vuetifyColors)[0]
     const xLabels = config.dataType.groupBy.field['x-labels']
     return {
       labels: data.aggs.map(agg => (xLabels && xLabels[agg.value]) || agg.value),
