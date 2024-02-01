@@ -32,7 +32,6 @@ export default {
 
     const config = computed(() => store.config)
     const conceptFilters = computed(() => store.conceptFilters)
-
     const dynamicFilter = computed(() => config.value.dynamicFilters[props.indice])
     const higherFilters = computed(() => config.value.dynamicFilters.slice(0, props.indice))
 
@@ -47,7 +46,12 @@ export default {
     }, { deep: true })
 
     onMounted(() => {
-      dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
+      dynamicFilter.value.values = new URLSearchParams(window.location.search).getAll(dynamicFilter.value.field.key + '_in')
+      if (!dynamicFilter.value.values.length) {
+        dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
+      } else {
+        dynamicFilter.value.values = JSON.parse('[' + dynamicFilter.value.values + ']')
+      }
     })
 
     const fetchItems = async () => {
@@ -63,7 +67,13 @@ export default {
             q: search.value ? search.value + '*' : ''
           }
         })
-        items.value = response.data
+        const unique = [...new Set(response.data)]
+        unique.forEach((value, index) => {
+          if (dynamicFilter.value.values.includes(value)) {
+            unique.splice(index, 1)
+          }
+        })
+        items.value = unique
       } catch (error) {
         console.error(error)
       } finally {
