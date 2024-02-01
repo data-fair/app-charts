@@ -28,7 +28,7 @@ export default {
     const store = inject('appInfo')
     const loading = ref(false)
     const search = ref('')
-    const items = ref(null)
+    const items = ref([])
 
     const config = computed(() => store.config)
     const conceptFilters = computed(() => store.conceptFilters)
@@ -86,7 +86,7 @@ export default {
       applyFilter(null)
       dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
       search.value = ''
-      items.value = null
+      items.value = []
     }
 
     return {
