@@ -135,6 +135,12 @@
         "sortOrder": {
           "$ref": "#/definitions/sortOrder"
         },
+        "dynamicSort": {
+          "type": "boolean",
+          "title": "Trier dynamiquement",
+          "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+          "default": false
+        },
         "size": {
           "$ref": "#/definitions/size"
         }
@@ -163,6 +169,12 @@
             },
             "sort": {
               "$ref": "#/definitions/sortCount"
+            },
+            "dynamicSort": {
+              "type": "boolean",
+              "title": "Trier dynamiquement",
+              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+              "default": false
             }
           }
         },
@@ -175,6 +187,12 @@
             },
             "secondSort": {
               "$ref": "#/definitions/sortCount"
+            },
+            "dynamicSort": {
+              "type": "boolean",
+              "title": "Trier dynamiquement",
+              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+              "default": false
             }
           }
         }
@@ -205,6 +223,12 @@
             },
             "sort": {
               "$ref": "#/definitions/sortMetric"
+            },
+            "dynamicSort": {
+              "type": "boolean",
+              "title": "Trier dynamiquement",
+              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+              "default": false
             }
           }
         },
@@ -217,6 +241,12 @@
             },
             "secondSort": {
               "$ref": "#/definitions/sortMetric"
+            },
+            "dynamicSort": {
+              "type": "boolean",
+              "title": "Trier dynamiquement",
+              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+              "default": false
             }
           }
         },
@@ -230,6 +260,12 @@
             },
             "valueField": {
               "$ref": "#/definitions/valueFieldAgg"
+            },
+            "dynamicMetric": {
+              "type": "boolean",
+              "title": "Calcul dynamique",
+              "description": "Si cette option est activée, l'utilisateur pourra choisir le type de calcul dans le formulaire de filtres interactifs.",
+              "default": false
             }
           }
         }

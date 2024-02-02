@@ -6,7 +6,7 @@ import useAppInfo from './composables/useAppInfo'
 import { createApp, defineAsyncComponent } from 'vue'
 import { createVuetify } from 'vuetify'
 import { defaultOptions } from '@data-fair/lib/vuetify.js'
-import { VAutocomplete, VContainer, VRow, VCol } from 'vuetify/components'
+import { VAutocomplete, VContainer, VRow, VCol, VSelect } from 'vuetify/components'
 
 const AppInfoPlugin = {
   install(app, options) {
@@ -28,7 +28,8 @@ vuetifyOptions.components = {
   VAutocomplete,
   VContainer,
   VRow,
-  VCol
+  VCol,
+  VSelect
 }
 
 const vuetify = createVuetify({ ...vuetifyOptions })
