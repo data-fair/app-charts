@@ -36,22 +36,24 @@ export default {
     const higherFilters = computed(() => config.value.dynamicFilters.slice(0, props.indice))
 
     watch(search, async (val, oldVal) => {
-      if (val === oldVal && items.value !== null) return
+      if (val === oldVal && items.value.length === 0) {
+        return
+      }
       await fetchItems()
     })
 
     watch(higherFilters, async () => {
-      clearFilter()
-      await fetchItems()
+      await clearFilter()
     }, { deep: true })
 
-    onMounted(() => {
-      dynamicFilter.value.values = new URLSearchParams(window.location.search).getAll(dynamicFilter.value.field.key + '_in')
-      if (!dynamicFilter.value.values.length) {
+    onMounted(async () => {
+      const urlparams = new URLSearchParams(window.location.search).getAll(dynamicFilter.value.field.key + '_in')
+      if (!urlparams.length) {
         dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
       } else {
-        dynamicFilter.value.values = JSON.parse('[' + dynamicFilter.value.values + ']')
+        dynamicFilter.value.values = urlparams.map(param => param.split(',').map(value => value.replace(/"/g, ''))).flat()
       }
+      await fetchItems()
     })
 
     const fetchItems = async () => {
@@ -78,6 +80,7 @@ export default {
         console.error(error)
       } finally {
         loading.value = false
+        store.fetchData()
       }
     }
 
@@ -92,11 +95,11 @@ export default {
       store.fetchData()
     }
 
-    const clearFilter = () => {
+    const clearFilter = async () => {
       applyFilter(null)
       dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
       search.value = ''
-      items.value = []
+      await fetchItems()
     }
 
     return {
