@@ -1,18 +1,16 @@
 <template lang="html">
   <v-autocomplete
     :items="dynamicFilter.values.concat(items)"
-    :value="dynamicFilter.values"
     :label="`Filtrer par ${dynamicFilter.field.label}`"
     :loading="loading"
     v-model:search="search"
     :clearable="true"
     :multiple="true"
-    :filter="item => item !== null && item !== undefined"
     class="chart-filter"
     hide-no-data
     hide-details
     placeholder="Saisissez une valeur"
-    @update:modelValue="applyFilter"
+    @update:model-value="applyFilter"
     @click:clear="clearFilter"
   />
 </template>
@@ -51,7 +49,9 @@ export default {
       if (!urlparams.length) {
         dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
       } else {
-        dynamicFilter.value.values = urlparams.map(param => param.split(',').map(value => value.replace(/"/g, ''))).flat()
+        const vals = urlparams.map(param => param.split(',').map(value => value.replace(/"/g, ''))).flat()
+        dynamicFilter.value.values = vals
+        search.value = vals
       }
       await fetchItems()
     })
