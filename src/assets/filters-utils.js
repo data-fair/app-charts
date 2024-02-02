@@ -2,14 +2,14 @@ export function filter2qs(filter) {
   if (!filter.type || filter.type === 'in') {
     if ([null, undefined, ''].includes(filter.values)) return null
     if (Array.isArray(filter.values) && filter.values.length === 0) return null
-    return filter.values.map(v => `${filter.field.key}:"${v}"`).join(' OR ')
+    return filter.values.map(v => `${encodeURIComponent(filter.field.key)}:"${encodeURIComponent(v)}"`).join(' OR ')
   } else if (filter.type === 'out') {
     if ([null, undefined, ''].includes(filter.values)) return null
     if (Array.isArray(filter.values) && filter.values.length === 0) return null
-    return filter.values.map(v => `!(${filter.field.key}:"${v})"`).join(' AND ')
+    return filter.values.map(v => `!(${encodeURIComponent(filter.field.key)}:"${encodeURIComponent(v)}")`).join(' AND ')
   } else if (filter.type === 'interval') {
     if (!filter.minValue || !filter.maxValue) return null
-    return `${filter.field.key}:[${filter.minValue} TO ${filter.maxValue}]`
+    return `${encodeURIComponent(filter.field.key)}:[${encodeURIComponent(filter.minValue)} TO ${encodeURIComponent(filter.maxValue)}]`
   }
 }
 

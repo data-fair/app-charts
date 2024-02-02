@@ -96,7 +96,7 @@ function generatePalette(colorscheme, data, numColors = 10) {
       data.aggs.forEach(value => {
         if (value.aggs) {
           value.aggs.forEach(val2 => {
-            set.push(colorscheme.colors.find(c => c.value === val2.value.toString()).color)
+            set.push(colorscheme.colors.find(c => c.value === val2.value.toString())?.color || colorscheme.defaultColor)
           })
         } else {
           set.push(colorscheme.defaultColor)
