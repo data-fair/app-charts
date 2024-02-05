@@ -19,6 +19,7 @@
 import axios from 'redaxios'
 import { filters2qs } from '../assets/filters-utils'
 import { ref, computed, watch, onMounted, inject } from 'vue'
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   props: ['indice'],
@@ -27,6 +28,7 @@ export default {
     const loading = ref(false)
     const search = ref('')
     const items = ref([])
+    const urlSearchParams = getReactiveSearchParams()
 
     const config = computed(() => store.config)
     const conceptFilters = computed(() => store.conceptFilters)
@@ -45,14 +47,10 @@ export default {
     }, { deep: true })
 
     onMounted(async () => {
-      const urlparams = new URLSearchParams(window.location.search).getAll(dynamicFilter.value.field.key + '_in')
-      if (!urlparams.length) {
-        dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
-      } else {
-        const vals = urlparams.map(param => param.split(',').map(value => value.replace(/"/g, ''))).flat()
-        dynamicFilter.value.values = vals
-        search.value = vals
-      }
+      const urlparams = urlSearchParams[dynamicFilter.value.field.key + '_in'] || dynamicFilter.value.defaultValues || []
+      const vals = typeof urlparams === 'string' ? urlparams.split(',').map(value => value.replace(/"/g, '')) : urlparams
+      dynamicFilter.value.values = vals
+      search.value = vals.toString()
       await fetchItems()
     })
 
@@ -85,13 +83,11 @@ export default {
     }
 
     const applyFilter = (values) => {
-      const newQuery = new URLSearchParams(window.location.search)
       if (values && values.length) {
-        newQuery.set(dynamicFilter.value.field.key + '_in', JSON.stringify(values).slice(1, -1))
+        urlSearchParams[dynamicFilter.value.field.key + '_in'] = JSON.stringify(values).slice(1, -1)
       } else {
-        newQuery.delete(dynamicFilter.value.field.key + '_in')
+        delete urlSearchParams[dynamicFilter.value.field.key + '_in']
       }
-      window.history.pushState({}, '', '?' + newQuery.toString())
       store.fetchData()
     }
 

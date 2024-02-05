@@ -4,35 +4,26 @@
 
 <script>
 import ChartComponent from './components/ChartComponent.vue'
-import { computed, watch, onMounted, inject, ref } from 'vue'
+import { computed, onMounted, inject } from 'vue'
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   components: { ChartComponent },
   setup() {
     const store = inject('appInfo')
     const application = computed(() => store.application)
-    const urlSearchParams = ref(new URLSearchParams(window.location.search))
+    const urlSearchParams = getReactiveSearchParams()
 
     const fetchData = () => {
       const conceptFilters = {}
-      for (const key of urlSearchParams.value.keys()) {
+      for (const [key, value] of Object.entries(urlSearchParams)) {
         if (key.startsWith('_c_')) {
-          conceptFilters[key] = urlSearchParams.value.get(key)
+          conceptFilters[key] = value
         }
       }
       store.conceptFilters = conceptFilters
       store.fetchData()
     }
-
-    const updateSearchParams = () => {
-      urlSearchParams.value = ref(new URLSearchParams(window.location.search))
-    }
-
-    watch(urlSearchParams, (newParams) => {
-      fetchData()
-    }, { immediate: true })
-
-    window.addEventListener('popstate', updateSearchParams)
 
     onMounted(() => {
       if (!application.value) {
