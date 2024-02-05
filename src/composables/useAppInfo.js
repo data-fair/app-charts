@@ -52,7 +52,7 @@ export default function useAppInfo() {
     }
   }
 
-  const fetchData = debounce(async function fetchDataImpl() {
+  const fetchData = debounce(async function () {
     if (incompleteConfig) {
       return
     }

@@ -18,7 +18,7 @@ export default {
     const store = inject('appInfo')
     const config = computed(() => store.config)
     const loading = ref(false)
-    const selectedSort = ref(configSchema.definitions.sortBy.default.key)
+    const selectedSort = ref(config.value.sortBy?.title || configSchema.definitions.sortBy.default.key)
     const sortOptions = ref([])
     const dataType = computed(() => config.value.dataType.type)
     const prepType = computed(() => {
@@ -33,10 +33,6 @@ export default {
       return type
     })
 
-    /* if (dataType.value === 'linesBased') {
-      console.log(configSchema.definitions.sortBy)
-      return configSchema.definitions.sortBy.default.key
-    } */
     const applySort = (sortValue) => {
       config.value.dataType.sortBy.key = sortOptions.value.find((option) => option.title === sortValue).key
       store.fetchData()
