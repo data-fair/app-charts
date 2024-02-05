@@ -1,40 +1,48 @@
 <template lang="html">
   <v-select
     :items="metricOptions"
-    label="Metric"
+    label="Calcul"
+    :loading="loading"
     v-model="selectedMetric"
-    @change="applyMetric"
+    @update:model-value="applyMetric"
   ></v-select>
 </template>
 
 <script>
-import { ref, computed, inject } from 'vue'
+import axios from 'redaxios'
+import { ref, computed, inject, onMounted } from 'vue'
 
 export default {
   setup() {
     const store = inject('appInfo')
     const config = computed(() => store.config)
-    const selectedMetric = ref(config.value.dataType.metricType.default)
+    const loading = ref(false)
+    const selectedMetric = ref(config.value.dataType.valueField?.title ?? '')
+    const metricOptions = ref([])
 
-    const metricOptions = computed(() => {
-      // Generate metric options based on schema
-      return config.value.dataType.metricType.oneOf.map(option => ({
-        text: option.title,
-        value: option.const
-      }))
-    })
-
-    const applyMetric = (metricValue) => {
-      // Directly update the reactive config state
-      config.value.dataType.metricType = metricValue
-      // Trigger any other necessary updates or re-fetching of data
+    const applyMetric = (sortValue) => {
+      config.value.dataType.valueField.key = metricOptions.value.find((option) => option.title === sortValue).key
       store.fetchData()
     }
+
+    onMounted(async () => {
+      if (loading.value) return
+      loading.value = true
+      const schema = await axios.get(config.value.datasets[0].href + '/schema?calculated=false&type=integer,number')
+      metricOptions.value.push(...schema.data.map((field) => {
+        return {
+          key: field.key,
+          title: field.title
+        }
+      }))
+      loading.value = false
+    })
 
     return {
       selectedMetric,
       metricOptions,
-      applyMetric
+      applyMetric,
+      loading
     }
   }
 }

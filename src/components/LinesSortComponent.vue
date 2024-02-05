@@ -1,7 +1,7 @@
 <template lang="html">
   <v-select
     :items="sortOptions"
-    :label="`${prepType}Trier par`"
+    label="Trier par"
     :loading="loading"
     v-model="selectedSort"
     @update:model-value="applySort"
@@ -18,20 +18,8 @@ export default {
     const store = inject('appInfo')
     const config = computed(() => store.config)
     const loading = ref(false)
-    const selectedSort = ref(config.value.sortBy?.title || configSchema.definitions.sortBy.default.key)
+    const selectedSort = ref((config.value.dataType.sortBy?.title ?? config.value.dataType.valuesFields[0].title) || configSchema.definitions.sortBy.default.key)
     const sortOptions = ref([])
-    const dataType = computed(() => config.value.dataType.type)
-    const prepType = computed(() => {
-      let type = ''
-      if (dataType.value === 'linesBased') {
-        // there is only one sort option for linesBased, so no need to precise which type it is
-      } else if (dataType.value === 'countBased') {
-        type = configSchema.definitions.countBasedChart.title + ' : '
-      } else if (dataType.value === 'metricBased') {
-        type = configSchema.definitions.metricBasedChart.title + ' : '
-      }
-      return type
-    })
 
     const applySort = (sortValue) => {
       config.value.dataType.sortBy.key = sortOptions.value.find((option) => option.title === sortValue).key
@@ -52,6 +40,7 @@ export default {
           title: field.title
         }
       }))
+      sortOptions.value = sortOptions.value.filter((option) => option.title !== '_i')
       loading.value = false
     })
 
@@ -59,8 +48,7 @@ export default {
       selectedSort,
       sortOptions,
       applySort,
-      loading,
-      prepType
+      loading
     }
   }
 }

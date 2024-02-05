@@ -167,7 +167,7 @@
             "sort": {
               "$ref": "#/definitions/sortCount"
             },
-            "dynamicSort": {
+            "dynamicSort1": {
               "$ref": "#/definitions/dynamicSort"
             }
           }
@@ -182,7 +182,7 @@
             "secondSort": {
               "$ref": "#/definitions/sortCount"
             },
-            "dynamicSort": {
+            "dynamicSort2": {
               "$ref": "#/definitions/dynamicSort"
             }
           }
@@ -215,7 +215,7 @@
             "sort": {
               "$ref": "#/definitions/sortMetric"
             },
-            "dynamicSort": {
+            "dynamicSort1": {
               "$ref": "#/definitions/dynamicSort"
             }
           }
@@ -230,7 +230,7 @@
             "secondSort": {
               "$ref": "#/definitions/sortMetric"
             },
-            "dynamicSort": {
+            "dynamicSort2": {
               "$ref": "#/definitions/dynamicSort"
             }
           }
