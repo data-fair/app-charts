@@ -136,10 +136,7 @@
           "$ref": "#/definitions/sortOrder"
         },
         "dynamicSort": {
-          "type": "boolean",
-          "title": "Trier dynamiquement",
-          "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
-          "default": false
+          "$ref": "#/definitions/dynamicSort"
         },
         "size": {
           "$ref": "#/definitions/size"
@@ -171,10 +168,7 @@
               "$ref": "#/definitions/sortCount"
             },
             "dynamicSort": {
-              "type": "boolean",
-              "title": "Trier dynamiquement",
-              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
-              "default": false
+              "$ref": "#/definitions/dynamicSort"
             }
           }
         },
@@ -189,10 +183,7 @@
               "$ref": "#/definitions/sortCount"
             },
             "dynamicSort": {
-              "type": "boolean",
-              "title": "Trier dynamiquement",
-              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
-              "default": false
+              "$ref": "#/definitions/dynamicSort"
             }
           }
         }
@@ -225,10 +216,7 @@
               "$ref": "#/definitions/sortMetric"
             },
             "dynamicSort": {
-              "type": "boolean",
-              "title": "Trier dynamiquement",
-              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
-              "default": false
+              "$ref": "#/definitions/dynamicSort"
             }
           }
         },
@@ -243,10 +231,7 @@
               "$ref": "#/definitions/sortMetric"
             },
             "dynamicSort": {
-              "type": "boolean",
-              "title": "Trier dynamiquement",
-              "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
-              "default": false
+              "$ref": "#/definitions/dynamicSort"
             }
           }
         },
@@ -351,10 +336,6 @@
           "properties": {
             "type": {
               "const": "vuetify-theme"
-            },
-            "useAccent": {
-              "type": "boolean",
-              "title": "Ajouter la couleur d'accent"
             },
             "generatePalette": {
               "type": "boolean",
@@ -825,6 +806,12 @@
           "x-display": "color-picker"
         }
       }
+    },
+    "dynamicSort": {
+      "type": "boolean",
+      "title": "Trier dynamiquement",
+      "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+      "default": false
     }
   }
 }

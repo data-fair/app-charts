@@ -27,9 +27,6 @@ function generateGreyscale(start, end, steps) {
 export default function getColors(colorscheme, data, size, vuetifyColors = null) {
   if (colorscheme.type === 'vuetify-theme' && vuetifyColors) {
     const baseColors = [vuetifyColors.primary, vuetifyColors.secondary]
-    if (colorscheme.useAccent) {
-      baseColors.push(vuetifyColors.accent)
-    }
 
     if (colorscheme.generatePalette) {
       return generateDynamicPalette(baseColors, colorscheme.paletteType, size)

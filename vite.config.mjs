@@ -1,10 +1,9 @@
 import commonjs from 'vite-plugin-commonjs'
 import Unfonts from 'unplugin-fonts/vite'
 import vue from '@vitejs/plugin-vue'
-import { createVuetify } from 'vuetify/lib/framework.mjs'
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
-import { transformAssetUrls } from 'vite-plugin-vuetify'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { visualizer } from 'rollup-plugin-visualizer'
 
 const BASE_PATH = process.env.PUBLIC_URL ?? '/app/'
@@ -15,7 +14,7 @@ export default defineConfig({
     vue({
       template: { transformAssetUrls }
     }),
-    createVuetify({
+    vuetify({
       autoImport: true,
       styles: {
         configFile: 'src/styles/settings.scss'

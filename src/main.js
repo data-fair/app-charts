@@ -1,4 +1,4 @@
-import '@mdi/font/css/materialdesignicons.css'
+import '@mdi/font/css/materialdesignicons.min.css'
 import 'url-polyfill'
 import 'vuetify/styles'
 import './styles/settings.scss'
@@ -6,7 +6,6 @@ import useAppInfo from './composables/useAppInfo'
 import { createApp, defineAsyncComponent } from 'vue'
 import { createVuetify } from 'vuetify'
 import { defaultOptions } from '@data-fair/lib/vuetify.js'
-import { VAutocomplete, VContainer, VRow, VCol, VSelect } from 'vuetify/components'
 
 const AppInfoPlugin = {
   install(app, options) {
@@ -23,16 +22,7 @@ const AppInfoPlugin = {
   }
 }
 
-const vuetifyOptions = defaultOptions(window.location.search)
-vuetifyOptions.components = {
-  VAutocomplete,
-  VContainer,
-  VRow,
-  VCol,
-  VSelect
-}
-
-const vuetify = createVuetify({ ...vuetifyOptions })
+const vuetify = createVuetify(defaultOptions)
 
 const asyncApp = defineAsyncComponent(() => import('./App.vue'))
 
