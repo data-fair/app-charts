@@ -11,6 +11,7 @@
 <script>
 import { ref, computed, inject, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   setup() {
@@ -19,9 +20,14 @@ export default {
     const loading = ref(false)
     const selectedOrder = ref(configSchema.definitions.sortOrder.oneOf.find((option) => option.const === config.value.dataType.sortOrder).title || configSchema.definitions.sortOrder.oneOf[0].title)
     const orderOptions = ref([])
+    const urlSearchParams = getReactiveSearchParams()
 
     const applyOrder = (orderValue) => {
-      config.value.dataType.sortOrder = orderOptions.value.find((option) => option.title === orderValue).key
+      const selectedOption = orderOptions.value.find((option) => option.title === orderValue)
+      if (selectedOption) {
+        config.value.dataType.sortOrder = selectedOption.key
+        urlSearchParams.sort_order = selectedOption.key
+      }
       store.fetchData()
     }
 
@@ -34,13 +40,17 @@ export default {
           title: option.title
         }
       }))
+      console.log(orderOptions.value.find((option) => option.key === urlSearchParams.sort_order))
+      selectedOrder.value = orderOptions.value.find((option) => option.key === urlSearchParams.sort_order) || config.value.dataType.sortOrder || configSchema.definitions.sortOrder.oneOf.find((option) => option.const === configSchema.definitions.sortOrder.default).title
+      applyOrder(selectedOrder.value)
       loading.value = false
     })
 
     return {
       selectedOrder,
       applyOrder,
-      orderOptions
+      orderOptions,
+      loading
     }
   }
 }
