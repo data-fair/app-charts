@@ -10,7 +10,6 @@ node_modules
 dist
 dist-ssr
 *.local
-package-lock.json
 
 # Editor directories and files
 .vscode
@@ -18,5 +17,4 @@ package-lock.json
 *.tsbuildinfo
 
 .dev-config.json
-
 stats.html
