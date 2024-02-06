@@ -292,11 +292,11 @@ const metricTypes = [
 function chartTitle(config) {
   if (config.title) return config.title
   if (config.dataType.type === 'linesBased') return ''
-  if (config.dataType.type === 'countBased') return 'Nombre de documents'
+  if (config.dataType.type === 'countBased') return 'Nombre de documents par ' + config.dataType.groupBy.field.label + (config.dataType.secondGroupBy.field ? ' et par ' + config.dataType.secondGroupBy.field.label : '')
   const metricType = metricTypes.find(m => m.value === config.dataType.metricType)
   let label = metricType.text + ' de ' + config.dataType.valueField.label
   if (config.dataType.groupBy && config.dataType.groupBy.field) label += ' par ' + config.dataType.groupBy.field.label
-  if (config.dataType.secondGroupByField) label += ' et par ' + config.dataType.secondGroupByField.label
+  if (config.dataType.secondGroupBy) label += ' et par ' + config.dataType.secondGroupBy.field.label
   return label
 }
 
