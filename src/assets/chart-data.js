@@ -66,6 +66,7 @@ function prepare2levelAggData(config, data) {
   if (sort === 'metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
   else if (sort === 'key') datasets.sort((a, b) => a.key < b.key ? -1 : 1)
   else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
+  if (config.chartType.showTotal) datasets.push(totalDataset)
   const colors = getColors(config.colorscheme, data, datasets.length, vuetifyColors)
   datasets.forEach((d, i) => {
     d.backgroundColor = colors[i]
@@ -77,7 +78,6 @@ function prepare2levelAggData(config, data) {
       if (d.data[i] === undefined) d.data[i] = 0
     }
   })
-  if (config.chartType.showTotal) datasets.push(totalDataset)
   return { labels, datasets }
 }
 

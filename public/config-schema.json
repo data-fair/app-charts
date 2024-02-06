@@ -604,6 +604,11 @@
           "properties": {
             "type": {
               "const": "line"
+            },
+            "showTotal": {
+              "type": "boolean",
+              "title": "Montrer le total",
+              "default": false
             }
           }
         },

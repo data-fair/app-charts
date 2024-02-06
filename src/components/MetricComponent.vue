@@ -1,7 +1,7 @@
 <template lang="html">
   <v-select
     :items="metricOptions"
-    label="Calcul"
+    :label="`Calcul${metricType}`"
     :loading="loading"
     v-model="selectedMetric"
     @update:model-value="applyMetric"
@@ -11,6 +11,7 @@
 <script>
 import axios from 'redaxios'
 import { ref, computed, inject, onMounted } from 'vue'
+import configSchema from '../../public/config-schema.json'
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
@@ -20,6 +21,7 @@ export default {
     const loading = ref(false)
     const selectedMetric = ref(config.value.dataType.valueField?.title ?? '')
     const metricOptions = ref([])
+    const metricType = computed(() => ' : ' + configSchema.definitions.metricType.oneOf.find((option) => option.const === config.value.dataType.metricType).title || '')
     const urlSearchParams = getReactiveSearchParams()
 
     const applyMetric = (metricValue) => {
@@ -64,7 +66,8 @@ export default {
       selectedMetric,
       metricOptions,
       applyMetric,
-      loading
+      loading,
+      metricType
     }
   }
 }
