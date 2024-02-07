@@ -9,10 +9,10 @@
 </template>
 
 <script>
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { ofetch } from 'ofetch'
 import { ref, computed, inject, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
-import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   setup() {
@@ -21,7 +21,7 @@ export default {
     const loading = ref(false)
     const selectedSort = ref((config.value.dataType.sortBy?.title ?? config.value.dataType.valuesFields[0].title) || configSchema.definitions.sortBy.default.key)
     const sortOptions = ref([])
-    const urlSearchParams = getReactiveSearchParams()
+    const urlSearchParams = getReactiveSearchParams
 
     const applySort = (sortValue) => {
       const selectedOption = sortOptions.value.find((option) => option.title === sortValue)
@@ -48,7 +48,8 @@ export default {
         title: configSchema.definitions.sortBy.default.key
       }]
       const schema = await ofetch(config.value.datasets[0].href + '/schema?calculated=false')
-      sortOptions.value.push(...schema.data.map((field) => ({
+      console.log(schema)
+      sortOptions.value.push(...schema.map((field) => ({
         key: field.key,
         title: field.title
       })).filter((option) => option.title !== '_i'))

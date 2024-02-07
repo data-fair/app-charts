@@ -17,10 +17,10 @@
 </template>
 
 <script>
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
 import { ref, computed, watch, onMounted, inject } from 'vue'
-import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   props: ['indice'],
@@ -29,7 +29,7 @@ export default {
     const loading = ref(false)
     const search = ref('')
     const items = ref([])
-    const urlSearchParams = getReactiveSearchParams()
+    const urlSearchParams = getReactiveSearchParams
 
     const config = computed(() => store.config)
     const conceptFilters = computed(() => store.conceptFilters)

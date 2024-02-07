@@ -9,9 +9,9 @@
 </template>
 
 <script>
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { ref, computed, inject, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
-import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   setup() {
@@ -20,7 +20,7 @@ export default {
     const loading = ref(false)
     const selectedSort = ref(configSchema.definitions.sortMetric.oneOf.find((option) => option.const === config.value.dataType.secondSort).title || configSchema.definitions.sortMetric.oneOf[0].title)
     const sortOptions = ref([])
-    const urlSearchParams = getReactiveSearchParams()
+    const urlSearchParams = getReactiveSearchParams
 
     const applySort = (sortValue) => {
       const selectedOption = sortOptions.value.find((option) => option.title === sortValue)

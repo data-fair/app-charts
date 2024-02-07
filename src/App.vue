@@ -4,15 +4,15 @@
 
 <script>
 import ChartComponent from './components/ChartComponent.vue'
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { computed, onMounted, inject } from 'vue'
-import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   components: { ChartComponent },
   setup() {
     const store = inject('appInfo')
     const application = computed(() => store.application)
-    const urlSearchParams = getReactiveSearchParams()
+    const urlSearchParams = getReactiveSearchParams
 
     const fetchData = () => {
       const conceptFilters = {}

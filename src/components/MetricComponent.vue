@@ -9,10 +9,10 @@
 </template>
 
 <script>
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { ofetch } from 'ofetch'
 import { ref, computed, inject, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
-import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
 export default {
   setup() {
@@ -22,7 +22,7 @@ export default {
     const selectedMetric = ref(config.value.dataType.valueField?.title ?? '')
     const metricOptions = ref([])
     const metricType = computed(() => ' : ' + configSchema.definitions.metricType.oneOf.find((option) => option.const === config.value.dataType.metricType).title || '')
-    const urlSearchParams = getReactiveSearchParams()
+    const urlSearchParams = getReactiveSearchParams
 
     const applyMetric = (metricValue) => {
       const selectedOption = metricOptions.value.find((option) => option.title === metricValue)
@@ -50,7 +50,7 @@ export default {
       if (loading.value) return
       loading.value = true
       const schema = await ofetch(config.value.datasets[0].href + '/schema?calculated=false&type=integer,number')
-      metricOptions.value = schema.data.map(field => ({
+      metricOptions.value = schema.map(field => ({
         key: field.key,
         title: field.title
       }))
