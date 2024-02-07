@@ -50,7 +50,7 @@ export default {
       const urlparams = urlSearchParams[dynamicFilter.value.field.key + '_in'] || dynamicFilter.value.defaultValues || []
       const vals = typeof urlparams === 'string' ? urlparams.split(',').map(value => value.replace(/"/g, '')) : urlparams
       dynamicFilter.value.values = vals
-      search.value = vals.toString()
+      search.value = vals.toString().replace(/,/g, ', ')
       await fetchItems()
     })
 

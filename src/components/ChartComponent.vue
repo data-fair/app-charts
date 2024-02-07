@@ -33,8 +33,15 @@ export default {
     config.value.vuetifyColors = vuetifyColors.value
 
     watch(data, async () => {
-      await nextTick()
-      renderChart()
+      if (chartCanvas.value) {
+        chartTop.value = chartCanvas.value.getBoundingClientRect().top
+      }
+      try {
+        await refresh()
+      } catch (err) {
+        await nextTick()
+        renderChart()
+      }
     }, { immediate: true })
 
     onMounted(async () => {
