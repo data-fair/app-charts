@@ -1,6 +1,6 @@
-import axios from 'redaxios'
 import debounce from 'debounce'
 import { filters2qs } from '../assets/filters-utils'
+import { ofetch } from 'ofetch'
 import { reactive } from 'vue'
 
 let instance = null
@@ -118,13 +118,10 @@ export default function useAppInfo() {
       }
     }
 
-    try {
-      let response = await axios.get(`${config.datasets[0].href}/values_agg`, { params })
-      if (response.data) response = response.data
-      setAny({ data: response })
-    } catch (err) {
-      setError((err.response && err.response.data) || err.message)
-    }
+    const response = await ofetch(`${config.datasets[0].href}/values_agg`, { params }).catch(err => {
+      setError(err)
+    })
+    setAny({ data: response })
   }
 
   async function fetchLinesData() {
@@ -139,22 +136,22 @@ export default function useAppInfo() {
       finalizedAt: config.datasets[0].finalizedAt // for better caching
     }
 
-    try {
-      let response = await axios.get(`${config.datasets[0].href}/lines`, { params })
-      if (response.data) response = response.data
-      setAny({ data: response })
-    } catch (err) {
+    const response = await ofetch(`${config.datasets[0].href}/lines`, { params }).catch(err => {
       setError(err)
-    }
+    })
+    setAny({ data: response })
   }
 
   async function setError(error) {
     console.error(error)
-    try {
-      await axios.post(`${application.href}/error`, { message: error.message || error })
-    } catch (postError) {
+    await ofetch(`${application.href}/error`, {
+      method: 'POST',
+      body: {
+        message: error.message || error
+      }
+    }).catch(postError => {
       console.error('Failed to report error', postError)
-    }
+    })
   }
 
   const appInfo = reactive({

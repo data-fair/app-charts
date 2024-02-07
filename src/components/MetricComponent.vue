@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'redaxios'
+import { ofetch } from 'ofetch'
 import { ref, computed, inject, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
@@ -49,7 +49,7 @@ export default {
     onMounted(async () => {
       if (loading.value) return
       loading.value = true
-      const schema = await axios.get(config.value.datasets[0].href + '/schema?calculated=false&type=integer,number')
+      const schema = await ofetch(config.value.datasets[0].href + '/schema?calculated=false&type=integer,number')
       metricOptions.value = schema.data.map(field => ({
         key: field.key,
         title: field.title

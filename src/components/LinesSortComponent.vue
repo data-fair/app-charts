@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'redaxios'
+import { ofetch } from 'ofetch'
 import { ref, computed, inject, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
@@ -47,7 +47,7 @@ export default {
         key: configSchema.definitions.sortBy.default.key,
         title: configSchema.definitions.sortBy.default.key
       }]
-      const schema = await axios.get(config.value.datasets[0].href + '/schema?calculated=false')
+      const schema = await ofetch(config.value.datasets[0].href + '/schema?calculated=false')
       sortOptions.value.push(...schema.data.map((field) => ({
         key: field.key,
         title: field.title

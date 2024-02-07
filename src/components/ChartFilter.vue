@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import axios from 'redaxios'
 import { filters2qs } from '../assets/filters-utils'
+import { ofetch } from 'ofetch'
 import { ref, computed, watch, onMounted, inject } from 'vue'
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params.js'
 
@@ -59,7 +59,7 @@ export default {
       loading.value = true
       const qs = filters2qs(config.value.staticFilters.concat(higherFilters.value))
       try {
-        const response = await axios.get(config.value.datasets[0].href + '/values/' + encodeURIComponent(dynamicFilter.value.field.key), {
+        const response = await ofetch(config.value.datasets[0].href + '/values/' + encodeURIComponent(dynamicFilter.value.field.key), {
           params: {
             size: 10,
             qs,
@@ -67,7 +67,7 @@ export default {
             q: search.value ? search.value + '*' : ''
           }
         })
-        const unique = [...new Set(response.data)]
+        const unique = [...new Set(response)]
         unique.forEach((value, index) => {
           if (dynamicFilter.value.values.includes(value)) {
             unique.splice(index, 1)
