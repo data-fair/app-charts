@@ -47,14 +47,14 @@ export default {
     onMounted(async () => {
       if (loading.value) return
       loading.value = true
-      sortOptions.value.push(...configSchema.definitions.sortMetric.oneOf.map((option) => {
-        return {
-          key: option.const,
-          title: option.title
-        }
+      sortOptions.value = configSchema.definitions.sortMetric.oneOf.map(option => ({
+        key: option.const,
+        title: option.title
       }))
       cleanSearchParams()
-      selectedSort.value = sortOptions.value.find((option) => option.key === urlSearchParams.metric_sort_by_1) || configSchema.definitions.sortMetric.oneOf.find((option) => option.const === configSchema.definitions.sortMetric.default).title
+      const urlSortKey = urlSearchParams.metric_sort_by_1
+      const defaultSortOption = configSchema.definitions.sortMetric.oneOf.find(option => option.const === config.value.dataType.sort) || configSchema.definitions.sortMetric.oneOf[0]
+      selectedSort.value = sortOptions.value.find(option => option.key === urlSortKey)?.title || defaultSortOption.title
       applySort(selectedSort.value)
       loading.value = false
     })

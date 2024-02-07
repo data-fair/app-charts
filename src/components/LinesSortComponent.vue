@@ -43,20 +43,19 @@ export default {
     onMounted(async () => {
       if (loading.value) return
       loading.value = true
-      sortOptions.value.push({
+      sortOptions.value = [{
         key: configSchema.definitions.sortBy.default.key,
         title: configSchema.definitions.sortBy.default.key
-      })
+      }]
       const schema = await axios.get(config.value.datasets[0].href + '/schema?calculated=false')
-      sortOptions.value.push(...schema.data.map((field) => {
-        return {
-          key: field.key,
-          title: field.title
-        }
-      }))
-      sortOptions.value = sortOptions.value.filter((option) => option.title !== '_i')
+      sortOptions.value.push(...schema.data.map((field) => ({
+        key: field.key,
+        title: field.title
+      })).filter((option) => option.title !== '_i'))
       cleanSearchParams()
-      selectedSort.value = sortOptions.value.find((option) => option.key === urlSearchParams.sort_by) || (config.value.dataType.sortBy?.title ?? config.value.dataType.valuesFields[0].title) || configSchema.definitions.sortBy.default.key
+      const urlSortKey = urlSearchParams.sort_by
+      const defaultSort = config.value.dataType.sortBy?.title ?? config.value.dataType.valuesFields[0].title ?? configSchema.definitions.sortBy.default.key
+      selectedSort.value = sortOptions.value.find((option) => option.key === urlSortKey)?.title ?? defaultSort
       applySort(selectedSort.value)
       loading.value = false
     })

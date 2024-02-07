@@ -50,14 +50,13 @@ export default {
       if (loading.value) return
       loading.value = true
       const schema = await axios.get(config.value.datasets[0].href + '/schema?calculated=false&type=integer,number')
-      metricOptions.value.push(...schema.data.map((field) => {
-        return {
-          key: field.key,
-          title: field.title
-        }
+      metricOptions.value = schema.data.map(field => ({
+        key: field.key,
+        title: field.title
       }))
       cleanSearchParams()
-      selectedMetric.value = metricOptions.value.find((option) => option.key === urlSearchParams.calculate_by) || metricOptions.value[0].title
+      const urlMetricKey = urlSearchParams.calculate_by
+      selectedMetric.value = metricOptions.value.find(option => option.key === urlMetricKey)?.title || metricOptions.value[0]?.title
       applyMetric(selectedMetric.value)
       loading.value = false
     })

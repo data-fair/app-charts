@@ -34,14 +34,14 @@ export default {
     onMounted(async () => {
       if (loading.value) return
       loading.value = true
-      orderOptions.value.push(...configSchema.definitions.sortOrder.oneOf.map((option) => {
-        return {
-          key: option.const,
-          title: option.title
-        }
+      orderOptions.value = configSchema.definitions.sortOrder.oneOf.map((option) => ({
+        key: option.const,
+        title: option.title
       }))
-      console.log(orderOptions.value.find((option) => option.key === urlSearchParams.sort_order))
-      selectedOrder.value = orderOptions.value.find((option) => option.key === urlSearchParams.sort_order) || config.value.dataType.sortOrder || configSchema.definitions.sortOrder.oneOf.find((option) => option.const === configSchema.definitions.sortOrder.default).title
+      const urlOrderKey = urlSearchParams.sort_order
+      const defaultOrderKey = config.value.dataType.sortOrder || configSchema.definitions.sortOrder.default
+      const defaultOrderTitle = orderOptions.value.find((option) => option.key === defaultOrderKey)?.title
+      selectedOrder.value = orderOptions.value.find((option) => option.key === urlOrderKey)?.title || defaultOrderTitle
       applyOrder(selectedOrder.value)
       loading.value = false
     })
