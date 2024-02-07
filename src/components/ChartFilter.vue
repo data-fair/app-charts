@@ -4,6 +4,7 @@
     :label="`Filtrer par ${dynamicFilter.field.label}`"
     :loading="loading"
     v-model:search="search"
+    v-model="dynamicFilter.values"
     :clearable="true"
     :multiple="true"
     class="chart-filter"
@@ -50,7 +51,6 @@ export default {
       const urlparams = urlSearchParams[dynamicFilter.value.field.key + '_in'] || dynamicFilter.value.defaultValues || []
       const vals = typeof urlparams === 'string' ? urlparams.split(',').map(value => value.replace(/"/g, '')) : urlparams
       dynamicFilter.value.values = vals
-      search.value = vals.toString().replace(/,/g, ', ')
       await fetchItems()
     })
 
@@ -85,9 +85,11 @@ export default {
     const applyFilter = (values) => {
       if (values && values.length) {
         urlSearchParams[dynamicFilter.value.field.key + '_in'] = JSON.stringify(values).slice(1, -1)
+        items.value = items.value.filter(item => !values.includes(item))
       } else {
         delete urlSearchParams[dynamicFilter.value.field.key + '_in']
       }
+      dynamicFilter.value.values = values
       store.fetchData()
     }
 
