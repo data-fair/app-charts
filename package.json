@@ -6,7 +6,7 @@
   "homepage": "https://data-fair.github.io/3/user-guide-backoffice/charts",
   "scripts": {
     "analyze": "cross-env ANALYZE=true npm run build",
-    "build": "rm -rf dist && cross-env PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-dashboards@${npm_package_version}/dist vite build",
+    "build": "rm -rf dist && cross-env PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist vite build",
     "dev": "cross-env APP_URL=http://localhost:3000/app/ df-dev-server",
     "dev-src": "vite",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
