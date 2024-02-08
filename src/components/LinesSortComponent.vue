@@ -48,7 +48,6 @@ export default {
         title: configSchema.definitions.sortBy.default.key
       }]
       const schema = await ofetch(config.value.datasets[0].href + '/schema?calculated=false')
-      console.log(schema)
       sortOptions.value.push(...schema.map((field) => ({
         key: field.key,
         title: field.title

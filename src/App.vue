@@ -21,7 +21,7 @@ export default {
           conceptFilters[key] = value
         }
       }
-      store.conceptFilters = conceptFilters
+      store.setAny({ conceptFilters })
       store.fetchData()
     }
 
