@@ -7,7 +7,7 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=true npm run build-dev",
     "build": "cross-env PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist && npm run build-dev",
-    "build-dev": "rimraf public/config-schema.json dist src/config/.type/resolved-schema.json && npm run build-types && vite build",
+    "build-dev": "rimraf dist && npm run build-types && node prepare-schema.js && vite build",
     "build-types": "df-build-types && ncp src/config/.type/resolved-schema.json public/config-schema.json",
     "dev": "cross-env APP_URL=http://localhost:3000/app/ df-dev-server",
     "dev-src": "vite",
