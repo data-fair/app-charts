@@ -33,6 +33,7 @@ export default defineConfig({
     }),
     commonjs({
       include: [
+        'node_modules/@data-fair/lib/src/color-scheme/colors.js',
         'node_modules/@data-fair/lib/src/vue/reactive-search-params-global.js',
         'node_modules/@data-fair/lib/src/vuetify/index.js',
         'node_modules/chroma-js/chroma.js',

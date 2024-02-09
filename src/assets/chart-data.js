@@ -1,4 +1,4 @@
-import getColors from './colors'
+import getColors from '@data-fair/lib/color-scheme/colors.js'
 
 // From data-fair response data to the data object expected by chartjs
 export default function prepareData(config, data) {

@@ -15,6 +15,7 @@ dist-ssr
 .vscode
 
 *.tsbuildinfo
+.type
 
 .dev-config.json
 stats.html
