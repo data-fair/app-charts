@@ -952,7 +952,6 @@
           "type": "string"
         },
         "colorscheme": {
-          "$id": "https://github.com/data-fair/lib/colors",
           "type": "object",
           "title": "Palette de couleur",
           "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d'une valeur faible à une valeur forte (gradient)\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété\n\n**Palette personnalisée** : choisissez vos propres couleurs",
@@ -2105,7 +2104,6 @@
       }
     },
     "colorscheme": {
-      "$id": "https://github.com/data-fair/lib/colors",
       "type": "object",
       "title": "Palette de couleur",
       "description": "**Qualitative** : pour représenter des données catégorielles ou nominales.\n\n**Divergente** : accorde la même importance aux différentes valeurs des données.\n\n**Séquentielle** : pour des données ordonnées qui varient d'une valeur faible à une valeur forte (gradient)\n\n**Thème global** : utilise les couleurs principales de l'interface, peut être étendu en une palette pour plus de variété\n\n**Palette personnalisée** : choisissez vos propres couleurs",
