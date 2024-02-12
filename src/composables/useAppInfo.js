@@ -10,7 +10,7 @@ export default function useAppInfo() {
 
   const error = null
   const env = null
-  const application = window.APPLICATION
+  const application = /** @type {import('@data-fair/lib/shared/application.js').Application} */ window.APPLICATION
   const data = null
   const conceptFilters = {}
 
@@ -19,16 +19,16 @@ export default function useAppInfo() {
 
   const incompleteConfig = (() => {
     if (!application) return false
-    const config = application.configuration
-    if (!config) return 'Configuration absente'
+    const config = /** @type {import('../config/.type/types.js').Config | undefined} */ application.configuration
+    if (!config) throw new Error('Configuration absente')
     if (!(config.datasets && config.datasets[0] && config.datasets[0].href)) {
-      return 'Pas de jeu de données configuré.'
+      throw new Error('Pas de jeu de données configuré.')
     }
     if (config.dataType.type === 'linesBased' && (!config.dataType.valuesFields || !config.dataType.valuesFields.length)) {
-      return 'Pas de colonnes de valeurs sélectionnées.'
+      throw new Error('Pas de colonnes de valeurs sélectionnées.')
     }
     if (config.dataType.type === 'metricBased' && !config.dataType.valueField) {
-      return 'Pour ce type de préparation de données vous devez configurer la colonne sur laquelle effectuer un calcul.'
+      throw new Error('Pour ce type de préparation de données vous devez configurer la colonne sur laquelle effectuer un calcul.')
     }
     return false
   })()

@@ -13,23 +13,13 @@ export default {
     const store = inject('appInfo')
     const application = computed(() => store.application)
     const urlSearchParams = getReactiveSearchParams
-
-    const fetchData = () => {
-      const conceptFilters = {}
-      for (const [key, value] of Object.entries(urlSearchParams)) {
-        if (key.startsWith('_c_')) {
-          conceptFilters[key] = value
-        }
-      }
-      store.setAny({ conceptFilters })
-      store.fetchData()
-    }
+    window.vIframeOptions = { reactiveParams: urlSearchParams }
 
     onMounted(() => {
       if (!application.value) {
         window.location.href = 'https://github.com/data-fair/app-charts'
       } else {
-        fetchData()
+        store.fetchData()
       }
     })
 

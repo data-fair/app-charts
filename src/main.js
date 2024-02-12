@@ -2,7 +2,6 @@ import '@mdi/font/css/materialdesignicons.min.css'
 import 'url-polyfill'
 import 'vuetify/styles'
 import './styles/settings.scss'
-import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import useAppInfo from './composables/useAppInfo'
 import { createApp, defineAsyncComponent } from 'vue'
 import { createVuetify } from 'vuetify'
@@ -30,7 +29,6 @@ if (env === undefined) {
     defaultDataFairUrl: process.env.DEFAULT_DATA_FAIR ?? 'http://localhost:5888'
   }
 }
-window.vIframeOptions = { reactiveParams: getReactiveSearchParams }
 
 app.use(AppInfoPlugin, { environement: env })
 app.use(vuetify)

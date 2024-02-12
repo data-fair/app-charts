@@ -7,7 +7,7 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=true npm run build-dev",
     "build": "cross-env-shell PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist \"npm run build-dev\"",
-    "build-dev": "rimraf dist && npm run build-types && node prepare-schema.js && cross-env-shell PUBLIC_URL=./ \"vite build\"",
+    "build-dev": "rimraf dist && npm run build-types && node prepare-schema.js && cross-env-shell PUBLIC_URL=https://staging-koumoul.com/apps/charts/master/ \"vite build\"",
     "build-types": "df-build-types && ncp src/config/.type/resolved-schema.json public/config-schema.json",
     "dev": "cross-env APP_URL=http://localhost:3000/app/ df-dev-server",
     "dev-src": "vite",
@@ -25,6 +25,7 @@
     "@data-fair/lib": "^0.21.0",
     "@koumoul/gh-pages-multi": "^0.7.2",
     "@mdi/font": "^7.4.47",
+    "@vueuse/core": "^10.7.2",
     "chart.js": "^4.4.1",
     "chroma-js": "^2.4.2",
     "debounce": "^2.0.0",

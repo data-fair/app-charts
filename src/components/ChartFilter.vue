@@ -18,9 +18,11 @@
 
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import { computedAsync } from '@vueuse/core'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
 import { ref, computed, watch, onMounted, inject } from 'vue'
+import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 export default {
   props: ['indice'],
@@ -32,7 +34,7 @@ export default {
     const urlSearchParams = getReactiveSearchParams
 
     const config = computed(() => store.config)
-    const conceptFilters = computed(() => store.conceptFilters)
+    const conceptFilters = useConceptFilters(getReactiveSearchParams)
     const dynamicFilter = computed(() => config.value.dynamicFilters[props.indice])
     const higherFilters = computed(() => config.value.dynamicFilters.slice(0, props.indice))
 
