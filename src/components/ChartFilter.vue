@@ -18,22 +18,23 @@
 
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import useAppInfo from '@/composables/useAppInfo'
 import { computedAsync } from '@vueuse/core'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
-import { ref, computed, watch, onMounted, inject } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 export default {
   props: ['indice'],
   setup(props) {
-    const store = inject('appInfo')
+    const appInfo = useAppInfo()
     const loading = ref(false)
     const search = ref('')
     const items = ref([])
     const urlSearchParams = getReactiveSearchParams
 
-    const config = computed(() => store.config)
+    const config = computed(() => appInfo.config)
     const conceptFilters = useConceptFilters(getReactiveSearchParams)
     const dynamicFilter = computed(() => config.value.dynamicFilters[props.indice])
     const higherFilters = computed(() => config.value.dynamicFilters.slice(0, props.indice))
@@ -80,7 +81,7 @@ export default {
         console.error(error)
       } finally {
         loading.value = false
-        store.fetchData()
+        appInfo.fetchData()
       }
     }
 
@@ -92,7 +93,7 @@ export default {
         delete urlSearchParams[dynamicFilter.value.field.key + '_in']
       }
       dynamicFilter.value.values = values
-      store.fetchData()
+      appInfo.fetchData()
     }
 
     const clearFilter = async () => {

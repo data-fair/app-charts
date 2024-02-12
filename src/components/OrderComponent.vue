@@ -10,13 +10,14 @@
 
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
-import { ref, computed, inject, onMounted } from 'vue'
+import useAppInfo from '@/composables/useAppInfo'
+import { ref, computed, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 
 export default {
   setup() {
-    const store = inject('appInfo')
-    const config = computed(() => store.config)
+    const appInfo = useAppInfo()
+    const config = computed(() => appInfo.config)
     const loading = ref(false)
     const selectedOrder = ref(configSchema.definitions.sortOrder.oneOf.find((option) => option.const === config.value.dataType.sortOrder).title || configSchema.definitions.sortOrder.oneOf[0].title)
     const orderOptions = ref([])
@@ -28,7 +29,7 @@ export default {
         config.value.dataType.sortOrder = selectedOption.key
         urlSearchParams.sort_order = selectedOption.key
       }
-      store.fetchData()
+      appInfo.fetchData()
     }
 
     onMounted(async () => {

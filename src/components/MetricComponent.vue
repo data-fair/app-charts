@@ -10,14 +10,15 @@
 
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import useAppInfo from '@/composables/useAppInfo'
 import { ofetch } from 'ofetch'
-import { ref, computed, inject, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 
 export default {
   setup() {
-    const store = inject('appInfo')
-    const config = computed(() => store.config)
+    const appInfo = useAppInfo()
+    const config = computed(() => appInfo.config)
     const loading = ref(false)
     const selectedMetric = ref(config.value.dataType.valueField?.title ?? '')
     const metricOptions = ref([])
@@ -30,7 +31,7 @@ export default {
         config.value.dataType.valueField.key = selectedOption.key
         urlSearchParams.calculate_by = selectedOption.key
       }
-      store.fetchData()
+      appInfo.fetchData()
     }
 
     function cleanSearchParams() {

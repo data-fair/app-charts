@@ -38,16 +38,17 @@ import MetricComponent from './MetricComponent.vue'
 import MetricSort1Component from './MetricSort1Component.vue'
 import MetricSort2Component from './MetricSort2Component.vue'
 import OrderComponent from './OrderComponent.vue'
-import { defineComponent, computed, inject } from 'vue'
+import useAppInfo from '@/composables/useAppInfo'
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
   components: { ChartFilter, CountSort1Component, CountSort2Component, LinesSortComponent, MetricComponent, MetricSort1Component, MetricSort2Component, OrderComponent },
   setup() {
-    const store = inject('appInfo')
+    const appInfo = useAppInfo()
     const dataType = computed(() => config.value.dataType.type)
 
-    const config = computed(() => store.config)
-    const application = computed(() => store.application)
+    const config = computed(() => appInfo.config)
+    const application = computed(() => appInfo.application)
 
     return {
       config,

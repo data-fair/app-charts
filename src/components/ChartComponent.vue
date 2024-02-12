@@ -10,6 +10,7 @@
 <script>
 import chartUtils from '../assets/chart-utils.js'
 import FiltersComponent from './FiltersComponent.vue'
+import useAppInfo from '@/composables/useAppInfo'
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, RadarController, RadialLinearScale, Filler, Title, Tooltip } from 'chart.js'
 import { ref, computed, onMounted, watch, nextTick, shallowRef, inject } from 'vue'
 
@@ -18,7 +19,7 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineContro
 export default {
   components: { FiltersComponent },
   setup() {
-    const store = inject('appInfo')
+    const appInfo = useAppInfo()
     const vuetify = inject('vuetify')
     const vuetifyColors = computed(() => vuetify.theme.current.value.colors)
     const chartCanvas = shallowRef(null)
@@ -27,9 +28,9 @@ export default {
     const height = ref(null)
     const width = ref(null)
 
-    const data = computed(() => store.data)
-    const incompleteConfig = computed(() => store.incompleteConfig)
-    const config = computed(() => store.config)
+    const data = computed(() => appInfo.data)
+    const incompleteConfig = computed(() => appInfo.incompleteConfig === null)
+    const config = computed(() => appInfo.config)
     config.value.vuetifyColors = vuetifyColors.value
 
     watch(data, async () => {
@@ -65,7 +66,7 @@ export default {
     }
 
     const renderChart = () => {
-      if (!data.value || incompleteConfig.value) return
+      if (!data.value || incompleteConfig.value === null) return
       try {
         if (!chart.value) {
           chart.value = new Chart(chartCanvas.value.getContext('2d'), chartUtils.prepareChart(config.value, data.value))
@@ -74,7 +75,7 @@ export default {
           chart.value.update()
         }
       } catch (err) {
-        store.setError(err)
+        appInfo.setError(err)
       }
     }
 

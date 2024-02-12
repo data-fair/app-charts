@@ -8,17 +8,16 @@ let instance = null
 export default function useAppInfo() {
   if (instance) return instance
 
-  const error = null
   const env = null
   const application = /** @type {import('@data-fair/lib/shared/application.js').Application} */ window.APPLICATION
   const data = null
   const conceptFilters = {}
 
-  const defaultDataFairUrl = env ? new URL(env.defaultDataFair) : null
-  const defaultConfigureUrl = env ? `${env.defaultDataFair}/applications?import=${encodeURIComponent(window.location.href)}` : null
+  let defaultDataFairUrl = null
+  let defaultConfigureUrl = null
 
   const incompleteConfig = (() => {
-    if (!application) return false
+    if (!application) return null
     const config = /** @type {import('../config/.type/types.js').Config | undefined} */ application.configuration
     if (!config) throw new Error('Configuration absente')
     if (!(config.datasets && config.datasets[0] && config.datasets[0].href)) {
@@ -30,10 +29,10 @@ export default function useAppInfo() {
     if (config.dataType.type === 'metricBased' && !config.dataType.valueField) {
       throw new Error('Pour ce type de préparation de données vous devez configurer la colonne sur laquelle effectuer un calcul.')
     }
-    return false
+    return config
   })()
 
-  const config = application ? application.configuration : null
+  const config = incompleteConfig
 
   function setAny(params) {
     Object.assign(appInfo, params)
@@ -41,6 +40,9 @@ export default function useAppInfo() {
 
   function init(env) {
     setAny({ env })
+
+    defaultDataFairUrl = env ? new URL(env.defaultDataFairUrl) : null
+    defaultConfigureUrl = env ? `${env.defaultDataFairUrl}/applications?import=${encodeURIComponent(window.location.href)}` : null
 
     if (application) {
       const config = application.configuration
@@ -53,7 +55,7 @@ export default function useAppInfo() {
   }
 
   const fetchData = debounce(async function () {
-    if (incompleteConfig) {
+    if (incompleteConfig === null) {
       return
     }
 
@@ -155,7 +157,6 @@ export default function useAppInfo() {
   }
 
   const appInfo = reactive({
-    error,
     env,
     application,
     data,

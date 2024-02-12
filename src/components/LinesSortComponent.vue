@@ -10,14 +10,15 @@
 
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import useAppInfo from '@/composables/useAppInfo'
 import { ofetch } from 'ofetch'
-import { ref, computed, inject, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 
 export default {
   setup() {
-    const store = inject('appInfo')
-    const config = computed(() => store.config)
+    const appInfo = useAppInfo()
+    const config = computed(() => appInfo.config)
     const loading = ref(false)
     const selectedSort = ref((config.value.dataType.sortBy?.title ?? config.value.dataType.valuesFields[0].title) || configSchema.definitions.sortBy.default.key)
     const sortOptions = ref([])
@@ -29,7 +30,7 @@ export default {
         config.value.dataType.sortBy.key = selectedOption.key
         urlSearchParams.sort_by = selectedOption.key
       }
-      store.fetchData()
+      appInfo.fetchData()
     }
 
     function cleanSearchParams() {
