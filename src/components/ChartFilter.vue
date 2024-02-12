@@ -19,18 +19,18 @@
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import useAppInfo from '@/composables/useAppInfo'
+import { computedAsync } from '@vueuse/core'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 export default {
   props: ['indice'],
   setup(props) {
+    let loading = false
     const appInfo = useAppInfo()
-    const loading = ref(false)
     const search = ref('')
-    const items = ref([])
     const urlSearchParams = getReactiveSearchParams
 
     const config = computed(() => appInfo.config)
@@ -38,27 +38,9 @@ export default {
     const dynamicFilter = computed(() => config.value.dynamicFilters[props.indice])
     const higherFilters = computed(() => config.value.dynamicFilters.slice(0, props.indice))
 
-    watch(search, async (val, oldVal) => {
-      if (val === oldVal && items.value.length === 0) {
-        return
-      }
-      await fetchItems()
-    })
-
-    watch(higherFilters, async () => {
-      await clearFilter()
-    }, { deep: true })
-
-    onMounted(async () => {
-      const urlparams = urlSearchParams[dynamicFilter.value.field.key + '_in'] || dynamicFilter.value.defaultValues || []
-      const vals = typeof urlparams === 'string' ? urlparams.split(',').map(value => value.replace(/"/g, '')) : urlparams
-      dynamicFilter.value.values = vals
-      await fetchItems()
-    })
-
-    const fetchItems = async () => {
-      if (loading.value) return
-      loading.value = true
+    const items = computedAsync(async () => {
+      if (loading) return []
+      loading = true
       const qs = filters2qs(config.value.staticFilters.concat(higherFilters.value))
       try {
         const response = await ofetch(config.value.datasets[0].href + '/values/' + encodeURIComponent(dynamicFilter.value.field.key), {
@@ -69,25 +51,29 @@ export default {
             q: search.value ? search.value + '*' : ''
           }
         })
-        const unique = [...new Set(response)]
-        unique.forEach((value, index) => {
-          if (dynamicFilter.value.values.includes(value)) {
-            unique.splice(index, 1)
-          }
-        })
-        items.value = unique
+        const unique = [...new Set(response)].filter(value => !dynamicFilter.value.values.includes(value))
+        console.log(unique, dynamicFilter.value.values, response)
+        return unique
       } catch (error) {
         console.error(error)
+        return []
       } finally {
-        loading.value = false
+        loading = false
         appInfo.fetchData()
       }
-    }
+    },
+    [],
+    { lazy: true, loading })
+
+    watchEffect(() => {
+      const urlparams = urlSearchParams[dynamicFilter.value.field.key + '_in'] || dynamicFilter.value.defaultValues || []
+      const vals = typeof urlparams === 'string' ? urlparams.split(',').map(value => value.replace(/"/g, '')) : urlparams
+      dynamicFilter.value.values = vals
+    })
 
     const applyFilter = (values) => {
       if (values && values.length) {
         urlSearchParams[dynamicFilter.value.field.key + '_in'] = JSON.stringify(values).slice(1, -1)
-        items.value = items.value.filter(item => !values.includes(item))
       } else {
         delete urlSearchParams[dynamicFilter.value.field.key + '_in']
       }
@@ -99,7 +85,6 @@ export default {
       applyFilter(null)
       dynamicFilter.value.values = dynamicFilter.value.defaultValues || []
       search.value = ''
-      await fetchItems()
     }
 
     return {
