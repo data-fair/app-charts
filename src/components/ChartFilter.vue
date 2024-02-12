@@ -19,7 +19,6 @@
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import useAppInfo from '@/composables/useAppInfo'
-import { computedAsync } from '@vueuse/core'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
 import { ref, computed, watch, onMounted } from 'vue'

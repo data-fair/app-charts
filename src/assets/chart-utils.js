@@ -1,19 +1,31 @@
 import { setAlpha } from './colors.js'
 import prepareData from './chart-data.js'
 
+/**
+ * @param {string | number} value
+ * @param {number} maxLength
+ * @returns {string}
+ */
 function formatValue(value, maxLength) {
   if (typeof value === 'number') return value.toLocaleString()
   const str = '' + value
   return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
 }
 
+/**
+ * @param {import('../config/.type/types.js').Config} config
+ * @param {Record<any, any>} data
+ * @returns {Record<string, any>}
+ */
 function getXAxis(config, data) {
-  if (config.dataType.groupBy && config.dataType.groupBy.type === 'date') {
+  // @ts-ignore
+  if (config.dataType?.groupBy && config.dataType.groupBy.type === 'date') {
+    // @ts-ignore
     return { type: 'time', time: { unit: config.dataType.groupBy.interval } }
   } else {
     return {
       ticks: {
-        callback(value) {
+        callback(/** @type {number} */ value) {
           return formatValue(data.labels[value], 12)
         }
       }
@@ -21,11 +33,15 @@ function getXAxis(config, data) {
   }
 }
 
+/**
+ * @param {Record<any, any>} data
+ * @returns {Record<string, any>}
+ */
 function getYAxis(data) {
   return {
     ticks: {
       beginAtZero: true,
-      callback(value) {
+      callback(/** @type {number} */ value) {
         const label = data.datasets[value] && data.datasets[value].label ? data.datasets[value].label : value
         return formatValue(label, 12)
       }
@@ -33,12 +49,22 @@ function getYAxis(data) {
   }
 }
 
+/**
+ * @param {Array<Record<string, any>>} tooltipItems
+ * @param {Record<any, any>} data
+ * @returns {string}
+ */
 function tooltipTitle(tooltipItems, data) {
   const value = tooltipItems[0].label || data.labels[tooltipItems[0].datasetIndex]
   // title might be truncated in tooltip, but not as much as in xAxis labels
   return formatValue(value, 50)
 }
 
+/**
+ * @param {Record<string, any>} tooltipItem
+ * @param {Record<any, any>} data
+ * @returns {string}
+ */
 function tooltipLabel(tooltipItem, data) {
   const value = tooltipItem.raw || data.datasets[tooltipItem.datasetIndex].data[tooltipItem.dataIndex]
   let label
@@ -49,6 +75,10 @@ function tooltipLabel(tooltipItem, data) {
   else return formatValue(value, 40)
 }
 
+/**
+ * @param {Record<any, any>} data
+ * @returns {{callbacks: {title: (tooltipItems: Array<Record<string, any>>) => string, label: (tooltipItem: Record<string, any>) => string}}}
+ */
 function getSingleTooltips(data) {
   return {
     callbacks: {
@@ -58,11 +88,15 @@ function getSingleTooltips(data) {
   }
 }
 
+/**
+ * @param {Record<any, any>} data
+ * @returns {{mode: string, intersect: boolean, callbacks: {title: (tooltipItems: Array<Record<string, any>>) => string, label: (tooltipItem: Record<string, any>) => string}} | {callbacks: {title: (tooltipItems: Array<Record<string, any>>) => string, label: (tooltipItem: Record<string, any>) => string}}}
+ */
 function getStackedTooltips(data) {
   const customTooltips = {
     callbacks: {
-      title: (tooltipItems) => tooltipTitle(tooltipItems, data),
-      label: (tooltipItem) => tooltipLabel(tooltipItem, data)
+      title: (/** @type {Array<Record<string, any>>} */ tooltipItems) => tooltipTitle(tooltipItems, data),
+      label: (/** @type {Record<string, any>} */ tooltipItem) => tooltipLabel(tooltipItem, data)
     }
   }
   // when there are many items, better not to generate a huge tooltip
@@ -72,12 +106,12 @@ function getStackedTooltips(data) {
 }
 
 const chartOptions = {}
-chartOptions.bar = (config, data) => {
+chartOptions.bar = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
   return {
     type: 'bar',
     data,
     options: {
-      indexAxis: config.chartType.horizontal ? 'y' : 'x',
+      indexAxis: config.chartType?.horizontal ? 'y' : 'x',
       plugins: {
         title: { display: true, text: chartTitle(config) },
         legend: { display: false },
@@ -91,8 +125,8 @@ chartOptions.bar = (config, data) => {
   }
 }
 
-chartOptions['multi-bar'] = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions['multi-bar'] = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.borderColor = 'white'
     dataset.borderWidth = 1
   })
@@ -100,7 +134,7 @@ chartOptions['multi-bar'] = (config, data) => {
     type: 'bar',
     data,
     options: {
-      indexAxis: config.chartType.horizontal ? 'y' : 'x',
+      indexAxis: config.chartType?.horizontal ? 'y' : 'x',
       plugins: {
         title: { display: true, text: chartTitle(config) },
         tooltips: getStackedTooltips(data)
@@ -119,8 +153,8 @@ chartOptions['multi-bar'] = (config, data) => {
   }
 }
 
-chartOptions['grouped-bar'] = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions['grouped-bar'] = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.borderColor = setAlpha(dataset.backgroundColor, 0.5)
     dataset.borderWidth = 1
   })
@@ -128,7 +162,7 @@ chartOptions['grouped-bar'] = (config, data) => {
     type: 'bar',
     data,
     options: {
-      indexAxis: config.chartType.horizontal ? 'y' : 'x',
+      indexAxis: config.chartType?.horizontal ? 'y' : 'x',
       plugins: {
         title: { display: true, text: chartTitle(config) },
         tooltip: getSingleTooltips(data)
@@ -141,7 +175,7 @@ chartOptions['grouped-bar'] = (config, data) => {
   }
 }
 
-chartOptions.pie = (config, data) => {
+chartOptions.pie = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
   return {
     type: 'pie',
     data,
@@ -154,12 +188,12 @@ chartOptions.pie = (config, data) => {
   }
 }
 
-chartOptions['multi-pie'] = (config, data) => {
+chartOptions['multi-pie'] = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
   return {}
 }
 
-chartOptions.line = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions.line = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.fill = false
   })
   return {
@@ -179,8 +213,8 @@ chartOptions.line = (config, data) => {
   }
 }
 
-chartOptions['multi-line'] = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions['multi-line'] = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.fill = false
   })
   return {
@@ -199,8 +233,8 @@ chartOptions['multi-line'] = (config, data) => {
   }
 }
 
-chartOptions.area = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions.area = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.backgroundColor = setAlpha(dataset.backgroundColor, 0.5)
     dataset.fill = true
   })
@@ -221,8 +255,8 @@ chartOptions.area = (config, data) => {
   }
 }
 
-chartOptions['multi-area'] = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions['multi-area'] = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.backgroundColor = setAlpha(dataset.backgroundColor, 0.5)
     dataset.fill = true
   })
@@ -248,8 +282,8 @@ chartOptions['multi-area'] = (config, data) => {
   }
 }
 
-chartOptions.radar = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions.radar = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.fill = false
   })
   return {
@@ -265,8 +299,8 @@ chartOptions.radar = (config, data) => {
   }
 }
 
-chartOptions['multi-radar'] = (config, data) => {
-  data.datasets.forEach(dataset => {
+chartOptions['multi-radar'] = (/** @type {import('../config/.type/types.js').Config} */ config, /** @type {Record<any, any>} */ data) => {
+  data.datasets.forEach(/** @param {Record<String, any>} dataset */ dataset => {
     dataset.fill = false
   })
   return {
@@ -289,26 +323,43 @@ const metricTypes = [
   { value: 'avg', text: 'Moyenne' }
 ]
 
+/**
+ * @param {import('../config/.type/types.js').Config} config
+ * @returns {string}
+ */
 function chartTitle(config) {
   if (config.title) return config.title
-  if (config.dataType.type === 'linesBased') return ''
-  if (config.dataType.type === 'countBased') return 'Nombre de documents par ' + config.dataType.groupBy.field.label + (config.dataType.secondGroupBy.field ? ' et par ' + config.dataType.secondGroupBy.field.label : '')
-  const metricType = metricTypes.find(m => m.value === config.dataType.metricType)
-  let label = metricType.text + ' de ' + config.dataType.valueField.label
-  if (config.dataType.groupBy && config.dataType.groupBy.field) label += ' par ' + config.dataType.groupBy.field.label
-  if (config.dataType.secondGroupBy) label += ' et par ' + config.dataType.secondGroupBy.field.label
+  if (config.dataType?.type === 'linesBased') return ''
+  // @ts-ignore
+  if (config.dataType?.type === 'countBased') return 'Nombre de documents par ' + config.dataType?.groupBy?.field.label + (config.dataType?.secondGroupBy?.field ? ' et par ' + config.dataType.secondGroupBy.field.label : '')
+  const metricType = metricTypes.find(m => m.value === config.dataType?.metricType)
+  // @ts-ignore
+  let label = metricType?.text + ' de ' + config.dataType?.valueField?.label
+  // @ts-ignore
+  if (config.dataType?.groupBy && config.dataType.groupBy.field) label += ' par ' + config.dataType.groupBy.field.label
+  // @ts-ignore
+  if (config.dataType?.secondGroupBy) label += ' et par ' + config.dataType.secondGroupBy.field.label
   return label
 }
 
+/**
+ * @param {import('../config/.type/types.js').Config} config
+ * @param {Record<any, any>} data
+ * @returns {Record<string, any>}
+ */
 function prepareChart(config, data) {
-  let renderType = config.chartType.type
-  if (config.dataType.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
-    if (renderType === 'bar' && config.chartType.split) renderType = 'grouped-bar'
+  let renderType = config.chartType?.type
+  // @ts-ignore
+  if (config.dataType?.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {
+    // @ts-ignore
+    if (renderType === 'bar' && config.chartType?.split) renderType = 'grouped-bar'
     else renderType = 'multi-' + renderType
   }
+  // @ts-ignore
   if (!chartOptions[renderType]) throw new Error('Type de graphique non supporté ' + renderType)
   let ndata = data
   if (data.data) ndata = data.data
+  // @ts-ignore
   const chart = chartOptions[renderType](config, prepareData(config, ndata))
   chart.options.responsive = false
   return chart

@@ -1,3 +1,7 @@
+/**
+ * @param {string} input
+ * @returns {{ r: string, g: string, b: string, a: string }}
+ */
 function parseColor(input) {
   const div = document.createElement('div')
   div.style.color = input
@@ -8,6 +12,11 @@ function parseColor(input) {
   else throw new Error('Color not parsed')
 }
 
+/**
+ * @param {string} color
+ * @param {string | number} alpha
+ * @returns {string}
+ */
 export function setAlpha(color, alpha) {
   const { r, g, b } = parseColor(color)
   return `rgba(${r},${g},${b},${alpha})`

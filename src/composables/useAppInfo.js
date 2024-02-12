@@ -3,12 +3,13 @@ import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
 import { reactive } from 'vue'
 
-let instance = null
+let /** @type {any} */ instance = null
 
 export default function useAppInfo() {
   if (instance) return instance
 
   const env = null
+  // @ts-ignore
   const application = /** @type {import('@data-fair/lib/shared/application.js').Application} */ window.APPLICATION
   const data = null
   const conceptFilters = {}
@@ -34,10 +35,16 @@ export default function useAppInfo() {
 
   const config = incompleteConfig
 
+  /**
+   * @param {Record<string, any>} params
+   */
   function setAny(params) {
     Object.assign(appInfo, params)
   }
 
+  /**
+   * @param {Record<string, any>} env
+   */
   function init(env) {
     setAny({ env })
 
@@ -47,7 +54,7 @@ export default function useAppInfo() {
     if (application) {
       const config = application.configuration
       if (config && config.dynamicFilters) {
-        config.dynamicFilters.forEach(f => {
+        config.dynamicFilters.forEach(/** @param {Record<string, any>} f */ f => {
           f.values = f.defaultValues
         })
       }
@@ -61,7 +68,7 @@ export default function useAppInfo() {
 
     const config = application.configuration
     if (config && config.dynamicFilters) {
-      config.dynamicFilters.forEach(f => {
+      config.dynamicFilters.forEach(/** @param {Record<string, any>} f */ f => {
         const regex = new RegExp(`${f.field.key}_in=([^&]+)`)
         const match = window.location.search.match(regex)
         if (match && match[1]) {
@@ -107,7 +114,9 @@ export default function useAppInfo() {
     }
 
     if (config.dataType.type === 'metricBased') {
+      // @ts-ignore
       params.metric = config.dataType.metricType
+      // @ts-ignore
       params.metric_field = config.dataType.valueField.key
     }
 
@@ -130,7 +139,7 @@ export default function useAppInfo() {
     const config = application.configuration
 
     const params = {
-      select: config.dataType.valuesFields.map(f => f.key).concat([config.dataType.labelsField.key]).join(','),
+      select: config.dataType.valuesFields.map(/** @param {Record<string, any>} f */ f => f.key).concat([config.dataType.labelsField.key]).join(','),
       size: config.dataType.size,
       sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key,
       qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
@@ -144,7 +153,7 @@ export default function useAppInfo() {
     setAny({ data: response })
   }
 
-  async function setError(error) {
+  async function setError(/** @type {any} */ error) {
     console.error(error)
     await ofetch(`${application.href}/error`, {
       method: 'POST',

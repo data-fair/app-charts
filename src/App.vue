@@ -12,17 +12,19 @@ import { ofetch } from 'ofetch'
 export default {
   components: { ChartComponent },
   setup() {
-    let appInfo = null
-    let application = null
+    let /** @type {any} */ appInfo = null
+    let /** @type {any} */ application = null
     try {
       appInfo = useAppInfo()
       const env = inject('startEnv')
       appInfo.init(env)
       application = computed(() => appInfo.application)
     } catch (/** @type{any} */ e) {
+      // @ts-ignore
       ofetch(window.APPLICATION.href + '/error', { body: { message: e.message || e }, method: 'POST' })
     }
     const urlSearchParams = getReactiveSearchParams
+    // @ts-ignore
     window.vIframeOptions = { reactiveParams: urlSearchParams }
 
     onMounted(() => {
