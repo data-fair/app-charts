@@ -19,7 +19,7 @@
 <script>
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import useAppInfo from '@/composables/useAppInfo'
-import { computedAsync } from '@vueuse/core'
+import { computedAsync, refDebounced } from '@vueuse/core'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
 import { ref, computed, watchEffect } from 'vue'
@@ -30,7 +30,8 @@ export default {
   setup(props) {
     let loading = false
     const appInfo = useAppInfo()
-    const search = ref('')
+    const rawSearch = ref('')
+    const search = refDebounced(rawSearch, 300)
     const urlSearchParams = getReactiveSearchParams
 
     const config = computed(() => appInfo.config)
@@ -52,14 +53,14 @@ export default {
           }
         })
         const unique = [...new Set(response)].filter(value => !dynamicFilter.value.values.includes(value))
-        console.log(unique, dynamicFilter.value.values, response)
+        appInfo.fetchData()
+        loading = false
         return unique
       } catch (error) {
         console.error(error)
-        return []
-      } finally {
-        loading = false
         appInfo.fetchData()
+        loading = false
+        return []
       }
     },
     [],
@@ -88,7 +89,7 @@ export default {
     }
 
     return {
-      search,
+      search: rawSearch,
       loading,
       items,
       dynamicFilter,
