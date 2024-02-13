@@ -48,7 +48,7 @@ export default {
           params: {
             size: 10,
             qs,
-            ...conceptFilters.value,
+            ...conceptFilters.conceptFilters.value,
             q: search.value ? search.value + '*' : ''
           }
         })

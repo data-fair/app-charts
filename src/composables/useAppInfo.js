@@ -1,7 +1,9 @@
 import debounce from 'debounce'
+import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
 import { reactive } from 'vue'
+import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 let /** @type {any} */ instance = null
 
@@ -12,7 +14,7 @@ export default function useAppInfo() {
   // @ts-ignore
   const application = /** @type {import('@data-fair/lib/shared/application.js').Application} */ window.APPLICATION
   const data = null
-  const conceptFilters = {}
+  const conceptFilters = useConceptFilters(getReactiveSearchParams)
 
   let defaultDataFairUrl = null
   let defaultConfigureUrl = null
@@ -109,7 +111,7 @@ export default function useAppInfo() {
       sort: config.dataType.sort,
       interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval,
       qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
-      ...appInfo.conceptFilters,
+      ...conceptFilters.conceptFilters.value,
       finalizedAt: config.datasets[0].finalizedAt // for better caching
     }
 
@@ -143,7 +145,7 @@ export default function useAppInfo() {
       size: config.dataType.size,
       sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key,
       qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
-      ...appInfo.conceptFilters,
+      ...conceptFilters.conceptFilters.value,
       finalizedAt: config.datasets[0].finalizedAt // for better caching
     }
 
