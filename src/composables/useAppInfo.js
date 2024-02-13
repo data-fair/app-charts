@@ -2,7 +2,7 @@ import debounce from 'debounce'
 import getReactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { filters2qs } from '../assets/filters-utils'
 import { ofetch } from 'ofetch'
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 let /** @type {any} */ instance = null
@@ -14,7 +14,8 @@ export default function useAppInfo() {
   // @ts-ignore
   const application = /** @type {import('@data-fair/lib/shared/application.js').Application} */ window.APPLICATION
   const data = null
-  const conceptFilters = useConceptFilters(getReactiveSearchParams)
+  const searchParams = getReactiveSearchParams
+  const conceptFilters = useConceptFilters(searchParams)
 
   let defaultDataFairUrl = null
   let defaultConfigureUrl = null
@@ -154,6 +155,9 @@ export default function useAppInfo() {
     })
     setAny({ data: response })
   }
+
+  watch(searchParams, fetchData, { deep: true })
+  watch(conceptFilters.conceptFilters, fetchData, { deep: true })
 
   async function setError(/** @type {any} */ error) {
     console.error(error)
