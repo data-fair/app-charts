@@ -156,8 +156,7 @@ export default function useAppInfo() {
     setAny({ data: response })
   }
 
-  watch(searchParams, fetchData, { deep: true })
-  watch(conceptFilters.conceptFilters, fetchData, { deep: true })
+  watch(conceptFilters.conceptFilters, fetchData)
 
   async function setError(/** @type {any} */ error) {
     console.error(error)

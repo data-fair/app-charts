@@ -33,14 +33,14 @@ export default {
     }
 
     function cleanSearchParams() {
-      urlSearchParams.sort_by = undefined
-      urlSearchParams.sort_order = undefined
-      urlSearchParams.count_sort_by_1 = undefined
-      urlSearchParams.count_sort_by_2 = undefined
-      if (!config.value.dataType.dynamicSort2) {
+      if (urlSearchParams.sort_by) urlSearchParams.sort_by = undefined
+      if (urlSearchParams.sort_order) urlSearchParams.sort_order = undefined
+      if (urlSearchParams.count_sort_by_1) urlSearchParams.count_sort_by_1 = undefined
+      if (urlSearchParams.count_sort_by_2) urlSearchParams.count_sort_by_2 = undefined
+      if (!config.value.dataType.dynamicSort2 && urlSearchParams.metric_sort_by_2) {
         urlSearchParams.metric_sort_by_2 = undefined
       }
-      if (!config.value.dataType.dynamicMetric) {
+      if (!config.value.dataType.dynamicMetric && urlSearchParams.calculate_by) {
         urlSearchParams.calculate_by = undefined
       }
     }

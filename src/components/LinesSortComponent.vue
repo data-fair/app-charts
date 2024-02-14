@@ -34,11 +34,11 @@ export default {
     }
 
     function cleanSearchParams() {
-      urlSearchParams.count_sort_by_1 = undefined
-      urlSearchParams.count_sort_by_2 = undefined
-      urlSearchParams.metric_sort_by_1 = undefined
-      urlSearchParams.metric_sort_by_2 = undefined
-      urlSearchParams.calculate_by = undefined
+      if (urlSearchParams.count_sort_by_1) urlSearchParams.count_sort_by_1 = undefined
+      if (urlSearchParams.count_sort_by_2) urlSearchParams.count_sort_by_2 = undefined
+      if (urlSearchParams.metric_sort_by_1) urlSearchParams.metric_sort_by_1 = undefined
+      if (urlSearchParams.metric_sort_by_2) urlSearchParams.metric_sort_by_2 = undefined
+      if (urlSearchParams.calculate_by) urlSearchParams.calculate_by = undefined
     }
 
     onMounted(async () => {
