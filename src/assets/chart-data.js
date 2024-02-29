@@ -1,4 +1,4 @@
-import getColors from '@data-fair/lib/color-scheme/colors.js'
+import getColors from '@data-fair/lib/color-scheme/index.js'
 
 /**
  * From data-fair response data to the data object expected by chartjs
