@@ -1,7 +1,7 @@
 <template lang="html">
   <v-container fluid class="pa-1">
     <template v-if="!incompleteConfig">
-      <FiltersComponent v-if="config.dynamicFilters && config.dynamicFilters.length" />
+      <FiltersComponent v-if="(config.dynamicFilters && config.dynamicFilters.length) || Object.keys(config.dataType).some(key => /^dynamic.*$/.test(key))" />
       <canvas ref="chartCanvas" :height="height" :width="width" />
     </template>
   </v-container>

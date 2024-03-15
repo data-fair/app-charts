@@ -1,12 +1,13 @@
 <template lang="html">
   <v-autocomplete
-    :items="dynamicFilter.values.concat(items)"
+    :items="dynamicFilter.values.concat(items.filter(value => !dynamicFilter.values.includes(value)))"
     :label="`Filtrer par ${dynamicFilter.field.label}`"
     :loading="loading"
     v-model:search="search"
     v-model="dynamicFilter.values"
-    :clearable="true"
-    :multiple="true"
+    clearable
+    persistent-clear
+    multiple
     class="chart-filter"
     hide-no-data
     hide-details
@@ -48,7 +49,7 @@ export default {
           params: {
             size: 10,
             qs,
-            ...conceptFilters.conceptFilters.value,
+            ...conceptFilters.value,
             q: search.value ? search.value + '*' : ''
           }
         })
