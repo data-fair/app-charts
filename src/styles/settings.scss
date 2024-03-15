@@ -1,0 +1,17 @@
+@use 'vuetify/settings' with (
+  $body-font-family: 'Nunito'
+);
+
+html {
+  overflow-y: hidden;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  overflow-y: hidden;
+}
+
+body .application.embed {
+  background: transparent;
+}

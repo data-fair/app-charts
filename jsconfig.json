@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
       "module": "commonjs",
-      "target": "es6"
+      "target": "es6",
+      "paths": {
+        "@/*": ["./src/*"]
+      }
     },
-    "exclude": ["node_modules", "nuxt-dist", "dist", ".nuxt", ".github"]
+    "exclude": ["node_modules", "dist", ".github", ".vscode"]
 }
