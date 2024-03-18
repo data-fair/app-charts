@@ -112,8 +112,7 @@ export default function useAppInfo() {
       sort: config.dataType.sort,
       interval: config.dataType.groupBy.type === 'value' ? 'value' : config.dataType.groupBy.interval,
       qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
-      // @ts-ignore
-      ...conceptFilters.value,
+      ...conceptFilters,
       finalizedAt: config.datasets[0].finalizedAt // for better caching
     }
 
@@ -147,8 +146,7 @@ export default function useAppInfo() {
       size: config.dataType.size,
       sort: (config.dataType.sortOrder === 'desc' ? '-' : '') + config.dataType.sortBy.key,
       qs: filters2qs((config.staticFilters).concat(config.dynamicFilters)),
-      // @ts-ignore
-      ...conceptFilters.value,
+      ...conceptFilters,
       finalizedAt: config.datasets[0].finalizedAt // for better caching
     }
 
