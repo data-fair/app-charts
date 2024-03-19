@@ -1,4 +1,4 @@
-name: Publish documentation
+name: Deploy to CDN
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
     tags: [ 'v*.*.*' ]
 
 jobs:
-  publish-doc:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - run: echo $GITHUB_REF
@@ -22,5 +22,7 @@ jobs:
           export PUBLIC_URL=https://cdn.jsdelivr.net/gh/data-fair/app-charts@deploy/$MINOR
           echo "PUBLIC_URL=$PUBLIC_URL"
           npm run build
+          git config --global user.email "github-actions@koumoul.com"
+          git config --global user.name "github-actions"
           ./node_modules/.bin/gh-pages-multi deploy -v -b deploy -s dist --no-history -t $MINOR
 
