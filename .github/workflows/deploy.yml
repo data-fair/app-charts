@@ -19,10 +19,10 @@ jobs:
       - run: |
           export MINOR=$(./node_modules/.bin/semver-extract --minor --branch $GITHUB_REF)
           echo "MINOR=$MINOR"
-          export PUBLIC_URL=https://cdn.jsdelivr.net/gh/data-fair/app-charts@deploy/$MINOR
-          echo "PUBLIC_URL=$PUBLIC_URL"
+          export PUBLIC_URL=https://cdn.jsdelivr.net/gh/data-fair/app-charts@deploy/$MINOR/
           npm run build
           git config --global user.email "github-actions@koumoul.com"
           git config --global user.name "github-actions"
           ./node_modules/.bin/gh-pages-multi deploy -v -r https://${{ secrets.GH_TOKEN }}@github.com/data-fair/app-charts.git -b deploy -s dist --no-history -t $MINOR
+          echo -e "\n\nNew version of the application available at\n\t$PUBLIC_URL"
 
