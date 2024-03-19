@@ -6,7 +6,7 @@
   "homepage": "https://data-fair.github.io/3/user-guide-backoffice/charts",
   "scripts": {
     "analyze": "cross-env ANALYZE=true npm run build",
-    "build": "rimraf dist && npm run build-types && node prepare-schema.js && tsc && vite build\"",
+    "build": "rimraf dist && npm run build-types && node prepare-schema.js && tsc && vite build",
     "build-types": "df-build-types && ncp src/config/.type/resolved-schema.json public/config-schema.json",
     "dev": "cross-env APP_URL=http://localhost:3000/app/ df-dev-server",
     "dev-src": "vite --port 3000",
