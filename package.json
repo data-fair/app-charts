@@ -1,6 +1,6 @@
 {
   "name": "@data-fair/app-charts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple charts application for data-fair",
   "author": "Alban Mouton <alban.mouton@gmail.com>",
   "homepage": "https://data-fair.github.io/3/user-guide-backoffice/charts",
