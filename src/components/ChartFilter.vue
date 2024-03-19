@@ -1,10 +1,10 @@
 <template lang="html">
   <v-autocomplete
+    v-model:search="search"
+    v-model="dynamicFilter.values"
     :items="dynamicFilter.values.concat(items.filter(value => !dynamicFilter.values.includes(value)))"
     :label="`Filtrer par ${dynamicFilter.field.label}`"
     :loading="loading"
-    v-model:search="search"
-    v-model="dynamicFilter.values"
     clearable
     persistent-clear
     multiple
@@ -28,7 +28,7 @@ import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 export default {
   props: ['indice'],
-  setup(props) {
+  setup (props) {
     let loading = false
     const appInfo = useAppInfo()
     const rawSearch = ref('')

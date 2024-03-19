@@ -7,13 +7,14 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=true npm run build-dev",
     "build": "cross-env-shell PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist \"npm run prepareBuild && vite build\"",
-    "build-dev": "npm run prepareBuild && cross-env-shell PUBLIC_URL=https://staging-koumoul.com/apps/charts/master/ \"vite build\"",
+    "build-preview": "npm run prepareBuild && vite build",
+    "build-staging": "npm run prepareBuild && cross-env-shell PUBLIC_URL=https://staging-koumoul.com/apps/charts/master/ \"vite build\"",
     "build-types": "df-build-types && ncp src/config/.type/resolved-schema.json public/config-schema.json",
     "dev": "cross-env APP_URL=http://localhost:3000/app/ df-dev-server",
-    "dev-src": "vite",
+    "dev-src": "vite --port 3000",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "precommit": "npm run lint",
-    "prepareBuild": "rimraf dist && npm run build-types && node prepare-schema.js && tsc -p tsconfig.build.json",
+    "prepareBuild": "rimraf dist && npm run build-types && node prepare-schema.js && tsc",
     "prepublishOnly": "npm run build",
     "preview": "vite preview"
   },
@@ -36,12 +37,8 @@
     "vuetify": "^3.5.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/eslint-parser": "^7.23.10",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
     "@data-fair/dev-server": "^1.12.0",
+    "@types/node": "^20.11.29",
     "@vitejs/plugin-vue": "^5.0.3",
     "babel-preset-vue": "^2.0.2",
     "cors": "^2.8.5",
@@ -58,7 +55,6 @@
     "typescript": "^5.3.3",
     "unplugin-fonts": "^1.1.1",
     "vite": "^5.0.12",
-    "vite-plugin-commonjs": "^0.10.1",
     "vite-plugin-vuetify": "^2.0.1"
   }
 }

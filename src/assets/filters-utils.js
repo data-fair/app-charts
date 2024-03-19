@@ -2,7 +2,7 @@
  * @param {Record<string, any>} filter
  * @returns {string | null}
  */
-export function filter2qs(filter) {
+export function filter2qs (filter) {
   if (!filter.type || filter.type === 'in') {
     if ([null, undefined, ''].includes(filter.values)) return null
     if (Array.isArray(filter.values) && filter.values.length === 0) return null
@@ -22,7 +22,7 @@ export function filter2qs(filter) {
  * @param {Array<Record<string, any>>} filters
  * @returns {string | null}
  */
-export function filters2qs(filters) {
+export function filters2qs (filters) {
   const queryString = filters
     .map(filter2qs)
     .filter(f => f !== null)

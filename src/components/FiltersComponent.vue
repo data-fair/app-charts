@@ -1,28 +1,69 @@
 <template lang="html">
   <v-container>
     <v-row>
-      <v-col v-for="(dynamicFilter, i) in config.dynamicFilters" :key="i" cols="12" sm="6" md="4">
+      <v-col
+        v-for="(dynamicFilter, i) in config.dynamicFilters"
+        :key="i"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <ChartFilter :indice="i" />
       </v-col>
-      <v-col v-if="dataType === 'linesBased' && config.dataType.dynamicSort" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'linesBased' && config.dataType.dynamicSort"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <LinesSortComponent />
       </v-col>
-      <v-col v-if="dataType === 'linesBased' && config.dataType.dynamicSort" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'linesBased' && config.dataType.dynamicSort"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <OrderComponent />
       </v-col>
-      <v-col v-if="dataType === 'countBased' && config.dataType.dynamicSort1" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'countBased' && config.dataType.dynamicSort1"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <CountSort1Component />
       </v-col>
-      <v-col v-if="dataType === 'countBased' && config.dataType.dynamicSort2" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'countBased' && config.dataType.dynamicSort2"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <CountSort2Component />
       </v-col>
-      <v-col v-if="dataType === 'metricBased' && config.dataType.dynamicSort1" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'metricBased' && config.dataType.dynamicSort1"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <MetricSort1Component />
       </v-col>
-      <v-col v-if="dataType === 'metricBased' && config.dataType.dynamicSort2" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'metricBased' && config.dataType.dynamicSort2"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <MetricSort2Component />
       </v-col>
-      <v-col v-if="dataType === 'metricBased' && config.dataType.dynamicMetric" cols="12" sm="6" md="4">
+      <v-col
+        v-if="dataType === 'metricBased' && config.dataType.dynamicMetric"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <MetricComponent />
       </v-col>
     </v-row>
@@ -43,7 +84,7 @@ import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
   components: { ChartFilter, CountSort1Component, CountSort2Component, LinesSortComponent, MetricComponent, MetricSort1Component, MetricSort2Component, OrderComponent },
-  setup() {
+  setup () {
     const appInfo = useAppInfo()
     const dataType = computed(() => config.value.dataType.type)
 

@@ -1,8 +1,15 @@
 <template lang="html">
-  <v-container fluid class="pa-1">
+  <v-container
+    fluid
+    class="pa-1"
+  >
     <template v-if="!incompleteConfig">
       <FiltersComponent v-if="(config.dynamicFilters && config.dynamicFilters.length) || Object.keys(config.dataType).some(key => /^dynamic.*$/.test(key))" />
-      <canvas ref="chartCanvas" :height="height" :width="width" />
+      <canvas
+        ref="chartCanvas"
+        :height="height"
+        :width="width"
+      />
     </template>
   </v-container>
 </template>
@@ -18,7 +25,7 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineContro
 
 export default {
   components: { FiltersComponent },
-  setup() {
+  setup () {
     const appInfo = useAppInfo()
     const vuetify = inject('vuetify')
     const vuetifyColors = computed(() => vuetify.theme.current.value.colors)

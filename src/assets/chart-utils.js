@@ -6,7 +6,7 @@ import prepareData from './chart-data.js'
  * @param {number} maxLength
  * @returns {string}
  */
-function formatValue(value, maxLength) {
+function formatValue (value, maxLength) {
   if (typeof value === 'number') return value.toLocaleString()
   const str = '' + value
   return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
@@ -17,7 +17,7 @@ function formatValue(value, maxLength) {
  * @param {Record<any, any>} data
  * @returns {Record<string, any>}
  */
-function getXAxis(config, data) {
+function getXAxis (config, data) {
   // @ts-ignore
   if (config.dataType?.groupBy && config.dataType.groupBy.type === 'date') {
     // @ts-ignore
@@ -25,7 +25,7 @@ function getXAxis(config, data) {
   } else {
     return {
       ticks: {
-        callback(/** @type {number} */ value) {
+        callback (/** @type {number} */ value) {
           return formatValue(data.labels[value], 12)
         }
       }
@@ -37,11 +37,11 @@ function getXAxis(config, data) {
  * @param {Record<any, any>} data
  * @returns {Record<string, any>}
  */
-function getYAxis(data) {
+function getYAxis (data) {
   return {
     ticks: {
       beginAtZero: true,
-      callback(/** @type {number} */ value) {
+      callback (/** @type {number} */ value) {
         const label = data.datasets[value] && data.datasets[value].label ? data.datasets[value].label : value
         return formatValue(label, 12)
       }
@@ -54,7 +54,7 @@ function getYAxis(data) {
  * @param {Record<any, any>} data
  * @returns {string}
  */
-function tooltipTitle(tooltipItems, data) {
+function tooltipTitle (tooltipItems, data) {
   const value = tooltipItems[0].label || data.labels[tooltipItems[0].datasetIndex]
   // title might be truncated in tooltip, but not as much as in xAxis labels
   return formatValue(value, 50)
@@ -65,7 +65,7 @@ function tooltipTitle(tooltipItems, data) {
  * @param {Record<any, any>} data
  * @returns {string}
  */
-function tooltipLabel(tooltipItem, data) {
+function tooltipLabel (tooltipItem, data) {
   const value = tooltipItem.raw || data.datasets[tooltipItem.datasetIndex].data[tooltipItem.dataIndex]
   let label
   if (tooltipItem.datasetIndex !== undefined) {
@@ -79,7 +79,7 @@ function tooltipLabel(tooltipItem, data) {
  * @param {Record<any, any>} data
  * @returns {{callbacks: {title: (tooltipItems: Array<Record<string, any>>) => string, label: (tooltipItem: Record<string, any>) => string}}}
  */
-function getSingleTooltips(data) {
+function getSingleTooltips (data) {
   return {
     callbacks: {
       title: (tooltipItems) => tooltipTitle(tooltipItems, data),
@@ -92,7 +92,7 @@ function getSingleTooltips(data) {
  * @param {Record<any, any>} data
  * @returns {{mode: string, intersect: boolean, callbacks: {title: (tooltipItems: Array<Record<string, any>>) => string, label: (tooltipItem: Record<string, any>) => string}} | {callbacks: {title: (tooltipItems: Array<Record<string, any>>) => string, label: (tooltipItem: Record<string, any>) => string}}}
  */
-function getStackedTooltips(data) {
+function getStackedTooltips (data) {
   const customTooltips = {
     callbacks: {
       title: (/** @type {Array<Record<string, any>>} */ tooltipItems) => tooltipTitle(tooltipItems, data),
@@ -327,7 +327,7 @@ const metricTypes = [
  * @param {import('../config/.type/types.js').Config} config
  * @returns {string}
  */
-function chartTitle(config) {
+function chartTitle (config) {
   if (config.title) return config.title
   if (config.dataType?.type === 'linesBased') return ''
   // @ts-ignore
@@ -347,7 +347,7 @@ function chartTitle(config) {
  * @param {Record<any, any>} data
  * @returns {Record<string, any>}
  */
-function prepareChart(config, data) {
+function prepareChart (config, data) {
   let renderType = config.chartType?.type
   // @ts-ignore
   if (config.dataType?.secondGroupBy && config.dataType.secondGroupBy.field && config.dataType.secondGroupBy.field.key) {

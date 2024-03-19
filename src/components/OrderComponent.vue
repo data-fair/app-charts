@@ -1,11 +1,11 @@
 <template lang="html">
   <v-select
+    v-model="selectedOrder"
     :items="orderOptions"
     label="Ordre"
     :loading="loading"
-    v-model="selectedOrder"
     @update:model-value="applyOrder"
-  ></v-select>
+  />
 </template>
 
 <script>
@@ -15,7 +15,7 @@ import { ref, computed, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 
 export default {
-  setup() {
+  setup () {
     const appInfo = useAppInfo()
     const config = computed(() => appInfo.config)
     const loading = ref(false)

@@ -7,7 +7,7 @@ import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 
 let /** @type {any} */ instance = null
 
-export default function useAppInfo() {
+export default function useAppInfo () {
   if (instance) return instance
 
   const env = null
@@ -41,14 +41,14 @@ export default function useAppInfo() {
   /**
    * @param {Record<string, any>} params
    */
-  function setAny(params) {
+  function setAny (params) {
     Object.assign(appInfo, params)
   }
 
   /**
    * @param {Record<string, any>} env
    */
-  function init(env) {
+  function init (env) {
     setAny({ env })
 
     defaultDataFairUrl = env ? new URL(env.defaultDataFairUrl) : null
@@ -103,7 +103,7 @@ export default function useAppInfo() {
     }
   }, 10)
 
-  async function fetchAggData() {
+  async function fetchAggData () {
     const config = application.configuration
 
     const params = {
@@ -138,7 +138,7 @@ export default function useAppInfo() {
     setAny({ data: response })
   }
 
-  async function fetchLinesData() {
+  async function fetchLinesData () {
     const config = application.configuration
 
     const params = {
@@ -159,12 +159,11 @@ export default function useAppInfo() {
   // @ts-ignore
   watch(conceptFilters, fetchData)
 
-  async function setError(/** @type {any} */ error) {
-    console.error(error)
+  async function setError (/** @type {any} */ error) {
     await ofetch(`${application.href}/error`, {
       method: 'POST',
       body: {
-        message: error.message || error
+        message: error.data || error.message || error
       }
     }).catch(postError => {
       console.error('Failed to report error', postError)

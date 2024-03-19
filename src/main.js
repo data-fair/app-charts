@@ -1,4 +1,3 @@
-import '@mdi/font/css/materialdesignicons.min.css'
 import 'url-polyfill'
 import 'vuetify/styles'
 import './styles/settings.scss'

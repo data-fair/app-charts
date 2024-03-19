@@ -6,7 +6,7 @@ import getColors from '@data-fair/lib/color-scheme/index.js'
  * @param {Record<any, any>} data
  * @returns {{labels: Array<string>, datasets: Array<{data: Array<string>, backgroundColor: string | string[], borderColor: string | string[]}>}}
  */
-export default function prepareData(config, data) {
+export default function prepareData (config, data) {
   if (config.dataType?.type === 'linesBased') return prepareLinesData(config, data)
   else return prepareAggData(config, data)
 }
@@ -17,7 +17,7 @@ export default function prepareData(config, data) {
  * @returns {{labels: Array<string>, datasets: Array<{data: Array<string>, key: string, label: string, backgroundColor: string, borderColor: string}>}}
  * @throws {Error}
  */
-function prepareLinesData(config, data) {
+function prepareLinesData (config, data) {
   // @ts-ignore
   if (config.chartType?.type === 'pie' && config.dataType?.valuesFields?.length > 1) {
     throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
@@ -52,7 +52,7 @@ function prepareLinesData(config, data) {
  * @returns {{labels: Array<string>, datasets: Array<{data: Array<string>, key: string, label: string, backgroundColor: string, borderColor: string}>}}
  * @throws {Error}
  */
-function prepare2levelAggData(config, data) {
+function prepare2levelAggData (config, data) {
   if (config.chartType?.type === 'pie') {
     throw new Error('La visualisation camembert ne supporte pas d\'afficher plusieurs niveaux.')
   }
@@ -111,7 +111,7 @@ function prepare2levelAggData(config, data) {
  * @returns {{labels: Array<string>, datasets: Array<{data: Array<string>, backgroundColor: string | string[], borderColor: string | string[]}>}}
  * @throws {Error}
  */
-function prepareAggData(config, data) {
+function prepareAggData (config, data) {
   if (data.aggs.length > 1000) {
     throw new Error('Nombre d\'éléments à afficher trop important. Abandon.')
   }

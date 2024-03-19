@@ -1,11 +1,11 @@
 <template lang="html">
   <v-select
+    v-model="selectedSort"
     :items="sortOptions"
     label="Trier par"
     :loading="loading"
-    v-model="selectedSort"
     @update:model-value="applySort"
-  ></v-select>
+  />
 </template>
 
 <script>
@@ -16,7 +16,7 @@ import { ref, computed, onMounted } from 'vue'
 import configSchema from '../../public/config-schema.json'
 
 export default {
-  setup() {
+  setup () {
     const appInfo = useAppInfo()
     const config = computed(() => appInfo.config)
     const loading = ref(false)
@@ -33,7 +33,7 @@ export default {
       appInfo.fetchData()
     }
 
-    function cleanSearchParams() {
+    function cleanSearchParams () {
       if (urlSearchParams.count_sort_by_1) urlSearchParams.count_sort_by_1 = undefined
       if (urlSearchParams.count_sort_by_2) urlSearchParams.count_sort_by_2 = undefined
       if (urlSearchParams.metric_sort_by_1) urlSearchParams.metric_sort_by_1 = undefined

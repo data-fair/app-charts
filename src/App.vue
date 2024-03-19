@@ -11,7 +11,7 @@ import { ofetch } from 'ofetch'
 
 export default {
   components: { ChartComponent },
-  setup() {
+  setup () {
     let /** @type {any} */ appInfo = null
     let /** @type {any} */ application = null
     try {
