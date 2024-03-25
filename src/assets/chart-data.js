@@ -91,7 +91,7 @@ function prepare2levelAggData (config, data) {
   else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
   if (config.chartType?.showTotal) datasets.push(totalDataset)
   // @ts-ignore
-  const colors = getColors(config.colorscheme, data, datasets.length, vuetifyColors)
+  const colors = getColors(config.colorscheme, data, datasets.length, vuetifyColors).filter((c, i, s) => s.indexOf(c) === i)
   datasets.forEach((d, i) => {
     d.backgroundColor = colors[i]
     d.borderColor = d.backgroundColor
