@@ -84,12 +84,6 @@ function prepare2levelAggData (config, data) {
     })
   })
   if (datasets.length > 60) throw new Error(`Le graphique essaie d'afficher un nombre trop important de séries (${datasets.length})`)
-  const sort = config.dataType?.secondSort || (config.dataType?.type === 'countBased' ? '-count' : '-metric')
-  if (sort === '-count' || sort === '-metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
-  if (sort === 'metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
-  else if (sort === 'key') datasets.sort((a, b) => a.key < b.key ? -1 : 1)
-  else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
-  if (config.chartType?.showTotal) datasets.push(totalDataset)
   // @ts-ignore
   const colors = getColors(config.colorscheme, data, datasets.length, vuetifyColors).filter((c, i, s) => s.indexOf(c) === i)
   datasets.forEach((d, i) => {
@@ -102,6 +96,12 @@ function prepare2levelAggData (config, data) {
       if (d.data[i] === undefined) d.data[i] = 0
     }
   })
+  const sort = config.dataType?.secondSort || (config.dataType?.type === 'countBased' ? '-count' : '-metric')
+  if (sort === '-count' || sort === '-metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
+  if (sort === 'metric') datasets.sort((a, b) => a.totalSort < b.totalSort ? 1 : -1)
+  else if (sort === 'key') datasets.sort((a, b) => a.key < b.key ? -1 : 1)
+  else if (sort === '-key') datasets.sort((a, b) => a.key < b.key ? 1 : -1)
+  if (config.chartType?.showTotal) datasets.push(totalDataset)
   return { labels, datasets }
 }
 
