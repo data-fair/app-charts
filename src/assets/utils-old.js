@@ -114,7 +114,7 @@ chartOptions.bar = (/** @type {import('../config/.type/types.js').Config} */ con
       indexAxis: config.chartType?.horizontal ? 'y' : 'x',
       plugins: {
         title: { display: true, text: chartTitle(config) },
-        legend: { display: false },
+        legend: { display: true },
         tooltip: getSingleTooltips(data)
       },
       scales: {
@@ -136,6 +136,7 @@ chartOptions['multi-bar'] = (/** @type {import('../config/.type/types.js').Confi
     options: {
       indexAxis: config.chartType?.horizontal ? 'y' : 'x',
       plugins: {
+        legend: { display: true, position: 'top' },
         title: { display: true, text: chartTitle(config) },
         tooltips: getStackedTooltips(data)
       },
@@ -222,6 +223,7 @@ chartOptions['multi-line'] = (/** @type {import('../config/.type/types.js').Conf
     data,
     options: {
       plugins: {
+        legend: { display: true },
         title: { display: true, text: chartTitle(config) },
         tooltip: getSingleTooltips(data)
       },
@@ -265,6 +267,7 @@ chartOptions['multi-area'] = (/** @type {import('../config/.type/types.js').Conf
     data,
     options: {
       plugins: {
+        legend: { display: true },
         title: { display: true, text: chartTitle(config) },
         tooltip: getStackedTooltips(data)
       },
@@ -291,7 +294,7 @@ chartOptions.radar = (/** @type {import('../config/.type/types.js').Config} */ c
     data,
     options: {
       plugins: {
-        legend: { display: false },
+        legend: { display: true },
         title: { display: true, text: chartTitle(config) },
         tooltip: getSingleTooltips(data)
       }
