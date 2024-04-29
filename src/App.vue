@@ -9,10 +9,7 @@ window.vIframeOptions = { reactiveParams: reactiveSearchParams }
 
 let /** @type {any} */configureError
 try {
-  const { application } = useAppInfo()
-  if (!application) {
-    window.location.href = 'https://github.com/data-fair/app-charts'
-  }
+  useAppInfo()
 } catch (e) {
   // @ts-ignore
   configureError = e.message

@@ -572,6 +572,14 @@
                       }
                     }
                   ]
+                },
+                "tension": {
+                  "type": "integer",
+                  "title": "Courbure",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 1,
+                  "x-display": "slider"
                 }
               }
             },
@@ -1427,6 +1435,14 @@
                       }
                     }
                   ]
+                },
+                "tension": {
+                  "type": "integer",
+                  "title": "Courbure",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 1,
+                  "x-display": "slider"
                 }
               }
             },
@@ -1967,6 +1983,14 @@
                       }
                     }
                   ]
+                },
+                "tension": {
+                  "type": "integer",
+                  "title": "Courbure",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 1,
+                  "x-display": "slider"
                 }
               }
             },
@@ -3056,6 +3080,14 @@
                       }
                     }
                   ]
+                },
+                "tension": {
+                  "type": "integer",
+                  "title": "Courbure",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 1,
+                  "x-display": "slider"
                 }
               }
             },
@@ -3596,6 +3628,14 @@
                       }
                     }
                   ]
+                },
+                "tension": {
+                  "type": "integer",
+                  "title": "Courbure",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 1,
+                  "x-display": "slider"
                 }
               }
             },
@@ -4212,6 +4252,14 @@
       "title": "Trier dynamiquement",
       "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
       "default": false
+    },
+    "tension": {
+      "type": "integer",
+      "title": "Courbure",
+      "minimum": 0,
+      "maximum": 4,
+      "default": 1,
+      "x-display": "slider"
     },
     "hexColor": {
       "type": "string",

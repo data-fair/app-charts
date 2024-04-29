@@ -33,6 +33,9 @@
                 },
                 "config": {
                   "$ref": "#/definitions/singleDataType"
+                },
+                "tension": {
+                  "$ref": "#/definitions/tension"
                 }
               }
             },
@@ -61,6 +64,9 @@
                 },
                 "config": {
                   "$ref": "#/definitions/singleDataType"
+                },
+                "tension": {
+                  "$ref": "#/definitions/tension"
                 }
               }
             },
@@ -73,6 +79,9 @@
                 },
                 "config": {
                   "$ref": "#/definitions/multipleDataType"
+                },
+                "tension": {
+                  "$ref": "#/definitions/tension"
                 }
               }
             },
@@ -105,6 +114,9 @@
                 },
                 "config": {
                   "$ref": "#/definitions/multipleDataType"
+                },
+                "tension": {
+                  "$ref": "#/definitions/tension"
                 }
               }
             },
@@ -117,6 +129,9 @@
                 },
                 "config": {
                   "$ref": "#/definitions/multipleDataType"
+                },
+                "tension": {
+                  "$ref": "#/definitions/tension"
                 }
               }
             },
@@ -271,6 +286,14 @@
       "title": "Trier dynamiquement",
       "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
       "default": false
+    },
+    "tension": {
+      "type": "integer",
+      "title": "Courbure",
+      "minimum": 0,
+      "maximum": 4,
+      "default": 1,
+      "x-display": "slider"
     },
     "hexColor": {
       "type": "string",

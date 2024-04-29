@@ -33,13 +33,21 @@ const options = {
   }
 }
 
-if (chart.stacked) {
+if (chart.stacked || chart.type === 'multi-area') {
   options.scales = {
     x: {
       stacked: true
     },
     y: {
       stacked: true
+    }
+  }
+}
+
+if (chart.tension != null) {
+  options.elements = {
+    line: {
+      tension: chart.tension / 10
     }
   }
 }

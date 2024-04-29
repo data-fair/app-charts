@@ -13,8 +13,8 @@ const { config, chart, datasetUrl, finalizedAt } = useAppInfo()
 export const filters = (config.dynamicFilters || []).map(filter => {
   const key = filter.field.key
   const loading = ref(false)
-  const items = ref([])
   const labels = filter.field['x-labels']
+  const items = ref((filter.field.enum || []).map(a => labels ? ({ title: labels[a], value: a }) : a))
   const value = computed({
     get () {
       return reactiveSearchParams[key] ? JSON.parse(`[${reactiveSearchParams[key]}]`) : []
@@ -38,12 +38,15 @@ export const filters = (config.dynamicFilters || []).map(filter => {
     loading,
     items,
     search: async (search) => {
-      if (!search || search.length < 2) return
+      if (filter.field.enum) {
+        items.value = filter.field.enum.filter(a => !search.length || (labels ? labels[a] : a).toLowerCase().includes(search.toLowerCase())).map(a => labels ? ({ title: labels[a], value: a }) : a)
+        return
+      } else if (!search || search.length < 2) return
       loading.value = true
       // TODO merge q from global search and filter search
       const params = { ...getParams(key).value, size: 100, sort: key, finalizedAt, q: search, q_mode: 'complete' }
       const results = await ofetch(`${datasetUrl}/values/${key}`, { params })
-      items.value = results.map(a => labels ? labels[a] : a)
+      items.value = results.map(a => labels ? ({ title: labels[a], value: a }) : a)
       loading.value = false
     }
   }
