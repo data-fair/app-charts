@@ -25,17 +25,22 @@
           "required": ["type", "config"],
           "oneOf": [
             {
-              "title": "Ligne",
+              "title": "Courbe",
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "line"
                 },
-                "config": {
-                  "$ref": "#/definitions/singleDataType"
-                },
                 "tension": {
                   "$ref": "#/definitions/tension"
+                },
+                "area": {
+                  "type": "boolean",
+                  "title": "Remplir l'aire en dessous",
+                  "default": false
+                },
+                "config": {
+                  "$ref": "#/definitions/singleDataType"
                 }
               }
             },
@@ -56,32 +61,21 @@
               }
             },
             {
-              "title": "Aire",
-              "additionalProperties": false,
-              "properties": {
-                "type": {
-                  "const": "area"
-                },
-                "config": {
-                  "$ref": "#/definitions/singleDataType"
-                },
-                "tension": {
-                  "$ref": "#/definitions/tension"
-                }
-              }
-            },
-            {
-              "title": "Plusieurs lignes",
+              "title": "Plusieurs courbes",
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "multi-line"
                 },
-                "config": {
-                  "$ref": "#/definitions/multipleDataType"
-                },
                 "tension": {
                   "$ref": "#/definitions/tension"
+                },
+                "stacked": {
+                  "type": "boolean",
+                  "title": "Aires empilées"
+                },
+                "config": {
+                  "$ref": "#/definitions/multipleDataType"
                 }
               }
             },
@@ -106,32 +100,17 @@
               }
             },
             {
-              "title": "Aires empilées",
-              "additionalProperties": false,
-              "properties": {
-                "type": {
-                  "const": "multi-area"
-                },
-                "config": {
-                  "$ref": "#/definitions/multipleDataType"
-                },
-                "tension": {
-                  "$ref": "#/definitions/tension"
-                }
-              }
-            },
-            {
               "title": "Radar",
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "radar"
                 },
-                "config": {
-                  "$ref": "#/definitions/multipleDataType"
-                },
                 "tension": {
                   "$ref": "#/definitions/tension"
+                },
+                "config": {
+                  "$ref": "#/definitions/multipleDataType"
                 }
               }
             },

@@ -2,9 +2,10 @@
 import { getData } from '../context.js'
 import Actions from './Actions.vue'
 import useAppInfo from '@/composables/useAppInfo'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { useTheme } from 'vuetify'
+import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 
 import { Line, Bar, Pie, Radar } from 'vue-chartjs'
 import {
@@ -21,40 +22,41 @@ const theme = useTheme()
 
 const loading = ref(false)
 
-const options = {
-  maintainAspectRatio: false,
-  responsive: true,
-  plugins: {
-    legend: {
-      display: !!chart.config.colors
-    },
-    title: {
-      display: !!config.title,
-      text: config.title
+const options = computed(() => {
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: !!chart.config.colors
+      },
+      title: {
+        display: !!config.title,
+        text: config.title
+      }
     }
   }
-}
 
-if (chart.stacked || chart.type === 'multi-area') {
   options.scales = {
     x: {
-      stacked: true
+      stacked: reactiveSearchParams.stacked === 'true'
     },
     y: {
-      stacked: true
+      stacked: reactiveSearchParams.stacked === 'true'
     }
   }
-}
 
-if (chart.tension != null) {
-  options.elements = {
-    line: {
-      tension: chart.tension / 10
+  if (chart.tension != null) {
+    options.elements = {
+      line: {
+        tension: chart.tension / 10
+      }
     }
   }
-}
 
-if (chart.horizontal) options.indexAxis = 'y'
+  if (chart.horizontal) options.indexAxis = 'y'
+  return options
+})
 
 const data = computedAsync(getData(theme)[chart.config.type], null, loading)
 
@@ -68,7 +70,7 @@ const data = computedAsync(getData(theme)[chart.config.type], null, loading)
       style="flex:1"
     >
       <Line
-        v-if="['line', 'area', 'multi-line', 'multi-area'].includes(chart.type)"
+        v-if="['line', 'multi-line'].includes(chart.type)"
         :options="options"
         :data="data"
       />

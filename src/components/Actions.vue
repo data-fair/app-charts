@@ -111,6 +111,22 @@ if (chart?.config.type === 'rowsBased') {
           </template>
         </v-select>
       </v-col>
+      <v-col
+        v-if="['multi-bar', 'multi-line'].includes(chart.type) "
+        cols="12"
+        sm="6"
+        md="4"
+        class="pb-0"
+      >
+        <v-switch
+          v-model="reactiveSearchParams['stacked']"
+          false-value="false"
+          true-value="true"
+          label="Empiler"
+          density="compact"
+          variant="outlined"
+        />
+      </v-col>
     </v-row>
   </v-container>
 </template>

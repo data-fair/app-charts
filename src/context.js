@@ -10,6 +10,9 @@ import useAppInfo from '@/composables/useAppInfo'
 const conceptFilters = useConceptFilters(reactiveSearchParams)
 const { config, chart, datasetUrl, finalizedAt } = useAppInfo()
 
+if (chart.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
+else delete reactiveSearchParams.stacked
+
 export const filters = (config.dynamicFilters || []).map(filter => {
   const key = filter.field.key
   const loading = ref(false)
@@ -72,6 +75,7 @@ const baseParams = getParams()
 
 export const getData = (theme) => ({
   rowsBased: async () => {
+    const fill = chart.area || (chart.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
     const select = [chart.config.labelsField.key].concat(chart.config.valuesField || chart.config.valuesFields.map(v => v.key)).join(',')
     const params = {
       ...baseParams.value,
@@ -89,7 +93,7 @@ export const getData = (theme) => ({
         borderColor: color,
         backgroundColor: color,
         data: results.map(r => r[chart.config.valuesField] || undefined),
-        fill: ['area', 'multi-area'].includes(chart.type)
+        fill
       }]
     } else {
       const colors = getColors(chart.config.valuesFields.map(v => v.key) || labels)
@@ -104,7 +108,7 @@ export const getData = (theme) => ({
           label: field.key,
           borderColor: colors[field.key],
           backgroundColor: colors[field.key],
-          fill: ['area', 'multi-area'].includes(chart.type),
+          fill,
           data: results.map(r => r[field.key] || undefined)
         }))
       }
@@ -116,6 +120,7 @@ export const getData = (theme) => ({
     }
   },
   aggsBased: async () => {
+    const fill = chart.area || (chart.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
     const params = {
       ...baseParams.value,
       size: 0,
@@ -143,7 +148,7 @@ export const getData = (theme) => ({
         borderColor: color,
         backgroundColor: color,
         data: aggs.slice(0, chart.config.size).map(a => chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total),
-        fill: ['area', 'multi-area'].includes(chart.type)
+        fill
       }]
     } else {
       if (chart.config.groupsField) {
@@ -153,7 +158,7 @@ export const getData = (theme) => ({
           label,
           borderColor: colors[label],
           backgroundColor: colors[label],
-          fill: ['area', 'multi-area'].includes(chart.type),
+          fill,
           data: aggs.slice(0, chart.config.size).map(a => {
             const val = a.aggs.find(ag => ag.value === label)
             return val ? (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : 0
