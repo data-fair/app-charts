@@ -64,7 +64,9 @@ const data = computedAsync(getData(theme)[chart.config.type], null, loading)
 
 <template lang="html">
   <div style="display:flex;flex-direction:column;">
-    <Actions v-if="dynamicFilters || dynamicMetric || chart.config.dynamicSort" />
+    <Actions
+      v-if="dynamicFilters || dynamicMetric || chart.config.dynamicSort || ['multi-bar', 'multi-line'].includes(chart.type)"
+    />
     <div
       v-if="data"
       style="flex:1"
