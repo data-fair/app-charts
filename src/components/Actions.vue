@@ -45,6 +45,7 @@ if (chart?.config.type === 'rowsBased') {
         cols="12"
         sm="6"
         md="4"
+        class="pb-0"
       >
         <v-autocomplete
           v-model="filter.value.value"
@@ -67,6 +68,7 @@ if (chart?.config.type === 'rowsBased') {
         cols="12"
         sm="6"
         md="4"
+        class="pb-0"
       >
         <v-select
           v-model="reactiveSearchParams.metric"
@@ -81,6 +83,7 @@ if (chart?.config.type === 'rowsBased') {
         cols="12"
         sm="6"
         md="4"
+        class="pb-0"
       >
         <v-select
           v-model="reactiveSearchParams['sort-by']"

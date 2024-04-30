@@ -26,6 +26,8 @@ export const filters = (config.dynamicFilters || []).map(filter => {
     }
   })
 
+  let searchTimeout
+
   return {
     key,
     label: filter.field.title || filter.field['x-originalName'] || key,
@@ -37,17 +39,20 @@ export const filters = (config.dynamicFilters || []).map(filter => {
     }),
     loading,
     items,
-    search: async (search) => {
+    search: (search) => {
       if (filter.field.enum) {
         items.value = filter.field.enum.filter(a => !search.length || (labels ? labels[a] : a).toLowerCase().includes(search.toLowerCase())).map(a => labels ? ({ title: labels[a], value: a }) : a)
         return
       } else if (!search || search.length < 2) return
-      loading.value = true
-      // TODO merge q from global search and filter search
-      const params = { ...getParams(key).value, size: 100, sort: key, finalizedAt, q: search, q_mode: 'complete' }
-      const results = await ofetch(`${datasetUrl}/values/${key}`, { params })
-      items.value = results.map(a => labels ? ({ title: labels[a], value: a }) : a)
-      loading.value = false
+      clearTimeout(searchTimeout)
+      searchTimeout = setTimeout(async () => {
+        loading.value = true
+        // TODO merge q from global search and filter search
+        const params = { ...getParams(key).value, size: 100, sort: key, finalizedAt, q: search, q_mode: 'complete' }
+        const results = await ofetch(`${datasetUrl}/values/${key}`, { params })
+        items.value = results.map(a => labels ? ({ title: labels[a], value: a }) : a)
+        loading.value = false
+      }, 500)
     }
   }
 })

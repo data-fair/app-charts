@@ -20,5 +20,8 @@ try {
 </script>
 
 <template>
-  <Chart v-if="!configureError" />
+  <Chart
+    v-if="!configureError"
+    style="height:100%"
+  />
 </template>

@@ -22,6 +22,8 @@ const theme = useTheme()
 const loading = ref(false)
 
 const options = {
+  maintainAspectRatio: false,
+  responsive: true,
   plugins: {
     legend: {
       display: !!chart.config.colors
@@ -59,33 +61,38 @@ const data = computedAsync(getData(theme)[chart.config.type], null, loading)
 </script>
 
 <template lang="html">
-  <template v-if="data">
-    <Line
-      v-if="['line', 'area', 'multi-line', 'multi-area'].includes(chart.type)"
-      :options="options"
-      :data="data"
-    />
-    <Bar
-      v-else-if="['bar', 'multi-bar'].includes(chart.type)"
-      :options="options"
-      :data="data"
-    />
+  <div style="display:flex;flex-direction:column;">
+    <Actions v-if="dynamicFilters || dynamicMetric || chart.config.dynamicSort" />
     <div
-      v-else
-      class="h-screen"
-      style="display: flex;align-items: center;justify-content: center;"
+      v-if="data"
+      style="flex:1"
     >
-      <Pie
-        v-if="chart.type === 'pie'"
+      <Line
+        v-if="['line', 'area', 'multi-line', 'multi-area'].includes(chart.type)"
         :options="options"
         :data="data"
       />
-      <Radar
-        v-else-if="chart.type === 'radar'"
+      <Bar
+        v-else-if="['bar', 'multi-bar'].includes(chart.type)"
         :options="options"
         :data="data"
       />
+      <div
+        v-else
+        class="h-screen"
+        style="display: flex;align-items: center;justify-content: center;"
+      >
+        <Pie
+          v-if="chart.type === 'pie'"
+          :options="options"
+          :data="data"
+        />
+        <Radar
+          v-else-if="chart.type === 'radar'"
+          :options="options"
+          :data="data"
+        />
+      </div>
     </div>
-  </template>
-  <Actions v-if="dynamicFilters || dynamicMetric || chart.config.dynamicSort" />
+  </div>
 </template>
