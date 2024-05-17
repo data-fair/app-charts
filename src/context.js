@@ -9,7 +9,6 @@ import useAppInfo from '@/composables/useAppInfo'
 
 const conceptFilters = useConceptFilters(reactiveSearchParams)
 const { config, chart, datasetUrl, finalizedAt } = useAppInfo()
-
 if (chart.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
 else delete reactiveSearchParams.stacked
 
@@ -64,7 +63,7 @@ function getParams (ignoreField) {
   const filtersWithIgnore = filters.filter(f => ignoreField !== f.key)
   return useDebounce(computed(() => {
     // if (!ignoreField && reactiveSearchParams._id) return { qs: `_id:"${escape(reactiveSearchParams._id)}"` }
-    const params = { ...conceptFilters.value }
+    const params = { ...conceptFilters }
     const qs = filtersWithIgnore.filter(f => f.qs.value).map(f => f.qs.value).concat(config.staticFilters && config.staticFilters.length ? filters2qs(config.staticFilters).split(' AND ') : [])
     if (qs.length) params.qs = qs.join(' AND ')
     return params
