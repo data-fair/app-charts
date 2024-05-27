@@ -1,6 +1,9 @@
 {
   "type": "object",
-  "required": ["datasets", "chart"],
+  "required": [
+    "datasets",
+    "chart"
+  ],
   "allOf": [
     {
       "title": "Source de données",
@@ -46,7 +49,10 @@
             "oneOf": [
               {
                 "title": "Restreindre à des valeurs",
-                "required": ["field", "values"],
+                "required": [
+                  "field",
+                  "values"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "type": {
@@ -71,7 +77,9 @@
               },
               {
                 "title": "Restreindre à un interval de valeurs",
-                "required": ["field"],
+                "required": [
+                  "field"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "type": {
@@ -98,7 +106,10 @@
               },
               {
                 "title": "Exclure des valeurs",
-                "required": ["field", "values"],
+                "required": [
+                  "field",
+                  "values"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "type": {
@@ -134,7 +145,10 @@
           "default": {
             "type": "line"
           },
-          "required": ["type", "config"],
+          "required": [
+            "type",
+            "config"
+          ],
           "oneOf": [
             {
               "title": "Courbe",
@@ -240,7 +254,9 @@
                         "color": {
                           "type": "object",
                           "title": "Couleur",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "oneOf": [
                             {
                               "title": "Thème",
@@ -306,7 +322,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -333,7 +351,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -377,7 +398,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -422,7 +446,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -506,7 +533,9 @@
                         "color": {
                           "type": "object",
                           "title": "Couleur",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "oneOf": [
                             {
                               "title": "Thème",
@@ -655,7 +684,9 @@
                         "color": {
                           "type": "object",
                           "title": "Couleur",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "oneOf": [
                             {
                               "title": "Thème",
@@ -721,7 +752,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -748,7 +781,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -792,7 +828,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -837,7 +876,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -921,7 +963,9 @@
                         "color": {
                           "type": "object",
                           "title": "Couleur",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "oneOf": [
                             {
                               "title": "Thème",
@@ -1084,7 +1128,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1137,7 +1184,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1153,7 +1203,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["key"],
+                                    "required": [
+                                      "key"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "key": {
@@ -1193,7 +1245,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -1220,7 +1274,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1264,7 +1321,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1316,7 +1376,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1403,7 +1466,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1456,7 +1522,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1472,7 +1541,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["value"],
+                                    "required": [
+                                      "value"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "value": {
@@ -1606,7 +1677,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1659,7 +1733,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1675,7 +1752,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["key"],
+                                    "required": [
+                                      "key"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "key": {
@@ -1715,7 +1794,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -1742,7 +1823,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1786,7 +1870,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1838,7 +1925,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1925,7 +2015,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1978,7 +2071,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -1994,7 +2090,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["value"],
+                                    "required": [
+                                      "value"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "value": {
@@ -2127,7 +2225,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2180,7 +2281,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2196,7 +2300,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["key"],
+                                    "required": [
+                                      "key"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "key": {
@@ -2236,7 +2342,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -2263,7 +2371,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2307,7 +2418,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2359,7 +2473,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2446,7 +2563,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2499,7 +2619,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2515,7 +2638,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["value"],
+                                    "required": [
+                                      "value"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "value": {
@@ -2557,7 +2682,10 @@
                     {
                       "title": "Lire les lignes une par une",
                       "type": "object",
-                      "required": ["labelsField", "valuesField"],
+                      "required": [
+                        "labelsField",
+                        "valuesField"
+                      ],
                       "additionalProperties": false,
                       "properties": {
                         "type": {
@@ -2592,7 +2720,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2645,7 +2776,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2661,7 +2795,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["value"],
+                                    "required": [
+                                      "value"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "value": {
@@ -2687,7 +2823,10 @@
                     {
                       "title": "Grouper les lignes",
                       "type": "object",
-                      "required": ["groupBy", "valueCalc"],
+                      "required": [
+                        "groupBy",
+                        "valueCalc"
+                      ],
                       "additionalProperties": false,
                       "properties": {
                         "type": {
@@ -2695,7 +2834,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -2722,7 +2863,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2766,7 +2910,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2813,7 +2960,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2864,7 +3014,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2917,7 +3070,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -2933,7 +3089,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["value"],
+                                    "required": [
+                                      "value"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "value": {
@@ -3059,7 +3217,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3112,7 +3273,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3128,7 +3292,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["key"],
+                                    "required": [
+                                      "key"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "key": {
@@ -3168,7 +3334,9 @@
                         },
                         "groupBy": {
                           "type": "object",
-                          "required": ["type"],
+                          "required": [
+                            "type"
+                          ],
                           "default": {
                             "type": "value"
                           },
@@ -3195,7 +3363,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne de type date",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3239,7 +3410,10 @@
                             },
                             {
                               "title": "Intervalles d'une colonne numérique",
-                              "required": ["field", "interval"],
+                              "required": [
+                                "field",
+                                "interval"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3291,7 +3465,10 @@
                             },
                             {
                               "title": "Calcul depuis les valeurs d'une colonne",
-                              "required": ["field", "metric"],
+                              "required": [
+                                "field",
+                                "metric"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3378,7 +3555,10 @@
                           "oneOf": [
                             {
                               "title": "Palette précalculée",
-                              "required": ["type", "name"],
+                              "required": [
+                                "type",
+                                "name"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3431,7 +3611,10 @@
                             },
                             {
                               "title": "Palette personnalisée",
-                              "required": ["type", "styles"],
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
                               "additionalProperties": false,
                               "properties": {
                                 "type": {
@@ -3447,7 +3630,9 @@
                                   "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
-                                    "required": ["value"],
+                                    "required": [
+                                      "value"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                       "value": {
@@ -3491,7 +3676,9 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["field"],
+            "required": [
+              "field"
+            ],
             "additionalProperties": false,
             "properties": {
               "field": {
@@ -3653,7 +3840,9 @@
     "color": {
       "type": "object",
       "title": "Couleur",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "oneOf": [
         {
           "title": "Thème",
@@ -3702,7 +3891,9 @@
     },
     "groupBy": {
       "type": "object",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "default": {
         "type": "value"
       },
@@ -3729,7 +3920,10 @@
         },
         {
           "title": "Intervalles d'une colonne de type date",
-          "required": ["field", "interval"],
+          "required": [
+            "field",
+            "interval"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -3773,7 +3967,10 @@
         },
         {
           "title": "Intervalles d'une colonne numérique",
-          "required": ["field", "interval"],
+          "required": [
+            "field",
+            "interval"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -3813,7 +4010,10 @@
         },
         {
           "title": "Calcul depuis les valeurs d'une colonne",
-          "required": ["field", "metric"],
+          "required": [
+            "field",
+            "metric"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -3861,7 +4061,13 @@
     "rowsDataSingle": {
       "title": "Lire les lignes une par une",
       "type": "object",
-      "required": ["sortBy", "sortOrder", "size", "labelsField", "valuesField"],
+      "required": [
+        "sortBy",
+        "sortOrder",
+        "size",
+        "labelsField",
+        "valuesField"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -3931,7 +4137,9 @@
         "color": {
           "type": "object",
           "title": "Couleur",
-          "required": ["type"],
+          "required": [
+            "type"
+          ],
           "oneOf": [
             {
               "title": "Thème",
@@ -3983,7 +4191,13 @@
     "aggsDataSingle": {
       "title": "Grouper les lignes",
       "type": "object",
-      "required": ["sortBy", "sortOrder", "size", "groupBy", "valueCalc"],
+      "required": [
+        "sortBy",
+        "sortOrder",
+        "size",
+        "groupBy",
+        "valueCalc"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -3991,7 +4205,9 @@
         },
         "groupBy": {
           "type": "object",
-          "required": ["type"],
+          "required": [
+            "type"
+          ],
           "default": {
             "type": "value"
           },
@@ -4018,7 +4234,10 @@
             },
             {
               "title": "Intervalles d'une colonne de type date",
-              "required": ["field", "interval"],
+              "required": [
+                "field",
+                "interval"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4062,7 +4281,10 @@
             },
             {
               "title": "Intervalles d'une colonne numérique",
-              "required": ["field", "interval"],
+              "required": [
+                "field",
+                "interval"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4107,7 +4329,10 @@
             },
             {
               "title": "Calcul depuis les valeurs d'une colonne",
-              "required": ["field", "metric"],
+              "required": [
+                "field",
+                "metric"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4191,7 +4416,9 @@
         "color": {
           "type": "object",
           "title": "Couleur",
-          "required": ["type"],
+          "required": [
+            "type"
+          ],
           "oneOf": [
             {
               "title": "Thème",
@@ -4324,7 +4551,9 @@
             "color": {
               "type": "object",
               "title": "Couleur",
-              "required": ["type"],
+              "required": [
+                "type"
+              ],
               "oneOf": [
                 {
                   "title": "Thème",
@@ -4376,7 +4605,13 @@
         {
           "title": "Grouper les lignes",
           "type": "object",
-          "required": ["sortBy", "sortOrder", "size", "groupBy", "valueCalc"],
+          "required": [
+            "sortBy",
+            "sortOrder",
+            "size",
+            "groupBy",
+            "valueCalc"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -4384,7 +4619,9 @@
             },
             "groupBy": {
               "type": "object",
-              "required": ["type"],
+              "required": [
+                "type"
+              ],
               "default": {
                 "type": "value"
               },
@@ -4411,7 +4648,10 @@
                 },
                 {
                   "title": "Intervalles d'une colonne de type date",
-                  "required": ["field", "interval"],
+                  "required": [
+                    "field",
+                    "interval"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -4455,7 +4695,10 @@
                 },
                 {
                   "title": "Intervalles d'une colonne numérique",
-                  "required": ["field", "interval"],
+                  "required": [
+                    "field",
+                    "interval"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -4500,7 +4743,10 @@
                 },
                 {
                   "title": "Calcul depuis les valeurs d'une colonne",
-                  "required": ["field", "metric"],
+                  "required": [
+                    "field",
+                    "metric"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -4584,7 +4830,9 @@
             "color": {
               "type": "object",
               "title": "Couleur",
-              "required": ["type"],
+              "required": [
+                "type"
+              ],
               "oneOf": [
                 {
                   "title": "Thème",
@@ -4638,7 +4886,12 @@
     "rowsDataMultiple": {
       "title": "Lire les lignes une par une",
       "type": "object",
-      "required": ["sortBy", "sortOrder", "labelsField", "valuesFields"],
+      "required": [
+        "sortBy",
+        "sortOrder",
+        "labelsField",
+        "valuesFields"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -4716,7 +4969,10 @@
           "oneOf": [
             {
               "title": "Palette précalculée",
-              "required": ["type", "name"],
+              "required": [
+                "type",
+                "name"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4769,7 +5025,10 @@
             },
             {
               "title": "Palette personnalisée",
-              "required": ["type", "styles"],
+              "required": [
+                "type",
+                "styles"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4785,7 +5044,9 @@
                   "x-itemsProp": "aggs",
                   "items": {
                     "type": "object",
-                    "required": ["key"],
+                    "required": [
+                      "key"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                       "key": {
@@ -4825,7 +5086,9 @@
         },
         "groupBy": {
           "type": "object",
-          "required": ["type"],
+          "required": [
+            "type"
+          ],
           "default": {
             "type": "value"
           },
@@ -4852,7 +5115,10 @@
             },
             {
               "title": "Intervalles d'une colonne de type date",
-              "required": ["field", "interval"],
+              "required": [
+                "field",
+                "interval"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4896,7 +5162,10 @@
             },
             {
               "title": "Intervalles d'une colonne numérique",
-              "required": ["field", "interval"],
+              "required": [
+                "field",
+                "interval"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -4948,7 +5217,10 @@
             },
             {
               "title": "Calcul depuis les valeurs d'une colonne",
-              "required": ["field", "metric"],
+              "required": [
+                "field",
+                "metric"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5035,7 +5307,10 @@
           "oneOf": [
             {
               "title": "Palette précalculée",
-              "required": ["type", "name"],
+              "required": [
+                "type",
+                "name"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5088,7 +5363,10 @@
             },
             {
               "title": "Palette personnalisée",
-              "required": ["type", "styles"],
+              "required": [
+                "type",
+                "styles"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5104,7 +5382,9 @@
                   "x-itemsProp": "aggs",
                   "items": {
                     "type": "object",
-                    "required": ["value"],
+                    "required": [
+                      "value"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                       "value": {
@@ -5135,7 +5415,12 @@
         {
           "title": "Lire les lignes une par une",
           "type": "object",
-          "required": ["sortBy", "sortOrder", "labelsField", "valuesFields"],
+          "required": [
+            "sortBy",
+            "sortOrder",
+            "labelsField",
+            "valuesFields"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -5213,7 +5498,10 @@
               "oneOf": [
                 {
                   "title": "Palette précalculée",
-                  "required": ["type", "name"],
+                  "required": [
+                    "type",
+                    "name"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5266,7 +5554,10 @@
                 },
                 {
                   "title": "Palette personnalisée",
-                  "required": ["type", "styles"],
+                  "required": [
+                    "type",
+                    "styles"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5282,7 +5573,9 @@
                       "x-itemsProp": "aggs",
                       "items": {
                         "type": "object",
-                        "required": ["key"],
+                        "required": [
+                          "key"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                           "key": {
@@ -5322,7 +5615,9 @@
             },
             "groupBy": {
               "type": "object",
-              "required": ["type"],
+              "required": [
+                "type"
+              ],
               "default": {
                 "type": "value"
               },
@@ -5349,7 +5644,10 @@
                 },
                 {
                   "title": "Intervalles d'une colonne de type date",
-                  "required": ["field", "interval"],
+                  "required": [
+                    "field",
+                    "interval"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5393,7 +5691,10 @@
                 },
                 {
                   "title": "Intervalles d'une colonne numérique",
-                  "required": ["field", "interval"],
+                  "required": [
+                    "field",
+                    "interval"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5445,7 +5746,10 @@
                 },
                 {
                   "title": "Calcul depuis les valeurs d'une colonne",
-                  "required": ["field", "metric"],
+                  "required": [
+                    "field",
+                    "metric"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5532,7 +5836,10 @@
               "oneOf": [
                 {
                   "title": "Palette précalculée",
-                  "required": ["type", "name"],
+                  "required": [
+                    "type",
+                    "name"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5585,7 +5892,10 @@
                 },
                 {
                   "title": "Palette personnalisée",
-                  "required": ["type", "styles"],
+                  "required": [
+                    "type",
+                    "styles"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -5601,7 +5911,9 @@
                       "x-itemsProp": "aggs",
                       "items": {
                         "type": "object",
-                        "required": ["value"],
+                        "required": [
+                          "value"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                           "value": {
@@ -5629,7 +5941,10 @@
     "rowsCategories": {
       "title": "Lire les lignes une par une",
       "type": "object",
-      "required": ["labelsField", "valuesField"],
+      "required": [
+        "labelsField",
+        "valuesField"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -5664,7 +5979,10 @@
           "oneOf": [
             {
               "title": "Palette précalculée",
-              "required": ["type", "name"],
+              "required": [
+                "type",
+                "name"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5717,7 +6035,10 @@
             },
             {
               "title": "Palette personnalisée",
-              "required": ["type", "styles"],
+              "required": [
+                "type",
+                "styles"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5733,7 +6054,9 @@
                   "x-itemsProp": "aggs",
                   "items": {
                     "type": "object",
-                    "required": ["value"],
+                    "required": [
+                      "value"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                       "value": {
@@ -5759,7 +6082,10 @@
     "aggsCategories": {
       "title": "Grouper les lignes",
       "type": "object",
-      "required": ["groupBy", "valueCalc"],
+      "required": [
+        "groupBy",
+        "valueCalc"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -5767,7 +6093,9 @@
         },
         "groupBy": {
           "type": "object",
-          "required": ["type"],
+          "required": [
+            "type"
+          ],
           "default": {
             "type": "value"
           },
@@ -5794,7 +6122,10 @@
             },
             {
               "title": "Intervalles d'une colonne de type date",
-              "required": ["field", "interval"],
+              "required": [
+                "field",
+                "interval"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5838,7 +6169,10 @@
             },
             {
               "title": "Intervalles d'une colonne numérique",
-              "required": ["field", "interval"],
+              "required": [
+                "field",
+                "interval"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5885,7 +6219,10 @@
             },
             {
               "title": "Calcul depuis les valeurs d'une colonne",
-              "required": ["field", "metric"],
+              "required": [
+                "field",
+                "metric"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5936,7 +6273,10 @@
           "oneOf": [
             {
               "title": "Palette précalculée",
-              "required": ["type", "name"],
+              "required": [
+                "type",
+                "name"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -5989,7 +6329,10 @@
             },
             {
               "title": "Palette personnalisée",
-              "required": ["type", "styles"],
+              "required": [
+                "type",
+                "styles"
+              ],
               "additionalProperties": false,
               "properties": {
                 "type": {
@@ -6005,7 +6348,9 @@
                   "x-itemsProp": "aggs",
                   "items": {
                     "type": "object",
-                    "required": ["value"],
+                    "required": [
+                      "value"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                       "value": {
@@ -6036,7 +6381,10 @@
         {
           "title": "Lire les lignes une par une",
           "type": "object",
-          "required": ["labelsField", "valuesField"],
+          "required": [
+            "labelsField",
+            "valuesField"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -6071,7 +6419,10 @@
               "oneOf": [
                 {
                   "title": "Palette précalculée",
-                  "required": ["type", "name"],
+                  "required": [
+                    "type",
+                    "name"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6124,7 +6475,10 @@
                 },
                 {
                   "title": "Palette personnalisée",
-                  "required": ["type", "styles"],
+                  "required": [
+                    "type",
+                    "styles"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6140,7 +6494,9 @@
                       "x-itemsProp": "aggs",
                       "items": {
                         "type": "object",
-                        "required": ["value"],
+                        "required": [
+                          "value"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                           "value": {
@@ -6166,7 +6522,10 @@
         {
           "title": "Grouper les lignes",
           "type": "object",
-          "required": ["groupBy", "valueCalc"],
+          "required": [
+            "groupBy",
+            "valueCalc"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -6174,7 +6533,9 @@
             },
             "groupBy": {
               "type": "object",
-              "required": ["type"],
+              "required": [
+                "type"
+              ],
               "default": {
                 "type": "value"
               },
@@ -6201,7 +6562,10 @@
                 },
                 {
                   "title": "Intervalles d'une colonne de type date",
-                  "required": ["field", "interval"],
+                  "required": [
+                    "field",
+                    "interval"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6245,7 +6609,10 @@
                 },
                 {
                   "title": "Intervalles d'une colonne numérique",
-                  "required": ["field", "interval"],
+                  "required": [
+                    "field",
+                    "interval"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6292,7 +6659,10 @@
                 },
                 {
                   "title": "Calcul depuis les valeurs d'une colonne",
-                  "required": ["field", "metric"],
+                  "required": [
+                    "field",
+                    "metric"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6343,7 +6713,10 @@
               "oneOf": [
                 {
                   "title": "Palette précalculée",
-                  "required": ["type", "name"],
+                  "required": [
+                    "type",
+                    "name"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6396,7 +6769,10 @@
                 },
                 {
                   "title": "Palette personnalisée",
-                  "required": ["type", "styles"],
+                  "required": [
+                    "type",
+                    "styles"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -6412,7 +6788,9 @@
                       "x-itemsProp": "aggs",
                       "items": {
                         "type": "object",
-                        "required": ["value"],
+                        "required": [
+                          "value"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                           "value": {
@@ -6443,7 +6821,9 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["field"],
+        "required": [
+          "field"
+        ],
         "additionalProperties": false,
         "properties": {
           "field": {
@@ -6473,7 +6853,10 @@
         "oneOf": [
           {
             "title": "Restreindre à des valeurs",
-            "required": ["field", "values"],
+            "required": [
+              "field",
+              "values"
+            ],
             "additionalProperties": false,
             "properties": {
               "type": {
@@ -6498,7 +6881,9 @@
           },
           {
             "title": "Restreindre à un interval de valeurs",
-            "required": ["field"],
+            "required": [
+              "field"
+            ],
             "additionalProperties": false,
             "properties": {
               "type": {
@@ -6525,7 +6910,10 @@
           },
           {
             "title": "Exclure des valeurs",
-            "required": ["field", "values"],
+            "required": [
+              "field",
+              "values"
+            ],
             "additionalProperties": false,
             "properties": {
               "type": {
@@ -6560,7 +6948,10 @@
     },
     "colorPalette": {
       "title": "Palette précalculée",
-      "required": ["type", "name"],
+      "required": [
+        "type",
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {

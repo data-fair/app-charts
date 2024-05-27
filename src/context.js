@@ -104,7 +104,7 @@ export const getData = (theme) => ({
         }]
       } else {
         datasets = chart.config.valuesFields.map(field => ({
-          label: field.key,
+          label: field.title || field.key,
           borderColor: colors[field.key],
           backgroundColor: colors[field.key],
           fill,
@@ -156,7 +156,7 @@ export const getData = (theme) => ({
         const series = [].concat(...aggs.map(a => a.aggs.map(ag => ag.value))).filter((s, i, self) => self.indexOf(s) === i).sort((s1, s2) => s1.localeCompare(s2))
         const colors = getColors(series)
         datasets = series.map(label => ({
-          label,
+          label: chart.config.groupsField['x-labels'] ? chart.config.groupsField['x-labels'][label] : label,
           borderColor: colors[label],
           backgroundColor: colors[label],
           fill,
