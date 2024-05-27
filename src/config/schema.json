@@ -125,6 +125,19 @@
                   "$ref": "#/definitions/categories"
                 }
               }
+            },
+            {
+              "title": "Paire d'histogrammes",
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "paired-histogram",
+                  "title": "Type de visualisation"
+                },
+                "config": {
+                  "$ref": "#/definitions/multipleDataType"
+                }
+              }
             }
           ]
         }

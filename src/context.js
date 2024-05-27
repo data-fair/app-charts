@@ -112,7 +112,9 @@ export const getData = (theme) => ({
         }))
       }
     }
-
+    if (chart.type === 'paired-histogram') {
+      datasets[0].data = datasets[0].data.map(d => -d)
+    }
     return {
       labels,
       datasets
@@ -171,6 +173,9 @@ export const getData = (theme) => ({
           data: aggs.slice(0, chart.config.size).map(a => chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)
         }]
       }
+    }
+    if (chart.type === 'paired-histogram') {
+      datasets[0].data = datasets[0].data.map(d => -d)
     }
     return {
       labels,

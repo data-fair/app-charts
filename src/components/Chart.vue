@@ -39,10 +39,10 @@ const options = computed(() => {
 
   options.scales = {
     x: {
-      stacked: reactiveSearchParams.stacked === 'true'
+      stacked: chart.type === 'paired-histogram' || reactiveSearchParams.stacked === 'true'
     },
     y: {
-      stacked: reactiveSearchParams.stacked === 'true'
+      stacked: chart.type === 'paired-histogram' || reactiveSearchParams.stacked === 'true'
     }
   }
 
@@ -55,11 +55,28 @@ const options = computed(() => {
   }
 
   if (chart.horizontal) options.indexAxis = 'y'
+
+  if (chart.type === 'paired-histogram') {
+    options.indexAxis = 'y'
+    options.scales.x = {
+      ticks: {
+        callback: (v) => v < 0 ? -v : v
+      }
+    }
+    options.plugins.tooltip = {
+      callbacks: {
+        label: (c) => {
+          const value = Number(c.raw)
+          const positiveOnly = value < 0 ? -value : value
+          return `${c.dataset.label}: ${positiveOnly.toString()}`
+        }
+      }
+    }
+  }
   return options
 })
 
 const data = computedAsync(getData(theme)[chart.config.type], null, loading)
-
 </script>
 
 <template lang="html">
@@ -77,7 +94,7 @@ const data = computedAsync(getData(theme)[chart.config.type], null, loading)
         :data="data"
       />
       <Bar
-        v-else-if="['bar', 'multi-bar'].includes(chart.type)"
+        v-else-if="['bar', 'multi-bar', 'paired-histogram'].includes(chart.type)"
         :options="options"
         :data="data"
       />
