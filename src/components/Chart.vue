@@ -6,16 +6,20 @@ import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import dayjs from 'dayjs'
 
 import { Line, Bar, Pie, Radar } from 'vue-chartjs'
 import {
   Chart as ChartJS, Title, Tooltip, Legend,
   BarElement, PointElement, ArcElement, LineElement,
-  CategoryScale, LinearScale, RadialLinearScale, Filler
+  CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler
 } from 'chart.js'
+import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm'
+import 'dayjs/locale/fr'
+dayjs.locale('fr')
 ChartJS.register(Title, Tooltip, Legend,
   BarElement, PointElement, ArcElement, LineElement,
-  CategoryScale, LinearScale, RadialLinearScale, Filler)
+  CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler)
 
 const { config, chart, dynamicFilters, dynamicMetric } = useAppInfo()
 const theme = useTheme()
@@ -44,6 +48,9 @@ const options = computed(() => {
     y: {
       stacked: chart.type === 'paired-histogram' || reactiveSearchParams.stacked === 'true'
     }
+  }
+  if ((chart?.config.groupBy && chart?.config.groupBy.type === 'date') || (chart?.config.labelsField && chart?.config.labelsField.format === 'date')) {
+    options.scales.x.type = 'time'
   }
 
   if (chart.tension != null) {
