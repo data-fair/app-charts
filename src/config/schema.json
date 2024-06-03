@@ -651,7 +651,12 @@
                 }
               }
             }
-          ]
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
         }
       }
     },
@@ -735,7 +740,12 @@
                 }
               }
             }
-          ]
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
         }
       }
     },
@@ -814,7 +824,12 @@
                 }
               }
             }
-          ]
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
         }
       }
     },
@@ -880,7 +895,12 @@
                 }
               }
             }
-          ]
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
         }
       }
     },

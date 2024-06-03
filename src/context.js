@@ -142,7 +142,7 @@ export const getData = (theme) => ({
       params.sort = params.sort + ';-' + chart.config.valueCalc.type
     }
     const { aggs } = await ofetch(`${datasetUrl}/values_agg`, { params })
-    const labels = aggs.slice(0, chart.config.size).map(a => a.value)
+    const labels = aggs.slice(0, chart.config.size).map(a => chart.config.groupBy.field['x-labels'] ? chart.config.groupBy.field['x-labels'][a.value] : a.value)
     let datasets
     if (chart.config.color) {
       const color = chart.config.color.type === 'custom' ? chart.config.color.hexValue : theme.current.value.colors[chart.config.color.strValue]
@@ -154,7 +154,7 @@ export const getData = (theme) => ({
       }]
     } else {
       if (chart.config.groupsField) {
-        const series = orderBy([].concat(...aggs.map(a => a.aggs.map(ag => ag.value))).filter((s, i, self) => self.indexOf(s) === i))
+        const series = chart.config.colors.type === 'manual' ? chart.config.colors.styles.map(s => s.value) : orderBy([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))).filter((s, i, self) => self.indexOf(s) === i))
         const colors = getColors(series)
         datasets = series.map(label => ({
           label: chart.config.groupsField['x-labels'] ? chart.config.groupsField['x-labels'][label] : label,
@@ -162,7 +162,7 @@ export const getData = (theme) => ({
           backgroundColor: colors[label],
           fill,
           data: aggs.slice(0, chart.config.size).map(a => {
-            const val = a.aggs.find(ag => ag.value === label)
+            const val = a.aggs.find(ag => (ag.value + '') === label)
             return val ? (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
           })
         }))
