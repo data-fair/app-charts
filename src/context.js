@@ -6,6 +6,7 @@ import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 import { filters2qs, escape } from '@data-fair/lib/filters.js'
 import { getSortStr, getColors } from '@/assets/utils'
 import useAppInfo from '@/composables/useAppInfo'
+import { orderBy } from 'natural-orderby'
 
 const conceptFilters = useConceptFilters(reactiveSearchParams)
 const { config, chart, datasetUrl, finalizedAt } = useAppInfo()
@@ -153,7 +154,7 @@ export const getData = (theme) => ({
       }]
     } else {
       if (chart.config.groupsField) {
-        const series = [].concat(...aggs.map(a => a.aggs.map(ag => ag.value))).filter((s, i, self) => self.indexOf(s) === i).sort((s1, s2) => s1.localeCompare(s2))
+        const series = orderBy([].concat(...aggs.map(a => a.aggs.map(ag => ag.value))).filter((s, i, self) => self.indexOf(s) === i))
         const colors = getColors(series)
         datasets = series.map(label => ({
           label: chart.config.groupsField['x-labels'] ? chart.config.groupsField['x-labels'][label] : label,
