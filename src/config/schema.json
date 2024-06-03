@@ -74,6 +74,10 @@
                   "type": "boolean",
                   "title": "Aires empilées"
                 },
+                "disableDynamicStack": {
+                  "type": "boolean",
+                  "title": "Désactiver la bascule d'empilement"
+                },
                 "config": {
                   "$ref": "#/definitions/multipleDataType"
                 }
@@ -93,6 +97,10 @@
                 "stacked": {
                   "type": "boolean",
                   "title": "Empiler les barres"
+                },
+                "disableDynamicStack": {
+                  "type": "boolean",
+                  "title": "Désactiver la bascule d'empilement"
                 },
                 "config": {
                   "$ref": "#/definitions/multipleDataType"

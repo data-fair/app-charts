@@ -112,7 +112,7 @@ if (chart?.config.type === 'rowsBased') {
         </v-select>
       </v-col>
       <v-col
-        v-if="['multi-bar', 'multi-line'].includes(chart.type)"
+        v-if="['multi-bar', 'multi-line'].includes(chart.type) && !chart.disableDynamicStack"
         cols="12"
         sm="6"
         md="4"
