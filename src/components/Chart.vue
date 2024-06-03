@@ -52,6 +52,9 @@ const options = computed(() => {
   if ((chart?.config.groupBy && chart?.config.groupBy.type === 'date') || (chart?.config.labelsField && chart?.config.labelsField.format === 'date')) {
     options.scales.x.type = 'time'
   }
+  if (chart.yAxisStartsZero) {
+    options.scales.y.min = 0
+  }
 
   if (chart.tension != null) {
     options.elements = {
