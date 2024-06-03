@@ -126,7 +126,7 @@ export const getData = (theme) => ({
       ...baseParams.value,
       size: 0,
       field: chart.config.groupBy.field.key,
-      interval: chart.config.groupBy.interval,
+      interval: chart.config.groupBy.interval || 'value',
       agg_size: chart.config.size,
       sort: getSortStr(chart.config),
       finalizedAt
@@ -162,7 +162,7 @@ export const getData = (theme) => ({
           fill,
           data: aggs.slice(0, chart.config.size).map(a => {
             const val = a.aggs.find(ag => ag.value === label)
-            return val ? (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : 0
+            return val ? (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
           })
         }))
       } else {
