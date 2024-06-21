@@ -65,7 +65,7 @@ function getParams (ignoreField) {
   return useDebounce(computed(() => {
     // if (!ignoreField && reactiveSearchParams._id) return { qs: `_id:"${escape(reactiveSearchParams._id)}"` }
     const params = { ...conceptFilters }
-    const qs = filtersWithIgnore.filter(f => f.qs.value).map(f => f.qs.value).concat(config.staticFilters && config.staticFilters.length ? filters2qs(config.staticFilters).split(' AND ') : [])
+    const qs = filtersWithIgnore.filter(f => f.qs.value).map(f => f.qs.value).concat(config.staticFilters?.length ? filters2qs(config.staticFilters).split(' AND ') : [])
     if (qs.length) params.qs = qs.join(' AND ')
     return params
   }), 500)
@@ -113,7 +113,7 @@ export const getData = (theme) => ({
         }))
         if (chart.percentage) {
           for (const i in datasets[0].data) {
-            const sum = datasets.reduce((acc, d) => acc + d.data[i], 0)
+            const sum = datasets.reduce((acc, d) => acc + (d.data[i] || 0), 0)
             if (sum) datasets.forEach(d => { d.data[i] *= 100 / sum })
           }
         }
@@ -174,7 +174,7 @@ export const getData = (theme) => ({
         }))
         if (chart.percentage) {
           for (const i in datasets[0].data) {
-            const sum = datasets.reduce((acc, d) => acc + d.data[i], 0)
+            const sum = datasets.reduce((acc, d) => acc + (d.data[i] || 0), 0)
             if (sum) datasets.forEach(d => { d.data[i] *= 100 / sum })
           }
         }
