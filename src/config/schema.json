@@ -11,6 +11,11 @@
         },
         "staticFilters": {
           "$ref": "#/definitions/filters"
+        },
+        "qsFilter": {
+          "type": "string",
+          "x-display": "hidden",
+          "default": ""
         }
       }
     },
@@ -728,7 +733,7 @@
                 "styles": {
                   "title": "Couleurs et ordre",
                   "type": "array",
-                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
                   "x-display": "list",
                   "x-itemTitle": "value",
                   "x-itemKey": "value",
@@ -812,7 +817,7 @@
                 "styles": {
                   "title": "Couleurs et ordre",
                   "type": "array",
-                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.labelsField.key}&agg_size=12&size=0",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.labelsField.key}&agg_size=12&size=0&qs={qsFilter}",
                   "x-display": "list",
                   "x-itemTitle": "value",
                   "x-itemKey": "value",
@@ -883,7 +888,7 @@
                 "styles": {
                   "title": "Couleurs et ordre",
                   "type": "array",
-                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}",
                   "x-display": "list",
                   "x-itemTitle": "value",
                   "x-itemKey": "value",
@@ -946,7 +951,7 @@
           "defaultValue": {
             "type": "string",
             "title": "Valeur par défaut",
-            "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
+            "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true&qs={qsFilter}"
           }
         }
       }

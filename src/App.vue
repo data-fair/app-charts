@@ -3,13 +3,15 @@ import Chart from './components/Chart.vue'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import useAppInfo from './composables/useAppInfo'
 import { ofetch } from 'ofetch'
+import { filters2qs } from '@data-fair/lib/filters.js'
 
 // @ts-ignore
 window.vIframeOptions = { reactiveParams: reactiveSearchParams }
 
 let /** @type {any} */configureError
 try {
-  useAppInfo()
+  const { config } = useAppInfo()
+  if (window.parent && reactiveSearchParams.draft === 'true' && config.staticFilters?.length && !config.qsFilter) window.parent.postMessage({ type: 'set-config', content: { field: 'qsFilter', value: filters2qs(config.staticFilters) } }, '*')
 } catch (e) {
   // @ts-ignore
   configureError = e.message
