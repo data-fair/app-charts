@@ -1035,6 +1035,11 @@
                   "type": "boolean",
                   "title": "Aires empilées"
                 },
+                "percentage": {
+                  "type": "boolean",
+                  "title": "Pourcentages",
+                  "x-if": "parent.value.stacked"
+                },
                 "disableDynamicStack": {
                   "type": "boolean",
                   "title": "Désactiver la bascule d'empilement"
@@ -1594,6 +1599,11 @@
                 "stacked": {
                   "type": "boolean",
                   "title": "Empiler les barres"
+                },
+                "percentage": {
+                  "type": "boolean",
+                  "title": "Pourcentages",
+                  "x-if": "parent.value.stacked"
                 },
                 "disableDynamicStack": {
                   "type": "boolean",

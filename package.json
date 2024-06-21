@@ -14,7 +14,7 @@
     "dev-src": "vite --port 3000",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "precommit": "npm run lint",
-    "prepareBuild": "rimraf dist && npm run build-types && tsc",
+    "prepareBuild": "rimraf dist && npm run build-types",
     "prepublishOnly": "npm run build",
     "preview": "vite preview"
   },

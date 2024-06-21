@@ -111,6 +111,12 @@ export const getData = (theme) => ({
           fill,
           data: results.map(r => r[field.key] || undefined)
         }))
+        if (chart.percentage) {
+          for (const i in datasets[0].data) {
+            const sum = datasets.reduce((acc, d) => acc + d.data[i], 0)
+            if (sum) datasets.forEach(d => { d.data[i] *= 100 / sum })
+          }
+        }
       }
     }
     if (chart.type === 'paired-histogram') {
@@ -166,6 +172,12 @@ export const getData = (theme) => ({
             return val ? (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
           })
         }))
+        if (chart.percentage) {
+          for (const i in datasets[0].data) {
+            const sum = datasets.reduce((acc, d) => acc + d.data[i], 0)
+            if (sum) datasets.forEach(d => { d.data[i] *= 100 / sum })
+          }
+        }
       } else {
         const colors = getColors(labels)
         datasets = [{

@@ -55,6 +55,11 @@ const options = computed(() => {
   if (chart.yAxisStartsZero) {
     options.scales.y.min = 0
   }
+  if (chart.percentage) {
+    options.scales.y.ticks = {
+      callback: v => v + ' %'
+    }
+  }
 
   if (chart.tension != null) {
     options.elements = {
