@@ -8,24 +8,26 @@ import { getSortStr, getColors } from '@/assets/utils'
 import useAppInfo from '@/composables/useAppInfo'
 import { orderBy } from 'natural-orderby'
 
-const conceptFilters = useConceptFilters(reactiveSearchParams)
 const { config, chart, datasetUrl, finalizedAt } = useAppInfo()
+const conceptFilters = useConceptFilters(reactiveSearchParams, config.datasets?.[0]?.id)
+
 if (chart.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
 else delete reactiveSearchParams.stacked
 
 export const filters = (config.dynamicFilters || []).map(filter => {
   const key = filter.field.key
+  const paramKey = `_d_${config.datasets?.[0]?.id}_${key}_in`
   const loading = ref(false)
   const labels = filter.field['x-labels']
   const items = ref((filter.field.enum || []).map(a => labels ? ({ title: labels[a], value: a }) : a))
   const value = computed({
     get () {
-      return reactiveSearchParams[key] ? JSON.parse(`[${reactiveSearchParams[key]}]`) : []
+      return reactiveSearchParams[paramKey] ? JSON.parse(`[${reactiveSearchParams[paramKey]}]`) : []
     },
     set (val) {
       if (val.length) {
-        reactiveSearchParams[key] = JSON.stringify(val).slice(1, -1)
-      } else delete reactiveSearchParams[key]
+        reactiveSearchParams[paramKey] = JSON.stringify(val).slice(1, -1)
+      } else delete reactiveSearchParams[paramKey]
     }
   })
 
@@ -36,10 +38,6 @@ export const filters = (config.dynamicFilters || []).map(filter => {
     label: filter.field.title || filter.field['x-originalName'] || key,
     labels,
     value,
-    qs: computed(() => {
-      if (!value.value.length) return
-      return `${escape(key)}:(${value.value.map(v => `"${escape(v)}"`).join(' OR ')})`
-    }),
     loading,
     items,
     search: (search) => {
@@ -61,11 +59,11 @@ export const filters = (config.dynamicFilters || []).map(filter => {
 })
 
 function getParams (ignoreField) {
-  const filtersWithIgnore = filters.filter(f => ignoreField !== f.key)
   return useDebounce(computed(() => {
     // if (!ignoreField && reactiveSearchParams._id) return { qs: `_id:"${escape(reactiveSearchParams._id)}"` }
     const params = { ...conceptFilters }
-    const qs = filtersWithIgnore.filter(f => f.qs.value).map(f => f.qs.value).concat(config.staticFilters?.length ? filters2qs(config.staticFilters).split(' AND ') : [])
+    if (ignoreField) delete params[`_d_${config.datasets?.[0]?.id}_${ignoreField}_in`]
+    const qs = config.staticFilters?.length ? filters2qs(config.staticFilters).split(' AND ') : []
     if (qs.length) params.qs = qs.join(' AND ')
     return params
   }), 500)

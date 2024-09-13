@@ -24,7 +24,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@data-fair/lib": "^0.29.0",
+    "@data-fair/lib": "^0.45.0",
     "@vueuse/core": "^10.7.2",
     "chart.js": "^4.4.2",
     "chartjs-adapter-dayjs-4": "^1.0.4",
@@ -56,5 +56,8 @@
     "unplugin-fonts": "^1.1.1",
     "vite": "^5.0.12",
     "vite-plugin-vuetify": "^2.0.1"
+  },
+  "relativeDependencies": {
+    "@data-fair/lib": "../lib"
   }
 }
