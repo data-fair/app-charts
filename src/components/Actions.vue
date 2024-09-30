@@ -28,7 +28,7 @@ const sorts = [
   }
 ]
 
-if (chart?.config.type === 'rowsBased') {
+if (chart?.config.type?.replace('Categories', '') === 'rowsBased') {
   sorts.push({
     value: 'row',
     title: 'Ligne'

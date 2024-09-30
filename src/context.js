@@ -71,22 +71,22 @@ function getParams (ignoreField) {
 
 const baseParams = getParams()
 
+let categories
 export const getData = (theme) => ({
   rowsBased: async () => {
     const fill = chart.area || (chart.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
     const select = [chart.config.labelsField.key].concat(chart.config.valuesField || chart.config.valuesFields.map(v => v.key))
-    let categories
-    if (chart.config.categoriesField) {
-      select.push(chart.config.categoriesField)
-      categories = await ofetch(`${datasetUrl}/values/${chart.config.categoriesField}`)
-    }
     const params = {
       ...baseParams.value,
-      select: select.join(','),
       size: chart.config.size,
       sort: getSortStr(chart.config),
       finalizedAt
     }
+    if (chart.config.categoriesField) {
+      select.push(chart.config.categoriesField)
+      categories = categories || await ofetch(`${datasetUrl}/values/${chart.config.categoriesField}`)
+    }
+    params.select = select.join(',')
     const { results } = await ofetch(`${datasetUrl}/lines`, { params })
     const labels = results.map(r => r[chart.config.labelsField.key])
     let datasets
