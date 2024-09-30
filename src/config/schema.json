@@ -61,6 +61,9 @@
                   "const": "bar",
                   "title": "Type de visualisation"
                 },
+                "categorizable": {
+                  "const": "true"
+                },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"
                 },
@@ -523,7 +526,7 @@
       ]
     },
     "rowsDataSingle": {
-      "title": "Lire les lignes une par une",
+      "title": "Lire les lignes une par une, couleur unique",
       "type": "object",
       "required": ["sortBy", "sortOrder", "size", "labelsField", "valuesField"],
       "additionalProperties": false,
@@ -551,6 +554,90 @@
         },
         "color": {
           "$ref": "#/definitions/color"
+        }
+      }
+    },
+    "rowsDataSingleCategories": {
+      "title": "Lire les lignes une par une, plusieurs couleurs",
+      "type": "object",
+      "required": ["sortBy", "sortOrder", "size", "labelsField", "valuesField"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "rowsBasedCategories"
+        },
+        "labelsField": {
+          "$ref": "#/definitions/labelsField"
+        },
+        "size": {
+          "$ref": "#/definitions/size"
+        },
+        "valuesField": {
+          "$ref": "#/definitions/valuesField"
+        },
+        "categoriesField": {
+          "type": "string",
+          "title": "Champ de catégorie",
+          "x-if": "parent.parent.parent.parent.value.categorizable",
+          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&maxCardinality=12",
+          "x-itemTitle": "label",
+          "x-itemKey": "key"
+        },
+        "sortBy": {
+          "$ref": "#/definitions/rowSort"
+        },
+        "sortOrder": {
+          "$ref": "#/definitions/sortOrder"
+        },
+        "dynamicSort": {
+          "$ref": "#/definitions/dynamicSort"
+        },
+        "colors": {
+          "type": "object",
+          "title": "Couleurs",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/colorPalette"
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": ["type", "styles"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "styles": {
+                  "title": "Couleurs et ordre",
+                  "type": "array",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.categoriesField}&agg_size=12&size=0&qs={qsFilter}",
+                  "x-display": "list",
+                  "x-itemTitle": "value",
+                  "x-itemKey": "value",
+                  "x-itemsProp": "aggs",
+                  "items": {
+                    "type": "object",
+                    "required": ["value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "x-display": "hidden"
+                      },
+                      "color": {
+                        "$ref": "#/definitions/hexColor"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
         }
       }
     },
@@ -593,6 +680,9 @@
       "oneOf": [
         {
           "$ref": "#/definitions/rowsDataSingle"
+        },
+        {
+          "$ref": "#/definitions/rowsDataSingleCategories"
         },
         {
           "$ref": "#/definitions/aggsDataSingle"
@@ -676,7 +766,7 @@
       }
     },
     "aggsDataMultiple": {
-      "title": "Grouper les lignes",
+      "title": "Grouper les lignes, valeurs dans une seule colonne",
       "type": "object",
       "required": [
         "sortBy",
@@ -764,6 +854,110 @@
         }
       }
     },
+    "aggsDataMultipleCategories": {
+      "title": "Grouper les lignes, valeurs dans plusieurs colonnes",
+      "type": "object",
+      "required": ["sortBy", "sortOrder", "groupBy", "valuesCalc"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "aggsBasedCategories"
+        },
+        "groupBy": {
+          "$ref": "#/definitions/groupBy"
+        },
+        "valuesCalc": {
+          "$ref": "#/definitions/valuesFields"
+        },
+        "metric": {
+          "type": "string",
+          "title": "Type de calcul",
+          "default": "sum",
+          "oneOf": [
+            {
+              "const": "avg",
+              "title": "Moyenne"
+            },
+            {
+              "const": "min",
+              "title": "Valeur minimale"
+            },
+            {
+              "const": "max",
+              "title": "Valeur maximale"
+            },
+            {
+              "const": "sum",
+              "title": "Somme"
+            }
+          ]
+        },
+        "dynamicMetric": {
+          "type": "boolean",
+          "title": "Choix dynamique de la métrique",
+          "default": false
+        },
+        "size": {
+          "$ref": "#/definitions/size"
+        },
+        "sortBy": {
+          "$ref": "#/definitions/aggSort"
+        },
+        "sortOrder": {
+          "$ref": "#/definitions/sortOrder"
+        },
+        "dynamicSort": {
+          "$ref": "#/definitions/dynamicSort"
+        },
+        "colors": {
+          "type": "object",
+          "title": "Couleurs",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/colorPalette"
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": ["type", "styles"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "styles": {
+                  "title": "Couleurs et ordre",
+                  "type": "array",
+                  "x-fromData": "parent.parent.parent.value.valuesCalc",
+                  "x-display": "list",
+                  "x-itemTitle": "key",
+                  "x-itemKey": "key",
+                  "x-itemsProp": "aggs",
+                  "items": {
+                    "type": "object",
+                    "required": ["key"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "x-display": "hidden"
+                      },
+                      "color": {
+                        "$ref": "#/definitions/hexColor"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    },
     "multipleDataType": {
       "type": "object",
       "title": "Préparation des données",
@@ -774,6 +968,9 @@
         },
         {
           "$ref": "#/definitions/aggsDataMultiple"
+        },
+        {
+          "$ref": "#/definitions/aggsDataMultipleCategories"
         }
       ]
     },

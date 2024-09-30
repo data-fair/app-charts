@@ -8,8 +8,8 @@ import { getSortStr, getColors } from '@/assets/utils'
 import useAppInfo from '@/composables/useAppInfo'
 import { orderBy } from 'natural-orderby'
 
-const { config, chart, datasetUrl, finalizedAt } = useAppInfo()
-const conceptFilters = useConceptFilters(reactiveSearchParams, config.datasets?.[0]?.id)
+const { config, dataset, chart, datasetUrl, finalizedAt } = useAppInfo()
+const conceptFilters = useConceptFilters(reactiveSearchParams, dataset?.id)
 
 if (chart.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
 else delete reactiveSearchParams.stacked
@@ -74,10 +74,15 @@ const baseParams = getParams()
 export const getData = (theme) => ({
   rowsBased: async () => {
     const fill = chart.area || (chart.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
-    const select = [chart.config.labelsField.key].concat(chart.config.valuesField || chart.config.valuesFields.map(v => v.key)).join(',')
+    const select = [chart.config.labelsField.key].concat(chart.config.valuesField || chart.config.valuesFields.map(v => v.key))
+    let categories
+    if (chart.config.categoriesField) {
+      select.push(chart.config.categoriesField)
+      categories = await ofetch(`${datasetUrl}/values/${chart.config.categoriesField}`)
+    }
     const params = {
       ...baseParams.value,
-      select,
+      select: select.join(','),
       size: chart.config.size,
       sort: getSortStr(chart.config),
       finalizedAt
@@ -94,13 +99,23 @@ export const getData = (theme) => ({
         fill
       }]
     } else {
-      const colors = getColors(chart.config.valuesFields.map(v => v.key) || labels)
+      const colors = getColors(categories || chart.config.valuesFields.map(v => v.key) || labels)
       if (chart.config.valuesField) {
-        datasets = [{
-          borderColor: labels.map(l => colors[l]),
-          backgroundColor: labels.map(l => colors[l]),
-          data: results.map(r => r[chart.config.valuesField] || undefined)
-        }]
+        if (categories) {
+          datasets = categories.map(category => ({
+            label: category,
+            borderColor: colors[category],
+            backgroundColor: colors[category],
+            fill,
+            data: results.map(r => (r[chart.config.categoriesField] === category && r[chart.config.valuesField]) || undefined)
+          }))
+        } else {
+          datasets = [{
+            borderColor: labels.map(l => colors[l]),
+            backgroundColor: labels.map(l => colors[l]),
+            data: results.map(r => r[chart.config.valuesField] || undefined)
+          }]
+        }
       } else {
         datasets = chart.config.valuesFields.map(field => ({
           label: field.title || field.key,
@@ -136,9 +151,12 @@ export const getData = (theme) => ({
       sort: getSortStr(chart.config),
       finalizedAt
     }
-    if (chart.config.valueCalc && chart.config.valueCalc.type === 'metric') {
-      params.metric = reactiveSearchParams.metric || chart.config.valueCalc.metric
-      params.metric_field = chart.config.valueCalc.field.key
+    if (chart.config.valueCalc?.type === 'metric' || chart.config.valuesCalc) {
+      params.metric = reactiveSearchParams.metric || chart.config.metric || chart.config.valueCalc.metric
+      params.metric_field = chart.config.valuesCalc?.[0]?.key || chart.config.valueCalc.field.key
+      if (chart.config.valuesCalc?.length > 1) {
+        params.extra_metrics = chart.config.valuesCalc.slice(1).map(v => v.key + ':' + chart.config.metric).join(',')
+      }
     }
     if (chart.config.groupsField) {
       params.field = params.field + ';' + chart.config.groupsField.key
@@ -177,12 +195,23 @@ export const getData = (theme) => ({
           }
         }
       } else {
-        const colors = getColors(labels)
-        datasets = [{
-          borderColor: labels.map(l => colors[l]),
-          backgroundColor: labels.map(l => colors[l]),
-          data: aggs.slice(0, chart.config.size).map(a => chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)
-        }]
+        if (chart?.config.type === 'aggsBasedCategories') {
+          const colors = getColors(chart.config.valuesCalc.map(v => v.key))
+          datasets = chart.config.valuesCalc.map((field, i) => ({
+            label: field.title || field.key,
+            borderColor: colors[field.key],
+            backgroundColor: colors[field.key],
+            fill,
+            data: aggs.map(a => i === 0 ? a.metric : a[field.key + '_' + chart.config.metric])
+          }))
+        } else {
+          const colors = getColors(labels)
+          datasets = [{
+            borderColor: labels.map(l => colors[l]),
+            backgroundColor: labels.map(l => colors[l]),
+            data: aggs.slice(0, chart.config.size).map(a => chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)
+          }]
+        }
       }
     }
     if (chart.type === 'paired-histogram') {

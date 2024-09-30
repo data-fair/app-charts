@@ -43,10 +43,10 @@ const options = computed(() => {
 
   options.scales = {
     x: {
-      stacked: chart.type === 'paired-histogram' || reactiveSearchParams.stacked === 'true'
+      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
     },
     y: {
-      stacked: chart.type === 'paired-histogram' || reactiveSearchParams.stacked === 'true'
+      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
     }
   }
   if ((chart?.config.groupBy && chart?.config.groupBy.type === 'date') || (chart?.config.labelsField && chart?.config.labelsField.format === 'date')) {
@@ -91,7 +91,7 @@ const options = computed(() => {
   return options
 })
 
-const data = computedAsync(getData(theme)[chart.config.type], null, loading)
+const data = computedAsync(getData(theme)[chart.config.type?.replace('Categories', '')], null, loading)
 </script>
 
 <template lang="html">
