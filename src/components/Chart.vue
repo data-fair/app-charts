@@ -44,7 +44,9 @@ const options = computed(() => {
       tooltip: {
         enabled: !config.disableTooltip,
         callbacks: {
-          label: context => context.dataset.label + ' : ' + context.parsed.y.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+          label: context => {
+            return (context.dataset.label ? context.dataset.label + ' : ' : '') + context.parsed.y.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+          }
         }
       }
     }
@@ -102,7 +104,12 @@ const options = computed(() => {
   }
   if (chart.type === 'pie') {
     ChartJS.register(ChartDataLabels)
-    options.layout = { padding: 48 }
+    if (config.title) {
+      options.plugins.title.padding = { top: 0, bottom: 48 }
+      options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
+    } else {
+      options.layout = { padding: 48 }
+    }
     options.scales.x.display = false
     options.scales.y.display = false
     options.plugins.datalabels = {
@@ -134,7 +141,9 @@ const options = computed(() => {
         const index = context.dataIndex
         return context.dataset.labels[index] + '\n' + value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
       }
-
+    }
+    options.plugins.tooltip.callbacks = {
+      label: context => context.parsed.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
     }
   }
 
