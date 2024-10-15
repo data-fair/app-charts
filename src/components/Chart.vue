@@ -7,6 +7,7 @@ import { computedAsync } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import dayjs from 'dayjs'
+import chroma from 'chroma-js'
 
 import { Line, Bar, Pie, Radar } from 'vue-chartjs'
 import {
@@ -14,6 +15,7 @@ import {
   BarElement, PointElement, ArcElement, LineElement,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler
 } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm'
 import 'dayjs/locale/fr'
 dayjs.locale('fr')
@@ -21,7 +23,7 @@ ChartJS.register(Title, Tooltip, Legend,
   BarElement, PointElement, ArcElement, LineElement,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler)
 
-const { config, chart, dynamicFilters, dynamicMetric } = useAppInfo()
+const { config, chart, dynamicMetric } = useAppInfo()
 const theme = useTheme()
 
 const loading = ref(false)
@@ -30,16 +32,24 @@ const options = computed(() => {
   const options = {
     maintainAspectRatio: false,
     responsive: true,
+    locale: 'fr',
     plugins: {
       legend: {
-        display: !!chart.config.colors
+        display: chart.type !== 'pie' && !!chart.config.colors
       },
       title: {
         display: !!config.title,
         text: config.title
+      },
+      tooltip: {
+        enabled: !config.disableTooltip,
+        callbacks: {
+          label: context => context.dataset.label + ' : ' + context.parsed.y.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+        }
       }
     }
   }
+  if (chart.cutout) options.cutout = chart.cutout + '%'
 
   options.scales = {
     x: {
@@ -59,6 +69,73 @@ const options = computed(() => {
     options.scales.y.ticks = {
       callback: v => v + ' %'
     }
+  } else if (config.unit && chart.type !== 'paired-histogram') {
+    if (chart.horizontal) {
+      options.scales.x.ticks = {
+        callback: v => v.toLocaleString('fr') + ' ' + config.unit
+      }
+    } else {
+      options.scales.y.ticks = {
+        callback: v => v.toLocaleString('fr') + ' ' + config.unit
+      }
+    }
+  }
+  if (chart.hideYAxis) {
+    options.scales[chart.horizontal ? 'y' : 'x'].grid = { display: false }
+    options.scales[chart.horizontal ? 'x' : 'y'].display = false
+    options.plugins.datalabels = {
+      anchor: 'end',
+      align: 'end',
+      labels: {
+        title: {
+          font: {
+            weight: 'bold'
+          }
+        }
+      },
+      formatter: function (value) {
+        return value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+      }
+    }
+    ChartJS.register(ChartDataLabels)
+    options.layout = { padding: chart.horizontal ? { right: 64 } : { top: 24 } }
+  }
+  if (chart.type === 'pie') {
+    ChartJS.register(ChartDataLabels)
+    options.layout = { padding: 48 }
+    options.scales.x.display = false
+    options.scales.y.display = false
+    options.plugins.datalabels = {
+      anchor: 'end',
+      align: 'end',
+      offset: 8,
+      labels: {
+        value: {
+          font: {
+            weight: 'bold',
+            size: 13
+          }
+        }
+      },
+      borderColor: function (context) {
+        return chroma(context.dataset.backgroundColor[context.dataIndex]).darken().hex()
+      },
+      backgroundColor: function (context) {
+        return context.dataset.backgroundColor[context.dataIndex]
+      },
+      textAlign: 'center',
+      color: function (context) {
+        return chroma(context.dataset.backgroundColor[context.dataIndex]).luminance() < 0.4 ? 'white' : 'black'
+      },
+      borderWidth: 1,
+      borderRadius: 4,
+      padding: { left: 8, right: 8, top: 4, bottom: 4 },
+      formatter: function (value, context) {
+        const index = context.dataIndex
+        return context.dataset.labels[index] + '\n' + value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+      }
+
+    }
   }
 
   if (chart.tension != null) {
@@ -69,13 +146,15 @@ const options = computed(() => {
     }
   }
 
-  if (chart.horizontal) options.indexAxis = 'y'
+  if (chart.horizontal) {
+    options.indexAxis = 'y'
+  }
 
   if (chart.type === 'paired-histogram') {
     options.indexAxis = 'y'
     options.scales.x = {
       ticks: {
-        callback: (v) => v < 0 ? -v : v
+        callback: (v) => (v < 0 ? -v : v).toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
       }
     }
     options.plugins.tooltip = {
@@ -83,10 +162,21 @@ const options = computed(() => {
         label: (c) => {
           const value = Number(c.raw)
           const positiveOnly = value < 0 ? -value : value
-          return `${c.dataset.label}: ${positiveOnly.toString()}`
+          return `${c.dataset.label}: ${positiveOnly.toLocaleString('fr')}` + (config.unit ? ' ' + config.unit : '')
         }
       }
     }
+  }
+  if (chart.type === 'radar') {
+    if (config.unit) {
+      options.scales = {
+        r: {
+          ticks: {
+            callback: v => v + ' ' + config.unit
+          }
+        }
+      }
+    } else delete options.scales
   }
   return options
 })
@@ -97,7 +187,7 @@ const data = computedAsync(getData(theme)[chart.config.type?.replace('Categories
 <template lang="html">
   <div style="display:flex;flex-direction:column;">
     <Actions
-      v-if="dynamicFilters || dynamicMetric || chart.config.dynamicSort || ['multi-bar', 'multi-line'].includes(chart.type)"
+      v-if="dynamicMetric || chart.config.dynamicSort || ['multi-bar', 'multi-line'].includes(chart.type)"
     />
     <div
       v-if="data"

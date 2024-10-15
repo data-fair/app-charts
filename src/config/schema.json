@@ -64,6 +64,9 @@
                 "categorizable": {
                   "const": "true"
                 },
+                "hideYAxis": {
+                  "$ref": "#/definitions/hideYAxis"
+                },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"
                 },
@@ -108,6 +111,9 @@
                   "const": "multi-bar",
                   "title": "Type de visualisation"
                 },
+                "hideYAxis": {
+                  "$ref": "#/definitions/hideYAxis"
+                },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"
                 },
@@ -151,6 +157,14 @@
                 "type": {
                   "const": "pie"
                 },
+                "cutout": {
+                  "type": "integer",
+                  "title": "Trou au milieu",
+                  "minimum": 0,
+                  "maximum": 80,
+                  "default": 0,
+                  "x-display": "slider"
+                },
                 "config": {
                   "$ref": "#/definitions/categories"
                 }
@@ -180,8 +194,27 @@
           "title": "Titre du graphique",
           "type": "string"
         },
-        "dynamicFilters": {
-          "$ref": "#/definitions/dynamicFilters"
+        "disableTooltip": {
+          "type": "boolean",
+          "title": "Désactiver l'infobulle",
+          "default": false
+        },
+        "labelsMaxWidth": {
+          "type": "integer",
+          "title": "Longueur maximum des libellés",
+          "minimum": 20,
+          "maximum": 60,
+          "default": 30,
+          "x-display": "slider"
+        },
+        "unit": {
+          "type": "string",
+          "title": "Unité"
+        },
+        "divider": {
+          "type": "number",
+          "title": "Diviseur",
+          "default": 1
         }
       }
     }
@@ -224,6 +257,11 @@
     "horizontal": {
       "type": "boolean",
       "title": "Affichage horizontal"
+    },
+    "hideYAxis": {
+      "type": "boolean",
+      "title": "Cacher l'axe Y",
+      "description": "Les valeurs apparaitront au au dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
     },
     "labelsField": {
       "type": "object",
@@ -1128,30 +1166,6 @@
           "$ref": "#/definitions/aggsCategories"
         }
       ]
-    },
-    "dynamicFilters": {
-      "title": "Filtres interactifs",
-      "description": "Ces filtres seront proposés à l'utilisateur sous forme de formulaire en haut du graphique",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["field"],
-        "additionalProperties": false,
-        "properties": {
-          "field": {
-            "type": "object",
-            "title": "Colonne de filtre",
-            "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
-            "x-itemTitle": "label",
-            "x-itemKey": "key"
-          },
-          "defaultValue": {
-            "type": "string",
-            "title": "Valeur par défaut",
-            "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true&qs={qsFilter}"
-          }
-        }
-      }
     },
     "filters": {
       "title": "Filtres prédéfinis",

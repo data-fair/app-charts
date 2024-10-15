@@ -1,10 +1,10 @@
 import { ofetch } from 'ofetch'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useDebounce } from '@vueuse/core'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
 import { filters2qs } from '@data-fair/lib/filters.js'
-import { getSortStr, getColors } from '@/assets/utils'
+import { getSortStr, getColors, splitString } from '@/assets/utils'
 import useAppInfo from '@/composables/useAppInfo'
 import { orderBy } from 'natural-orderby'
 
@@ -13,50 +13,6 @@ const conceptFilters = useConceptFilters(reactiveSearchParams, dataset?.id)
 
 if (chart.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
 else delete reactiveSearchParams.stacked
-
-export const filters = (config.dynamicFilters || []).map(filter => {
-  const key = filter.field.key
-  const paramKey = `_d_${config.datasets?.[0]?.id}_${key}_in`
-  const loading = ref(false)
-  const labels = filter.field['x-labels']
-  const items = ref((filter.field.enum || []).map(a => labels ? ({ title: labels[a], value: a }) : a))
-  const value = computed({
-    get () {
-      return reactiveSearchParams[paramKey] ? JSON.parse(`[${reactiveSearchParams[paramKey]}]`) : []
-    },
-    set (val) {
-      if (val.length) {
-        reactiveSearchParams[paramKey] = JSON.stringify(val).slice(1, -1)
-      } else delete reactiveSearchParams[paramKey]
-    }
-  })
-
-  let searchTimeout
-
-  return {
-    key,
-    label: filter.field.title || filter.field['x-originalName'] || key,
-    labels,
-    value,
-    loading,
-    items,
-    search: (search) => {
-      if (filter.field.enum) {
-        items.value = filter.field.enum.filter(a => !search.length || (labels ? labels[a] : a).toLowerCase().includes(search.toLowerCase())).map(a => labels ? ({ title: labels[a], value: a }) : a)
-        return
-      } else if (!search || search.length < 2) return
-      clearTimeout(searchTimeout)
-      searchTimeout = setTimeout(async () => {
-        loading.value = true
-        // TODO merge q from global search and filter search
-        const params = { ...getParams(key).value, size: 100, sort: key, finalizedAt, q: search, q_mode: 'complete' }
-        const results = await ofetch(`${datasetUrl}/values/${key}`, { params })
-        items.value = results.map(a => labels ? ({ title: labels[a], value: a }) : a)
-        loading.value = false
-      }, 500)
-    }
-  }
-})
 
 function getParams (ignoreField) {
   return useDebounce(computed(() => {
@@ -70,6 +26,7 @@ function getParams (ignoreField) {
 }
 
 const baseParams = getParams()
+const getValue = (value) => value != null ? value / config.divider : undefined
 
 let categories
 export const getData = (theme) => ({
@@ -95,7 +52,7 @@ export const getData = (theme) => ({
       datasets = [{
         borderColor: color,
         backgroundColor: color,
-        data: results.map(r => r[chart.config.valuesField] || undefined),
+        data: results.map(r => getValue(r[chart.config.valuesField])),
         fill
       }]
     } else {
@@ -107,13 +64,14 @@ export const getData = (theme) => ({
             borderColor: colors[category],
             backgroundColor: colors[category],
             fill,
-            data: results.map(r => (r[chart.config.categoriesField] === category && r[chart.config.valuesField]) || undefined)
+            data: results.map(r => (r[chart.config.categoriesField] === category && getValue(r[chart.config.valuesField])) || undefined)
           }))
         } else {
           datasets = [{
-            borderColor: labels.map(l => colors[l]),
+            labels,
+            borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
             backgroundColor: labels.map(l => colors[l]),
-            data: results.map(r => r[chart.config.valuesField] || undefined)
+            data: results.map(r => getValue(r[chart.config.valuesField]))
           }]
         }
       } else {
@@ -122,7 +80,7 @@ export const getData = (theme) => ({
           borderColor: colors[field.key],
           backgroundColor: colors[field.key],
           fill,
-          data: results.map(r => r[field.key] || undefined)
+          data: results.map(r => getValue(r[field.key]))
         }))
         if (chart.percentage) {
           for (const i in datasets[0].data) {
@@ -136,7 +94,7 @@ export const getData = (theme) => ({
       datasets[0].data = datasets[0].data.map(d => -d)
     }
     return {
-      labels,
+      labels: labels.map(l => splitString(config.labelsMaxWidth, l + '')),
       datasets
     }
   },
@@ -171,7 +129,7 @@ export const getData = (theme) => ({
       datasets = [{
         borderColor: color,
         backgroundColor: color,
-        data: aggs.slice(0, chart.config.size).map(a => chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total),
+        data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)),
         fill
       }]
     } else {
@@ -185,7 +143,7 @@ export const getData = (theme) => ({
           fill,
           data: aggs.slice(0, chart.config.size).map(a => {
             const val = a.aggs.find(ag => (ag.value + '') === label)
-            return val ? (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
+            return val ? getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
           })
         }))
         if (chart.percentage) {
@@ -202,14 +160,15 @@ export const getData = (theme) => ({
             borderColor: colors[field.key],
             backgroundColor: colors[field.key],
             fill,
-            data: aggs.map(a => i === 0 ? a.metric : a[field.key + '_' + chart.config.metric])
+            data: aggs.map(a => getValue(i === 0 ? a.metric : a[field.key + '_' + chart.config.metric]))
           }))
         } else {
           const colors = getColors(labels)
           datasets = [{
-            borderColor: labels.map(l => colors[l]),
+            labels,
+            borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
             backgroundColor: labels.map(l => colors[l]),
-            data: aggs.slice(0, chart.config.size).map(a => chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)
+            data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
           }]
         }
       }
@@ -218,7 +177,7 @@ export const getData = (theme) => ({
       datasets[0].data = datasets[0].data.map(d => -d)
     }
     return {
-      labels,
+      labels: labels.map(l => splitString(config.labelsMaxWidth, l + '')),
       datasets
     }
   }

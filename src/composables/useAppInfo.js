@@ -5,7 +5,6 @@ export default function useAppInfo () {
   if (!config) throw new Error('Il n\'y a pas de configuration définie')
   const dataset = config.datasets?.[0]
   if (!dataset) throw new Error('Veuillez sélectionner une source de données')
-  const dynamicFilters = (config.dynamicFilters && config.dynamicFilters.length) || undefined
   const chart = config.chart
   const dynamicMetric = chart.config.valueCalc && chart.config.valueCalc.dynamicMetric
 
@@ -14,7 +13,6 @@ export default function useAppInfo () {
     config,
     dataset,
     datasetUrl: dataset.href,
-    dynamicFilters,
     dynamicMetric,
     chart,
     finalizedAt: dataset.finalizedAt

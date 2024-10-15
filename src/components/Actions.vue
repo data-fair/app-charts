@@ -1,7 +1,6 @@
 <script setup>
 import useAppInfo from '@/composables/useAppInfo'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
-import { filters } from '../context.js'
 
 const { chart, dynamicMetric } = useAppInfo()
 if (dynamicMetric) reactiveSearchParams.metric = chart.config.valueCalc.metric
@@ -39,30 +38,6 @@ if (chart?.config.type?.replace('Categories', '') === 'rowsBased') {
 <template lang="html">
   <v-container>
     <v-row>
-      <v-col
-        v-for="(filter, i) in filters"
-        :key="i"
-        cols="12"
-        sm="6"
-        md="4"
-        class="pb-0"
-      >
-        <v-autocomplete
-          v-model="filter.value.value"
-          :dense="$vuetify.display.width < 960"
-          :loading="filter.loading.value"
-          :label="filter.label"
-          :items="filter.items.value"
-          placeholder="Saisissez une valeur"
-          hide-no-data
-          multiple
-          clearable
-          persistent-clear
-          variant="outlined"
-          density="compact"
-          @update:search="filter.search"
-        />
-      </v-col>
       <v-col
         v-if="dynamicMetric"
         cols="12"

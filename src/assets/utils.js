@@ -37,3 +37,21 @@ export function getColors (labels) {
     return colors
   } else return Object.assign({}, ...chart.config.colors.styles.map(s => ({ [s.value != null ? s.value : s.key]: s.color })))
 }
+
+// taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length
+export function splitString (n, str) {
+  const arr = str?.split(' ')
+  const result = []
+  let subStr = arr[0]
+  for (let i = 1; i < arr.length; i++) {
+    const word = arr[i]
+    if (subStr.length + word.length + 1 <= n) {
+      subStr = subStr + ' ' + word
+    } else {
+      result.push(subStr)
+      subStr = word
+    }
+  }
+  if (subStr.length) { result.push(subStr) }
+  return result
+}
