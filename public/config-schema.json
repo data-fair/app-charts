@@ -547,6 +547,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -1177,6 +1180,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -1681,6 +1687,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -2020,6 +2029,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -2558,6 +2570,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -2897,6 +2912,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -3420,6 +3438,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -3759,6 +3780,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -4234,6 +4258,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -4741,6 +4768,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -5080,6 +5110,9 @@
                                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                                   "x-itemTitle": "label",
                                   "x-itemKey": "key"
+                                },
+                                "interval": {
+                                  "const": ""
                                 }
                               }
                             },
@@ -5608,6 +5641,9 @@
               "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
               "x-itemTitle": "label",
               "x-itemKey": "key"
+            },
+            "interval": {
+              "const": ""
             }
           }
         },
@@ -6114,6 +6150,9 @@
                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                   "x-itemTitle": "label",
                   "x-itemKey": "key"
+                },
+                "interval": {
+                  "const": ""
                 }
               }
             },
@@ -6720,6 +6759,9 @@
                       "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                       "x-itemTitle": "label",
                       "x-itemKey": "key"
+                    },
+                    "interval": {
+                      "const": ""
                     }
                   }
                 },
@@ -7189,6 +7231,9 @@
                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                   "x-itemTitle": "label",
                   "x-itemKey": "key"
+                },
+                "interval": {
+                  "const": ""
                 }
               }
             },
@@ -7528,6 +7573,9 @@
                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                   "x-itemTitle": "label",
                   "x-itemKey": "key"
+                },
+                "interval": {
+                  "const": ""
                 }
               }
             },
@@ -8032,6 +8080,9 @@
                       "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                       "x-itemTitle": "label",
                       "x-itemKey": "key"
+                    },
+                    "interval": {
+                      "const": ""
                     }
                   }
                 },
@@ -8371,6 +8422,9 @@
                       "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                       "x-itemTitle": "label",
                       "x-itemKey": "key"
+                    },
+                    "interval": {
+                      "const": ""
                     }
                   }
                 },
@@ -8824,6 +8878,9 @@
                   "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                   "x-itemTitle": "label",
                   "x-itemKey": "key"
+                },
+                "interval": {
+                  "const": ""
                 }
               }
             },
@@ -9271,6 +9328,9 @@
                       "x-fromUrl": "{datasets.0.href}/schema?calculated=false",
                       "x-itemTitle": "label",
                       "x-itemKey": "key"
+                    },
+                    "interval": {
+                      "const": ""
                     }
                   }
                 },
