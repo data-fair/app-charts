@@ -35,7 +35,8 @@ const options = computed(() => {
     locale: 'fr',
     plugins: {
       legend: {
-        display: chart.type !== 'pie' && !!chart.config.colors
+        display: chart.type !== 'pie' && !!chart.config.colors &&
+        !(chart.config.groupBy?.type === 'value' && chart.config.groupBy.field?.key === chart.config.groupsField?.key)
       },
       title: {
         display: !!config.title,
@@ -96,7 +97,7 @@ const options = computed(() => {
         }
       },
       formatter: function (value) {
-        return value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+        return value ? value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '') : ''
       }
     }
     ChartJS.register(ChartDataLabels)
