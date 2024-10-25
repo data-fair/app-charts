@@ -1845,6 +1845,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -1955,7 +1960,7 @@
                                 "styles": {
                                   "title": "Couleurs et ordre",
                                   "type": "array",
-                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                                   "x-display": "list",
                                   "x-itemTitle": "value",
                                   "x-itemKey": "value",
@@ -2728,6 +2733,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -2838,7 +2848,7 @@
                                 "styles": {
                                   "title": "Couleurs et ordre",
                                   "type": "array",
-                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                                   "x-display": "list",
                                   "x-itemTitle": "value",
                                   "x-itemKey": "value",
@@ -3596,6 +3606,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -3706,7 +3721,7 @@
                                 "styles": {
                                   "title": "Couleurs et ordre",
                                   "type": "array",
-                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                                   "x-display": "list",
                                   "x-itemTitle": "value",
                                   "x-itemKey": "value",
@@ -4411,6 +4426,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "colors": {
                           "type": "object",
                           "title": "Couleurs",
@@ -4485,7 +4505,7 @@
                                 "styles": {
                                   "title": "Couleurs et ordre",
                                   "type": "array",
-                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                                   "x-display": "list",
                                   "x-itemTitle": "value",
                                   "x-itemKey": "value",
@@ -4926,6 +4946,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -5036,7 +5061,7 @@
                                 "styles": {
                                   "title": "Couleurs et ordre",
                                   "type": "array",
-                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                                   "x-display": "list",
                                   "x-itemTitle": "value",
                                   "x-itemKey": "value",
@@ -7389,6 +7414,11 @@
             }
           ]
         },
+        "missingLabel": {
+          "type": "string",
+          "title": "Libellé de groupe non renseigné",
+          "default": "Non renseigné"
+        },
         "sortBy": {
           "type": "string",
           "title": "Trier par",
@@ -7499,7 +7529,7 @@
                 "styles": {
                   "title": "Couleurs et ordre",
                   "type": "array",
-                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                   "x-display": "list",
                   "x-itemTitle": "value",
                   "x-itemKey": "value",
@@ -8238,6 +8268,11 @@
                 }
               ]
             },
+            "missingLabel": {
+              "type": "string",
+              "title": "Libellé de groupe non renseigné",
+              "default": "Non renseigné"
+            },
             "sortBy": {
               "type": "string",
               "title": "Trier par",
@@ -8348,7 +8383,7 @@
                     "styles": {
                       "title": "Couleurs et ordre",
                       "type": "array",
-                      "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}",
+                      "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupsField.key}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                       "x-display": "list",
                       "x-itemTitle": "value",
                       "x-itemKey": "value",
@@ -9031,6 +9066,11 @@
             }
           ]
         },
+        "missingLabel": {
+          "type": "string",
+          "title": "Libellé de groupe non renseigné",
+          "default": "Non renseigné"
+        },
         "colors": {
           "type": "object",
           "title": "Couleurs",
@@ -9105,7 +9145,7 @@
                 "styles": {
                   "title": "Couleurs et ordre",
                   "type": "array",
-                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                   "x-display": "list",
                   "x-itemTitle": "value",
                   "x-itemKey": "value",
@@ -9481,6 +9521,11 @@
                 }
               ]
             },
+            "missingLabel": {
+              "type": "string",
+              "title": "Libellé de groupe non renseigné",
+              "default": "Non renseigné"
+            },
             "colors": {
               "type": "object",
               "title": "Couleurs",
@@ -9555,7 +9600,7 @@
                     "styles": {
                       "title": "Couleurs et ordre",
                       "type": "array",
-                      "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}",
+                      "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
                       "x-display": "list",
                       "x-itemTitle": "value",
                       "x-itemKey": "value",

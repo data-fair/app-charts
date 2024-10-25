@@ -109,6 +109,7 @@ export const getData = (theme) => ({
       sort: getSortStr(chart.config),
       finalizedAt
     }
+    if (chart.config.missingLabel) params.missing = chart.config.missingLabel
     if (chart.config.valueCalc?.type === 'metric' || chart.config.valuesCalc) {
       params.metric = reactiveSearchParams.metric || chart.config.metric || chart.config.valueCalc.metric
       params.metric_field = chart.config.valuesCalc?.[0]?.key || chart.config.valueCalc.field.key
