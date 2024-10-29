@@ -140,7 +140,14 @@ const options = computed(() => {
       padding: { left: 8, right: 8, top: 4, bottom: 4 },
       formatter: function (value, context) {
         const index = context.dataIndex
-        return context.dataset.labels[index] + '\n' + value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+        const lines = [context.dataset.labels[index]]
+        if (['values', 'both'].includes(chart.display)) {
+          lines.push(value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : ''))
+        }
+        if (['percentages', 'both'].includes(chart.display)) {
+          lines.push(context.dataset.percentages[index].toLocaleString('fr') + ' %')
+        }
+        return lines.join('\n')
       }
     }
     options.plugins.tooltip.callbacks = {

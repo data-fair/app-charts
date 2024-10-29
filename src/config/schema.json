@@ -169,6 +169,25 @@
                   "default": 0,
                   "x-display": "slider"
                 },
+                "display": {
+                  "type": "string",
+                  "title": "Affichage",
+                  "oneOf": [
+                    {
+                      "const": "values",
+                      "title": "Valeurs"
+                    },
+                    {
+                      "const": "percentages",
+                      "title": "Pourcentages"
+                    },
+                    {
+                      "const": "both",
+                      "title": "Valeurs et pourcentages"
+                    }
+                  ],
+                  "default": "values"
+                },
                 "config": {
                   "$ref": "#/definitions/categories"
                 }

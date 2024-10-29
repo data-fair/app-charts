@@ -56,7 +56,7 @@ export const getData = (theme) => ({
         fill
       }]
     } else {
-      const colors = getColors(categories || chart.config.valuesFields.map(v => v.key) || labels)
+      const colors = getColors(categories || chart.config.valuesFields?.map(v => v.key) || labels)
       if (chart.config.valuesField) {
         if (categories) {
           datasets = categories.map(category => ({
@@ -73,6 +73,10 @@ export const getData = (theme) => ({
             backgroundColor: labels.map(l => colors[l]),
             data: results.map(r => getValue(r[chart.config.valuesField]))
           }]
+          if (['percentages', 'both'].includes(chart.display)) {
+            const sum = datasets[0].data.reduce((acc, d) => acc + (d || 0), 0)
+            datasets[0].percentages = datasets[0].data.map(d => d * 100 / sum)
+          }
         }
       } else {
         datasets = chart.config.valuesFields.map(field => ({
@@ -154,7 +158,7 @@ export const getData = (theme) => ({
           }
         }
       } else {
-        if (chart?.config.type === 'aggsBasedCategories') {
+        if (chart.config.type === 'aggsBasedCategories') {
           const colors = getColors(chart.config.valuesCalc.map(v => v.key))
           datasets = chart.config.valuesCalc.map((field, i) => ({
             label: field.title || field.key,
@@ -171,6 +175,10 @@ export const getData = (theme) => ({
             backgroundColor: labels.map(l => colors[l]),
             data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
           }]
+          if (['percentages', 'both'].includes(chart.display)) {
+            const sum = datasets[0].data.reduce((acc, d) => acc + (d || 0), 0)
+            datasets[0].percentages = datasets[0].data.map(d => d * 100 / sum)
+          }
         }
       }
     }
