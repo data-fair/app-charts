@@ -1453,6 +1453,10 @@
                   "type": "boolean",
                   "title": "Désactiver la bascule d'empilement"
                 },
+                "yAxisStartsZero": {
+                  "type": "boolean",
+                  "title": "Commencer à partir de 0 pour l'axe des ordonnées"
+                },
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",

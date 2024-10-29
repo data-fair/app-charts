@@ -15,7 +15,7 @@ export function getSortStr (config) {
   const sortOrder = reactiveSearchParams['sort-order'] || config.sortOrder
   const sortBy = reactiveSearchParams['sort-by'] || config.sortBy
   let str = (sortOrder === 'desc' ? '-' : '')
-  if (sortBy === 'value') str += (config.valuesField || (config.valuesFields && config.valuesFields[0].key) || (config.valueCalc && config.valueCalc.type))
+  if (sortBy === 'value') str += (config.valuesField || config.valuesFields?.[0]?.key || config.valueCalc?.type || (config.metric && 'metric'))
   else if (sortBy === 'label') str += (config.labelsField ? config.labelsField.key : (config.groupBy && config.groupBy.field.key))
   else if (sortBy === 'row') str += '_i'
   return str
