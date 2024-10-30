@@ -196,6 +196,7 @@ export const getData = (theme) => ({
       ...baseParams.value,
       size: 0,
       field: chart.config.valuesLabel,
+      sort: chart.config.valuesLabel,
       agg_size: chart.config.size,
       metric: reactiveSearchParams.metric || chart.config.metric,
       metric_field: chart.config.labelsValues?.[0],
