@@ -174,6 +174,10 @@
                   "title": "Affichage",
                   "oneOf": [
                     {
+                      "const": "label",
+                      "title": "Libellé uniquement"
+                    },
+                    {
                       "const": "values",
                       "title": "Valeurs"
                     },
@@ -250,24 +254,17 @@
           "title": "Jeu de données",
           "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
           "type": "object",
-          "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&{context.datasetFilter}&sort=createdAt:-1",
+          "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title,schema&{context.datasetFilter}&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href",
           "additionalProperties": false,
           "properties": {
-            "href": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            },
-            "id": {
-              "type": "string"
-            },
-            "finalizedAt": {
-              "type": "string"
-            }
+            "href": { "type": "string" },
+            "title": { "type": "string" },
+            "id": { "type": "string" },
+            "schema": { "type": "array" },
+            "finalizedAt": { "type": "string" }
           }
         }
       ]
@@ -314,6 +311,25 @@
       "items": {
         "type": "object"
       }
+    },
+    "labelsValues": {
+      "type": "array",
+      "title": "Colonnes de libellés",
+      "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valuesLabel": {
+      "type": "string",
+      "title": "Colonne de libellé des séries",
+      "description": "Choisissez une colonne des libellés des différentes séries.",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
     },
     "rowSort": {
       "type": "string",
@@ -723,6 +739,11 @@
         "valueCalc": {
           "$ref": "#/definitions/valueCalc"
         },
+        "missingLabel": {
+          "type": "string",
+          "title": "Libellé de groupe non renseigné",
+          "default": "Non renseigné"
+        },
         "sortBy": {
           "$ref": "#/definitions/aggSort"
         },
@@ -770,6 +791,11 @@
         },
         "valuesFields": {
           "$ref": "#/definitions/valuesFields"
+        },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
         },
         "sortBy": {
           "$ref": "#/definitions/rowSort"
@@ -938,6 +964,11 @@
         "valuesCalc": {
           "$ref": "#/definitions/valuesFields"
         },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
+        },
         "metric": {
           "type": "string",
           "title": "Type de calcul",
@@ -1027,6 +1058,111 @@
         }
       }
     },
+    "aggsDataMultipleLabels": {
+      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+      "type": "object",
+      "required": ["labelsValues", "valuesLabel"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "aggsBasedLabels"
+        },
+        "labelsValues": {
+          "$ref": "#/definitions/labelsValues"
+        },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
+        },
+        "valuesLabel": {
+          "$ref": "#/definitions/valuesLabel"
+        },
+        "missingLabel": {
+          "type": "string",
+          "title": "Libellé de groupe non renseigné",
+          "default": "Non renseigné"
+        },
+        "metric": {
+          "type": "string",
+          "title": "Type de calcul",
+          "default": "sum",
+          "oneOf": [
+            {
+              "const": "avg",
+              "title": "Moyenne"
+            },
+            {
+              "const": "min",
+              "title": "Valeur minimale"
+            },
+            {
+              "const": "max",
+              "title": "Valeur maximale"
+            },
+            {
+              "const": "sum",
+              "title": "Somme"
+            }
+          ]
+        },
+        "dynamicMetric": {
+          "type": "boolean",
+          "title": "Choix dynamique de la métrique",
+          "default": false
+        },
+        "size": {
+          "$ref": "#/definitions/size"
+        },
+        "colors": {
+          "type": "object",
+          "title": "Couleurs",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/colorPalette"
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": ["type", "styles"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "styles": {
+                  "title": "Couleurs et ordre",
+                  "type": "array",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                  "x-display": "list",
+                  "x-itemTitle": "value",
+                  "x-itemKey": "value",
+                  "x-itemsProp": "aggs",
+                  "items": {
+                    "type": "object",
+                    "required": ["value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "x-display": "hidden"
+                      },
+                      "color": {
+                        "$ref": "#/definitions/hexColor"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    },
     "multipleDataType": {
       "type": "object",
       "title": "Préparation des données",
@@ -1040,6 +1176,9 @@
         },
         {
           "$ref": "#/definitions/aggsDataMultipleCategories"
+        },
+        {
+          "$ref": "#/definitions/aggsDataMultipleLabels"
         }
       ]
     },
@@ -1190,6 +1329,72 @@
         }
       }
     },
+    "aggsLabels": {
+      "title": "Sommes calculées sur plusieurs colonnes",
+      "type": "object",
+      "required": ["valuesFields"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "aggsLabels"
+        },
+        "valuesFields": {
+          "$ref": "#/definitions/valuesFields"
+        },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
+        },
+        "colors": {
+          "type": "object",
+          "title": "Couleurs",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/colorPalette"
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": ["type", "styles"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "styles": {
+                  "title": "Couleurs et ordre",
+                  "type": "array",
+                  "x-fromData": "parent.parent.parent.value.valuesFields",
+                  "x-display": "list",
+                  "x-itemTitle": "value",
+                  "x-itemKey": "value",
+                  "x-itemsProp": "aggs",
+                  "items": {
+                    "type": "object",
+                    "required": ["value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "x-display": "hidden"
+                      },
+                      "color": {
+                        "$ref": "#/definitions/hexColor"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    },
     "categories": {
       "type": "object",
       "title": "Préparation des données",
@@ -1200,6 +1405,9 @@
         },
         {
           "$ref": "#/definitions/aggsCategories"
+        },
+        {
+          "$ref": "#/definitions/aggsLabels"
         }
       ]
     },

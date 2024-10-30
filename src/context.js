@@ -8,7 +8,7 @@ import { getSortStr, getColors, splitString } from '@/assets/utils'
 import useAppInfo from '@/composables/useAppInfo'
 import { orderBy } from 'natural-orderby'
 
-const { config, dataset, chart, datasetUrl, finalizedAt } = useAppInfo()
+const { config, dataset, chart, datasetUrl, fields, finalizedAt } = useAppInfo()
 const conceptFilters = useConceptFilters(reactiveSearchParams, dataset?.id)
 
 if (chart.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
@@ -80,7 +80,7 @@ export const getData = (theme) => ({
         }
       } else {
         datasets = chart.config.valuesFields.map(field => ({
-          label: field.title || field.key,
+          label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
           borderColor: colors[field.key],
           backgroundColor: colors[field.key],
           fill,
@@ -161,7 +161,7 @@ export const getData = (theme) => ({
         if (chart.config.type === 'aggsBasedCategories') {
           const colors = getColors(chart.config.valuesCalc.map(v => v.key))
           datasets = chart.config.valuesCalc.map((field, i) => ({
-            label: field.title || field.key,
+            label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
             borderColor: colors[field.key],
             backgroundColor: colors[field.key],
             fill,
@@ -185,6 +185,69 @@ export const getData = (theme) => ({
     if (chart.type === 'paired-histogram') {
       datasets[0].data = datasets[0].data.map(d => -d)
     }
+    return {
+      labels: labels.map(l => splitString(config.labelsMaxWidth, l + '')),
+      datasets
+    }
+  },
+  aggsBasedLabels: async () => {
+    const fill = chart.area || (chart.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
+    const params = {
+      ...baseParams.value,
+      size: 0,
+      field: chart.config.valuesLabel,
+      agg_size: chart.config.size,
+      metric: reactiveSearchParams.metric || chart.config.metric,
+      metric_field: chart.config.labelsValues?.[0],
+      finalizedAt
+    }
+    if (chart.config.missingLabel) params.missing = chart.config.missingLabel
+    if (chart.config.labelsValues?.length > 1) {
+      params.extra_metrics = chart.config.labelsValues.slice(1).map(v => v + ':' + chart.config.metric).join(',')
+    }
+    const { aggs } = await ofetch(`${datasetUrl}/values_agg`, { params })
+    const labels = chart.config.labelsValues.map(l => fields?.[l].title || l).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
+    const series = aggs.slice(0, chart.config.size)
+    series.forEach(s => {
+      s.label = fields?.[chart.config.valuesLabel]['x-labels'] ? fields[chart.config.valuesLabel]['x-labels'][s.value] : s.value
+    })
+    const colors = getColors(series.map(s => s.label))
+    const datasets = series.map((serie, i) => ({
+      label: serie.label,
+      borderColor: colors[serie.label],
+      backgroundColor: colors[serie.label],
+      fill,
+      data: chart.config.labelsValues.map((l, i) => getValue(!i ? serie.metric : serie[l + '_' + params.metric]))
+    }))
+
+    return {
+      labels: labels.map(l => splitString(config.labelsMaxWidth, l + '')),
+      datasets
+    }
+  },
+  aggsLabels: async () => {
+    const params = {
+      ...baseParams.value,
+      metric: 'sum',
+      finalizedAt
+    }
+    const metrics = await Promise.all(chart.config.valuesFields?.map(v => {
+      params.field = v.key
+      return ofetch(`${datasetUrl}/metric_agg`, { params })
+    }))
+    const labels = chart.config.valuesFields.map(f => f.title || f.key).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
+    const colors = getColors(labels)
+    const datasets = [{
+      labels,
+      borderColor: 'white',
+      backgroundColor: labels.map(l => colors[l]),
+      data: metrics.map(a => getValue(a.metric))
+    }]
+    if (['percentages', 'both'].includes(chart.display)) {
+      const sum = datasets[0].data.reduce((acc, d) => acc + (d || 0), 0)
+      datasets[0].percentages = datasets[0].data.map(d => d * 100 / sum)
+    }
+
     return {
       labels: labels.map(l => splitString(config.labelsMaxWidth, l + '')),
       datasets

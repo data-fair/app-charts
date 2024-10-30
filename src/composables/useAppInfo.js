@@ -7,6 +7,7 @@ export default function useAppInfo () {
   if (!dataset) throw new Error('Veuillez sélectionner une source de données')
   const chart = config.chart
   const dynamicMetric = chart.config.valueCalc && chart.config.valueCalc.dynamicMetric
+  const fields = dataset.schema?.reduce((a, b) => { a[b.key] = b; return a }, {})
 
   return {
     application,
@@ -15,6 +16,7 @@ export default function useAppInfo () {
     datasetUrl: dataset.href,
     dynamicMetric,
     chart,
+    fields,
     finalizedAt: dataset.finalizedAt
   }
 }

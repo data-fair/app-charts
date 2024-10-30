@@ -46,7 +46,7 @@ const options = computed(() => {
         enabled: !config.disableTooltip,
         callbacks: {
           label: context => {
-            return (context.dataset.label ? context.dataset.label + ' : ' : '') + context.parsed.y.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+            return (context.dataset.label ? context.dataset.label + ' : ' : '') + (context.parsed.y || context.parsed.r).toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
           }
         }
       }

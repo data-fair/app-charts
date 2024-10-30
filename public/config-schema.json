@@ -15,7 +15,7 @@
               "title": "Jeu de données",
               "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
               "type": "object",
-              "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&{context.datasetFilter}&sort=createdAt:-1",
+              "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title,schema&{context.datasetFilter}&sort=createdAt:-1",
               "x-itemsProp": "results",
               "x-itemTitle": "title",
               "x-itemKey": "href",
@@ -29,6 +29,9 @@
                 },
                 "id": {
                   "type": "string"
+                },
+                "schema": {
+                  "type": "array"
                 },
                 "finalizedAt": {
                   "type": "string"
@@ -698,6 +701,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -1331,6 +1339,11 @@
                             }
                           ]
                         },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -1502,6 +1515,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -2131,6 +2149,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "metric": {
                           "type": "string",
                           "title": "Type de calcul",
@@ -2287,6 +2310,191 @@
                                     "additionalProperties": false,
                                     "properties": {
                                       "key": {
+                                        "type": "string",
+                                        "x-display": "hidden"
+                                      },
+                                      "color": {
+                                        "type": "string",
+                                        "title": "Couleur",
+                                        "format": "hexcolor",
+                                        "default": "#828282",
+                                        "x-display": "color-picker"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "default": {
+                            "type": "palette",
+                            "name": "Accent",
+                            "offset": 0
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+                      "type": "object",
+                      "required": [
+                        "labelsValues",
+                        "valuesLabel"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "const": "aggsBasedLabels"
+                        },
+                        "labelsValues": {
+                          "type": "array",
+                          "title": "Colonnes de libellés",
+                          "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
+                        "valuesLabel": {
+                          "type": "string",
+                          "title": "Colonne de libellé des séries",
+                          "description": "Choisissez une colonne des libellés des différentes séries.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key"
+                        },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
+                        "metric": {
+                          "type": "string",
+                          "title": "Type de calcul",
+                          "default": "sum",
+                          "oneOf": [
+                            {
+                              "const": "avg",
+                              "title": "Moyenne"
+                            },
+                            {
+                              "const": "min",
+                              "title": "Valeur minimale"
+                            },
+                            {
+                              "const": "max",
+                              "title": "Valeur maximale"
+                            },
+                            {
+                              "const": "sum",
+                              "title": "Somme"
+                            }
+                          ]
+                        },
+                        "dynamicMetric": {
+                          "type": "boolean",
+                          "title": "Choix dynamique de la métrique",
+                          "default": false
+                        },
+                        "size": {
+                          "type": "integer",
+                          "title": "Nombre maximal d'élements",
+                          "default": 10
+                        },
+                        "colors": {
+                          "type": "object",
+                          "title": "Couleurs",
+                          "oneOf": [
+                            {
+                              "title": "Palette précalculée",
+                              "required": [
+                                "type",
+                                "name"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "palette"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "Accent",
+                                      "title": "Accent"
+                                    },
+                                    {
+                                      "const": "Dark2",
+                                      "title": "Foncé"
+                                    },
+                                    {
+                                      "const": "Paired",
+                                      "title": "Paires"
+                                    },
+                                    {
+                                      "const": "Set1",
+                                      "title": "Ensemble 1"
+                                    },
+                                    {
+                                      "const": "Set2",
+                                      "title": "Ensemble 2"
+                                    },
+                                    {
+                                      "const": "Set3",
+                                      "title": "Ensemble 3"
+                                    },
+                                    {
+                                      "const": "Pastel1",
+                                      "title": "Pastel 1"
+                                    },
+                                    {
+                                      "const": "Pastel2",
+                                      "title": "Pastel 2"
+                                    }
+                                  ],
+                                  "default": "Accent"
+                                },
+                                "offset": {
+                                  "type": "integer",
+                                  "title": "Décallage",
+                                  "default": 0
+                                }
+                              }
+                            },
+                            {
+                              "title": "Palette personnalisée",
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "manual"
+                                },
+                                "styles": {
+                                  "title": "Couleurs et ordre",
+                                  "type": "array",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-display": "list",
+                                  "x-itemTitle": "value",
+                                  "x-itemKey": "value",
+                                  "x-itemsProp": "aggs",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "value": {
                                         "type": "string",
                                         "x-display": "hidden"
                                       },
@@ -2390,6 +2598,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -3019,6 +3232,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "metric": {
                           "type": "string",
                           "title": "Type de calcul",
@@ -3175,6 +3393,191 @@
                                     "additionalProperties": false,
                                     "properties": {
                                       "key": {
+                                        "type": "string",
+                                        "x-display": "hidden"
+                                      },
+                                      "color": {
+                                        "type": "string",
+                                        "title": "Couleur",
+                                        "format": "hexcolor",
+                                        "default": "#828282",
+                                        "x-display": "color-picker"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "default": {
+                            "type": "palette",
+                            "name": "Accent",
+                            "offset": 0
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+                      "type": "object",
+                      "required": [
+                        "labelsValues",
+                        "valuesLabel"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "const": "aggsBasedLabels"
+                        },
+                        "labelsValues": {
+                          "type": "array",
+                          "title": "Colonnes de libellés",
+                          "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
+                        "valuesLabel": {
+                          "type": "string",
+                          "title": "Colonne de libellé des séries",
+                          "description": "Choisissez une colonne des libellés des différentes séries.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key"
+                        },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
+                        "metric": {
+                          "type": "string",
+                          "title": "Type de calcul",
+                          "default": "sum",
+                          "oneOf": [
+                            {
+                              "const": "avg",
+                              "title": "Moyenne"
+                            },
+                            {
+                              "const": "min",
+                              "title": "Valeur minimale"
+                            },
+                            {
+                              "const": "max",
+                              "title": "Valeur maximale"
+                            },
+                            {
+                              "const": "sum",
+                              "title": "Somme"
+                            }
+                          ]
+                        },
+                        "dynamicMetric": {
+                          "type": "boolean",
+                          "title": "Choix dynamique de la métrique",
+                          "default": false
+                        },
+                        "size": {
+                          "type": "integer",
+                          "title": "Nombre maximal d'élements",
+                          "default": 10
+                        },
+                        "colors": {
+                          "type": "object",
+                          "title": "Couleurs",
+                          "oneOf": [
+                            {
+                              "title": "Palette précalculée",
+                              "required": [
+                                "type",
+                                "name"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "palette"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "Accent",
+                                      "title": "Accent"
+                                    },
+                                    {
+                                      "const": "Dark2",
+                                      "title": "Foncé"
+                                    },
+                                    {
+                                      "const": "Paired",
+                                      "title": "Paires"
+                                    },
+                                    {
+                                      "const": "Set1",
+                                      "title": "Ensemble 1"
+                                    },
+                                    {
+                                      "const": "Set2",
+                                      "title": "Ensemble 2"
+                                    },
+                                    {
+                                      "const": "Set3",
+                                      "title": "Ensemble 3"
+                                    },
+                                    {
+                                      "const": "Pastel1",
+                                      "title": "Pastel 1"
+                                    },
+                                    {
+                                      "const": "Pastel2",
+                                      "title": "Pastel 2"
+                                    }
+                                  ],
+                                  "default": "Accent"
+                                },
+                                "offset": {
+                                  "type": "integer",
+                                  "title": "Décallage",
+                                  "default": 0
+                                }
+                              }
+                            },
+                            {
+                              "title": "Palette personnalisée",
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "manual"
+                                },
+                                "styles": {
+                                  "title": "Couleurs et ordre",
+                                  "type": "array",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-display": "list",
+                                  "x-itemTitle": "value",
+                                  "x-itemKey": "value",
+                                  "x-itemsProp": "aggs",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "value": {
                                         "type": "string",
                                         "x-display": "hidden"
                                       },
@@ -3263,6 +3666,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "sortBy": {
                           "type": "string",
                           "title": "Trier par",
@@ -3892,6 +4300,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "metric": {
                           "type": "string",
                           "title": "Type de calcul",
@@ -4071,6 +4484,191 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+                      "type": "object",
+                      "required": [
+                        "labelsValues",
+                        "valuesLabel"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "const": "aggsBasedLabels"
+                        },
+                        "labelsValues": {
+                          "type": "array",
+                          "title": "Colonnes de libellés",
+                          "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
+                        "valuesLabel": {
+                          "type": "string",
+                          "title": "Colonne de libellé des séries",
+                          "description": "Choisissez une colonne des libellés des différentes séries.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key"
+                        },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
+                        "metric": {
+                          "type": "string",
+                          "title": "Type de calcul",
+                          "default": "sum",
+                          "oneOf": [
+                            {
+                              "const": "avg",
+                              "title": "Moyenne"
+                            },
+                            {
+                              "const": "min",
+                              "title": "Valeur minimale"
+                            },
+                            {
+                              "const": "max",
+                              "title": "Valeur maximale"
+                            },
+                            {
+                              "const": "sum",
+                              "title": "Somme"
+                            }
+                          ]
+                        },
+                        "dynamicMetric": {
+                          "type": "boolean",
+                          "title": "Choix dynamique de la métrique",
+                          "default": false
+                        },
+                        "size": {
+                          "type": "integer",
+                          "title": "Nombre maximal d'élements",
+                          "default": 10
+                        },
+                        "colors": {
+                          "type": "object",
+                          "title": "Couleurs",
+                          "oneOf": [
+                            {
+                              "title": "Palette précalculée",
+                              "required": [
+                                "type",
+                                "name"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "palette"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "Accent",
+                                      "title": "Accent"
+                                    },
+                                    {
+                                      "const": "Dark2",
+                                      "title": "Foncé"
+                                    },
+                                    {
+                                      "const": "Paired",
+                                      "title": "Paires"
+                                    },
+                                    {
+                                      "const": "Set1",
+                                      "title": "Ensemble 1"
+                                    },
+                                    {
+                                      "const": "Set2",
+                                      "title": "Ensemble 2"
+                                    },
+                                    {
+                                      "const": "Set3",
+                                      "title": "Ensemble 3"
+                                    },
+                                    {
+                                      "const": "Pastel1",
+                                      "title": "Pastel 1"
+                                    },
+                                    {
+                                      "const": "Pastel2",
+                                      "title": "Pastel 2"
+                                    }
+                                  ],
+                                  "default": "Accent"
+                                },
+                                "offset": {
+                                  "type": "integer",
+                                  "title": "Décallage",
+                                  "default": 0
+                                }
+                              }
+                            },
+                            {
+                              "title": "Palette personnalisée",
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "manual"
+                                },
+                                "styles": {
+                                  "title": "Couleurs et ordre",
+                                  "type": "array",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-display": "list",
+                                  "x-itemTitle": "value",
+                                  "x-itemKey": "value",
+                                  "x-itemsProp": "aggs",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "value": {
+                                        "type": "string",
+                                        "x-display": "hidden"
+                                      },
+                                      "color": {
+                                        "type": "string",
+                                        "title": "Couleur",
+                                        "format": "hexcolor",
+                                        "default": "#828282",
+                                        "x-display": "color-picker"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "default": {
+                            "type": "palette",
+                            "name": "Accent",
+                            "offset": 0
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -4095,6 +4693,10 @@
                   "type": "string",
                   "title": "Affichage",
                   "oneOf": [
+                    {
+                      "const": "label",
+                      "title": "Libellé uniquement"
+                    },
                     {
                       "const": "values",
                       "title": "Valeurs"
@@ -4564,6 +5166,146 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "Sommes calculées sur plusieurs colonnes",
+                      "type": "object",
+                      "required": [
+                        "valuesFields"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "const": "aggsLabels"
+                        },
+                        "valuesFields": {
+                          "type": "array",
+                          "title": "Colonnes de valeurs",
+                          "description": "Choisissez les colonnes de valeurs numériques à présenter dans le graphique.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key",
+                          "minItems": 1,
+                          "maxItems": 12,
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
+                        "colors": {
+                          "type": "object",
+                          "title": "Couleurs",
+                          "oneOf": [
+                            {
+                              "title": "Palette précalculée",
+                              "required": [
+                                "type",
+                                "name"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "palette"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "Accent",
+                                      "title": "Accent"
+                                    },
+                                    {
+                                      "const": "Dark2",
+                                      "title": "Foncé"
+                                    },
+                                    {
+                                      "const": "Paired",
+                                      "title": "Paires"
+                                    },
+                                    {
+                                      "const": "Set1",
+                                      "title": "Ensemble 1"
+                                    },
+                                    {
+                                      "const": "Set2",
+                                      "title": "Ensemble 2"
+                                    },
+                                    {
+                                      "const": "Set3",
+                                      "title": "Ensemble 3"
+                                    },
+                                    {
+                                      "const": "Pastel1",
+                                      "title": "Pastel 1"
+                                    },
+                                    {
+                                      "const": "Pastel2",
+                                      "title": "Pastel 2"
+                                    }
+                                  ],
+                                  "default": "Accent"
+                                },
+                                "offset": {
+                                  "type": "integer",
+                                  "title": "Décallage",
+                                  "default": 0
+                                }
+                              }
+                            },
+                            {
+                              "title": "Palette personnalisée",
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "manual"
+                                },
+                                "styles": {
+                                  "title": "Couleurs et ordre",
+                                  "type": "array",
+                                  "x-fromData": "parent.parent.parent.value.valuesFields",
+                                  "x-display": "list",
+                                  "x-itemTitle": "value",
+                                  "x-itemKey": "value",
+                                  "x-itemsProp": "aggs",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "value": {
+                                        "type": "string",
+                                        "x-display": "hidden"
+                                      },
+                                      "color": {
+                                        "type": "string",
+                                        "title": "Couleur",
+                                        "format": "hexcolor",
+                                        "default": "#828282",
+                                        "x-display": "color-picker"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "default": {
+                            "type": "palette",
+                            "name": "Accent",
+                            "offset": 0
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -4621,6 +5363,11 @@
                           "items": {
                             "type": "object"
                           }
+                        },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -5251,6 +5998,11 @@
                             "type": "object"
                           }
                         },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
                         "metric": {
                           "type": "string",
                           "title": "Type de calcul",
@@ -5430,6 +6182,191 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+                      "type": "object",
+                      "required": [
+                        "labelsValues",
+                        "valuesLabel"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "const": "aggsBasedLabels"
+                        },
+                        "labelsValues": {
+                          "type": "array",
+                          "title": "Colonnes de libellés",
+                          "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "removeFromLabels": {
+                          "title": "Texte à retirer des libellés",
+                          "type": "string",
+                          "default": ""
+                        },
+                        "valuesLabel": {
+                          "type": "string",
+                          "title": "Colonne de libellé des séries",
+                          "description": "Choisissez une colonne des libellés des différentes séries.",
+                          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+                          "x-itemTitle": "label",
+                          "x-itemKey": "key"
+                        },
+                        "missingLabel": {
+                          "type": "string",
+                          "title": "Libellé de groupe non renseigné",
+                          "default": "Non renseigné"
+                        },
+                        "metric": {
+                          "type": "string",
+                          "title": "Type de calcul",
+                          "default": "sum",
+                          "oneOf": [
+                            {
+                              "const": "avg",
+                              "title": "Moyenne"
+                            },
+                            {
+                              "const": "min",
+                              "title": "Valeur minimale"
+                            },
+                            {
+                              "const": "max",
+                              "title": "Valeur maximale"
+                            },
+                            {
+                              "const": "sum",
+                              "title": "Somme"
+                            }
+                          ]
+                        },
+                        "dynamicMetric": {
+                          "type": "boolean",
+                          "title": "Choix dynamique de la métrique",
+                          "default": false
+                        },
+                        "size": {
+                          "type": "integer",
+                          "title": "Nombre maximal d'élements",
+                          "default": 10
+                        },
+                        "colors": {
+                          "type": "object",
+                          "title": "Couleurs",
+                          "oneOf": [
+                            {
+                              "title": "Palette précalculée",
+                              "required": [
+                                "type",
+                                "name"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "palette"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "oneOf": [
+                                    {
+                                      "const": "Accent",
+                                      "title": "Accent"
+                                    },
+                                    {
+                                      "const": "Dark2",
+                                      "title": "Foncé"
+                                    },
+                                    {
+                                      "const": "Paired",
+                                      "title": "Paires"
+                                    },
+                                    {
+                                      "const": "Set1",
+                                      "title": "Ensemble 1"
+                                    },
+                                    {
+                                      "const": "Set2",
+                                      "title": "Ensemble 2"
+                                    },
+                                    {
+                                      "const": "Set3",
+                                      "title": "Ensemble 3"
+                                    },
+                                    {
+                                      "const": "Pastel1",
+                                      "title": "Pastel 1"
+                                    },
+                                    {
+                                      "const": "Pastel2",
+                                      "title": "Pastel 2"
+                                    }
+                                  ],
+                                  "default": "Accent"
+                                },
+                                "offset": {
+                                  "type": "integer",
+                                  "title": "Décallage",
+                                  "default": 0
+                                }
+                              }
+                            },
+                            {
+                              "title": "Palette personnalisée",
+                              "required": [
+                                "type",
+                                "styles"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "type": {
+                                  "const": "manual"
+                                },
+                                "styles": {
+                                  "title": "Couleurs et ordre",
+                                  "type": "array",
+                                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                                  "x-display": "list",
+                                  "x-itemTitle": "value",
+                                  "x-itemKey": "value",
+                                  "x-itemsProp": "aggs",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "value": {
+                                        "type": "string",
+                                        "x-display": "hidden"
+                                      },
+                                      "color": {
+                                        "type": "string",
+                                        "title": "Couleur",
+                                        "format": "hexcolor",
+                                        "default": "#828282",
+                                        "x-display": "color-picker"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "default": {
+                            "type": "palette",
+                            "name": "Accent",
+                            "offset": 0
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -5479,7 +6416,7 @@
           "title": "Jeu de données",
           "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
           "type": "object",
-          "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title&{context.datasetFilter}&sort=createdAt:-1",
+          "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title,schema&{context.datasetFilter}&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href",
@@ -5493,6 +6430,9 @@
             },
             "id": {
               "type": "string"
+            },
+            "schema": {
+              "type": "array"
             },
             "finalizedAt": {
               "type": "string"
@@ -5543,6 +6483,25 @@
       "items": {
         "type": "object"
       }
+    },
+    "labelsValues": {
+      "type": "array",
+      "title": "Colonnes de libellés",
+      "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valuesLabel": {
+      "type": "string",
+      "title": "Colonne de libellé des séries",
+      "description": "Choisissez une colonne des libellés des différentes séries.",
+      "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+      "x-itemTitle": "label",
+      "x-itemKey": "key"
     },
     "rowSort": {
       "type": "string",
@@ -6349,6 +7308,11 @@
             }
           ]
         },
+        "missingLabel": {
+          "type": "string",
+          "title": "Libellé de groupe non renseigné",
+          "default": "Non renseigné"
+        },
         "sortBy": {
           "type": "string",
           "title": "Trier par",
@@ -6958,6 +7922,11 @@
                 }
               ]
             },
+            "missingLabel": {
+              "type": "string",
+              "title": "Libellé de groupe non renseigné",
+              "default": "Non renseigné"
+            },
             "sortBy": {
               "type": "string",
               "title": "Trier par",
@@ -7089,6 +8058,11 @@
           "items": {
             "type": "object"
           }
+        },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
         },
         "sortBy": {
           "type": "string",
@@ -7719,6 +8693,11 @@
             "type": "object"
           }
         },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
+        },
         "metric": {
           "type": "string",
           "title": "Type de calcul",
@@ -7899,6 +8878,191 @@
         }
       }
     },
+    "aggsDataMultipleLabels": {
+      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+      "type": "object",
+      "required": [
+        "labelsValues",
+        "valuesLabel"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "aggsBasedLabels"
+        },
+        "labelsValues": {
+          "type": "array",
+          "title": "Colonnes de libellés",
+          "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+          "x-itemTitle": "label",
+          "x-itemKey": "key",
+          "items": {
+            "type": "string"
+          }
+        },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
+        },
+        "valuesLabel": {
+          "type": "string",
+          "title": "Colonne de libellé des séries",
+          "description": "Choisissez une colonne des libellés des différentes séries.",
+          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+          "x-itemTitle": "label",
+          "x-itemKey": "key"
+        },
+        "missingLabel": {
+          "type": "string",
+          "title": "Libellé de groupe non renseigné",
+          "default": "Non renseigné"
+        },
+        "metric": {
+          "type": "string",
+          "title": "Type de calcul",
+          "default": "sum",
+          "oneOf": [
+            {
+              "const": "avg",
+              "title": "Moyenne"
+            },
+            {
+              "const": "min",
+              "title": "Valeur minimale"
+            },
+            {
+              "const": "max",
+              "title": "Valeur maximale"
+            },
+            {
+              "const": "sum",
+              "title": "Somme"
+            }
+          ]
+        },
+        "dynamicMetric": {
+          "type": "boolean",
+          "title": "Choix dynamique de la métrique",
+          "default": false
+        },
+        "size": {
+          "type": "integer",
+          "title": "Nombre maximal d'élements",
+          "default": 10
+        },
+        "colors": {
+          "type": "object",
+          "title": "Couleurs",
+          "oneOf": [
+            {
+              "title": "Palette précalculée",
+              "required": [
+                "type",
+                "name"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "palette"
+                },
+                "name": {
+                  "type": "string",
+                  "oneOf": [
+                    {
+                      "const": "Accent",
+                      "title": "Accent"
+                    },
+                    {
+                      "const": "Dark2",
+                      "title": "Foncé"
+                    },
+                    {
+                      "const": "Paired",
+                      "title": "Paires"
+                    },
+                    {
+                      "const": "Set1",
+                      "title": "Ensemble 1"
+                    },
+                    {
+                      "const": "Set2",
+                      "title": "Ensemble 2"
+                    },
+                    {
+                      "const": "Set3",
+                      "title": "Ensemble 3"
+                    },
+                    {
+                      "const": "Pastel1",
+                      "title": "Pastel 1"
+                    },
+                    {
+                      "const": "Pastel2",
+                      "title": "Pastel 2"
+                    }
+                  ],
+                  "default": "Accent"
+                },
+                "offset": {
+                  "type": "integer",
+                  "title": "Décallage",
+                  "default": 0
+                }
+              }
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": [
+                "type",
+                "styles"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "styles": {
+                  "title": "Couleurs et ordre",
+                  "type": "array",
+                  "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                  "x-display": "list",
+                  "x-itemTitle": "value",
+                  "x-itemKey": "value",
+                  "x-itemsProp": "aggs",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "x-display": "hidden"
+                      },
+                      "color": {
+                        "type": "string",
+                        "title": "Couleur",
+                        "format": "hexcolor",
+                        "default": "#828282",
+                        "x-display": "color-picker"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    },
     "multipleDataType": {
       "type": "object",
       "title": "Préparation des données",
@@ -7943,6 +9107,11 @@
               "items": {
                 "type": "object"
               }
+            },
+            "removeFromLabels": {
+              "title": "Texte à retirer des libellés",
+              "type": "string",
+              "default": ""
             },
             "sortBy": {
               "type": "string",
@@ -8573,6 +9742,11 @@
                 "type": "object"
               }
             },
+            "removeFromLabels": {
+              "title": "Texte à retirer des libellés",
+              "type": "string",
+              "default": ""
+            },
             "metric": {
               "type": "string",
               "title": "Type de calcul",
@@ -8729,6 +9903,191 @@
                         "additionalProperties": false,
                         "properties": {
                           "key": {
+                            "type": "string",
+                            "x-display": "hidden"
+                          },
+                          "color": {
+                            "type": "string",
+                            "title": "Couleur",
+                            "format": "hexcolor",
+                            "default": "#828282",
+                            "x-display": "color-picker"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "default": {
+                "type": "palette",
+                "name": "Accent",
+                "offset": 0
+              }
+            }
+          }
+        },
+        {
+          "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+          "type": "object",
+          "required": [
+            "labelsValues",
+            "valuesLabel"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "aggsBasedLabels"
+            },
+            "labelsValues": {
+              "type": "array",
+              "title": "Colonnes de libellés",
+              "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+              "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+              "x-itemTitle": "label",
+              "x-itemKey": "key",
+              "items": {
+                "type": "string"
+              }
+            },
+            "removeFromLabels": {
+              "title": "Texte à retirer des libellés",
+              "type": "string",
+              "default": ""
+            },
+            "valuesLabel": {
+              "type": "string",
+              "title": "Colonne de libellé des séries",
+              "description": "Choisissez une colonne des libellés des différentes séries.",
+              "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+              "x-itemTitle": "label",
+              "x-itemKey": "key"
+            },
+            "missingLabel": {
+              "type": "string",
+              "title": "Libellé de groupe non renseigné",
+              "default": "Non renseigné"
+            },
+            "metric": {
+              "type": "string",
+              "title": "Type de calcul",
+              "default": "sum",
+              "oneOf": [
+                {
+                  "const": "avg",
+                  "title": "Moyenne"
+                },
+                {
+                  "const": "min",
+                  "title": "Valeur minimale"
+                },
+                {
+                  "const": "max",
+                  "title": "Valeur maximale"
+                },
+                {
+                  "const": "sum",
+                  "title": "Somme"
+                }
+              ]
+            },
+            "dynamicMetric": {
+              "type": "boolean",
+              "title": "Choix dynamique de la métrique",
+              "default": false
+            },
+            "size": {
+              "type": "integer",
+              "title": "Nombre maximal d'élements",
+              "default": 10
+            },
+            "colors": {
+              "type": "object",
+              "title": "Couleurs",
+              "oneOf": [
+                {
+                  "title": "Palette précalculée",
+                  "required": [
+                    "type",
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "palette"
+                    },
+                    "name": {
+                      "type": "string",
+                      "oneOf": [
+                        {
+                          "const": "Accent",
+                          "title": "Accent"
+                        },
+                        {
+                          "const": "Dark2",
+                          "title": "Foncé"
+                        },
+                        {
+                          "const": "Paired",
+                          "title": "Paires"
+                        },
+                        {
+                          "const": "Set1",
+                          "title": "Ensemble 1"
+                        },
+                        {
+                          "const": "Set2",
+                          "title": "Ensemble 2"
+                        },
+                        {
+                          "const": "Set3",
+                          "title": "Ensemble 3"
+                        },
+                        {
+                          "const": "Pastel1",
+                          "title": "Pastel 1"
+                        },
+                        {
+                          "const": "Pastel2",
+                          "title": "Pastel 2"
+                        }
+                      ],
+                      "default": "Accent"
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "title": "Décallage",
+                      "default": 0
+                    }
+                  }
+                },
+                {
+                  "title": "Palette personnalisée",
+                  "required": [
+                    "type",
+                    "styles"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "manual"
+                    },
+                    "styles": {
+                      "title": "Couleurs et ordre",
+                      "type": "array",
+                      "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.valuesLabel}&agg_size=12&size=0&qs={qsFilter}",
+                      "x-display": "list",
+                      "x-itemTitle": "value",
+                      "x-itemKey": "value",
+                      "x-itemsProp": "aggs",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "value": {
                             "type": "string",
                             "x-display": "hidden"
                           },
@@ -9205,6 +10564,146 @@
         }
       }
     },
+    "aggsLabels": {
+      "title": "Sommes calculées sur plusieurs colonnes",
+      "type": "object",
+      "required": [
+        "valuesFields"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "aggsLabels"
+        },
+        "valuesFields": {
+          "type": "array",
+          "title": "Colonnes de valeurs",
+          "description": "Choisissez les colonnes de valeurs numériques à présenter dans le graphique.",
+          "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+          "x-itemTitle": "label",
+          "x-itemKey": "key",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "type": "object"
+          }
+        },
+        "removeFromLabels": {
+          "title": "Texte à retirer des libellés",
+          "type": "string",
+          "default": ""
+        },
+        "colors": {
+          "type": "object",
+          "title": "Couleurs",
+          "oneOf": [
+            {
+              "title": "Palette précalculée",
+              "required": [
+                "type",
+                "name"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "palette"
+                },
+                "name": {
+                  "type": "string",
+                  "oneOf": [
+                    {
+                      "const": "Accent",
+                      "title": "Accent"
+                    },
+                    {
+                      "const": "Dark2",
+                      "title": "Foncé"
+                    },
+                    {
+                      "const": "Paired",
+                      "title": "Paires"
+                    },
+                    {
+                      "const": "Set1",
+                      "title": "Ensemble 1"
+                    },
+                    {
+                      "const": "Set2",
+                      "title": "Ensemble 2"
+                    },
+                    {
+                      "const": "Set3",
+                      "title": "Ensemble 3"
+                    },
+                    {
+                      "const": "Pastel1",
+                      "title": "Pastel 1"
+                    },
+                    {
+                      "const": "Pastel2",
+                      "title": "Pastel 2"
+                    }
+                  ],
+                  "default": "Accent"
+                },
+                "offset": {
+                  "type": "integer",
+                  "title": "Décallage",
+                  "default": 0
+                }
+              }
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": [
+                "type",
+                "styles"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "styles": {
+                  "title": "Couleurs et ordre",
+                  "type": "array",
+                  "x-fromData": "parent.parent.parent.value.valuesFields",
+                  "x-display": "list",
+                  "x-itemTitle": "value",
+                  "x-itemKey": "value",
+                  "x-itemsProp": "aggs",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "x-display": "hidden"
+                      },
+                      "color": {
+                        "type": "string",
+                        "title": "Couleur",
+                        "format": "hexcolor",
+                        "default": "#828282",
+                        "x-display": "color-picker"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    },
     "categories": {
       "type": "object",
       "title": "Préparation des données",
@@ -9624,6 +11123,146 @@
                       "title": "Couleurs et ordre",
                       "type": "array",
                       "x-fromUrl": "{datasets.0.href}/values_agg?field={parent.parent.parent.value.groupBy.field.key}&interval={parent.parent.parent.value.groupBy.interval}&agg_size=12&size=0&qs={qsFilter}&missing={parent.parent.parent.value.missingLabel}",
+                      "x-display": "list",
+                      "x-itemTitle": "value",
+                      "x-itemKey": "value",
+                      "x-itemsProp": "aggs",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "x-display": "hidden"
+                          },
+                          "color": {
+                            "type": "string",
+                            "title": "Couleur",
+                            "format": "hexcolor",
+                            "default": "#828282",
+                            "x-display": "color-picker"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "default": {
+                "type": "palette",
+                "name": "Accent",
+                "offset": 0
+              }
+            }
+          }
+        },
+        {
+          "title": "Sommes calculées sur plusieurs colonnes",
+          "type": "object",
+          "required": [
+            "valuesFields"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "aggsLabels"
+            },
+            "valuesFields": {
+              "type": "array",
+              "title": "Colonnes de valeurs",
+              "description": "Choisissez les colonnes de valeurs numériques à présenter dans le graphique.",
+              "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
+              "x-itemTitle": "label",
+              "x-itemKey": "key",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object"
+              }
+            },
+            "removeFromLabels": {
+              "title": "Texte à retirer des libellés",
+              "type": "string",
+              "default": ""
+            },
+            "colors": {
+              "type": "object",
+              "title": "Couleurs",
+              "oneOf": [
+                {
+                  "title": "Palette précalculée",
+                  "required": [
+                    "type",
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "palette"
+                    },
+                    "name": {
+                      "type": "string",
+                      "oneOf": [
+                        {
+                          "const": "Accent",
+                          "title": "Accent"
+                        },
+                        {
+                          "const": "Dark2",
+                          "title": "Foncé"
+                        },
+                        {
+                          "const": "Paired",
+                          "title": "Paires"
+                        },
+                        {
+                          "const": "Set1",
+                          "title": "Ensemble 1"
+                        },
+                        {
+                          "const": "Set2",
+                          "title": "Ensemble 2"
+                        },
+                        {
+                          "const": "Set3",
+                          "title": "Ensemble 3"
+                        },
+                        {
+                          "const": "Pastel1",
+                          "title": "Pastel 1"
+                        },
+                        {
+                          "const": "Pastel2",
+                          "title": "Pastel 2"
+                        }
+                      ],
+                      "default": "Accent"
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "title": "Décallage",
+                      "default": 0
+                    }
+                  }
+                },
+                {
+                  "title": "Palette personnalisée",
+                  "required": [
+                    "type",
+                    "styles"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "manual"
+                    },
+                    "styles": {
+                      "title": "Couleurs et ordre",
+                      "type": "array",
+                      "x-fromData": "parent.parent.parent.value.valuesFields",
                       "x-display": "list",
                       "x-itemTitle": "value",
                       "x-itemKey": "value",
