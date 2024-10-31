@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useDebounce } from '@vueuse/core'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import { useConceptFilters } from '@data-fair/lib/vue/concept-filters.js'
@@ -28,6 +28,9 @@ function getParams (ignoreField) {
 const baseParams = getParams()
 const getValue = (value) => value != null ? value / config.divider : undefined
 
+export const displayError = ref(false)
+export const errorMessage = ref('')
+
 let categories
 export const getData = (theme) => ({
   rowsBased: async () => {
@@ -35,16 +38,22 @@ export const getData = (theme) => ({
     const select = [chart.config.labelsField.key].concat(chart.config.valuesField || chart.config.valuesFields.map(v => v.key))
     const params = {
       ...baseParams.value,
-      size: chart.config.size,
+      size: chart.type === 'pie' ? 10000 : chart.config.size,
       sort: getSortStr(chart.config),
       finalizedAt
     }
     if (chart.config.categoriesField) {
       select.push(chart.config.categoriesField)
-      categories = categories || await ofetch(`${datasetUrl}/values/${chart.config.categoriesField}`)
+      categories = categories || await ofetch(`${datasetUrl}/values/${chart.config.categoriesField}`).catch(e => {
+        errorMessage.value = e.status + ' - ' + e.data
+        displayError.value = true
+      })
     }
     params.select = select.join(',')
-    const { results } = await ofetch(`${datasetUrl}/lines`, { params })
+    const { results } = await ofetch(`${datasetUrl}/lines`, { params }).catch(e => {
+      errorMessage.value = e.status + ' - ' + e.data
+      displayError.value = true
+    })
     const labels = results.map(r => r[chart.config.labelsField.key])
     let datasets
     if (chart.config.color) {
@@ -56,6 +65,7 @@ export const getData = (theme) => ({
         fill
       }]
     } else {
+      if (chart.type === 'pie' && results.length > chart.config.size) labels.push('Autre')
       const colors = getColors(categories || chart.config.valuesFields?.map(v => v.key) || labels)
       if (chart.config.valuesField) {
         if (categories) {
@@ -71,8 +81,12 @@ export const getData = (theme) => ({
             labels,
             borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
             backgroundColor: labels.map(l => colors[l]),
-            data: results.map(r => getValue(r[chart.config.valuesField]))
+            data: results.slice(0, chart.config.size).map(r => getValue(r[chart.config.valuesField]))
           }]
+          if (chart.type === 'pie' && results.length > chart.config.size) {
+            const otherSum = results.slice(chart.config.size).reduce((acc, r) => acc + r[chart.config.valuesField], 0)
+            datasets[0].data.push(getValue(otherSum))
+          }
           if (['percentages', 'both'].includes(chart.display)) {
             const sum = datasets[0].data.reduce((acc, d) => acc + (d || 0), 0)
             datasets[0].percentages = datasets[0].data.map(d => d * 100 / sum)
@@ -109,7 +123,7 @@ export const getData = (theme) => ({
       size: 0,
       field: chart.config.groupBy.field.key,
       interval: chart.config.groupBy.interval || 'value',
-      agg_size: chart.config.size,
+      agg_size: chart.type === 'pie' ? 1000 : chart.config.size,
       sort: getSortStr(chart.config),
       finalizedAt
     }
@@ -126,7 +140,10 @@ export const getData = (theme) => ({
       params.agg_size = params.agg_size + ';12'
       params.sort = params.sort + ';-' + chart.config.valueCalc.type
     }
-    const { aggs } = await ofetch(`${datasetUrl}/values_agg`, { params })
+    const { aggs } = await ofetch(`${datasetUrl}/values_agg`, { params }).catch(e => {
+      errorMessage.value = e.status + ' - ' + e.data
+      displayError.value = true
+    })
     const labels = aggs.slice(0, chart.config.size).map(a => chart.config.groupBy.field['x-labels'] ? chart.config.groupBy.field['x-labels'][a.value] : a.value)
     let datasets
     if (chart.config.color) {
@@ -168,6 +185,7 @@ export const getData = (theme) => ({
             data: aggs.map(a => getValue(i === 0 ? a.metric : a[field.key + '_' + chart.config.metric]))
           }))
         } else {
+          if (chart.type === 'pie' && aggs.length > chart.config.size) labels.push('Autre')
           const colors = getColors(labels)
           datasets = [{
             labels,
@@ -175,6 +193,10 @@ export const getData = (theme) => ({
             backgroundColor: labels.map(l => colors[l]),
             data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
           }]
+          if (chart.type === 'pie' && aggs.length > chart.config.size) {
+            const otherSum = aggs.slice(chart.config.size).reduce((acc, a) => acc + (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total), 0)
+            datasets[0].data.push(getValue(otherSum))
+          }
           if (['percentages', 'both'].includes(chart.display)) {
             const sum = datasets[0].data.reduce((acc, d) => acc + (d || 0), 0)
             datasets[0].percentages = datasets[0].data.map(d => d * 100 / sum)
@@ -206,7 +228,10 @@ export const getData = (theme) => ({
     if (chart.config.labelsValues?.length > 1) {
       params.extra_metrics = chart.config.labelsValues.slice(1).map(v => v + ':' + chart.config.metric).join(',')
     }
-    const { aggs } = await ofetch(`${datasetUrl}/values_agg`, { params })
+    const { aggs } = await ofetch(`${datasetUrl}/values_agg`, { params }).catch(e => {
+      errorMessage.value = e.status + ' - ' + e.data
+      displayError.value = true
+    })
     const labels = chart.config.labelsValues.map(l => fields?.[l].title || l).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
     const series = aggs.slice(0, chart.config.size)
     series.forEach(s => {
@@ -234,7 +259,10 @@ export const getData = (theme) => ({
     }
     const metrics = await Promise.all(chart.config.valuesFields?.map(v => {
       params.field = v.key
-      return ofetch(`${datasetUrl}/metric_agg`, { params })
+      return ofetch(`${datasetUrl}/metric_agg`, { params }).catch(e => {
+        errorMessage.value = e.status + ' - ' + e.data
+        displayError.value = true
+      })
     }))
     const labels = chart.config.valuesFields.map(f => f.title || f.key).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
     const colors = getColors(labels)

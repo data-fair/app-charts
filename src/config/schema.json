@@ -192,6 +192,10 @@
                   ],
                   "default": "values"
                 },
+                "sumInTitle": {
+                  "type": "boolean",
+                  "title": "Afficher la somme dans le titre"
+                },
                 "config": {
                   "$ref": "#/definitions/categories"
                 }
@@ -741,8 +745,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "sortBy": {
           "$ref": "#/definitions/aggSort"
@@ -888,8 +892,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "sortBy": {
           "$ref": "#/definitions/aggSort"
@@ -1080,8 +1084,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "metric": {
           "type": "string",
@@ -1204,6 +1208,8 @@
         "valuesField": {
           "$ref": "#/definitions/valuesField"
         },
+        "sortBy": { "const": "value" },
+        "sortOrder": { "const": "desc" },
         "colors": {
           "type": "object",
           "title": "Couleurs",
@@ -1277,8 +1283,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "colors": {
           "type": "object",

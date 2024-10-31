@@ -703,8 +703,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -1341,8 +1341,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -1869,8 +1869,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -2372,8 +2372,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "metric": {
                           "type": "string",
@@ -2952,8 +2952,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -3455,8 +3455,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "metric": {
                           "type": "string",
@@ -4020,8 +4020,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -4523,8 +4523,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "metric": {
                           "type": "string",
@@ -4712,6 +4712,10 @@
                   ],
                   "default": "values"
                 },
+                "sumInTitle": {
+                  "type": "boolean",
+                  "title": "Afficher la somme dans le titre"
+                },
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
@@ -4751,6 +4755,12 @@
                           "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
                           "x-itemTitle": "label",
                           "x-itemKey": "key"
+                        },
+                        "sortBy": {
+                          "const": "value"
+                        },
+                        "sortOrder": {
+                          "const": "desc"
                         },
                         "colors": {
                           "type": "object",
@@ -5053,8 +5063,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "colors": {
                           "type": "object",
@@ -5718,8 +5728,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "sortBy": {
                           "type": "string",
@@ -6221,8 +6231,8 @@
                         },
                         "missingLabel": {
                           "type": "string",
-                          "title": "Libellé de groupe non renseigné",
-                          "default": "Non renseigné"
+                          "title": "Groupe pour les éléments non renseignés",
+                          "default": ""
                         },
                         "metric": {
                           "type": "string",
@@ -7310,8 +7320,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "sortBy": {
           "type": "string",
@@ -7924,8 +7934,8 @@
             },
             "missingLabel": {
               "type": "string",
-              "title": "Libellé de groupe non renseigné",
-              "default": "Non renseigné"
+              "title": "Groupe pour les éléments non renseignés",
+              "default": ""
             },
             "sortBy": {
               "type": "string",
@@ -8413,8 +8423,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "sortBy": {
           "type": "string",
@@ -8916,8 +8926,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "metric": {
           "type": "string",
@@ -9462,8 +9472,8 @@
             },
             "missingLabel": {
               "type": "string",
-              "title": "Libellé de groupe non renseigné",
-              "default": "Non renseigné"
+              "title": "Groupe pour les éléments non renseignés",
+              "default": ""
             },
             "sortBy": {
               "type": "string",
@@ -9965,8 +9975,8 @@
             },
             "missingLabel": {
               "type": "string",
-              "title": "Libellé de groupe non renseigné",
-              "default": "Non renseigné"
+              "title": "Groupe pour les éléments non renseignés",
+              "default": ""
             },
             "metric": {
               "type": "string",
@@ -10148,6 +10158,12 @@
           "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
           "x-itemTitle": "label",
           "x-itemKey": "key"
+        },
+        "sortBy": {
+          "const": "value"
+        },
+        "sortOrder": {
+          "const": "desc"
         },
         "colors": {
           "type": "object",
@@ -10450,8 +10466,8 @@
         },
         "missingLabel": {
           "type": "string",
-          "title": "Libellé de groupe non renseigné",
-          "default": "Non renseigné"
+          "title": "Groupe pour les éléments non renseignés",
+          "default": ""
         },
         "colors": {
           "type": "object",
@@ -10743,6 +10759,12 @@
               "x-fromUrl": "{datasets.0.href}/schema?calculated=false&type=integer,number",
               "x-itemTitle": "label",
               "x-itemKey": "key"
+            },
+            "sortBy": {
+              "const": "value"
+            },
+            "sortOrder": {
+              "const": "desc"
             },
             "colors": {
               "type": "object",
@@ -11045,8 +11067,8 @@
             },
             "missingLabel": {
               "type": "string",
-              "title": "Libellé de groupe non renseigné",
-              "default": "Non renseigné"
+              "title": "Groupe pour les éléments non renseignés",
+              "default": ""
             },
             "colors": {
               "type": "object",

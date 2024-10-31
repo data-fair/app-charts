@@ -1,5 +1,6 @@
 <script setup>
 import Chart from './components/Chart.vue'
+import SnackBar from './components/SnackBar.vue'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import useAppInfo from './composables/useAppInfo'
 import { ofetch } from 'ofetch'
@@ -22,8 +23,8 @@ try {
 </script>
 
 <template>
-  <Chart
-    v-if="!configureError"
-    style="height:100%"
-  />
+  <template v-if="!configureError">
+    <Chart style="height:100%" />
+    <snack-bar />
+  </template>
 </template>

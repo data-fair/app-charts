@@ -105,12 +105,21 @@ const options = computed(() => {
   }
   if (chart.type === 'pie') {
     ChartJS.register(ChartDataLabels)
-    if (config.title) {
+    if (config.title || chart.sumInTitle) {
       options.plugins.title.padding = { top: 0, bottom: 48 }
       options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
     } else {
       options.layout = { padding: 48 }
     }
+    if (chart.sumInTitle) {
+      options.plugins.title.display = true
+      options.plugins.title.text = function (context) {
+        const data = context.chart.data.datasets[0].data
+        const sum = data.reduce((acc, v) => acc + v, 0)
+        return (config.title ? config.title + ' : ' : '') + sum.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+      }
+    }
+
     options.scales.x.display = false
     options.scales.y.display = false
     options.plugins.datalabels = {
