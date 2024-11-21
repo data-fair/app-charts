@@ -1,6 +1,7 @@
 <script setup>
 import useAppInfo from '@/composables/useAppInfo'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import { mdiSortVariant, mdiSortReverseVariant } from '@mdi/js'
 
 const { chart, dynamicMetric } = useAppInfo()
 if (dynamicMetric) reactiveSearchParams.metric = chart.config.valueCalc.metric
@@ -75,11 +76,11 @@ if (chart?.config.type?.replace('Categories', '') === 'rowsBased') {
               density="compact"
             >
               <v-btn
-                icon="mdi-sort-ascending"
+                :icon="mdiSortReverseVariant"
                 value="asc"
               />
               <v-btn
-                icon="mdi-sort-descending"
+                :icon="mdiSortVariant"
                 value="desc"
               />
             </v-btn-toggle>
@@ -105,3 +106,9 @@ if (chart?.config.type?.replace('Categories', '') === 'rowsBased') {
     </v-row>
   </v-container>
 </template>
+
+<style>
+.v-icon {
+transform:rotate(270deg);
+}
+</style>

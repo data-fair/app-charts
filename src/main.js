@@ -4,10 +4,18 @@ import { createVuetify } from 'vuetify'
 import { defaultOptions } from '@data-fair/lib/vuetify.js'
 import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
 import App from './App.vue'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 const app = createApp(App)
 
-// @ts-ignore
-app.use(createVuetify(defaultOptions(reactiveSearchParams)))
+const options = defaultOptions(reactiveSearchParams)
+options.icons = {
+  defaultSet: 'mdi',
+  aliases,
+  sets: {
+    mdi
+  }
+}
+app.use(createVuetify(options))
 
 app.mount('#app')
