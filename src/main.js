@@ -1,8 +1,8 @@
 import 'vuetify/styles'
 import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
-import { defaultOptions } from '@data-fair/lib/vuetify.js'
-import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import { defaultOptions } from '@data-fair/lib-vuetify'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import App from './App.vue'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 

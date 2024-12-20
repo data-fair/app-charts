@@ -24,7 +24,9 @@
     "README.md"
   ],
   "dependencies": {
-    "@data-fair/lib": "^0.45.0",
+    "@data-fair/lib-utils": "^1.2.0",
+    "@data-fair/lib-vue": "^1.13.12",
+    "@data-fair/lib-vuetify": "^1.6.6",
     "@vueuse/core": "^10.7.2",
     "chart.js": "^4.4.2",
     "chartjs-adapter-dayjs-4": "^1.0.4",
@@ -35,10 +37,11 @@
     "ofetch": "^1.3.3",
     "vue": "^3.4.15",
     "vue-chartjs": "^5.3.0",
-    "vuetify": "^3.5.2"
+    "vuetify": "^3.7.4"
   },
   "devDependencies": {
     "@data-fair/dev-server": "^1.12.0",
+    "@data-fair/lib-types-builder": "^1.6.0",
     "@types/node": "^20.11.29",
     "@vitejs/plugin-vue": "^5.0.3",
     "babel-preset-vue": "^2.0.2",
@@ -57,8 +60,5 @@
     "unplugin-fonts": "^1.1.1",
     "vite": "^5.0.12",
     "vite-plugin-vuetify": "^2.0.1"
-  },
-  "relativeDependencies": {
-    "@data-fair/lib": "../lib"
   }
 }

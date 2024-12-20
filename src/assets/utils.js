@@ -3,7 +3,7 @@
  */
 
 import chroma from 'chroma-js'
-import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import useAppInfo from '@/composables/useAppInfo'
 const { chart } = useAppInfo()
 

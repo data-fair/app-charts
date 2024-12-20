@@ -1,6 +1,6 @@
 export default function useAppInfo () {
   // @ts-ignore
-  const application = /** @type {import('@data-fair/lib/shared/application.js').Application} */ (window.APPLICATION)
+  const application = /** @type {import('@data-fair/lib-common-types/application/index.js').Application} */ (window.APPLICATION)
   const config = /** @type {import('../config/.type/types.js').Config} */ (application.configuration)
   if (!config) throw new Error('Il n\'y a pas de configuration définie')
   const dataset = config.datasets?.[0]

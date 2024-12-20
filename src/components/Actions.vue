@@ -1,6 +1,6 @@
 <script setup>
 import useAppInfo from '@/composables/useAppInfo'
-import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { mdiSortVariant, mdiSortReverseVariant } from '@mdi/js'
 
 const { chart, dynamicMetric } = useAppInfo()

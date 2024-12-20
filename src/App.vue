@@ -1,10 +1,10 @@
 <script setup>
 import Chart from './components/Chart.vue'
 import SnackBar from './components/SnackBar.vue'
-import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import useAppInfo from './composables/useAppInfo'
 import { ofetch } from 'ofetch'
-import { filters2qs } from '@data-fair/lib/filters.js'
+import { filters2qs } from '@data-fair/lib-utils/filters'
 
 // @ts-ignore
 window.vIframeOptions = { reactiveParams: reactiveSearchParams }

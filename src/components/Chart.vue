@@ -5,7 +5,7 @@ import useAppInfo from '@/composables/useAppInfo'
 import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { useTheme } from 'vuetify'
-import reactiveSearchParams from '@data-fair/lib/vue/reactive-search-params-global.js'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import dayjs from 'dayjs'
 import chroma from 'chroma-js'
 
@@ -119,7 +119,7 @@ const options = computed(() => {
         return (config.title ? config.title + ' : ' : '') + sum.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
       }
     }
-
+    options.rotation = chart.rotation || 0
     options.scales.x.display = false
     options.scales.y.display = false
     options.plugins.datalabels = {
