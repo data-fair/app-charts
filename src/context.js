@@ -54,7 +54,7 @@ export const getData = (theme) => ({
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
     })
-    const labels = results.map(r => r[chart.config.labelsField.key])
+    const labels = results.map(r => r[chart.config.labelsField.key]).slice(0, chart.config.size)
     let datasets
     if (chart.config.color) {
       const color = chart.config.color.type === 'custom' ? chart.config.color.hexValue : theme.current.value.colors[chart.config.color.strValue]
