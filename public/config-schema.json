@@ -1636,19 +1636,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesFields",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -2299,19 +2300,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesCalc",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -2719,19 +2721,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesFields",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -3382,19 +3385,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesCalc",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -3787,19 +3791,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesFields",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -4450,19 +4455,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesCalc",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -5290,19 +5296,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesFields",
                                   "x-display": "list",
-                                  "x-itemTitle": "value",
-                                  "x-itemKey": "value",
-                                  "x-itemsProp": "aggs",
+                                  "x-itemTitle": "label",
+                                  "x-itemKey": "key",
                                   "items": {
                                     "type": "object",
                                     "required": [
-                                      "value"
+                                      "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
-                                      "value": {
+                                      "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -5503,19 +5510,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesFields",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -6166,19 +6174,20 @@
                                   "type": "array",
                                   "x-fromData": "parent.parent.parent.value.valuesCalc",
                                   "x-display": "list",
-                                  "x-itemTitle": "key",
+                                  "x-itemTitle": "label",
                                   "x-itemKey": "key",
-                                  "x-itemsProp": "aggs",
                                   "items": {
                                     "type": "object",
                                     "required": [
                                       "key"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                       "key": {
                                         "type": "string",
                                         "x-display": "hidden"
+                                      },
+                                      "label": {
+                                        "type": "string"
                                       },
                                       "color": {
                                         "type": "string",
@@ -8198,19 +8207,20 @@
                   "type": "array",
                   "x-fromData": "parent.parent.parent.value.valuesFields",
                   "x-display": "list",
-                  "x-itemTitle": "key",
+                  "x-itemTitle": "label",
                   "x-itemKey": "key",
-                  "x-itemsProp": "aggs",
                   "items": {
                     "type": "object",
                     "required": [
                       "key"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                       "key": {
                         "type": "string",
                         "x-display": "hidden"
+                      },
+                      "label": {
+                        "type": "string"
                       },
                       "color": {
                         "type": "string",
@@ -8861,19 +8871,20 @@
                   "type": "array",
                   "x-fromData": "parent.parent.parent.value.valuesCalc",
                   "x-display": "list",
-                  "x-itemTitle": "key",
+                  "x-itemTitle": "label",
                   "x-itemKey": "key",
-                  "x-itemsProp": "aggs",
                   "items": {
                     "type": "object",
                     "required": [
                       "key"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                       "key": {
                         "type": "string",
                         "x-display": "hidden"
+                      },
+                      "label": {
+                        "type": "string"
                       },
                       "color": {
                         "type": "string",
@@ -9247,19 +9258,20 @@
                       "type": "array",
                       "x-fromData": "parent.parent.parent.value.valuesFields",
                       "x-display": "list",
-                      "x-itemTitle": "key",
+                      "x-itemTitle": "label",
                       "x-itemKey": "key",
-                      "x-itemsProp": "aggs",
                       "items": {
                         "type": "object",
                         "required": [
                           "key"
                         ],
-                        "additionalProperties": false,
                         "properties": {
                           "key": {
                             "type": "string",
                             "x-display": "hidden"
+                          },
+                          "label": {
+                            "type": "string"
                           },
                           "color": {
                             "type": "string",
@@ -9910,19 +9922,20 @@
                       "type": "array",
                       "x-fromData": "parent.parent.parent.value.valuesCalc",
                       "x-display": "list",
-                      "x-itemTitle": "key",
+                      "x-itemTitle": "label",
                       "x-itemKey": "key",
-                      "x-itemsProp": "aggs",
                       "items": {
                         "type": "object",
                         "required": [
                           "key"
                         ],
-                        "additionalProperties": false,
                         "properties": {
                           "key": {
                             "type": "string",
                             "x-display": "hidden"
+                          },
+                          "label": {
+                            "type": "string"
                           },
                           "color": {
                             "type": "string",
@@ -10693,19 +10706,20 @@
                   "type": "array",
                   "x-fromData": "parent.parent.parent.value.valuesFields",
                   "x-display": "list",
-                  "x-itemTitle": "value",
-                  "x-itemKey": "value",
-                  "x-itemsProp": "aggs",
+                  "x-itemTitle": "label",
+                  "x-itemKey": "key",
                   "items": {
                     "type": "object",
                     "required": [
-                      "value"
+                      "key"
                     ],
-                    "additionalProperties": false,
                     "properties": {
-                      "value": {
+                      "key": {
                         "type": "string",
                         "x-display": "hidden"
+                      },
+                      "label": {
+                        "type": "string"
                       },
                       "color": {
                         "type": "string",
@@ -11294,19 +11308,20 @@
                       "type": "array",
                       "x-fromData": "parent.parent.parent.value.valuesFields",
                       "x-display": "list",
-                      "x-itemTitle": "value",
-                      "x-itemKey": "value",
-                      "x-itemsProp": "aggs",
+                      "x-itemTitle": "label",
+                      "x-itemKey": "key",
                       "items": {
                         "type": "object",
                         "required": [
-                          "value"
+                          "key"
                         ],
-                        "additionalProperties": false,
                         "properties": {
-                          "value": {
+                          "key": {
                             "type": "string",
                             "x-display": "hidden"
+                          },
+                          "label": {
+                            "type": "string"
                           },
                           "color": {
                             "type": "string",

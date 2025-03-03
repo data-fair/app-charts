@@ -35,7 +35,7 @@ export function getColors (labels) {
       colors[label] = palette[i + chart.config.colors.offset % 12]
     })
     return colors
-  } else return Object.assign({}, ...chart.config.colors.styles.map(s => ({ [s.value != null ? s.value : s.key]: s.color })))
+  } else return Object.assign({}, ...chart.config.colors.styles.map(s => ({ [s.value != null ? s.value : s.label]: s.color })))
 }
 
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length

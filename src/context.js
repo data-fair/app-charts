@@ -80,7 +80,7 @@ export const getData = (theme) => ({
           datasets = [{
             labels,
             borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
-            backgroundColor: labels.map(l => colors[l]),
+            backgroundColor: labels.map(l => colors[l] || '#828282'),
             data: results.slice(0, chart.config.size).map(r => getValue(r[chart.config.valuesField]))
           }]
           if (chart.type === 'pie' && results.length > chart.config.size) {
@@ -95,8 +95,8 @@ export const getData = (theme) => ({
       } else {
         datasets = chart.config.valuesFields.map(field => ({
           label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
-          borderColor: colors[field.key],
-          backgroundColor: colors[field.key],
+          borderColor: colors[field.label],
+          backgroundColor: colors[field.label],
           fill,
           data: results.map(r => getValue(r[field.key]))
         }))
@@ -179,8 +179,8 @@ export const getData = (theme) => ({
           const colors = getColors(chart.config.valuesCalc.map(v => v.key))
           datasets = chart.config.valuesCalc.map((field, i) => ({
             label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
-            borderColor: colors[field.key],
-            backgroundColor: colors[field.key],
+            borderColor: colors[field.label],
+            backgroundColor: colors[field.label],
             fill,
             data: aggs.map(a => getValue(i === 0 ? a.metric : a[field.key + '_' + chart.config.metric]))
           }))
@@ -190,7 +190,7 @@ export const getData = (theme) => ({
           datasets = [{
             labels,
             borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
-            backgroundColor: labels.map(l => colors[l]),
+            backgroundColor: labels.map(l => colors[l] || '#828282'),
             data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
           }]
           if (chart.type === 'pie' && aggs.length > chart.config.size) {
@@ -269,7 +269,7 @@ export const getData = (theme) => ({
     const datasets = [{
       labels,
       borderColor: 'white',
-      backgroundColor: labels.map(l => colors[l]),
+      backgroundColor: labels.map(l => colors[l] || '#828282'),
       data: metrics.map(a => getValue(a.metric))
     }]
     if (['percentages', 'both'].includes(chart.display)) {
