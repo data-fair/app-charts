@@ -66,7 +66,7 @@ export const getData = (theme) => ({
       }]
     } else {
       if (chart.type === 'pie' && results.length > chart.config.size) labels.push('Autre')
-      const colors = getColors(categories || chart.config.valuesFields?.map(v => v.key) || labels)
+      const colors = getColors(categories || chart.config.valuesFields?.map(v => v.label) || labels)
       if (chart.config.valuesField) {
         if (categories) {
           datasets = categories.map(category => ({
@@ -176,7 +176,7 @@ export const getData = (theme) => ({
         }
       } else {
         if (chart.config.type === 'aggsBasedCategories') {
-          const colors = getColors(chart.config.valuesCalc.map(v => v.key))
+          const colors = getColors(chart.config.valuesCalc.map(v => v.label))
           datasets = chart.config.valuesCalc.map((field, i) => ({
             label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
             borderColor: colors[field.label],
