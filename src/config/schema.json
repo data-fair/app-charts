@@ -413,6 +413,13 @@
       "default": "#828282",
       "x-display": "color-picker"
     },
+    "defaultColor": {
+      "type": "string",
+      "title": "Couleur par défaut",
+      "format": "hexcolor",
+      "default": "#828282",
+      "x-display": "color-picker"
+    },
     "color": {
       "type": "object",
       "title": "Couleur",
@@ -1257,6 +1264,9 @@
                       }
                     }
                   }
+                },
+                "defaultColor": {
+                  "$ref": "#/definitions/defaultColor"
                 }
               }
             }
@@ -1333,6 +1343,9 @@
                       }
                     }
                   }
+                },
+                "defaultColor": {
+                  "$ref": "#/definitions/defaultColor"
                 }
               }
             }
@@ -1400,6 +1413,9 @@
                       }
                     }
                   }
+                },
+                "defaultColor": {
+                  "$ref": "#/definitions/defaultColor"
                 }
               }
             }

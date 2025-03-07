@@ -54,7 +54,7 @@ export const getData = (theme) => ({
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
     })
-    const labels = results.map(r => r[chart.config.labelsField.key]).slice(0, chart.config.size)
+    const labels = results.map(r => chart.config.labelsField['x-labels'] ? chart.config.labelsField['x-labels'][r[chart.config.labelsField.key]] : r[chart.config.labelsField.key]).slice(0, chart.config.size)
     let datasets
     if (chart.config.color) {
       const color = chart.config.color.type === 'custom' ? chart.config.color.hexValue : theme.current.value.colors[chart.config.color.strValue]
@@ -66,7 +66,7 @@ export const getData = (theme) => ({
       }]
     } else {
       if (chart.type === 'pie' && results.length > chart.config.size) labels.push('Autre')
-      const colors = getColors(categories || chart.config.valuesFields?.map(v => v.label) || labels)
+      const colors = getColors(categories || chart.config.valuesFields?.map(v => v.label) || labels, chart.config.labelsField['x-labels'])
       if (chart.config.valuesField) {
         if (categories) {
           datasets = categories.map(category => ({
@@ -80,7 +80,7 @@ export const getData = (theme) => ({
           datasets = [{
             labels,
             borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
-            backgroundColor: labels.map(l => colors[l] || '#828282'),
+            backgroundColor: labels.map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
             data: results.slice(0, chart.config.size).map(r => getValue(r[chart.config.valuesField]))
           }]
           if (chart.type === 'pie' && results.length > chart.config.size) {
@@ -186,11 +186,11 @@ export const getData = (theme) => ({
           }))
         } else {
           if (chart.type === 'pie' && aggs.length > chart.config.size) labels.push('Autre')
-          const colors = getColors(labels)
+          const colors = getColors(labels, chart.config.groupBy.field['x-labels'])
           datasets = [{
             labels,
             borderColor: chart.type === 'pie' ? 'white' : labels.map(l => colors[l]),
-            backgroundColor: labels.map(l => colors[l] || '#828282'),
+            backgroundColor: labels.map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
             data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
           }]
           if (chart.type === 'pie' && aggs.length > chart.config.size) {
@@ -269,7 +269,7 @@ export const getData = (theme) => ({
     const datasets = [{
       labels,
       borderColor: 'white',
-      backgroundColor: labels.map(l => colors[l] || '#828282'),
+      backgroundColor: labels.map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
       data: metrics.map(a => getValue(a.metric))
     }]
     if (['percentages', 'both'].includes(chart.display)) {

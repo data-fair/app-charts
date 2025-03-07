@@ -4875,6 +4875,13 @@
                                       }
                                     }
                                   }
+                                },
+                                "defaultColor": {
+                                  "type": "string",
+                                  "title": "Couleur par défaut",
+                                  "format": "hexcolor",
+                                  "default": "#828282",
+                                  "x-display": "color-picker"
                                 }
                               }
                             }
@@ -5179,6 +5186,13 @@
                                       }
                                     }
                                   }
+                                },
+                                "defaultColor": {
+                                  "type": "string",
+                                  "title": "Couleur par défaut",
+                                  "format": "hexcolor",
+                                  "default": "#828282",
+                                  "x-display": "color-picker"
                                 }
                               }
                             }
@@ -5320,6 +5334,13 @@
                                       }
                                     }
                                   }
+                                },
+                                "defaultColor": {
+                                  "type": "string",
+                                  "title": "Couleur par défaut",
+                                  "format": "hexcolor",
+                                  "default": "#828282",
+                                  "x-display": "color-picker"
                                 }
                               }
                             }
@@ -6596,6 +6617,13 @@
     "hexColor": {
       "type": "string",
       "title": "Couleur",
+      "format": "hexcolor",
+      "default": "#828282",
+      "x-display": "color-picker"
+    },
+    "defaultColor": {
+      "type": "string",
+      "title": "Couleur par défaut",
       "format": "hexcolor",
       "default": "#828282",
       "x-display": "color-picker"
@@ -10285,6 +10313,13 @@
                       }
                     }
                   }
+                },
+                "defaultColor": {
+                  "type": "string",
+                  "title": "Couleur par défaut",
+                  "format": "hexcolor",
+                  "default": "#828282",
+                  "x-display": "color-picker"
                 }
               }
             }
@@ -10589,6 +10624,13 @@
                       }
                     }
                   }
+                },
+                "defaultColor": {
+                  "type": "string",
+                  "title": "Couleur par défaut",
+                  "format": "hexcolor",
+                  "default": "#828282",
+                  "x-display": "color-picker"
                 }
               }
             }
@@ -10730,6 +10772,13 @@
                       }
                     }
                   }
+                },
+                "defaultColor": {
+                  "type": "string",
+                  "title": "Couleur par défaut",
+                  "format": "hexcolor",
+                  "default": "#828282",
+                  "x-display": "color-picker"
                 }
               }
             }
@@ -10887,6 +10936,13 @@
                           }
                         }
                       }
+                    },
+                    "defaultColor": {
+                      "type": "string",
+                      "title": "Couleur par défaut",
+                      "format": "hexcolor",
+                      "default": "#828282",
+                      "x-display": "color-picker"
                     }
                   }
                 }
@@ -11191,6 +11247,13 @@
                           }
                         }
                       }
+                    },
+                    "defaultColor": {
+                      "type": "string",
+                      "title": "Couleur par défaut",
+                      "format": "hexcolor",
+                      "default": "#828282",
+                      "x-display": "color-picker"
                     }
                   }
                 }
@@ -11332,6 +11395,13 @@
                           }
                         }
                       }
+                    },
+                    "defaultColor": {
+                      "type": "string",
+                      "title": "Couleur par défaut",
+                      "format": "hexcolor",
+                      "default": "#828282",
+                      "x-display": "color-picker"
                     }
                   }
                 }
