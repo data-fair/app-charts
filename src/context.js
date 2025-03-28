@@ -269,7 +269,7 @@ export const getData = (theme) => ({
     const datasets = [{
       labels,
       borderColor: 'white',
-      backgroundColor: labels.map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
+      backgroundColor: chart.config.valuesFields.map(f => f.title || f.key).map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
       data: metrics.map(a => getValue(a.metric))
     }]
     if (['percentages', 'both'].includes(chart.display)) {
