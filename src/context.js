@@ -94,7 +94,7 @@ export const getData = (theme) => ({
         }
       } else {
         datasets = chart.config.valuesFields.map(field => ({
-          label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
+          label: chart.config.removeFromLabels ? (field.label || field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.label || field.title || field.key),
           borderColor: colors[field.label],
           backgroundColor: colors[field.label],
           fill,
@@ -178,7 +178,7 @@ export const getData = (theme) => ({
         if (chart.config.type === 'aggsBasedCategories') {
           const colors = getColors(chart.config.valuesCalc.map(v => v.label))
           datasets = chart.config.valuesCalc.map((field, i) => ({
-            label: chart.config.removeFromLabels ? (field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.title || field.key),
+            label: chart.config.removeFromLabels ? (field.label || field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.label || field.title || field.key),
             borderColor: colors[field.label],
             backgroundColor: colors[field.label],
             fill,
@@ -232,7 +232,7 @@ export const getData = (theme) => ({
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
     })
-    const labels = chart.config.labelsValues.map(l => fields?.[l].title || l).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
+    const labels = chart.config.labelsValues.map(l => fields?.[l].label || fields?.[l].title || l).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
     const series = aggs.slice(0, chart.config.size)
     series.forEach(s => {
       s.label = fields?.[chart.config.valuesLabel]['x-labels'] ? fields[chart.config.valuesLabel]['x-labels'][s.value] : s.value
@@ -264,12 +264,12 @@ export const getData = (theme) => ({
         displayError.value = true
       })
     }))
-    const labels = chart.config.valuesFields.map(f => f.title || f.key).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
+    const labels = chart.config.valuesFields.map(f => f.label || f.title || f.key).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
     const colors = getColors(labels)
     const datasets = [{
       labels,
       borderColor: 'white',
-      backgroundColor: chart.config.valuesFields.map(f => f.title || f.key).map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
+      backgroundColor: chart.config.valuesFields.map(f => f.label || f.title || f.key).map(l => colors[l] || chart.config.colors?.defaultColor || '#828282'),
       data: metrics.map(a => getValue(a.metric))
     }]
     if (['percentages', 'both'].includes(chart.display)) {
