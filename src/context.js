@@ -65,8 +65,11 @@ export const getData = (theme) => ({
         fill
       }]
     } else {
-      if (chart.type === 'pie' && results.length > chart.config.size) labels.push('Autre')
       const rawLabels = results.slice(0, chart.config.size).map(r => r[chart.config.labelsField.key])
+      if (chart.type === 'pie' && results.length > chart.config.size) {
+        labels.push('Autre')
+        rawLabels.push('Autre')
+      }
       const colors = getColors(categories || (chart.config.valuesField && rawLabels) || chart.config.valuesFields?.map(v => v.key))
       if (chart.config.valuesField) {
         if (categories) {
@@ -188,7 +191,10 @@ export const getData = (theme) => ({
             data: aggs.map(a => getValue(i === 0 ? a.metric : a[field.key + '_' + chart.config.metric]))
           }))
         } else {
-          if (chart.type === 'pie' && aggs.length > chart.config.size) labels.push('Autre')
+          if (chart.type === 'pie' && aggs.length > chart.config.size) {
+            labels.push('Autre')
+            rawLabels.push('Autre')
+          }
           const colors = getColors(rawLabels)
           datasets = [{
             labels,
