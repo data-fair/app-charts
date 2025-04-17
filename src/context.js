@@ -54,7 +54,7 @@ export const getData = (theme) => ({
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
     })
-    const labels = results.map(r => chart.config.labelsField['x-labels'] ? chart.config.labelsField['x-labels'][r[chart.config.labelsField.key]] : r[chart.config.labelsField.key]).slice(0, chart.config.size)
+    const labels = results.map(r => fields[chart.config.labelsField.key]['x-labels']?.[r[chart.config.labelsField.key]] || r[chart.config.labelsField.key]).slice(0, chart.config.size)
     let datasets
     if (chart.config.color) {
       const color = chart.config.color.type === 'custom' ? chart.config.color.hexValue : theme.current.value.colors[chart.config.color.strValue]
@@ -99,7 +99,7 @@ export const getData = (theme) => ({
         }
       } else {
         datasets = chart.config.valuesFields.map(field => ({
-          label: chart.config.removeFromLabels ? (field.label || field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.label || field.title || field.key),
+          label: chart.config.removeFromLabels ? (fields[field.key].label || fields[field.key].title || field.key).replace(chart.config.removeFromLabels, '') : (fields[field.key].label || fields[field.key].title || field.key),
           borderColor: colors[field.key],
           backgroundColor: colors[field.key],
           fill,
@@ -150,7 +150,7 @@ export const getData = (theme) => ({
       displayError.value = true
     })
     const rawLabels = aggs.slice(0, chart.config.size).map(a => a.value)
-    const labels = rawLabels.map(a => chart.config.groupBy.field['x-labels'] ? chart.config.groupBy.field['x-labels'][a] : a)
+    const labels = rawLabels.map(a => fields[chart.config.groupBy.field.key]['x-labels']?.[a] || a)
     let datasets
     if (chart.config.color) {
       const color = chart.config.color.type === 'custom' ? chart.config.color.hexValue : theme.current.value.colors[chart.config.color.strValue]
@@ -165,7 +165,7 @@ export const getData = (theme) => ({
         const series = chart.config.colors.type === 'manual' ? chart.config.colors.styles.map(s => s.value) : orderBy([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))).filter((s, i, self) => self.indexOf(s) === i))
         const colors = getColors(series)
         datasets = series.map(label => ({
-          label: chart.config.groupsField['x-labels'] ? chart.config.groupsField['x-labels'][label] : label,
+          label: fields[chart.config.groupsField.key]['x-labels']?.[label] || label,
           borderColor: colors[label],
           backgroundColor: colors[label],
           fill,
@@ -184,7 +184,7 @@ export const getData = (theme) => ({
         if (chart.config.type === 'aggsBasedCategories') {
           const colors = getColors(chart.config.valuesCalc.map(v => v.key))
           datasets = chart.config.valuesCalc.map((field, i) => ({
-            label: chart.config.removeFromLabels ? (field.label || field.title || field.key).replace(chart.config.removeFromLabels, '') : (field.label || field.title || field.key),
+            label: chart.config.removeFromLabels ? (fields[field.key].label || fields[field.key].title || field.key).replace(chart.config.removeFromLabels, '') : (fields[field.key].label || fields[field.key].title || field.key),
             borderColor: colors[field.key],
             backgroundColor: colors[field.key],
             fill,
@@ -245,7 +245,7 @@ export const getData = (theme) => ({
     const labels = chart.config.labelsValues.map(l => fields?.[l].label || fields?.[l].title || l).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
     const series = aggs.slice(0, chart.config.size)
     series.forEach(s => {
-      s.label = fields?.[chart.config.valuesLabel]['x-labels'] ? fields[chart.config.valuesLabel]['x-labels'][s.value] : s.value
+      s.label = fields?.[chart.config.valuesLabel]['x-labels']?.[s.value] || s.value
     })
     const colors = getColors(series.map(s => s.value))
     const datasets = series.map((serie, i) => ({
@@ -274,7 +274,7 @@ export const getData = (theme) => ({
         displayError.value = true
       })
     }))
-    const labels = chart.config.valuesFields.map(f => f.label || f.title || f.key).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
+    const labels = chart.config.valuesFields.map(f => fields[f.key].label || fields[f.key].title || f.key).map(l => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
     const colors = getColors(chart.config.valuesFields.map(f => f.key))
     const datasets = [{
       labels,
