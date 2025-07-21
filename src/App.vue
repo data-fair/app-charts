@@ -2,29 +2,36 @@
 import Chart from './components/Chart.vue'
 import SnackBar from './components/SnackBar.vue'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
-import useAppInfo from './composables/useAppInfo'
+import { useConfig } from './composables/config'
 import { ofetch } from 'ofetch'
 import { filters2qs } from '@data-fair/lib-utils/filters'
+import { watch } from 'vue'
 
 // @ts-ignore
 window.vIframeOptions = { reactiveParams: reactiveSearchParams }
 
-let /** @type {any} */configureError
-try {
-  const { config } = useAppInfo()
-  if (window.parent && reactiveSearchParams.draft === 'true' && config.staticFilters?.length && !config.qsFilter) window.parent.postMessage({ type: 'set-config', content: { field: 'qsFilter', value: filters2qs(config.staticFilters) } }, '*')
-} catch (e) {
-  // @ts-ignore
-  configureError = e.message
-  // @ts-ignore
-  ofetch(window.APPLICATION.href + '/error', { body: { message: e.message || e }, method: 'POST' })
+const { config, error } = useConfig()
+
+if (window.parent && reactiveSearchParams.draft === 'true' && config.value?.staticFilters?.length && !config.value?.qsFilter) {
+  window.parent.postMessage({ type: 'set-config', content: { field: 'qsFilter', value: filters2qs(config.value.staticFilters) } }, '*')
 }
 
+if (reactiveSearchParams.draft === 'true') {
+  watch(error, (message) => {
+    if (message) ofetch(window.APPLICATION.href + '/error', { body: { message }, method: 'POST' })
+  }, { immediate: true })
+}
 </script>
 
 <template>
-  <template v-if="!configureError">
+  <template v-if="!error">
     <Chart style="height:100%" />
     <snack-bar />
   </template>
+  <v-empty-state
+    v-else
+    :title="error"
+    headline="Configuration incomplète"
+    icon="mdi-chart-bar"
+  />
 </template>

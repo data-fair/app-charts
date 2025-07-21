@@ -1,7 +1,7 @@
 <script setup>
-import { getData } from '../context.js'
+import { useChartData } from '@/composables/useChartData.js'
 import Actions from './Actions.vue'
-import useAppInfo from '@/composables/useAppInfo'
+import { useConfig } from '@/composables/config'
 import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { useTheme } from 'vuetify'
@@ -24,9 +24,10 @@ ChartJS.register(Title, Tooltip, Legend,
   BarElement, PointElement, ArcElement, LineElement,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler)
 
-const { config, chart, dynamicMetric } = useAppInfo()
+const { config, chart, dynamicMetric } = useConfig()
 const theme = useTheme()
 const loading = ref(false)
+const { getData } = useChartData()
 
 const options = computed(() => {
   const options = {
@@ -35,78 +36,78 @@ const options = computed(() => {
     locale: 'fr',
     plugins: {
       legend: {
-        display: chart.type !== 'pie' && !!chart.config.colors &&
-        !(chart.config.groupBy?.type === 'value' && chart.config.groupBy.field?.key === chart.config.groupsField?.key),
-        position: config.legendPosition || 'top'
+        display: chart.value.type !== 'pie' && !!chart.value.config.colors &&
+        !(chart.value.config.groupBy?.type === 'value' && chart.value.config.groupBy.field?.key === chart.value.config.groupsField?.key),
+        position: config.value.legendPosition || 'top'
       },
       title: {
-        display: !!config.title,
-        text: config.title
+        display: !!config.value.title,
+        text: config.value.title
       },
       tooltip: {
-        enabled: !config.disableTooltip,
+        enabled: !config.value.disableTooltip,
         callbacks: {
           label: context => {
-            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.horizontal ? context.parsed.x : context.parsed.y) || context.parsed.r).toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.value.horizontal ? context.parsed.x : context.parsed.y) || context.parsed.r).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
           }
         }
       }
     }
   }
-  if (chart.cutout) options.cutout = chart.cutout + '%'
+  if (chart.value.cutout) options.cutout = chart.value.cutout + '%'
 
   options.scales = {
     x: {
-      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
+      stacked: chart.value.type === 'paired-histogram' || chart.value.config.categoriesField || reactiveSearchParams.stacked === 'true'
     },
     y: {
-      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
+      stacked: chart.value.type === 'paired-histogram' || chart.value.config.categoriesField || reactiveSearchParams.stacked === 'true'
     }
   }
-  if (config.xTitle?.length){
-    options.scales.x.title ={
-        text: config.xTitle,
-        display: true,
-        font: {
-          weight: 'bold'
-        }
+  if (config.value.xTitle?.length) {
+    options.scales.x.title = {
+      text: config.value.xTitle,
+      display: true,
+      font: {
+        weight: 'bold'
       }
+    }
   }
-  if (config.yTitle?.length){
-    options.scales.y.title ={
-        text: config.yTitle,
-        display: true,
-        font: {
-          weight: 'bold'
-        }
+  if (config.value.yTitle?.length) {
+    options.scales.y.title = {
+      text: config.value.yTitle,
+      display: true,
+      font: {
+        weight: 'bold'
       }
+    }
   }
-  if ((chart?.config.groupBy && chart?.config.groupBy.type === 'date') || (chart?.config.labelsField && chart?.config.labelsField.format === 'date')) {
+  if ((chart.value?.config.groupBy && chart.value?.config.groupBy.type === 'date') || (chart.value?.config.labelsField && chart.value?.config.labelsField.format === 'date')) {
     options.scales.x.type = 'time'
   }
-  if (chart.yAxisStartsZero) {
+  if (chart.value.yAxisStartsZero) {
     options.scales.y.min = 0
-  } else if (chart.yAxisNotStartsZero) {
-      options.scales.y.beginAtZero = false
+  } else if (chart.value.yAxisNotStartsZero) {
+    options.scales.y.beginAtZero = false
   }
-  if (chart.percentage) {
+  if (chart.value.percentage) {
     options.scales.y.ticks = {
       callback: v => v + ' %'
     }
-  } else if (config.unit && chart.type !== 'paired-histogram') {
-    if (chart.horizontal) {
+  } else if (config.value.unit && chart.value.type !== 'paired-histogram') {
+    if (chart.value.horizontal) {
       options.scales.x.ticks = {
-        callback: v => v.toLocaleString('fr') + ' ' + config.unit
+        callback: v => v.toLocaleString('fr') + ' ' + config.value.unit
       }
     } else {
       options.scales.y.ticks = {
-        callback: v => v.toLocaleString('fr') + ' ' + config.unit
+        callback: v => v.toLocaleString('fr') + ' ' + config.value.unit
       }
     }
   }
-  if (chart.hideYAxis) {
-    options.scales[chart.horizontal ? 'y' : 'x'].grid = { display: false }
-    options.scales[chart.horizontal ? 'x' : 'y'].display = false
+  if (chart.value.hideYAxis) {
+    options.scales[chart.value.horizontal ? 'y' : 'x'].grid = { display: false }
+    options.scales[chart.value.horizontal ? 'x' : 'y'].display = false
     options.plugins.datalabels = {
       anchor: 'end',
       align: 'end',
@@ -118,29 +119,29 @@ const options = computed(() => {
         }
       },
       formatter: function (value) {
-        return value ? value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '') : ''
+        return value ? value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '') : ''
       }
     }
     ChartJS.register(ChartDataLabels)
-    options.layout = { padding: chart.horizontal ? { right: 64 } : { top: 24 } }
+    options.layout = { padding: chart.value.horizontal ? { right: 64 } : { top: 24 } }
   }
-  if (chart.type === 'pie') {
+  if (chart.value.type === 'pie') {
     ChartJS.register(OutLabels)
-    if (config.title || chart.sumInTitle) {
+    if (config.value.title || chart.value.sumInTitle) {
       options.plugins.title.padding = { top: 0, bottom: 48 }
       options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
     } else {
       options.layout = { padding: 48 }
     }
-    if (chart.sumInTitle) {
+    if (chart.value.sumInTitle) {
       options.plugins.title.display = true
       options.plugins.title.text = function (context) {
         const data = context.chart.data.datasets[0].data
         const sum = data.reduce((acc, v) => acc + v, 0)
-        return (config.title ? config.title + ' : ' : '') + sum.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+        return (config.value.title ? config.value.title + ' : ' : '') + sum.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
-    options.rotation = chart.rotation || 0
+    options.rotation = chart.value.rotation || 0
     options.scales.x.display = false
     options.scales.y.display = false
     options.plugins.outlabels = {
@@ -149,7 +150,7 @@ const options = computed(() => {
       font: {
         weight: 'bold',
         size: 16,
-        lineHeight:0.8,
+        lineHeight: 0.8,
         resizable: false
       },
       textAlign: 'center',
@@ -168,37 +169,37 @@ const options = computed(() => {
         const value = context.dataset.data[index]
 
         const lines = [context.dataset.labels[index]]
-        if (['values', 'both'].includes(chart.display)) {
-          lines.push(value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : ''))
+        if (['values', 'both'].includes(chart.value.display)) {
+          lines.push(value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : ''))
         }
-        if (['percentages', 'both'].includes(chart.display)) {
+        if (['percentages', 'both'].includes(chart.value.display)) {
           lines.push(context.dataset.percentages[index].toLocaleString('fr') + ' %')
         }
         return lines.join('\n')
-      }      
+      }
     }
     options.plugins.tooltip.callbacks = {
-      label: context => context.parsed.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+      label: context => context.parsed.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
     }
   }
 
-  if (chart.tension != null) {
+  if (chart.value.tension != null) {
     options.elements = {
       line: {
-        tension: chart.tension / 10
+        tension: chart.value.tension / 10
       }
     }
   }
 
-  if (chart.horizontal) {
+  if (chart.value.horizontal) {
     options.indexAxis = 'y'
   }
 
-  if (chart.type === 'paired-histogram') {
+  if (chart.value.type === 'paired-histogram') {
     options.indexAxis = 'y'
     options.scales.x = {
       ticks: {
-        callback: (v) => (v < 0 ? -v : v).toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+        callback: (v) => (v < 0 ? -v : v).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
     options.plugins.tooltip = {
@@ -206,17 +207,17 @@ const options = computed(() => {
         label: (c) => {
           const value = Number(c.raw)
           const positiveOnly = value < 0 ? -value : value
-          return `${c.dataset.label}: ${positiveOnly.toLocaleString('fr')}` + (config.unit ? ' ' + config.unit : '')
+          return `${c.dataset.label}: ${positiveOnly.toLocaleString('fr')}` + (config.value.unit ? ' ' + config.value.unit : '')
         }
       }
     }
   }
-  if (chart.type === 'radar') {
-    if (config.unit) {
+  if (chart.value.type === 'radar') {
+    if (config.value.unit) {
       options.scales = {
         r: {
           ticks: {
-            callback: v => v + ' ' + config.unit
+            callback: v => v + ' ' + config.value.unit
           }
         }
       }
@@ -225,7 +226,7 @@ const options = computed(() => {
   return options
 })
 
-const data = computedAsync(getData(theme)[chart.config.type?.replace('Categories', '')], null, loading)
+const data = computedAsync(getData(theme)[chart.value.config.type?.replace('Categories', '')], null, loading)
 </script>
 
 <template lang="html">

@@ -1,13 +1,13 @@
 <script setup>
-import useAppInfo from '@/composables/useAppInfo'
+import { useConfig } from '@/composables/config'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { mdiSortVariant, mdiSortReverseVariant } from '@mdi/js'
 
-const { chart, dynamicMetric } = useAppInfo()
-if (dynamicMetric) reactiveSearchParams.metric = chart.config.valueCalc.metric
-if (chart.config.dynamicSort) {
-  reactiveSearchParams['sort-by'] = chart.config.sortBy
-  reactiveSearchParams['sort-order'] = chart.config.sortOrder
+const { chart, dynamicMetric } = useConfig()
+if (dynamicMetric.value) reactiveSearchParams.metric = chart.value.config.valueCalc.metric
+if (chart.value.config.dynamicSort) {
+  reactiveSearchParams['sort-by'] = chart.value.config.sortBy
+  reactiveSearchParams['sort-order'] = chart.value.config.sortOrder
 }
 
 const metrics = [
@@ -28,7 +28,7 @@ const sorts = [
   }
 ]
 
-if (chart?.config.type?.replace('Categories', '') === 'rowsBased') {
+if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
   sorts.push({
     value: 'row',
     title: 'Ligne'

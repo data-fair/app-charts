@@ -74,7 +74,9 @@
                     "items": {
                       "type": "string"
                     },
-                    "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
+                    "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true",
+                    "x-itemTitle": "label",
+                    "x-itemKey": "value"
                   }
                 }
               },
@@ -98,12 +100,16 @@
                   "minValue": {
                     "type": "string",
                     "title": "Valeur min",
-                    "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?sort=asc&{parent.value.field.key}_gte={q}&stringify=true"
+                    "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?sort=asc&{parent.value.field.key}_gte={q}&stringify=true",
+                    "x-itemTitle": "label",
+                    "x-itemKey": "value"
                   },
                   "maxValue": {
                     "type": "string",
                     "title": "Valeur max",
-                    "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?sort=desc&{parent.value.field.key}_lte={q}&stringify=true"
+                    "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?sort=desc&{parent.value.field.key}_lte={q}&stringify=true",
+                    "x-itemTitle": "label",
+                    "x-itemKey": "value"
                   }
                 }
               },
@@ -131,7 +137,9 @@
                     "items": {
                       "type": "string"
                     },
-                    "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
+                    "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true",
+                    "x-itemTitle": "label",
+                    "x-itemKey": "value"
                   }
                 }
               }
@@ -11497,7 +11505,9 @@
                 "items": {
                   "type": "string"
                 },
-                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
+                "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true",
+                "x-itemTitle": "label",
+                "x-itemKey": "value"
               }
             }
           },
@@ -11521,12 +11531,16 @@
               "minValue": {
                 "type": "string",
                 "title": "Valeur min",
-                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?sort=asc&{parent.value.field.key}_gte={q}&stringify=true"
+                "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?sort=asc&{parent.value.field.key}_gte={q}&stringify=true",
+                "x-itemTitle": "label",
+                "x-itemKey": "value"
               },
               "maxValue": {
                 "type": "string",
                 "title": "Valeur max",
-                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?sort=desc&{parent.value.field.key}_lte={q}&stringify=true"
+                "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?sort=desc&{parent.value.field.key}_lte={q}&stringify=true",
+                "x-itemTitle": "label",
+                "x-itemKey": "value"
               }
             }
           },
@@ -11554,7 +11568,9 @@
                 "items": {
                   "type": "string"
                 },
-                "x-fromUrl": "{datasets.0.href}/values/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true"
+                "x-fromUrl": "{datasets.0.href}/values-labels/{parent.value.field.key}?q={q}&q_mode=complete&size=100&stringify=true",
+                "x-itemTitle": "label",
+                "x-itemKey": "value"
               }
             }
           }
@@ -11624,5 +11640,6 @@
         }
       }
     }
-  }
+  },
+  "$id": "config-resolved"
 }

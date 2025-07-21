@@ -4,8 +4,6 @@
 
 import chroma from 'chroma-js'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
-import useAppInfo from '@/composables/useAppInfo'
-const { chart } = useAppInfo()
 
 /**
  * @param {ChartConfig} config
@@ -23,19 +21,20 @@ export function getSortStr (config) {
 
 /**
  * @param {string[]} labels
+ * @param {object} colorsConfig
  * @returns {Object.<string, string>}
  */
-export function getColors (labels) {
-  if (chart.config.colors.type === 'palette') {
+export function getColors (labels, colorsConfig) {
+  if (colorsConfig.type === 'palette') {
     /** @type {Object.<string, string>} */
     const colors = {}
     const numColors = 12 // Math.min(12, labels.length + chart.config.colors.offset)
-    const palette = chroma.scale(chart.config.colors.name).mode('lch').colors(numColors)
+    const palette = chroma.scale(colorsConfig.name).mode('lch').colors(numColors)
     labels.forEach((label, i) => {
-      colors[label] = palette[i + chart.config.colors.offset % 12]
+      colors[label] = palette[i + colorsConfig.offset % 12]
     })
     return colors
-  } else { return Object.assign({}, ...chart.config.colors.styles.map(s => ({ [s.value || s.key]: s.color }))) }
+  } else { return Object.assign({}, ...colorsConfig.styles.map(s => ({ [s.value || s.key]: s.color }))) }
 }
 
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length
