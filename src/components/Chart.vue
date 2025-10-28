@@ -56,25 +56,29 @@ const options = computed(() => {
 
   options.scales = {
     x: {
-      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true',
-      // title:{
-      //   text: 'test x',
-      //   display: true,
-      //   font: {
-      //     weight: 'bold'
-      //   }
-      // }
+      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
     },
     y: {
-      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true',
-      // title:{
-      //   text: 'test y',
-      //   display: true,
-      //   font: {
-      //     weight: 'bold'
-      //   }
-      // }
+      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
     }
+  }
+  if (config.xTitle?.length){
+    options.scales.x.title ={
+        text: config.xTitle,
+        display: true,
+        font: {
+          weight: 'bold'
+        }
+      }
+  }
+  if (config.yTitle?.length){
+    options.scales.y.title ={
+        text: config.yTitle,
+        display: true,
+        font: {
+          weight: 'bold'
+        }
+      }
   }
   if ((chart?.config.groupBy && chart?.config.groupBy.type === 'date') || (chart?.config.labelsField && chart?.config.labelsField.format === 'date')) {
     options.scales.x.type = 'time'

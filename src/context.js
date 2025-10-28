@@ -62,6 +62,7 @@ export const getData = (theme) => ({
         borderColor: color,
         backgroundColor: color,
         data: results.map(r => getValue(r[chart.config.valuesField])),
+        pointStyle: chart.hidePoints ? false : 'circle',
         fill
       }]
     } else {
@@ -77,6 +78,7 @@ export const getData = (theme) => ({
             label: category,
             borderColor: colors[category],
             backgroundColor: colors[category],
+            pointStyle: chart.hidePoints ? false : 'circle',
             fill,
             data: results.map(r => (r[chart.config.categoriesField] === category && getValue(r[chart.config.valuesField])) || undefined)
           }))
@@ -102,6 +104,7 @@ export const getData = (theme) => ({
           label: chart.config.removeFromLabels ? (fields[field.key].label || fields[field.key].title || fields[field.key]['x-originalName'] || field.key).replace(chart.config.removeFromLabels, '') : (fields[field.key].label || fields[field.key].title || fields[field.key]['x-originalName'] || field.key),
           borderColor: colors[field.key],
           backgroundColor: colors[field.key],
+          pointStyle: chart.hidePoints ? false : 'circle',
           fill,
           data: results.map(r => getValue(r[field.key]))
         }))
@@ -158,6 +161,7 @@ export const getData = (theme) => ({
         borderColor: color,
         backgroundColor: color,
         data: aggs.slice(0, chart.config.size).map(a => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)),
+        pointStyle: chart.hidePoints ? false : 'circle',
         fill
       }]
     } else {
@@ -168,8 +172,8 @@ export const getData = (theme) => ({
           label: fields[chart.config.groupsField.key]['x-labels']?.[label] || label,
           borderColor: colors[label],
           backgroundColor: colors[label],
+          pointStyle: chart.hidePoints ? false : 'circle',
           fill,
-          // pointStyle: false,
           data: aggs.slice(0, chart.config.size).map(a => {
             const val = a.aggs.find(ag => (ag.value + '') === label)
             return val ? getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
@@ -188,6 +192,7 @@ export const getData = (theme) => ({
             label: chart.config.removeFromLabels ? (fields[field.key].label || fields[field.key].title || fields[field.key]['x-originalName'] || field.key).replace(chart.config.removeFromLabels, '') : (fields[field.key].label || fields[field.key].title || fields[field.key]['x-originalName'] || field.key),
             borderColor: colors[field.key],
             backgroundColor: colors[field.key],
+            pointStyle: chart.hidePoints ? false : 'circle',
             fill,
             data: aggs.map(a => getValue(i === 0 ? a.metric : a[field.key + '_' + chart.config.metric]))
           }))
@@ -253,6 +258,7 @@ export const getData = (theme) => ({
       label: serie.label,
       borderColor: colors[serie.value],
       backgroundColor: colors[serie.value],
+      pointStyle: chart.hidePoints ? false : 'circle',
       fill,
       data: chart.config.labelsValues.map((l, i) => getValue(!i ? serie.metric : serie[l + '_' + params.metric]))
     }))

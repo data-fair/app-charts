@@ -182,6 +182,10 @@
                   "type": "boolean",
                   "title": "Commencer à partir de 0 pour l'axe des ordonnées"
                 },
+                "hidePoints": {
+                  "type": "boolean",
+                  "title": "Cacher les points"
+                },
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
@@ -1469,6 +1473,10 @@
                 "yAxisStartsZero": {
                   "type": "boolean",
                   "title": "Commencer à partir de 0 pour l'axe des ordonnées"
+                },
+                "hidePoints": {
+                  "type": "boolean",
+                  "title": "Cacher les points"
                 },
                 "config": {
                   "type": "object",
@@ -6431,6 +6439,14 @@
           "title": "Titre du graphique",
           "type": "string"
         },
+        "xTitle": {
+          "title": "Titre des abscisses",
+          "type": "string"
+        },
+        "yTitle": {
+          "title": "Titre des ordonnées",
+          "type": "string"
+        },
         "disableTooltip": {
           "type": "boolean",
           "title": "Désactiver l'infobulle",
@@ -6464,7 +6480,7 @@
           "title": "Jeu de données",
           "description": "Ce jeu doit contenir au moins une colonne avec valeur numérique",
           "type": "object",
-          "x-fromUrl": "api/v1/datasets?status=finalized&field-type=integer,number&q={q}&select=id,title,schema&{context.datasetFilter}&sort=createdAt:-1",
+          "x-fromUrl": "api/v1/datasets?status=finalized&q={q}&select=id,title,schema&{context.datasetFilter}&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href",
