@@ -169,6 +169,7 @@ export const getData = (theme) => ({
           borderColor: colors[label],
           backgroundColor: colors[label],
           fill,
+          // pointStyle: false,
           data: aggs.slice(0, chart.config.size).map(a => {
             const val = a.aggs.find(ag => (ag.value + '') === label)
             return val ? getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined

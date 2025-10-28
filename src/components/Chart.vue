@@ -46,7 +46,7 @@ const options = computed(() => {
         enabled: !config.disableTooltip,
         callbacks: {
           label: context => {
-            return (context.dataset.label ? context.dataset.label + ' : ' : '') + (context.parsed.y || context.parsed.r).toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
+            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.horizontal ? context.parsed.x : context.parsed.y) || context.parsed.r).toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
           }
         }
       }
@@ -56,10 +56,24 @@ const options = computed(() => {
 
   options.scales = {
     x: {
-      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
+      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true',
+      // title:{
+      //   text: 'test x',
+      //   display: true,
+      //   font: {
+      //     weight: 'bold'
+      //   }
+      // }
     },
     y: {
-      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true'
+      stacked: chart.type === 'paired-histogram' || chart.config.categoriesField || reactiveSearchParams.stacked === 'true',
+      // title:{
+      //   text: 'test y',
+      //   display: true,
+      //   font: {
+      //     weight: 'bold'
+      //   }
+      // }
     }
   }
   if ((chart?.config.groupBy && chart?.config.groupBy.type === 'date') || (chart?.config.labelsField && chart?.config.labelsField.format === 'date')) {

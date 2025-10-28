@@ -1,0 +1,20 @@
+layout {
+    pane {
+      split_direction "vertical"
+      pane name="App charts" borderless=true {
+        command "bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && bash"
+      }
+    }
+    pane {
+      split_direction "vertical"
+      pane name="app" {
+        command "bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-app"
+      }
+      pane name="dev-server" {
+        command "bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-server"
+      }
+    }
+}
