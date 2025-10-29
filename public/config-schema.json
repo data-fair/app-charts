@@ -6468,6 +6468,29 @@
           "type": "number",
           "title": "Diviseur",
           "default": 1
+        },
+        "legendPosition": {
+          "type": "string",
+          "title": "Position de la légende",
+          "default": "top",
+          "oneOf": [
+            {
+              "const": "top",
+              "title": "Haut"
+            },
+            {
+              "const": "bottom",
+              "title": "Bas"
+            },
+            {
+              "const": "left",
+              "title": "Gauche"
+            },
+            {
+              "const": "right",
+              "title": "Droite"
+            }
+          ]
         }
       }
     }

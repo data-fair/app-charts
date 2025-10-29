@@ -36,7 +36,8 @@ const options = computed(() => {
     plugins: {
       legend: {
         display: chart.type !== 'pie' && !!chart.config.colors &&
-        !(chart.config.groupBy?.type === 'value' && chart.config.groupBy.field?.key === chart.config.groupsField?.key)
+        !(chart.config.groupBy?.type === 'value' && chart.config.groupBy.field?.key === chart.config.groupsField?.key),
+        position: config.legendPosition || 'top'
       },
       title: {
         display: !!config.title,
