@@ -146,8 +146,9 @@ const options = computed(() => {
       borderRadius: 4,
       font: {
         weight: 'bold',
-        size: 13,
-        lineHeight:0.5
+        size: 16,
+        lineHeight:0.8,
+        resizable: false
       },
       textAlign: 'center',
       padding: { left: 8, right: 8, top: 0, bottom: 0 },
