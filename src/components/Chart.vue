@@ -16,6 +16,7 @@ import {
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler
 } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import OutLabels from '@energiency/chartjs-plugin-piechart-outlabels'
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm'
 import 'dayjs/locale/fr'
 dayjs.locale('fr')
@@ -25,7 +26,6 @@ ChartJS.register(Title, Tooltip, Legend,
 
 const { config, chart, dynamicMetric } = useAppInfo()
 const theme = useTheme()
-
 const loading = ref(false)
 
 const options = computed(() => {
@@ -123,7 +123,7 @@ const options = computed(() => {
     options.layout = { padding: chart.horizontal ? { right: 64 } : { top: 24 } }
   }
   if (chart.type === 'pie') {
-    ChartJS.register(ChartDataLabels)
+    ChartJS.register(OutLabels)
     if (config.title || chart.sumInTitle) {
       options.plugins.title.padding = { top: 0, bottom: 48 }
       options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
@@ -141,33 +141,29 @@ const options = computed(() => {
     options.rotation = chart.rotation || 0
     options.scales.x.display = false
     options.scales.y.display = false
-    options.plugins.datalabels = {
-      anchor: 'end',
-      align: 'end',
-      offset: 8,
-      labels: {
-        value: {
-          font: {
-            weight: 'bold',
-            size: 13
-          }
-        }
+    options.plugins.outlabels = {
+      borderWidth: 1,
+      borderRadius: 4,
+      font: {
+        weight: 'bold',
+        size: 13,
+        lineHeight:0.5
       },
+      textAlign: 'center',
+      padding: { left: 8, right: 8, top: 0, bottom: 0 },
       borderColor: function (context) {
         return chroma(context.dataset.backgroundColor[context.dataIndex]).darken().hex()
       },
       backgroundColor: function (context) {
         return context.dataset.backgroundColor[context.dataIndex]
       },
-      textAlign: 'center',
       color: function (context) {
         return chroma(context.dataset.backgroundColor[context.dataIndex]).luminance() < 0.4 ? 'white' : 'black'
       },
-      borderWidth: 1,
-      borderRadius: 4,
-      padding: { left: 8, right: 8, top: 4, bottom: 4 },
-      formatter: function (value, context) {
+      text: function (context) {
         const index = context.dataIndex
+        const value = context.dataset.data[index]
+
         const lines = [context.dataset.labels[index]]
         if (['values', 'both'].includes(chart.display)) {
           lines.push(value.toLocaleString('fr') + (config.unit ? ' ' + config.unit : ''))
@@ -176,7 +172,7 @@ const options = computed(() => {
           lines.push(context.dataset.percentages[index].toLocaleString('fr') + ' %')
         }
         return lines.join('\n')
-      }
+      }      
     }
     options.plugins.tooltip.callbacks = {
       label: context => context.parsed.toLocaleString('fr') + (config.unit ? ' ' + config.unit : '')
