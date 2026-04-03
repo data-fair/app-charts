@@ -820,6 +820,10 @@
                   "title": "Cacher l'axe Y",
                   "description": "Les valeurs apparaitront au au dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
                 },
+                "yAxisNotStartsZero": {
+                  "type": "boolean",
+                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
+                },
                 "horizontal": {
                   "type": "boolean",
                   "title": "Affichage horizontal"
@@ -2545,6 +2549,10 @@
                   "type": "boolean",
                   "title": "Cacher l'axe Y",
                   "description": "Les valeurs apparaitront au au dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
+                },
+                "yAxisNotStartsZero": {
+                  "type": "boolean",
+                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
                 },
                 "horizontal": {
                   "type": "boolean",

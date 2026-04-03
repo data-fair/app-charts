@@ -71,6 +71,10 @@
                 "hideYAxis": {
                   "$ref": "#/definitions/hideYAxis"
                 },
+                "yAxisNotStartsZero": {
+                  "type": "boolean",
+                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
+                },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"
                 },
@@ -125,6 +129,10 @@
                 },
                 "hideYAxis": {
                   "$ref": "#/definitions/hideYAxis"
+                },
+                "yAxisNotStartsZero": {
+                  "type": "boolean",
+                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
                 },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"

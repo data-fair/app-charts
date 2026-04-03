@@ -86,6 +86,8 @@ const options = computed(() => {
   }
   if (chart.yAxisStartsZero) {
     options.scales.y.min = 0
+  } else if (chart.yAxisNotStartsZero) {
+      options.scales.y.beginAtZero = false
   }
   if (chart.percentage) {
     options.scales.y.ticks = {
