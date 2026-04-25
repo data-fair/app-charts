@@ -13,8 +13,8 @@ export function getSortStr (config) {
   const sortOrder = reactiveSearchParams['sort-order'] || config.sortOrder
   const sortBy = reactiveSearchParams['sort-by'] || config.sortBy
   let str = (sortOrder === 'desc' ? '-' : '')
-  if (sortBy === 'value') str += (config.valuesField || config.valuesFields?.[0]?.key || config.valueCalc?.type || (config.metric && 'metric'))
-  else if (sortBy === 'label') str += (config.labelsField ? config.labelsField.key : (config.groupBy && config.groupBy.field.key))
+  if (sortBy === 'value') str += (config.valuesField || config.valuesFields?.[0] || config.valueCalc?.type || (config.metric && 'metric'))
+  else if (sortBy === 'label') str += (config.labelsField || (config.groupBy && config.groupBy.field))
   else if (sortBy === 'row') str += '_i'
   return str
 }
@@ -35,6 +35,16 @@ export function getColors (labels, colorsConfig) {
     })
     return colors
   } else { return Object.assign({}, ...colorsConfig.styles.map(s => ({ [s.value || s.key]: s.color }))) }
+}
+
+export function normalizeFilters (filters) {
+  return filters?.map(f => {
+    if (!f) return f
+    if (typeof f.field === 'string') {
+      return { ...f, field: { key: f.field } }
+    }
+    return f
+  })
 }
 
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length

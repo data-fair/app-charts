@@ -24,7 +24,7 @@ export default async function fetchAggsLabelsData (ctx) {
   }
 
   const metrics = await Promise.all(chart.value.config.valuesFields?.map(v => {
-    params.field = v.key
+    params.field = v
     return ofetch(`${datasetUrl.value}/metric_agg`, { params }).catch(e => {
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
@@ -32,14 +32,14 @@ export default async function fetchAggsLabelsData (ctx) {
   }))
 
   const labels = chart.value.config.valuesFields
-    .map(f => fields.value[f.key].label || fields.value[f.key].title || fields.value[f.key]['x-originalName'] || f.key)
+    .map(f => fields.value[f].label || fields.value[f].title || fields.value[f]['x-originalName'] || f)
     .map(l => chart.value.config.removeFromLabels ? l.replace(chart.value.config.removeFromLabels, '') : l)
 
-  const colors = getColors(chart.value.config.valuesFields.map(f => f.key), chart.value.config.colors)
+  const colors = getColors(chart.value.config.valuesFields, chart.value.config.colors)
   const datasets = [{
     labels,
     borderColor: 'white',
-    backgroundColor: chart.value.config.valuesFields.map(f => f.key).map(l => colors[l] || chart.value.config.colors?.defaultColor || '#828282'),
+    backgroundColor: chart.value.config.valuesFields.map(l => colors[l] || chart.value.config.colors?.defaultColor || '#828282'),
     data: metrics.map(a => getValue(a.metric))
   }]
 

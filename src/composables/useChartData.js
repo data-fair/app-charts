@@ -3,6 +3,7 @@ import { useDebounce } from '@vueuse/core'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { useConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
 import { filters2qs } from '@data-fair/lib-utils/filters'
+import { normalizeFilters } from '@/assets/utils'
 import { useConfig } from '@/composables/config'
 
 import fetchRowsBasedData from './chart-data/rowsBased.js'
@@ -24,7 +25,7 @@ export function useChartData () {
     return useDebounce(computed(() => {
       const params = { ...conceptFilters }
       if (ignoreField) delete params[`_d_${config.value.datasets?.[0]?.id}_${ignoreField}_in`]
-      const qs = config.value.staticFilters?.length ? filters2qs(config.value.staticFilters).split(' AND ') : []
+      const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters)).split(' AND ') : []
       if (qs.length) params.qs = qs.join(' AND ')
       return params
     }), 500)

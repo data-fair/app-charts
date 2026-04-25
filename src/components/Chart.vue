@@ -24,7 +24,7 @@ ChartJS.register(Title, Tooltip, Legend,
   BarElement, PointElement, ArcElement, LineElement,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler)
 
-const { config, chart, dynamicMetric } = useConfig()
+const { config, chart, fields, dynamicMetric } = useConfig()
 const theme = useTheme()
 const loading = ref(false)
 const { getData } = useChartData()
@@ -37,7 +37,7 @@ const options = computed(() => {
     plugins: {
       legend: {
         display: chart.value.type !== 'pie' && !!chart.value.config.colors &&
-        !(chart.value.config.groupBy?.type === 'value' && chart.value.config.groupBy.field?.key === chart.value.config.groupsField?.key),
+        !(chart.value.config.groupBy?.type === 'value' && chart.value.config.groupBy.field === chart.value.config.groupsField),
         position: config.value.legendPosition || 'top'
       },
       title: {
@@ -82,7 +82,7 @@ const options = computed(() => {
       }
     }
   }
-  if ((chart.value?.config.groupBy && chart.value?.config.groupBy.type === 'date') || (chart.value?.config.labelsField && chart.value?.config.labelsField.format === 'date')) {
+  if ((chart.value?.config.groupBy && chart.value?.config.groupBy.type === 'date') || (chart.value?.config.labelsField && fields.value?.[chart.value.config.labelsField]?.format === 'date')) {
     options.scales.x.type = 'time'
   }
   if (chart.value.yAxisStartsZero) {

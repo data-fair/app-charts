@@ -20,7 +20,7 @@ export default async function fetchRowsBasedData (ctx, theme) {
   const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, categories: existingCategories } = ctx
 
   const fill = chart.value.area || (chart.value.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
-  const select = [chart.value.config.labelsField.key].concat(chart.value.config.valuesField || chart.value.config.valuesFields.map(v => v.key))
+  const select = [chart.value.config.labelsField].concat(chart.value.config.valuesField || chart.value.config.valuesFields)
   const params = {
     ...baseParams.value,
     size: chart.value.type === 'pie' ? 10000 : chart.value.config.size,
@@ -45,7 +45,7 @@ export default async function fetchRowsBasedData (ctx, theme) {
     displayError.value = true
   })
 
-  const labels = results.map(r => fields.value[chart.value.config.labelsField.key]['x-labels']?.[r[chart.value.config.labelsField.key]] || r[chart.value.config.labelsField.key]).slice(0, chart.value.config.size)
+  const labels = results.map(r => fields.value[chart.value.config.labelsField]['x-labels']?.[r[chart.value.config.labelsField]] || r[chart.value.config.labelsField]).slice(0, chart.value.config.size)
   let datasets
 
   if (chart.value.config.color) {
@@ -58,12 +58,12 @@ export default async function fetchRowsBasedData (ctx, theme) {
       fill
     }]
   } else {
-    const rawLabels = results.slice(0, chart.value.config.size).map(r => r[chart.value.config.labelsField.key])
+    const rawLabels = results.slice(0, chart.value.config.size).map(r => r[chart.value.config.labelsField])
     if (chart.value.type === 'pie' && results.length > chart.value.config.size) {
       labels.push('Autre')
       rawLabels.push('Autre')
     }
-    const colors = getColors(categories?.map(c => c.value) || (chart.value.config.valuesField && rawLabels) || chart.value.config.valuesFields?.map(v => v.key), chart.value.config.colors)
+    const colors = getColors(categories?.map(c => c.value) || (chart.value.config.valuesField && rawLabels) || chart.value.config.valuesFields, chart.value.config.colors)
 
     if (chart.value.config.valuesField) {
       if (categories) {
@@ -95,13 +95,13 @@ export default async function fetchRowsBasedData (ctx, theme) {
     } else {
       datasets = chart.value.config.valuesFields.map(field => ({
         label: chart.value.config.removeFromLabels
-          ? (fields.value[field.key].label || fields.value[field.key].title || fields.value[field.key]['x-originalName'] || field.key).replace(chart.value.config.removeFromLabels, '')
-          : (fields.value[field.key].label || fields.value[field.key].title || fields.value[field.key]['x-originalName'] || field.key),
-        borderColor: colors[field.key],
-        backgroundColor: colors[field.key],
+          ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value.config.removeFromLabels, '')
+          : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
+        borderColor: colors[field],
+        backgroundColor: colors[field],
         pointStyle: chart.value.hidePoints ? false : 'circle',
         fill,
-        data: results.map(r => getValue(r[field.key]))
+        data: results.map(r => getValue(r[field]))
       }))
       if (chart.value.percentage) {
         for (const i in datasets[0].data) {

@@ -23,7 +23,7 @@ export default async function fetchAggsBasedData (ctx, theme) {
   const params = {
     ...baseParams.value,
     size: 0,
-    field: chart.value.config.groupBy.field.key,
+    field: chart.value.config.groupBy.field,
     interval: chart.value.config.groupBy.interval || 'value',
     agg_size: chart.value.type === 'pie' ? 1000 : chart.value.config.size,
     sort: getSortStr(chart.value.config),
@@ -33,14 +33,14 @@ export default async function fetchAggsBasedData (ctx, theme) {
   if (chart.value.config.missingLabel) params.missing = chart.value.config.missingLabel
   if (chart.value.config.valueCalc?.type === 'metric' || chart.value.config.valuesCalc) {
     params.metric = reactiveSearchParams.metric || chart.value.config.metric || chart.value.config.valueCalc.metric
-    params.metric_field = chart.value.config.valuesCalc?.[0]?.key || chart.value.config.valueCalc.field.key
+    params.metric_field = chart.value.config.valuesCalc?.[0] || chart.value.config.valueCalc.field
     if (chart.value.config.valuesCalc?.length > 1) {
-      params.extra_metrics = chart.value.config.valuesCalc.slice(1).map(v => v.key + ':' + chart.value.config.metric).join(',')
+      params.extra_metrics = chart.value.config.valuesCalc.slice(1).map(v => v + ':' + chart.value.config.metric).join(',')
     }
   }
 
   if (chart.value.config.groupsField) {
-    params.field = params.field + ';' + chart.value.config.groupsField.key
+    params.field = params.field + ';' + chart.value.config.groupsField
     params.agg_size = params.agg_size + ';12'
     params.sort = params.sort + ';-' + chart.value.config.valueCalc.type
   }
@@ -51,7 +51,7 @@ export default async function fetchAggsBasedData (ctx, theme) {
   })
 
   const rawLabels = aggs.slice(0, chart.value.config.size).map(a => a.value)
-  const labels = rawLabels.map(a => fields.value[chart.value.config.groupBy.field.key]['x-labels']?.[a] || a)
+  const labels = rawLabels.map(a => fields.value[chart.value.config.groupBy.field]['x-labels']?.[a] || a)
   let datasets
 
   if (chart.value.config.color) {
@@ -70,7 +70,7 @@ export default async function fetchAggsBasedData (ctx, theme) {
         : orderBy([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))).filter((s, i, self) => self.indexOf(s) === i))
       const colors = getColors(series, chart.value.config.colors)
       datasets = series.map(label => ({
-        label: fields.value[chart.value.config.groupsField.key]['x-labels']?.[label] || label,
+        label: fields.value[chart.value.config.groupsField]['x-labels']?.[label] || label,
         borderColor: colors[label],
         backgroundColor: colors[label],
         pointStyle: chart.value.hidePoints ? false : 'circle',
@@ -88,16 +88,16 @@ export default async function fetchAggsBasedData (ctx, theme) {
       }
     } else {
       if (chart.value.config.type === 'aggsBasedCategories') {
-        const colors = getColors(chart.value.config.valuesCalc.map(v => v.key), chart.value.config.colors)
+        const colors = getColors(chart.value.config.valuesCalc, chart.value.config.colors)
         datasets = chart.value.config.valuesCalc.map((field, i) => ({
           label: chart.value.config.removeFromLabels
-            ? (fields.value[field.key].label || fields.value[field.key].title || fields.value[field.key]['x-originalName'] || field.key).replace(chart.value.config.removeFromLabels, '')
-            : (fields.value[field.key].label || fields.value[field.key].title || fields.value[field.key]['x-originalName'] || field.key),
-          borderColor: colors[field.key],
-          backgroundColor: colors[field.key],
+            ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value.config.removeFromLabels, '')
+            : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
+          borderColor: colors[field],
+          backgroundColor: colors[field],
           pointStyle: chart.value.hidePoints ? false : 'circle',
           fill,
-          data: aggs.map(a => getValue(i === 0 ? a.metric : a[field.key + '_' + chart.value.config.metric]))
+          data: aggs.map(a => getValue(i === 0 ? a.metric : a[field + '_' + chart.value.config.metric]))
         }))
       } else {
         if (chart.value.type === 'pie' && aggs.length > chart.value.config.size) {
