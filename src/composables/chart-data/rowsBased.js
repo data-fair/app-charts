@@ -13,13 +13,12 @@
  */
 
 import { ofetch } from 'ofetch'
-import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { getSortStr, getColors, splitString } from '@/assets/utils'
 
 export default async function fetchRowsBasedData (ctx, theme) {
-  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, categories: existingCategories } = ctx
+  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, stacked, categories: existingCategories } = ctx
 
-  const fill = chart.value.area || (chart.value.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
+  const fill = chart.value.area || (chart.value.type === 'multi-line' && stacked === 'true')
   const select = [chart.value.config.labelsField].concat(chart.value.config.valuesField || chart.value.config.valuesFields)
   const params = {
     ...baseParams.value,
@@ -35,6 +34,7 @@ export default async function fetchRowsBasedData (ctx, theme) {
       categories = await ofetch(`${datasetUrl.value}/values-labels/${chart.value.config.categoriesField}`).catch(e => {
         errorMessage.value = e.status + ' - ' + e.data
         displayError.value = true
+        return []
       })
     }
   }
@@ -43,9 +43,10 @@ export default async function fetchRowsBasedData (ctx, theme) {
   const { results } = await ofetch(`${datasetUrl.value}/lines`, { params }).catch(e => {
     errorMessage.value = e.status + ' - ' + e.data
     displayError.value = true
+    return { results: [] }
   })
 
-  const labels = results.map(r => fields.value[chart.value.config.labelsField]['x-labels']?.[r[chart.value.config.labelsField]] || r[chart.value.config.labelsField]).slice(0, chart.value.config.size)
+  const labels = results.map(r => fields.value[chart.value.config.labelsField]?.['x-labels']?.[r[chart.value.config.labelsField]] || r[chart.value.config.labelsField]).slice(0, chart.value.config.size)
   let datasets
 
   if (chart.value.config.color) {

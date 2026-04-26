@@ -2,8 +2,7 @@
 import { useChartData } from '@/composables/useChartData.js'
 import Actions from './Actions.vue'
 import { useConfig } from '@/composables/config'
-import { ref, computed } from 'vue'
-import { computedAsync } from '@vueuse/core'
+import { ref, computed, watch } from 'vue'
 import { useTheme } from 'vuetify'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import dayjs from 'dayjs'
@@ -22,12 +21,19 @@ import 'dayjs/locale/fr'
 dayjs.locale('fr')
 ChartJS.register(Title, Tooltip, Legend,
   BarElement, PointElement, ArcElement, LineElement,
-  CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler)
+  CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler,
+  ChartDataLabels, OutLabels)
 
 const { config, chart, fields, dynamicMetric } = useConfig()
 const theme = useTheme()
 const loading = ref(false)
-const { getData } = useChartData()
+const { getData, queryKey } = useChartData()
+
+// Force chart recreation only for structural changes that Chart.js can't handle in-place:
+// - horizontal: switches indexAxis (Chart.js can't swap axes live)
+const chartKey = computed(() => JSON.stringify({
+  horizontal: chart.value.horizontal,
+}))
 
 const options = computed(() => {
   const options = {
@@ -85,10 +91,8 @@ const options = computed(() => {
   if ((chart.value?.config.groupBy && chart.value?.config.groupBy.type === 'date') || (chart.value?.config.labelsField && fields.value?.[chart.value.config.labelsField]?.format === 'date')) {
     options.scales.x.type = 'time'
   }
-  if (chart.value.yAxisStartsZero) {
-    options.scales.y.min = 0
-  } else if (chart.value.yAxisNotStartsZero) {
-    options.scales.y.beginAtZero = false
+  if (chart.value.yAxisStartsZero !== undefined) {
+    options.scales.y.beginAtZero = chart.value.yAxisStartsZero
   }
   if (chart.value.percentage) {
     options.scales.y.ticks = {
@@ -122,11 +126,11 @@ const options = computed(() => {
         return value ? value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '') : ''
       }
     }
-    ChartJS.register(ChartDataLabels)
     options.layout = { padding: chart.value.horizontal ? { right: 64 } : { top: 24 } }
+  } else {
+    options.plugins.datalabels = { display: false }
   }
   if (chart.value.type === 'pie') {
-    ChartJS.register(OutLabels)
     if (config.value.title || chart.value.sumInTitle) {
       options.plugins.title.padding = { top: 0, bottom: 48 }
       options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
@@ -141,6 +145,7 @@ const options = computed(() => {
         return (config.value.title ? config.value.title + ' : ' : '') + sum.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
+    options.plugins.datalabels = { display: false }
     options.rotation = chart.value.rotation || 0
     options.scales.x.display = false
     options.scales.y.display = false
@@ -226,7 +231,38 @@ const options = computed(() => {
   return options
 })
 
-const data = computedAsync(getData(theme)[chart.value.config.type?.replace('Categories', '')], null, loading)
+const data = ref(null)
+
+watch(queryKey, async (newKey, oldKey, onCleanup) => {
+  let cancelled = false
+  if (onCleanup) onCleanup(() => { cancelled = true })
+
+  const mode = chart.value.config.type?.replace('Categories', '')
+  const fetcher = getData(theme)[mode]
+  if (!fetcher) {
+    if (!cancelled) {
+      data.value = null
+      loading.value = false
+    }
+    return
+  }
+
+  loading.value = true
+  try {
+    const result = await fetcher()
+    if (!cancelled) {
+      data.value = result
+    }
+  } catch (e) {
+    if (!cancelled) {
+      data.value = null
+    }
+  } finally {
+    if (!cancelled) {
+      loading.value = false
+    }
+  }
+}, { immediate: true })
 </script>
 
 <template lang="html">
@@ -240,16 +276,19 @@ const data = computedAsync(getData(theme)[chart.value.config.type?.replace('Cate
     >
       <Line
         v-if="['line', 'multi-line'].includes(chart.type)"
+        :key="chartKey"
         :options="options"
         :data="data"
       />
       <Bar
         v-else-if="['bar', 'multi-bar', 'paired-histogram'].includes(chart.type)"
+        :key="chartKey"
         :options="options"
         :data="data"
       />
       <div
         v-else
+        :key="chartKey"
         class="h-screen"
         style="display: flex;align-items: center;justify-content: center;"
       >
@@ -265,5 +304,9 @@ const data = computedAsync(getData(theme)[chart.value.config.type?.replace('Cate
         />
       </div>
     </div>
+    <v-progress-linear
+      v-else-if="loading"
+      indeterminate
+    />
   </div>
 </template>

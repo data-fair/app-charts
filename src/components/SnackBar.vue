@@ -5,7 +5,7 @@ import { errorMessage, displayError } from '@/composables/useChartData.js'
 <template>
   <v-snackbar
     v-model="displayError"
-    :timeout="'5000'"
+    :timeout="5000"
     color="red"
   >
     <div>

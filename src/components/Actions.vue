@@ -2,13 +2,19 @@
 import { useConfig } from '@/composables/config'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { mdiSortVariant, mdiSortReverseVariant } from '@mdi/js'
+import { watch } from 'vue'
 
 const { chart, dynamicMetric } = useConfig()
-if (dynamicMetric.value) reactiveSearchParams.metric = chart.value.config.valueCalc.metric
-if (chart.value.config.dynamicSort) {
-  reactiveSearchParams['sort-by'] = chart.value.config.sortBy
-  reactiveSearchParams['sort-order'] = chart.value.config.sortOrder
-}
+
+watch(() => chart.value?.config, (chartConfig) => {
+  if (dynamicMetric.value && chartConfig?.valueCalc?.metric) {
+    reactiveSearchParams.metric = chartConfig.valueCalc.metric
+  }
+  if (chartConfig?.dynamicSort) {
+    reactiveSearchParams['sort-by'] = chartConfig.sortBy
+    reactiveSearchParams['sort-order'] = chartConfig.sortOrder
+  }
+}, { immediate: true, deep: true })
 
 const metrics = [
   { value: 'avg', title: 'Moyenne' },
@@ -37,7 +43,7 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
 </script>
 
 <template lang="html">
-  <v-container>
+  <v-container class="actions-container">
     <v-row>
       <v-col
         v-if="dynamicMetric"
@@ -107,8 +113,8 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
   </v-container>
 </template>
 
-<style>
-.v-icon {
-transform:rotate(270deg);
+<style scoped>
+.actions-container .v-btn-toggle .v-icon {
+  transform: rotate(270deg);
 }
 </style>

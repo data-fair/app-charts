@@ -12,14 +12,13 @@
  */
 
 import { ofetch } from 'ofetch'
-import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { getSortStr, getColors, splitString } from '@/assets/utils'
 import { orderBy } from 'natural-orderby'
 
 export default async function fetchAggsBasedData (ctx, theme) {
-  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage } = ctx
+  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, stacked, metric } = ctx
 
-  const fill = chart.value.area || (chart.value.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
+  const fill = chart.value.area || (chart.value.type === 'multi-line' && stacked === 'true')
   const params = {
     ...baseParams.value,
     size: 0,
@@ -32,7 +31,7 @@ export default async function fetchAggsBasedData (ctx, theme) {
 
   if (chart.value.config.missingLabel) params.missing = chart.value.config.missingLabel
   if (chart.value.config.valueCalc?.type === 'metric' || chart.value.config.valuesCalc) {
-    params.metric = reactiveSearchParams.metric || chart.value.config.metric || chart.value.config.valueCalc.metric
+    params.metric = metric || chart.value.config.metric || chart.value.config.valueCalc.metric
     params.metric_field = chart.value.config.valuesCalc?.[0] || chart.value.config.valueCalc.field
     if (chart.value.config.valuesCalc?.length > 1) {
       params.extra_metrics = chart.value.config.valuesCalc.slice(1).map(v => v + ':' + chart.value.config.metric).join(',')
@@ -48,6 +47,7 @@ export default async function fetchAggsBasedData (ctx, theme) {
   const { aggs } = await ofetch(`${datasetUrl.value}/values_agg`, { params }).catch(e => {
     errorMessage.value = e.status + ' - ' + e.data
     displayError.value = true
+    return { aggs: [] }
   })
 
   const rawLabels = aggs.slice(0, chart.value.config.size).map(a => a.value)
@@ -67,7 +67,7 @@ export default async function fetchAggsBasedData (ctx, theme) {
     if (chart.value.config.groupsField) {
       const series = chart.value.config.colors.type === 'manual'
         ? chart.value.config.colors.styles.map(s => s.value)
-        : orderBy([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))).filter((s, i, self) => self.indexOf(s) === i))
+        : orderBy([...new Set([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))))])
       const colors = getColors(series, chart.value.config.colors)
       datasets = series.map(label => ({
         label: fields.value[chart.value.config.groupsField]['x-labels']?.[label] || label,

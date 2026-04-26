@@ -28,6 +28,7 @@ export default async function fetchAggsLabelsData (ctx) {
     return ofetch(`${datasetUrl.value}/metric_agg`, { params }).catch(e => {
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
+      return { metric: 0 }
     })
   }))
 

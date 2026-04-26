@@ -12,20 +12,19 @@
  */
 
 import { ofetch } from 'ofetch'
-import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { getColors, splitString } from '@/assets/utils'
 
 export default async function fetchAggsBasedLabelsData (ctx, theme) {
-  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage } = ctx
+  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, stacked, metric } = ctx
 
-  const fill = chart.value.area || (chart.value.type === 'multi-line' && reactiveSearchParams.stacked === 'true')
+  const fill = chart.value.area || (chart.value.type === 'multi-line' && stacked === 'true')
   const params = {
     ...baseParams.value,
     size: 0,
     field: chart.value.config.valuesLabel,
     sort: chart.value.config.valuesLabel,
     agg_size: chart.value.config.size,
-    metric: reactiveSearchParams.metric || chart.value.config.metric,
+    metric: metric || chart.value.config.metric,
     metric_field: chart.value.config.labelsValues?.[0],
     finalizedAt: finalizedAt.value
   }
@@ -38,6 +37,7 @@ export default async function fetchAggsBasedLabelsData (ctx, theme) {
   const { aggs } = await ofetch(`${datasetUrl.value}/values_agg`, { params }).catch(e => {
     errorMessage.value = e.status + ' - ' + e.data
     displayError.value = true
+    return { aggs: [] }
   })
 
   const labels = chart.value.config.labelsValues
@@ -46,7 +46,7 @@ export default async function fetchAggsBasedLabelsData (ctx, theme) {
 
   const series = aggs.slice(0, chart.value.config.size)
   series.forEach(s => {
-    s.label = fields.value?.[chart.value.config.valuesLabel]['x-labels']?.[s.value] || s.value
+    s.label = fields.value?.[chart.value.config.valuesLabel]?.['x-labels']?.[s.value] || s.value
   })
 
   const colors = getColors(series.map(s => s.value), chart.value.config.colors)
@@ -56,7 +56,7 @@ export default async function fetchAggsBasedLabelsData (ctx, theme) {
     backgroundColor: colors[serie.value],
     pointStyle: chart.value.hidePoints ? false : 'circle',
     fill,
-    data: chart.value.config.labelsValues.map((l, i) => getValue(!i ? serie.metric : serie[l + '_' + params.metric]))
+    data: chart.value.config.labelsValues.map((l, li) => getValue(!li ? serie.metric : serie[l + '_' + params.metric]))
   }))
 
   return {

@@ -295,6 +295,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesField": {
@@ -438,6 +440,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesField": {
@@ -780,6 +784,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valueCalc": {
@@ -968,9 +974,10 @@
                   "title": "Cacher l'axe Y",
                   "description": "Les valeurs apparaitront au au dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
                 },
-                "yAxisNotStartsZero": {
+                "yAxisStartsZero": {
                   "type": "boolean",
-                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
+                  "title": "Commencer à partir de 0 pour l'axe des ordonnées",
+                  "default": true
                 },
                 "horizontal": {
                   "type": "boolean",
@@ -1015,6 +1022,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesField": {
@@ -1158,6 +1167,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesField": {
@@ -1500,6 +1511,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valueCalc": {
@@ -1693,14 +1706,7 @@
                 },
                 "percentage": {
                   "type": "boolean",
-                  "title": "Pourcentages",
-                  "layout": {
-                    "if": {
-                      "type": "js-eval",
-                      "expr": "parent.data.stacked",
-                      "pure": false
-                    }
-                  }
+                  "title": "Pourcentages"
                 },
                 "disableDynamicStack": {
                   "type": "boolean",
@@ -1752,6 +1758,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesFields": {
@@ -2096,6 +2104,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valueCalc": {
@@ -2530,6 +2540,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "sortBy": {
@@ -2706,7 +2718,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -2727,7 +2739,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -2771,6 +2783,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "colors": {
@@ -2908,9 +2922,10 @@
                   "title": "Cacher l'axe Y",
                   "description": "Les valeurs apparaitront au au dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
                 },
-                "yAxisNotStartsZero": {
+                "yAxisStartsZero": {
                   "type": "boolean",
-                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
+                  "title": "Commencer à partir de 0 pour l'axe des ordonnées",
+                  "default": true
                 },
                 "horizontal": {
                   "type": "boolean",
@@ -2973,6 +2988,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesFields": {
@@ -3317,6 +3334,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valueCalc": {
@@ -3751,6 +3770,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "sortBy": {
@@ -3927,7 +3948,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -3948,7 +3969,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -3992,6 +4013,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "colors": {
@@ -4169,6 +4192,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesFields": {
@@ -4513,6 +4538,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valueCalc": {
@@ -4947,6 +4974,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "sortBy": {
@@ -5123,7 +5152,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -5144,7 +5173,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -5188,6 +5217,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "colors": {
@@ -6106,6 +6137,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valuesFields": {
@@ -6450,6 +6483,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "valueCalc": {
@@ -6884,6 +6919,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "sortBy": {
@@ -7060,7 +7097,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -7081,7 +7118,7 @@
                             "getItems": {
                               "url": {
                                 "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                                 "pure": false
                               },
                               "itemKey": "data[\"key\"]",
@@ -7125,6 +7162,8 @@
                         "size": {
                           "type": "integer",
                           "title": "Nombre maximal d'élements",
+                          "minimum": 1,
+                          "maximum": 200,
                           "default": 10
                         },
                         "colors": {
@@ -7360,6 +7399,8 @@
     "size": {
       "type": "integer",
       "title": "Nombre maximal d'élements",
+      "minimum": 1,
+      "maximum": 200,
       "default": 10
     },
     "horizontal": {
@@ -7435,7 +7476,7 @@
         "getItems": {
           "url": {
             "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
             "pure": false
           },
           "itemKey": "data[\"key\"]",
@@ -7451,7 +7492,7 @@
         "getItems": {
           "url": {
             "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
             "pure": false
           },
           "itemKey": "data[\"key\"]",
@@ -7819,6 +7860,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "valuesField": {
@@ -7962,6 +8005,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "valuesField": {
@@ -8304,6 +8349,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "valueCalc": {
@@ -8511,6 +8558,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "valuesField": {
@@ -8654,6 +8703,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "valuesField": {
@@ -8996,6 +9047,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "valueCalc": {
@@ -9199,6 +9252,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "valuesFields": {
@@ -9543,6 +9598,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "valueCalc": {
@@ -9977,6 +10034,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "sortBy": {
@@ -10153,7 +10212,7 @@
             "getItems": {
               "url": {
                 "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                 "pure": false
               },
               "itemKey": "data[\"key\"]",
@@ -10174,7 +10233,7 @@
             "getItems": {
               "url": {
                 "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                 "pure": false
               },
               "itemKey": "data[\"key\"]",
@@ -10218,6 +10277,8 @@
         "size": {
           "type": "integer",
           "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
           "default": 10
         },
         "colors": {
@@ -10376,6 +10437,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "valuesFields": {
@@ -10720,6 +10783,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "valueCalc": {
@@ -11154,6 +11219,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "sortBy": {
@@ -11330,7 +11397,7 @@
                 "getItems": {
                   "url": {
                     "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                    "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                     "pure": false
                   },
                   "itemKey": "data[\"key\"]",
@@ -11351,7 +11418,7 @@
                 "getItems": {
                   "url": {
                     "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                    "expr": "${rootData.datasets[0].href}/schema?calculated=false",
                     "pure": false
                   },
                   "itemKey": "data[\"key\"]",
@@ -11395,6 +11462,8 @@
             "size": {
               "type": "integer",
               "title": "Nombre maximal d'élements",
+              "minimum": 1,
+              "maximum": 200,
               "default": 10
             },
             "colors": {

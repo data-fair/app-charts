@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useDebounce } from '@vueuse/core'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { useConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
@@ -18,20 +18,22 @@ export function useChartData () {
   const { config, dataset, chart, datasetUrl, fields, finalizedAt } = useConfig()
   const conceptFilters = useConceptFilters(reactiveSearchParams, dataset.value?.id)
 
-  if (chart.value?.stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
-  else delete reactiveSearchParams.stacked
+  watch(() => chart.value?.stacked, (stacked) => {
+    if (stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
+    else delete reactiveSearchParams.stacked
+  }, { immediate: true })
 
-  function getParams (ignoreField) {
-    return useDebounce(computed(() => {
-      const params = { ...conceptFilters }
-      if (ignoreField) delete params[`_d_${config.value.datasets?.[0]?.id}_${ignoreField}_in`]
-      const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters)).split(' AND ') : []
-      if (qs.length) params.qs = qs.join(' AND ')
-      return params
-    }), 500)
-  }
+  watch(config, () => {
+    displayError.value = false
+    errorMessage.value = ''
+  }, { deep: true })
 
-  const baseParams = getParams()
+  const baseParams = useDebounce(computed(() => {
+    const params = { ...conceptFilters }
+    const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters)).split(' AND ') : []
+    if (qs.length) params.qs = qs.join(' AND ')
+    return params
+  }), 500)
   const getValue = (value) => value != null ? value / config.value.divider : undefined
 
   let categories
@@ -46,19 +48,74 @@ export function useChartData () {
     getValue,
     displayError,
     errorMessage,
+    get stacked () { return reactiveSearchParams.stacked },
+    get metric () { return reactiveSearchParams.metric },
     get categories () { return categories }
   }
 
+  const queryKey = computed(() => {
+    const c = chart.value.config
+    return JSON.stringify({
+      type: c.type,
+      display: chart.value.display,
+      percentage: chart.value.percentage,
+      sumInTitle: chart.value.sumInTitle,
+      area: chart.value.area,
+      hidePoints: chart.value.hidePoints,
+      labelsField: c.labelsField,
+      valuesField: c.valuesField,
+      valuesFields: c.valuesFields,
+      categoriesField: c.categoriesField,
+      groupsField: c.groupsField,
+      groupBy: c.groupBy,
+      valuesLabel: c.valuesLabel,
+      labelsValues: c.labelsValues,
+      size: c.size,
+      metric: c.metric,
+      valueCalc: c.valueCalc,
+      valuesCalc: c.valuesCalc,
+      missingLabel: c.missingLabel,
+      dynamicSort: c.dynamicSort,
+      sortBy: c.sortBy,
+      sortOrder: c.sortOrder,
+      color: c.color,
+      colors: c.colors,
+      divider: config.value.divider,
+      datasetId: config.value.datasets?.[0]?.id,
+      finalizedAt: finalizedAt.value,
+      staticFilters: JSON.stringify(config.value.staticFilters),
+      baseParams: baseParams.value,
+      'reactiveSearchParams.metric': reactiveSearchParams.metric,
+      'reactiveSearchParams.sort-by': reactiveSearchParams['sort-by'],
+      'reactiveSearchParams.sort-order': reactiveSearchParams['sort-order'],
+      'reactiveSearchParams.stacked': reactiveSearchParams.stacked
+    })
+  })
+
   const getData = (theme) => ({
     rowsBased: async () => {
+      displayError.value = false
+      errorMessage.value = ''
       const result = await fetchRowsBasedData(ctx, theme)
       categories = result.categories
       return result
     },
-    aggsBased: async () => fetchAggsBasedData(ctx, theme),
-    aggsBasedLabels: async () => fetchAggsBasedLabelsData(ctx, theme),
-    aggsLabels: async () => fetchAggsLabelsData(ctx)
+    aggsBased: async () => {
+      displayError.value = false
+      errorMessage.value = ''
+      return fetchAggsBasedData(ctx, theme)
+    },
+    aggsBasedLabels: async () => {
+      displayError.value = false
+      errorMessage.value = ''
+      return fetchAggsBasedLabelsData(ctx, theme)
+    },
+    aggsLabels: async () => {
+      displayError.value = false
+      errorMessage.value = ''
+      return fetchAggsLabelsData(ctx)
+    }
   })
 
-  return { getData, displayError, errorMessage }
+  return { getData, queryKey, displayError, errorMessage }
 }

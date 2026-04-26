@@ -79,9 +79,10 @@
                 "hideYAxis": {
                   "$ref": "#/definitions/hideYAxis"
                 },
-                "yAxisNotStartsZero": {
+                "yAxisStartsZero": {
                   "type": "boolean",
-                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
+                  "title": "Commencer à partir de 0 pour l'axe des ordonnées",
+                  "default": true
                 },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"
@@ -107,14 +108,7 @@
                 },
                 "percentage": {
                   "type": "boolean",
-                  "title": "Pourcentages",
-                  "layout": {
-                    "if": {
-                      "type": "js-eval",
-                      "expr": "parent.data.stacked",
-                      "pure": false
-                    }
-                  }
+                  "title": "Pourcentages"
                 },
                 "disableDynamicStack": {
                   "type": "boolean",
@@ -144,9 +138,10 @@
                 "hideYAxis": {
                   "$ref": "#/definitions/hideYAxis"
                 },
-                "yAxisNotStartsZero": {
+                "yAxisStartsZero": {
                   "type": "boolean",
-                  "title": "Ne pas commencer à partir de 0 pour l'axe des ordonnées"
+                  "title": "Commencer à partir de 0 pour l'axe des ordonnées",
+                  "default": true
                 },
                 "horizontal": {
                   "$ref": "#/definitions/horizontal"
@@ -369,6 +364,8 @@
     "size": {
       "type": "integer",
       "title": "Nombre maximal d'élements",
+      "minimum": 1,
+      "maximum": 200,
       "default": 10
     },
     "horizontal": {
@@ -444,7 +441,7 @@
         "getItems": {
           "url": {
             "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
             "pure": false
           },
           "itemKey": "data[\"key\"]",
@@ -460,7 +457,7 @@
         "getItems": {
           "url": {
             "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
             "pure": false
           },
           "itemKey": "data[\"key\"]",
