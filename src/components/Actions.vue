@@ -13,6 +13,9 @@ watch(() => chart.value?.config, (chartConfig) => {
   if (chartConfig?.dynamicSort) {
     reactiveSearchParams['sort-by'] = chartConfig.sortBy
     reactiveSearchParams['sort-order'] = chartConfig.sortOrder
+  } else {
+    delete reactiveSearchParams['sort-by']
+    delete reactiveSearchParams['sort-order']
   }
 }, { immediate: true, deep: true })
 
@@ -40,6 +43,7 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
     title: 'Ligne'
   })
 }
+
 </script>
 
 <template lang="html">

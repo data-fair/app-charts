@@ -268,7 +268,7 @@ watch(queryKey, async (newKey, oldKey, onCleanup) => {
 <template lang="html">
   <div style="display:flex;flex-direction:column;">
     <Actions
-      v-if="dynamicMetric || chart.config.dynamicSort || ['multi-bar', 'multi-line'].includes(chart.type)"
+      v-if="dynamicMetric || (chart.config.dynamicSort && chart.type !== 'pie') || ['multi-bar', 'multi-line'].includes(chart.type)"
     />
     <div
       v-if="data"

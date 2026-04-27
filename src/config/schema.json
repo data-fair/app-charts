@@ -1501,10 +1501,22 @@
           "$ref": "#/definitions/valuesField"
         },
         "sortBy": {
-          "const": "value"
+          "type": "string",
+          "title": "Trier par",
+          "default": "value",
+          "oneOf": [
+            {
+              "const": "value",
+              "title": "Valeur"
+            },
+            {
+              "const": "label",
+              "title": "Libellé"
+            }
+          ]
         },
         "sortOrder": {
-          "const": "desc"
+          "$ref": "#/definitions/sortOrder"
         },
         "colors": {
           "type": "object",
@@ -1600,6 +1612,12 @@
           "type": "string",
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
+        },
+        "sortBy": {
+          "$ref": "#/definitions/aggSort"
+        },
+        "sortOrder": {
+          "$ref": "#/definitions/sortOrder"
         },
         "colors": {
           "type": "object",

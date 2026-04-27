@@ -5450,10 +5450,34 @@
                           }
                         },
                         "sortBy": {
-                          "const": "value"
+                          "type": "string",
+                          "title": "Trier par",
+                          "default": "value",
+                          "oneOf": [
+                            {
+                              "const": "value",
+                              "title": "Valeur"
+                            },
+                            {
+                              "const": "label",
+                              "title": "Libellé"
+                            }
+                          ]
                         },
                         "sortOrder": {
-                          "const": "desc"
+                          "type": "string",
+                          "title": "Ordre",
+                          "default": "asc",
+                          "oneOf": [
+                            {
+                              "const": "asc",
+                              "title": "Ascendant"
+                            },
+                            {
+                              "const": "desc",
+                              "title": "Descendant"
+                            }
+                          ]
                         },
                         "colors": {
                           "type": "object",
@@ -5804,6 +5828,36 @@
                           "type": "string",
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
+                        },
+                        "sortBy": {
+                          "type": "string",
+                          "title": "Trier par",
+                          "default": "label",
+                          "oneOf": [
+                            {
+                              "const": "value",
+                              "title": "Valeur calculée"
+                            },
+                            {
+                              "const": "label",
+                              "title": "Libellé"
+                            }
+                          ]
+                        },
+                        "sortOrder": {
+                          "type": "string",
+                          "title": "Ordre",
+                          "default": "asc",
+                          "oneOf": [
+                            {
+                              "const": "asc",
+                              "title": "Ascendant"
+                            },
+                            {
+                              "const": "desc",
+                              "title": "Descendant"
+                            }
+                          ]
                         },
                         "colors": {
                           "type": "object",
@@ -11638,10 +11692,34 @@
           }
         },
         "sortBy": {
-          "const": "value"
+          "type": "string",
+          "title": "Trier par",
+          "default": "value",
+          "oneOf": [
+            {
+              "const": "value",
+              "title": "Valeur"
+            },
+            {
+              "const": "label",
+              "title": "Libellé"
+            }
+          ]
         },
         "sortOrder": {
-          "const": "desc"
+          "type": "string",
+          "title": "Ordre",
+          "default": "asc",
+          "oneOf": [
+            {
+              "const": "asc",
+              "title": "Ascendant"
+            },
+            {
+              "const": "desc",
+              "title": "Descendant"
+            }
+          ]
         },
         "colors": {
           "type": "object",
@@ -11993,6 +12071,36 @@
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
         },
+        "sortBy": {
+          "type": "string",
+          "title": "Trier par",
+          "default": "label",
+          "oneOf": [
+            {
+              "const": "value",
+              "title": "Valeur calculée"
+            },
+            {
+              "const": "label",
+              "title": "Libellé"
+            }
+          ]
+        },
+        "sortOrder": {
+          "type": "string",
+          "title": "Ordre",
+          "default": "asc",
+          "oneOf": [
+            {
+              "const": "asc",
+              "title": "Ascendant"
+            },
+            {
+              "const": "desc",
+              "title": "Descendant"
+            }
+          ]
+        },
         "colors": {
           "type": "object",
           "title": "Couleurs",
@@ -12332,10 +12440,34 @@
               }
             },
             "sortBy": {
-              "const": "value"
+              "type": "string",
+              "title": "Trier par",
+              "default": "value",
+              "oneOf": [
+                {
+                  "const": "value",
+                  "title": "Valeur"
+                },
+                {
+                  "const": "label",
+                  "title": "Libellé"
+                }
+              ]
             },
             "sortOrder": {
-              "const": "desc"
+              "type": "string",
+              "title": "Ordre",
+              "default": "asc",
+              "oneOf": [
+                {
+                  "const": "asc",
+                  "title": "Ascendant"
+                },
+                {
+                  "const": "desc",
+                  "title": "Descendant"
+                }
+              ]
             },
             "colors": {
               "type": "object",
@@ -12686,6 +12818,36 @@
               "type": "string",
               "title": "Groupe pour les éléments non renseignés",
               "default": ""
+            },
+            "sortBy": {
+              "type": "string",
+              "title": "Trier par",
+              "default": "label",
+              "oneOf": [
+                {
+                  "const": "value",
+                  "title": "Valeur calculée"
+                },
+                {
+                  "const": "label",
+                  "title": "Libellé"
+                }
+              ]
+            },
+            "sortOrder": {
+              "type": "string",
+              "title": "Ordre",
+              "default": "asc",
+              "oneOf": [
+                {
+                  "const": "asc",
+                  "title": "Ascendant"
+                },
+                {
+                  "const": "desc",
+                  "title": "Descendant"
+                }
+              ]
             },
             "colors": {
               "type": "object",

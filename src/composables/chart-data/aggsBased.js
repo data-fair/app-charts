@@ -14,6 +14,7 @@
 import { ofetch } from 'ofetch'
 import { getSortStr, getColors, splitString } from '@/assets/utils'
 import { orderBy } from 'natural-orderby'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 
 export default async function fetchAggsBasedData (ctx, theme) {
   const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, stacked, metric } = ctx
@@ -65,9 +66,31 @@ export default async function fetchAggsBasedData (ctx, theme) {
     }]
   } else {
     if (chart.value.config.groupsField) {
-      const series = chart.value.config.colors.type === 'manual'
-        ? chart.value.config.colors.styles.map(s => s.value)
-        : orderBy([...new Set([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))))])
+      let series
+      if (chart.value.config.colors.type === 'manual') {
+        series = chart.value.config.colors.styles.map(s => s.value)
+      } else {
+        const seriesSet = [...new Set([].concat(...aggs.map(a => a.aggs.map(ag => ag.value + ''))))]
+        const groupSortBy = reactiveSearchParams['group-sort-by'] || chart.value.config.groupSortBy
+        const groupSortOrder = reactiveSearchParams['group-sort-order'] || chart.value.config.groupSortOrder
+        if (groupSortBy === 'value') {
+          const seriesTotals = {}
+          aggs.forEach(a => {
+            a.aggs.forEach(ag => {
+              const rawVal = chart.value.config.valueCalc && chart.value.config.valueCalc.type === 'metric' ? ag.metric : ag.total
+              const val = getValue(rawVal) ?? 0
+              seriesTotals[ag.value + ''] = (seriesTotals[ag.value + ''] || 0) + val
+            })
+          })
+          series = seriesSet.sort((a, b) => {
+            const diff = (seriesTotals[a] || 0) - (seriesTotals[b] || 0)
+            return groupSortOrder === 'desc' ? -diff : diff
+          })
+        } else {
+          const groupField = fields.value[chart.value.config.groupsField]
+          series = orderBy(seriesSet, v => groupField?.['x-labels']?.[v] || v, groupSortOrder === 'desc' ? 'desc' : 'asc')
+        }
+      }
       const colors = getColors(series, chart.value.config.colors)
       datasets = series.map(label => ({
         label: fields.value[chart.value.config.groupsField]['x-labels']?.[label] || label,
