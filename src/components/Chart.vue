@@ -35,11 +35,18 @@ const chartKey = computed(() => JSON.stringify({
   horizontal: chart.value.horizontal,
 }))
 
+const chartFontFamily = computed(() => {
+  return getComputedStyle(document.body).fontFamily || getComputedStyle(document.documentElement).fontFamily
+})
+
 const options = computed(() => {
   const options = {
     maintainAspectRatio: false,
     responsive: true,
     locale: 'fr',
+    font: {
+      family: chartFontFamily.value
+    },
     plugins: {
       legend: {
         display: chart.value.type !== 'pie' && !!chart.value.config.colors &&
@@ -95,8 +102,14 @@ const options = computed(() => {
     options.scales.y.beginAtZero = chart.value.yAxisStartsZero
   }
   if (chart.value.percentage) {
-    options.scales.y.ticks = {
-      callback: v => v + ' %'
+    if (chart.value.horizontal) {
+      options.scales.x.ticks = {
+        callback: v => v + ' %'
+      }
+    } else {
+      options.scales.y.ticks = {
+        callback: v => v + ' %'
+      }
     }
   } else if (config.value.unit && chart.value.type !== 'paired-histogram') {
     if (chart.value.horizontal) {
@@ -112,9 +125,10 @@ const options = computed(() => {
   if (chart.value.hideYAxis) {
     options.scales[chart.value.horizontal ? 'y' : 'x'].grid = { display: false }
     options.scales[chart.value.horizontal ? 'x' : 'y'].display = false
+    const isStacked = chart.value.type === 'paired-histogram' || chart.value.config.categoriesField || reactiveSearchParams.stacked === 'true'
     options.plugins.datalabels = {
-      anchor: 'end',
-      align: 'end',
+      anchor: isStacked ? 'center' : 'end',
+      align: isStacked ? 'center' : 'end',
       labels: {
         title: {
           font: {
@@ -123,7 +137,11 @@ const options = computed(() => {
         }
       },
       formatter: function (value) {
-        return value ? value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '') : ''
+        if (!value) return ''
+        if (chart.value.percentage) {
+          return value.toLocaleString('fr', { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + ' %'
+        }
+        return value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
     options.layout = { padding: chart.value.horizontal ? { right: 64 } : { top: 24 } }
