@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useConfig } from '@/composables/config'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { mdiSortVariant, mdiSortReverseVariant } from '@mdi/js'
@@ -98,7 +98,7 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
         </v-select>
       </v-col>
       <v-col
-        v-if="['multi-bar', 'multi-line'].includes(chart.type) && (!chart.disableDynamicStack && !chart.percentage)"
+        v-if="['multi-bar', 'multi-line'].includes(chart.type as string) && (!chart.disableDynamicStack && !chart.percentage)"
         cols="12"
         sm="6"
         md="4"

@@ -1,5 +1,5 @@
-<script setup>
-import { errorMessage, displayError } from '@/composables/useChartData.js'
+<script setup lang="ts">
+import { errorMessage, displayError } from '@/composables/useChartData'
 </script>
 
 <template>

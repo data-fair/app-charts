@@ -9,6 +9,23 @@ export default [
   ...pluginVuetify.configs['flat/recommended'],
   ...neostandard(),
   {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parserOptions: {
+        parser: '@typescript-eslint/parser'
+      }
+    }
+  },
+  {
+    languageOptions: {
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        getComputedStyle: 'readonly'
+      }
+    }
+  },
+  {
     rules: {
       'vue/multi-word-component-names': 'off',
       'vue/no-v-html': 'off'

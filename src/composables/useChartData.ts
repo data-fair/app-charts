@@ -1,18 +1,34 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { useDebounce } from '@vueuse/core'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { useConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
 import { filters2qs } from '@data-fair/lib-utils/filters'
 import { normalizeFilters } from '@/assets/utils'
 import { useConfig } from '@/composables/config'
+import type { ConfigState } from '@/composables/config'
 
-import fetchRowsBasedData from './chart-data/rowsBased.js'
-import fetchAggsBasedData from './chart-data/aggsBased.js'
-import fetchAggsBasedLabelsData from './chart-data/aggsBasedLabels.js'
-import fetchAggsLabelsData from './chart-data/aggsLabels.js'
+import fetchRowsBasedData from './chart-data/rowsBased'
+import fetchAggsBasedData from './chart-data/aggsBased'
+import fetchAggsBasedLabelsData from './chart-data/aggsBasedLabels'
+import fetchAggsLabelsData from './chart-data/aggsLabels'
 
 export const displayError = ref(false)
 export const errorMessage = ref('')
+
+export interface ChartDataCtx {
+  config: ConfigState['config']
+  chart: ConfigState['chart']
+  fields: ConfigState['fields']
+  datasetUrl: ConfigState['datasetUrl']
+  finalizedAt: ConfigState['finalizedAt']
+  baseParams: Ref<any>
+  getValue: (value: number | null | undefined) => number | undefined
+  stacked: string | undefined
+  metric: string | undefined
+  categories: any[] | undefined
+  displayError: Ref<boolean>
+  errorMessage: Ref<string>
+}
 
 export function useChartData () {
   const { config, dataset, chart, datasetUrl, fields, finalizedAt } = useConfig()
@@ -29,16 +45,16 @@ export function useChartData () {
   }, { deep: true })
 
   const baseParams = useDebounce(computed(() => {
-    const params = { ...conceptFilters }
-    const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters)).split(' AND ') : []
+    const params: any = { ...conceptFilters }
+    const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters)!).split(' AND ') : []
     if (qs.length) params.qs = qs.join(' AND ')
     return params
   }), 500)
-  const getValue = (value) => value != null ? value / config.value.divider : undefined
+  const getValue = (value: number | null | undefined) => value != null ? value / (config.value.divider ?? 1) : undefined
 
-  let categories
+  let categories: any[] | undefined
 
-  const ctx = {
+  const ctx: ChartDataCtx = {
     config,
     chart,
     fields,
@@ -51,17 +67,17 @@ export function useChartData () {
     get stacked () { return reactiveSearchParams.stacked },
     get metric () { return reactiveSearchParams.metric },
     get categories () { return categories }
-  }
+  } as ChartDataCtx
 
   const queryKey = computed(() => {
-    const c = chart.value.config
+    const c = chart.value!.config
     return JSON.stringify({
       type: c.type,
-      display: chart.value.display,
-      percentage: chart.value.percentage,
-      sumInTitle: chart.value.sumInTitle,
-      area: chart.value.area,
-      hidePoints: chart.value.hidePoints,
+      display: chart.value!.display,
+      percentage: chart.value!.percentage,
+      sumInTitle: chart.value!.sumInTitle,
+      area: chart.value!.area,
+      hidePoints: chart.value!.hidePoints,
       labelsField: c.labelsField,
       valuesField: c.valuesField,
       valuesFields: c.valuesFields,
@@ -96,7 +112,7 @@ export function useChartData () {
     })
   })
 
-  const getData = (theme) => ({
+  const getData = (theme: any) => ({
     rowsBased: async () => {
       displayError.value = false
       errorMessage.value = ''

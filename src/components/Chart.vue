@@ -1,5 +1,5 @@
-<script setup>
-import { useChartData } from '@/composables/useChartData.js'
+<script setup lang="ts">
+import { useChartData } from '@/composables/useChartData'
 import Actions from './Actions.vue'
 import { useConfig } from '@/composables/config'
 import { ref, computed, watch } from 'vue'
@@ -32,7 +32,7 @@ const { getData, queryKey } = useChartData()
 // Force chart recreation only for structural changes that Chart.js can't handle in-place:
 // - horizontal: switches indexAxis (Chart.js can't swap axes live)
 const chartKey = computed(() => JSON.stringify({
-  horizontal: chart.value.horizontal,
+  horizontal: chart.value!.horizontal,
 }))
 
 const chartFontFamily = computed(() => {
@@ -40,7 +40,7 @@ const chartFontFamily = computed(() => {
 })
 
 const options = computed(() => {
-  const options = {
+  const options: any = {
     maintainAspectRatio: false,
     responsive: true,
     locale: 'fr',
@@ -49,8 +49,8 @@ const options = computed(() => {
     },
     plugins: {
       legend: {
-        display: chart.value.type !== 'pie' && !!chart.value.config.colors &&
-        !(chart.value.config.groupBy?.type === 'value' && chart.value.config.groupBy.field === chart.value.config.groupsField),
+        display: chart.value!.type !== 'pie' && !!chart.value!.config.colors &&
+        !(chart.value!.config.groupBy?.type === 'value' && chart.value!.config.groupBy.field === chart.value!.config.groupsField),
         position: config.value.legendPosition || 'top'
       },
       title: {
@@ -60,21 +60,21 @@ const options = computed(() => {
       tooltip: {
         enabled: !config.value.disableTooltip,
         callbacks: {
-          label: context => {
-            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.value.horizontal ? context.parsed.x : context.parsed.y) || context.parsed.r).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
+          label: (context: any) => {
+            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.value!.horizontal ? context.parsed.x : context.parsed.y) || context.parsed.r).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
           }
         }
       }
     }
   }
-  if (chart.value.cutout) options.cutout = chart.value.cutout + '%'
+  if (chart.value!.cutout) options.cutout = chart.value!.cutout + '%'
 
   options.scales = {
     x: {
-      stacked: chart.value.type === 'paired-histogram' || chart.value.config.categoriesField || reactiveSearchParams.stacked === 'true'
+      stacked: chart.value!.type === 'paired-histogram' || chart.value!.config.categoriesField || reactiveSearchParams.stacked === 'true'
     },
     y: {
-      stacked: chart.value.type === 'paired-histogram' || chart.value.config.categoriesField || reactiveSearchParams.stacked === 'true'
+      stacked: chart.value!.type === 'paired-histogram' || chart.value!.config.categoriesField || reactiveSearchParams.stacked === 'true'
     }
   }
   if (config.value.xTitle?.length) {
@@ -95,37 +95,37 @@ const options = computed(() => {
       }
     }
   }
-  if ((chart.value?.config.groupBy && chart.value?.config.groupBy.type === 'date') || (chart.value?.config.labelsField && fields.value?.[chart.value.config.labelsField]?.format === 'date')) {
+  if ((chart.value!.config.groupBy && chart.value!.config.groupBy.type === 'date') || (chart.value!.config.labelsField && fields.value?.[chart.value!.config.labelsField]?.format === 'date')) {
     options.scales.x.type = 'time'
   }
-  if (chart.value.yAxisStartsZero !== undefined) {
-    options.scales.y.beginAtZero = chart.value.yAxisStartsZero
+  if (chart.value!.yAxisStartsZero !== undefined) {
+    options.scales.y.beginAtZero = chart.value!.yAxisStartsZero
   }
-  if (chart.value.percentage) {
-    if (chart.value.horizontal) {
+  if (chart.value!.percentage) {
+    if (chart.value!.horizontal) {
       options.scales.x.ticks = {
-        callback: v => v + ' %'
+        callback: (v: number) => v + ' %'
       }
     } else {
       options.scales.y.ticks = {
-        callback: v => v + ' %'
+        callback: (v: number) => v + ' %'
       }
     }
-  } else if (config.value.unit && chart.value.type !== 'paired-histogram') {
-    if (chart.value.horizontal) {
+  } else if (config.value.unit && chart.value!.type !== 'paired-histogram') {
+    if (chart.value!.horizontal) {
       options.scales.x.ticks = {
-        callback: v => v.toLocaleString('fr') + ' ' + config.value.unit
+        callback: (v: number) => v.toLocaleString('fr') + ' ' + config.value.unit
       }
     } else {
       options.scales.y.ticks = {
-        callback: v => v.toLocaleString('fr') + ' ' + config.value.unit
+        callback: (v: number) => v.toLocaleString('fr') + ' ' + config.value.unit
       }
     }
   }
-  if (chart.value.hideYAxis) {
-    options.scales[chart.value.horizontal ? 'y' : 'x'].grid = { display: false }
-    options.scales[chart.value.horizontal ? 'x' : 'y'].display = false
-    const isStacked = chart.value.type === 'paired-histogram' || chart.value.config.categoriesField || reactiveSearchParams.stacked === 'true'
+  if (chart.value!.hideYAxis) {
+    options.scales[chart.value!.horizontal ? 'y' : 'x'].grid = { display: false }
+    options.scales[chart.value!.horizontal ? 'x' : 'y'].display = false
+    const isStacked = chart.value!.type === 'paired-histogram' || chart.value!.config.categoriesField || reactiveSearchParams.stacked === 'true'
     options.plugins.datalabels = {
       anchor: isStacked ? 'center' : 'end',
       align: isStacked ? 'center' : 'end',
@@ -136,35 +136,35 @@ const options = computed(() => {
           }
         }
       },
-      formatter: function (value) {
+      formatter: function (value: number) {
         if (!value) return ''
-        if (chart.value.percentage) {
+        if (chart.value!.percentage) {
           return value.toLocaleString('fr', { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + ' %'
         }
         return value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
-    options.layout = { padding: chart.value.horizontal ? { right: 64 } : { top: 24 } }
+    options.layout = { padding: chart.value!.horizontal ? { right: 64 } : { top: 24 } }
   } else {
     options.plugins.datalabels = { display: false }
   }
-  if (chart.value.type === 'pie') {
-    if (config.value.title || chart.value.sumInTitle) {
+  if (chart.value!.type === 'pie') {
+    if (config.value.title || chart.value!.sumInTitle) {
       options.plugins.title.padding = { top: 0, bottom: 48 }
       options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
     } else {
       options.layout = { padding: 48 }
     }
-    if (chart.value.sumInTitle) {
+    if (chart.value!.sumInTitle) {
       options.plugins.title.display = true
-      options.plugins.title.text = function (context) {
+      options.plugins.title.text = function (context: any) {
         const data = context.chart.data.datasets[0].data
-        const sum = data.reduce((acc, v) => acc + v, 0)
+        const sum = data.reduce((acc: number, v: number) => acc + v, 0)
         return (config.value.title ? config.value.title + ' : ' : '') + sum.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
     options.plugins.datalabels = { display: false }
-    options.rotation = chart.value.rotation || 0
+    options.rotation = chart.value!.rotation || 0
     options.scales.x.display = false
     options.scales.y.display = false
     options.plugins.outlabels = {
@@ -178,56 +178,56 @@ const options = computed(() => {
       },
       textAlign: 'center',
       padding: { left: 8, right: 8, top: 0, bottom: 0 },
-      borderColor: function (context) {
+      borderColor: function (context: any) {
         return chroma(context.dataset.backgroundColor[context.dataIndex]).darken().hex()
       },
-      backgroundColor: function (context) {
+      backgroundColor: function (context: any) {
         return context.dataset.backgroundColor[context.dataIndex]
       },
-      color: function (context) {
+      color: function (context: any) {
         return chroma(context.dataset.backgroundColor[context.dataIndex]).luminance() < 0.4 ? 'white' : 'black'
       },
-      text: function (context) {
+      text: function (context: any) {
         const index = context.dataIndex
         const value = context.dataset.data[index]
 
         const lines = [context.dataset.labels[index]]
-        if (['values', 'both'].includes(chart.value.display)) {
+        if (['values', 'both'].includes(chart.value!.display as string)) {
           lines.push(value.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : ''))
         }
-        if (['percentages', 'both'].includes(chart.value.display)) {
+        if (['percentages', 'both'].includes(chart.value!.display as string)) {
           lines.push(context.dataset.percentages[index].toLocaleString('fr') + ' %')
         }
         return lines.join('\n')
       }
     }
     options.plugins.tooltip.callbacks = {
-      label: context => context.parsed.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
+      label: (context: any) => context.parsed.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
     }
   }
 
-  if (chart.value.tension != null) {
+  if (chart.value!.tension != null) {
     options.elements = {
       line: {
-        tension: chart.value.tension / 10
+        tension: chart.value!.tension / 10
       }
     }
   }
 
-  if (chart.value.horizontal) {
+  if (chart.value!.horizontal) {
     options.indexAxis = 'y'
   }
 
-  if (chart.value.type === 'paired-histogram') {
+  if (chart.value!.type === 'paired-histogram') {
     options.indexAxis = 'y'
     options.scales.x = {
       ticks: {
-        callback: (v) => (v < 0 ? -v : v).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
+        callback: (v: number) => (v < 0 ? -v : v).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
     options.plugins.tooltip = {
       callbacks: {
-        label: (c) => {
+        label: (c: any) => {
           const value = Number(c.raw)
           const positiveOnly = value < 0 ? -value : value
           return `${c.dataset.label}: ${positiveOnly.toLocaleString('fr')}` + (config.value.unit ? ' ' + config.value.unit : '')
@@ -235,12 +235,12 @@ const options = computed(() => {
       }
     }
   }
-  if (chart.value.type === 'radar') {
+  if (chart.value!.type === 'radar') {
     if (config.value.unit) {
       options.scales = {
         r: {
           ticks: {
-            callback: v => v + ' ' + config.value.unit
+            callback: (v: number) => v + ' ' + config.value.unit
           }
         }
       }
@@ -249,14 +249,21 @@ const options = computed(() => {
   return options
 })
 
-const data = ref(null)
+const data = ref<any>(null)
 
 watch(queryKey, async (newKey, oldKey, onCleanup) => {
   let cancelled = false
   if (onCleanup) onCleanup(() => { cancelled = true })
 
-  const mode = chart.value.config.type?.replace('Categories', '')
-  const fetcher = getData(theme)[mode]
+  const mode = chart.value!.config.type?.replace('Categories', '')
+  if (!mode) {
+    if (!cancelled) {
+      data.value = null
+      loading.value = false
+    }
+    return
+  }
+  const fetcher = (getData(theme) as any)[mode]
   if (!fetcher) {
     if (!cancelled) {
       data.value = null
@@ -286,20 +293,20 @@ watch(queryKey, async (newKey, oldKey, onCleanup) => {
 <template lang="html">
   <div style="display:flex;flex-direction:column;">
     <Actions
-      v-if="dynamicMetric || (chart.config.dynamicSort && chart.type !== 'pie') || ['multi-bar', 'multi-line'].includes(chart.type)"
+      v-if="dynamicMetric || (chart!.config.dynamicSort && chart!.type !== 'pie') || ['multi-bar', 'multi-line'].includes(chart!.type as string)"
     />
     <div
       v-if="data"
       style="flex:1"
     >
       <Line
-        v-if="['line', 'multi-line'].includes(chart.type)"
+        v-if="['line', 'multi-line'].includes(chart!.type as string)"
         :key="chartKey"
         :options="options"
         :data="data"
       />
       <Bar
-        v-else-if="['bar', 'multi-bar', 'paired-histogram'].includes(chart.type)"
+        v-else-if="['bar', 'multi-bar', 'paired-histogram'].includes(chart!.type as string)"
         :key="chartKey"
         :options="options"
         :data="data"
@@ -311,12 +318,12 @@ watch(queryKey, async (newKey, oldKey, onCleanup) => {
         style="display: flex;align-items: center;justify-content: center;"
       >
         <Pie
-          v-if="chart.type === 'pie'"
+          v-if="chart!.type === 'pie'"
           :options="options"
           :data="data"
         />
         <Radar
-          v-else-if="chart.type === 'radar'"
+          v-else-if="chart!.type === 'radar'"
           :options="options"
           :data="data"
         />

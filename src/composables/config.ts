@@ -1,15 +1,30 @@
-import { inject, computed, ref } from 'vue'
+import { inject, computed, ref, type App, type Ref } from 'vue'
+import type { Application } from '@data-fair/lib-common-types/application/index.js'
+import type { _JlResolved } from '@/config/.type/index.js'
+import type { AnyChart, AnyChartConfig, AnyConfig } from '@/types'
+
+export interface ConfigState {
+  application: Application
+  config: Ref<AnyConfig>
+  setConfig: (newConfig: AnyConfig) => void
+  dataset: Ref<Record<string, any> | undefined>
+  chart: Ref<AnyChart & { config: AnyChartConfig }>
+  fields: Ref<Record<string, any>>
+  datasetUrl: Ref<string | undefined>
+  dynamicMetric: Ref<boolean | undefined>
+  finalizedAt: Ref<string | undefined>
+  error: Ref<string | null>
+}
 
 export function createConfig () {
-  // @ts-ignore
-  const application = /** @type {import('@data-fair/lib-common-types/application/index.js').Application} */ (window.APPLICATION)
-  const config = ref(application?.configuration)
+  const application = (window as any).APPLICATION as Application
+  const config = ref<AnyConfig>(application?.configuration || {})
 
-  const dataset = computed(() => config.value?.datasets?.[0])
-  const chart = computed(() => config.value?.chart)
+  const dataset = computed(() => config.value?.datasets?.[0] as Record<string, any> | undefined)
+  const chart = computed(() => (config.value?.chart || {}) as AnyChart & { config: AnyChartConfig })
   const dynamicMetric = computed(() => chart.value?.config?.valueCalc?.dynamicMetric || chart.value?.config?.dynamicMetric)
-  const fields = computed(() => dataset.value?.schema?.reduce((a, b) => { a[b.key] = b; return a }, {}) ?? {})
-  const datasetUrl = computed(() => dataset.value?.href)
+  const fields = computed(() => dataset.value?.schema?.reduce((a: Record<string, any>, b: any) => { a[b.key] = b; return a }, {}) ?? {})
+  const datasetUrl = computed(() => dataset.value?.href as string | undefined)
   const finalizedAt = computed(() => dataset.value?.finalizedAt)
 
   const error = computed(() => {
@@ -18,11 +33,11 @@ export function createConfig () {
     return null
   })
 
-  function setConfig (newConfig) {
+  function setConfig (newConfig: AnyConfig) {
     config.value = newConfig
   }
 
-  function setByPath (obj, path, value) {
+  function setByPath (obj: any, path: string, value: any) {
     const keys = path.split('.')
     let current = obj
     for (let i = 0; i < keys.length - 1; i++) {
@@ -38,7 +53,7 @@ export function createConfig () {
   }
 
   return {
-    install (app) {
+    install (app: App) {
       app.provide('data-fair-app-config', {
         application,
         config,
@@ -71,8 +86,8 @@ export function createConfig () {
   }
 }
 
-export function useConfig () {
-  const config = inject('data-fair-app-config')
+export function useConfig (): ConfigState {
+  const config = inject<ConfigState>('data-fair-app-config')
   if (!config) throw new Error('useConfig requires using the plugin createConfig')
   return config
 }

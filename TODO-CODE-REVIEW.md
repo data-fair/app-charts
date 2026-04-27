@@ -50,4 +50,4 @@ Pas de framework de test configuré. Les transformations de données complexes (
 **Fichier :** `src/config/.type/index.d.ts` contient 2086 lignes de types générés, mais le code applicatif reste en JS avec JSDoc.
 
 TypeScript attraperait les bugs #3, #5, #11 à la compilation et offrirait une meilleure DX.
-- [ ] Migrer progressivement les modules critiques en `.ts`
+- [x] Migrer progressivement les modules critiques en `.ts`
