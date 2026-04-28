@@ -6,7 +6,13 @@ export function getSortStr (config: AnyChartConfig) {
   const sortOrder = reactiveSearchParams['sort-order'] || config?.sortOrder
   const sortBy = reactiveSearchParams['sort-by'] || config?.sortBy
   let str = (sortOrder === 'desc' ? '-' : '')
-  if (sortBy === 'value') str += (config?.valuesField || config?.valuesFields?.[0] || config?.valueCalc?.type || (config?.metric && 'metric'))
+  if (sortBy === 'value') {
+    if (config?.valuesField || config?.valuesFields?.[0]) {
+      str += (config?.valuesField || config?.valuesFields?.[0])
+    } else {
+      str += (config?.valueCalc?.type || 'metric')
+    }
+  }
   else if (sortBy === 'label') str += (config?.labelsField || (config?.groupBy && config?.groupBy.field))
   else if (sortBy === 'row') str += '_i'
   return str

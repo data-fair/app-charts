@@ -21,9 +21,14 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
   if (chart.value!.config.missingLabel) params.missing = chart.value!.config.missingLabel
   if (chart.value!.config.valueCalc?.type === 'metric' || chart.value!.config.valuesCalc) {
     params.metric = metric || chart.value!.config.metric || chart.value!.config.valueCalc!.metric
-    params.metric_field = chart.value!.config.valuesCalc?.[0] || chart.value!.config.valueCalc!.field
+    const sortByValue = reactiveSearchParams['sort-by'] || chart.value!.config.sortBy
+    const sortField = sortByValue === 'value' ? (reactiveSearchParams['sort-field'] || chart.value!.config.sortField) : undefined
+    params.metric_field = sortField || chart.value!.config.valuesCalc?.[0] || chart.value!.config.valueCalc!.field
     if (chart.value!.config.valuesCalc?.length > 1) {
-      params.extra_metrics = chart.value!.config.valuesCalc.slice(1).map((v: string) => v + ':' + chart.value!.config.metric).join(',')
+      const extraMetrics = chart.value!.config.valuesCalc
+        .filter((v: string) => v !== params.metric_field)
+        .map((v: string) => v + ':' + chart.value!.config.metric)
+      if (extraMetrics.length) params.extra_metrics = extraMetrics.join(',')
     }
   }
 
@@ -108,7 +113,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
             backgroundColor: colors[field],
             pointStyle: chart.value!.hidePoints ? false : 'circle',
             fill,
-            data: aggs.map((a: any) => getValue(i === 0 ? a.metric : a[field + '_' + chart.value!.config.metric]))
+            data: aggs.map((a: any) => getValue(field === params.metric_field ? a.metric : a[field + '_' + chart.value!.config.metric]))
           }))
           if (chart.value!.percentage) {
             for (const i in datasets[0].data) {

@@ -2559,6 +2559,27 @@
                             }
                           ]
                         },
+                        "sortField": {
+                          "type": "string",
+                          "title": "Champ de tri",
+                          "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
+                          "layout": {
+                            "if": {
+                              "type": "js-eval",
+                              "expr": "parent.data.sortBy === 'value'",
+                              "pure": false
+                            },
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"key\"]",
+                              "itemTitle": "data[\"label\"]"
+                            }
+                          }
+                        },
                         "sortOrder": {
                           "type": "string",
                           "title": "Ordre",
@@ -3789,6 +3810,27 @@
                             }
                           ]
                         },
+                        "sortField": {
+                          "type": "string",
+                          "title": "Champ de tri",
+                          "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
+                          "layout": {
+                            "if": {
+                              "type": "js-eval",
+                              "expr": "parent.data.sortBy === 'value'",
+                              "pure": false
+                            },
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"key\"]",
+                              "itemTitle": "data[\"label\"]"
+                            }
+                          }
+                        },
                         "sortOrder": {
                           "type": "string",
                           "title": "Ordre",
@@ -4992,6 +5034,27 @@
                               "title": "Libellé"
                             }
                           ]
+                        },
+                        "sortField": {
+                          "type": "string",
+                          "title": "Champ de tri",
+                          "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
+                          "layout": {
+                            "if": {
+                              "type": "js-eval",
+                              "expr": "parent.data.sortBy === 'value'",
+                              "pure": false
+                            },
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"key\"]",
+                              "itemTitle": "data[\"label\"]"
+                            }
+                          }
                         },
                         "sortOrder": {
                           "type": "string",
@@ -6991,6 +7054,27 @@
                               "title": "Libellé"
                             }
                           ]
+                        },
+                        "sortField": {
+                          "type": "string",
+                          "title": "Champ de tri",
+                          "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
+                          "layout": {
+                            "if": {
+                              "type": "js-eval",
+                              "expr": "parent.data.sortBy === 'value'",
+                              "pure": false
+                            },
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"key\"]",
+                              "itemTitle": "data[\"label\"]"
+                            }
+                          }
                         },
                         "sortOrder": {
                           "type": "string",
@@ -10107,6 +10191,27 @@
             }
           ]
         },
+        "sortField": {
+          "type": "string",
+          "title": "Champ de tri",
+          "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
+          "layout": {
+            "if": {
+              "type": "js-eval",
+              "expr": "parent.data.sortBy === 'value'",
+              "pure": false
+            },
+            "getItems": {
+              "url": {
+                "type": "js-tpl",
+                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                "pure": false
+              },
+              "itemKey": "data[\"key\"]",
+              "itemTitle": "data[\"label\"]"
+            }
+          }
+        },
         "sortOrder": {
           "type": "string",
           "title": "Ordre",
@@ -11291,6 +11396,27 @@
                   "title": "Libellé"
                 }
               ]
+            },
+            "sortField": {
+              "type": "string",
+              "title": "Champ de tri",
+              "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
+              "layout": {
+                "if": {
+                  "type": "js-eval",
+                  "expr": "parent.data.sortBy === 'value'",
+                  "pure": false
+                },
+                "getItems": {
+                  "url": {
+                    "type": "js-tpl",
+                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                    "pure": false
+                  },
+                  "itemKey": "data[\"key\"]",
+                  "itemTitle": "data[\"label\"]"
+                }
+              }
             },
             "sortOrder": {
               "type": "string",

@@ -2,9 +2,9 @@
 import { useConfig } from '@/composables/config'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { mdiSortVariant, mdiSortReverseVariant } from '@mdi/js'
-import { watch } from 'vue'
+import { watch, computed } from 'vue'
 
-const { chart, dynamicMetric } = useConfig()
+const { chart, dynamicMetric, fields } = useConfig()
 
 watch(() => chart.value?.config, (chartConfig) => {
   if (dynamicMetric.value && chartConfig?.valueCalc?.metric) {
@@ -13,9 +13,12 @@ watch(() => chart.value?.config, (chartConfig) => {
   if (chartConfig?.dynamicSort) {
     reactiveSearchParams['sort-by'] = chartConfig.sortBy
     reactiveSearchParams['sort-order'] = chartConfig.sortOrder
+    if (chartConfig.sortField) reactiveSearchParams['sort-field'] = chartConfig.sortField
+    else delete reactiveSearchParams['sort-field']
   } else {
     delete reactiveSearchParams['sort-by']
     delete reactiveSearchParams['sort-order']
+    delete reactiveSearchParams['sort-field']
   }
 }, { immediate: true, deep: true })
 
@@ -43,6 +46,18 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
     title: 'Ligne'
   })
 }
+
+const showSortField = computed(() => {
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value?.config.sortBy
+  return sortBy === 'value' && chart.value?.config.type === 'aggsBasedCategories' && chart.value?.config.valuesCalc?.length > 1
+})
+
+const sortFieldItems = computed(() => {
+  return chart.value?.config.valuesCalc?.map((field: string) => ({
+    value: field,
+    title: fields.value[field]?.title || fields.value[field]?.label || field
+  })) || []
+})
 
 </script>
 
@@ -96,6 +111,21 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
             </v-btn-toggle>
           </template>
         </v-select>
+      </v-col>
+      <v-col
+        v-if="chart.config.dynamicSort && showSortField"
+        cols="12"
+        sm="6"
+        md="4"
+        class="pb-0"
+      >
+        <v-select
+          v-model="reactiveSearchParams['sort-field']"
+          :items="sortFieldItems"
+          label="Champ de tri"
+          density="compact"
+          variant="outlined"
+        />
       </v-col>
       <v-col
         v-if="['multi-bar', 'multi-line'].includes(chart.type as string) && (!chart.disableDynamicStack && !chart.percentage)"
