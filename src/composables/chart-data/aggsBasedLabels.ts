@@ -47,6 +47,13 @@ export default async function fetchAggsBasedLabelsData (ctx: ChartDataCtx, theme
     data: chart.value!.config.labelsValues.map((l: string, li: number) => getValue(!li ? serie.metric : serie[l + '_' + params.metric]))
   }))
 
+  if (chart.value!.percentage) {
+    for (const i in datasets[0].data) {
+      const sum = datasets.reduce((acc: number, d: any) => acc + (d.data[i] || 0), 0)
+      if (sum) datasets.forEach((d: any) => { d.data[i] *= 100 / sum })
+    }
+  }
+
   return {
     labels: labels.map((l: string) => splitString(config.value.labelsMaxWidth ?? 20, l + '')),
     datasets

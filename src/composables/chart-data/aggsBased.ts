@@ -100,17 +100,23 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
     } else {
       if (chart.value!.config.type === 'aggsBasedCategories') {
         const colors = getColors(chart.value!.config.valuesCalc, chart.value!.config.colors)
-        datasets = chart.value!.config.valuesCalc.map((field: string, i: number) => ({
-          label: chart.value!.config.removeFromLabels
-            ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
-            : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
-          borderColor: colors[field],
-          backgroundColor: colors[field],
-          pointStyle: chart.value!.hidePoints ? false : 'circle',
-          fill,
-          data: aggs.map((a: any) => getValue(i === 0 ? a.metric : a[field + '_' + chart.value!.config.metric]))
-        }))
-      } else {
+          datasets = chart.value!.config.valuesCalc.map((field: string, i: number) => ({
+            label: chart.value!.config.removeFromLabels
+              ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
+              : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
+            borderColor: colors[field],
+            backgroundColor: colors[field],
+            pointStyle: chart.value!.hidePoints ? false : 'circle',
+            fill,
+            data: aggs.map((a: any) => getValue(i === 0 ? a.metric : a[field + '_' + chart.value!.config.metric]))
+          }))
+          if (chart.value!.percentage) {
+            for (const i in datasets[0].data) {
+              const sum = datasets.reduce((acc: number, d: any) => acc + (d.data[i] || 0), 0)
+              if (sum) datasets.forEach((d: any) => { d.data[i] *= 100 / sum })
+            }
+          }
+        } else {
         if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
           labels.push('Autre')
           rawLabels.push('Autre')
