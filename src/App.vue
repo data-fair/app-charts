@@ -8,13 +8,13 @@ import { filters2qs } from '@data-fair/lib-utils/filters'
 import { normalizeFilters } from './assets/utils'
 import { watch } from 'vue'
 
-(window as any).vIframeOptions = { reactiveParams: reactiveSearchParams }
+window.vIframeOptions = { reactiveParams: reactiveSearchParams }
 
 const { config, error } = useConfig()
 
 watch(() => config.value?.staticFilters, (staticFilters) => {
   if (window.parent && reactiveSearchParams.draft === 'true' && staticFilters?.length) {
-    const qsFilter = filters2qs(normalizeFilters(staticFilters)!)
+    const qsFilter = filters2qs(normalizeFilters(staticFilters as any) as any)
     if (!qsFilter && !config.value?.qsFilter) return
     if (qsFilter === config.value?.qsFilter) return
     window.parent.postMessage({ type: 'set-config', content: { field: 'qsFilter', value: qsFilter } }, '*')
@@ -23,7 +23,7 @@ watch(() => config.value?.staticFilters, (staticFilters) => {
 
 if (reactiveSearchParams.draft === 'true') {
   watch(error, (message) => {
-    if (message) ofetch((window as any).APPLICATION.href + '/error', { body: { message }, method: 'POST' })
+    if (message) ofetch(window.APPLICATION.href + '/error', { body: { message }, method: 'POST' })
   }, { immediate: true })
 }
 </script>

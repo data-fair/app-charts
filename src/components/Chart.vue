@@ -14,6 +14,7 @@ import {
   BarElement, PointElement, ArcElement, LineElement,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler
 } from 'chart.js'
+import type { ChartOptions, ChartData, TooltipItem } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import OutLabels from '@energiency/chartjs-plugin-piechart-outlabels'
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm'
@@ -60,14 +61,14 @@ const options = computed(() => {
       tooltip: {
         enabled: !config.value.disableTooltip,
         callbacks: {
-          label: (context: any) => {
-            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.value!.horizontal ? context.parsed.x : context.parsed.y) || context.parsed.r).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
+          label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
+            return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.value!.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
           }
         }
       }
     }
   }
-  if (chart.value!.cutout) options.cutout = chart.value!.cutout + '%'
+  if (chart.value!.cutout) (options as Record<string, unknown>).cutout = chart.value!.cutout + '%'
 
   options.scales = {
     x: {
@@ -78,7 +79,7 @@ const options = computed(() => {
     }
   }
   if (config.value.xTitle?.length) {
-    options.scales.x.title = {
+    options.scales!.x!.title = {
       text: config.value.xTitle,
       display: true,
       font: {
@@ -87,7 +88,7 @@ const options = computed(() => {
     }
   }
   if (config.value.yTitle?.length) {
-    options.scales.y.title = {
+    options.scales!.y!.title = {
       text: config.value.yTitle,
       display: true,
       font: {
@@ -96,37 +97,37 @@ const options = computed(() => {
     }
   }
   if ((chart.value!.config.groupBy && chart.value!.config.groupBy.type === 'date') || (chart.value!.config.labelsField && fields.value?.[chart.value!.config.labelsField]?.format === 'date')) {
-    options.scales.x.type = 'time'
+    options.scales!.x!.type = 'time'
   }
   if (chart.value!.yAxisStartsZero !== undefined) {
-    options.scales.y.beginAtZero = chart.value!.yAxisStartsZero
+    options.scales!.y!.beginAtZero = chart.value!.yAxisStartsZero
   }
   if (chart.value!.percentage) {
     if (chart.value!.horizontal) {
-      options.scales.x.ticks = {
+      options.scales!.x!.ticks = {
         callback: (v: number) => v + ' %'
       }
     } else {
-      options.scales.y.ticks = {
+      options.scales!.y!.ticks = {
         callback: (v: number) => v + ' %'
       }
     }
   } else if (config.value.unit && chart.value!.type !== 'paired-histogram') {
     if (chart.value!.horizontal) {
-      options.scales.x.ticks = {
+      options.scales!.x!.ticks = {
         callback: (v: number) => v.toLocaleString('fr') + ' ' + config.value.unit
       }
     } else {
-      options.scales.y.ticks = {
+      options.scales!.y!.ticks = {
         callback: (v: number) => v.toLocaleString('fr') + ' ' + config.value.unit
       }
     }
   }
   if (chart.value!.hideYAxis) {
-    options.scales[chart.value!.horizontal ? 'y' : 'x'].grid = { display: false }
-    options.scales[chart.value!.horizontal ? 'x' : 'y'].display = false
+    options.scales![chart.value!.horizontal ? 'y' : 'x']!.grid = { display: false }
+    options.scales![chart.value!.horizontal ? 'x' : 'y']!.display = false
     const isStacked = chart.value!.type === 'paired-histogram' || chart.value!.config.categoriesField || reactiveSearchParams.stacked === 'true'
-    options.plugins.datalabels = {
+    ;(options.plugins as Record<string, unknown>).datalabels = {
       anchor: isStacked ? 'center' : 'end',
       align: isStacked ? 'center' : 'end',
       labels: {
@@ -146,28 +147,28 @@ const options = computed(() => {
     }
     options.layout = { padding: chart.value!.horizontal ? { right: 64 } : { top: 24 } }
   } else {
-    options.plugins.datalabels = { display: false }
+    ;(options.plugins as Record<string, unknown>).datalabels = { display: false }
   }
   if (chart.value!.type === 'pie') {
     if (config.value.title || chart.value!.sumInTitle) {
-      options.plugins.title.padding = { top: 0, bottom: 48 }
+      options.plugins!.title!.padding = { top: 0, bottom: 48 }
       options.layout = { padding: { top: 0, left: 48, right: 48, bottom: 48 } }
     } else {
       options.layout = { padding: 48 }
     }
     if (chart.value!.sumInTitle) {
-      options.plugins.title.display = true
-      options.plugins.title.text = function (context: any) {
-        const data = context.chart.data.datasets[0].data
-        const sum = data.reduce((acc: number, v: number) => acc + v, 0)
+      options.plugins!.title!.display = true
+      ;(options.plugins!.title as Record<string, unknown>).text = function (context: TooltipItem<'pie'>) {
+        const data = (context.chart.data.datasets[0].data as number[])
+        const sum = data.reduce((acc, v) => acc + v, 0)
         return (config.value.title ? config.value.title + ' : ' : '') + sum.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
-    options.plugins.datalabels = { display: false }
-    options.rotation = chart.value!.rotation || 0
-    options.scales.x.display = false
-    options.scales.y.display = false
-    options.plugins.outlabels = {
+    ;(options.plugins as Record<string, unknown>).datalabels = { display: false }
+    ;(options as Record<string, unknown>).rotation = chart.value!.rotation || 0
+    options.scales!.x!.display = false
+    options.scales!.y!.display = false
+    ;(options.plugins as Record<string, unknown>).outlabels = {
       borderWidth: 1,
       borderRadius: 4,
       font: {
@@ -178,16 +179,16 @@ const options = computed(() => {
       },
       textAlign: 'center',
       padding: { left: 8, right: 8, top: 0, bottom: 0 },
-      borderColor: function (context: any) {
+      borderColor: function (context: { dataset: { backgroundColor: string[] }; dataIndex: number }) {
         return chroma(context.dataset.backgroundColor[context.dataIndex]).darken().hex()
       },
-      backgroundColor: function (context: any) {
+      backgroundColor: function (context: { dataset: { backgroundColor: string[] }; dataIndex: number }) {
         return context.dataset.backgroundColor[context.dataIndex]
       },
-      color: function (context: any) {
+      color: function (context: { dataset: { backgroundColor: string[] }; dataIndex: number }) {
         return chroma(context.dataset.backgroundColor[context.dataIndex]).luminance() < 0.4 ? 'white' : 'black'
       },
-      text: function (context: any) {
+      text: function (context: { dataset: { data: number[]; labels: string[]; percentages: number[] }; dataIndex: number }) {
         const index = context.dataIndex
         const value = context.dataset.data[index]
 
@@ -201,8 +202,8 @@ const options = computed(() => {
         return lines.join('\n')
       }
     }
-    options.plugins.tooltip.callbacks = {
-      label: (context: any) => context.parsed.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
+    options.plugins!.tooltip!.callbacks = {
+      label: (context: TooltipItem<'pie'>) => context.parsed.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
     }
   }
 
@@ -215,19 +216,19 @@ const options = computed(() => {
   }
 
   if (chart.value!.horizontal) {
-    options.indexAxis = 'y'
+    ;(options as Record<string, unknown>).indexAxis = 'y'
   }
 
   if (chart.value!.type === 'paired-histogram') {
-    options.indexAxis = 'y'
-    options.scales.x = {
+    ;(options as Record<string, unknown>).indexAxis = 'y'
+    options.scales!.x = {
       ticks: {
         callback: (v: number) => (v < 0 ? -v : v).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
     }
-    options.plugins.tooltip = {
+    options.plugins!.tooltip = {
       callbacks: {
-        label: (c: any) => {
+        label: (c: TooltipItem<'bar'>) => {
           const value = Number(c.raw)
           const positiveOnly = value < 0 ? -value : value
           return `${c.dataset.label}: ${positiveOnly.toLocaleString('fr')}` + (config.value.unit ? ' ' + config.value.unit : '')
@@ -251,7 +252,7 @@ const options = computed(() => {
 
 const data = ref<any>(null)
 
-watch(queryKey, async (newKey, oldKey, onCleanup) => {
+watch(queryKey, async (_newKey, _oldKey, onCleanup) => {
   let cancelled = false
   if (onCleanup) onCleanup(() => { cancelled = true })
 
@@ -278,7 +279,7 @@ watch(queryKey, async (newKey, oldKey, onCleanup) => {
     if (!cancelled) {
       data.value = result
     }
-  } catch (e) {
+  } catch (_e) {
     if (!cancelled) {
       data.value = null
     }

@@ -1,11 +1,11 @@
 import { ofetch } from 'ofetch'
 import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
-import type { ChartDataCtx } from '@/composables/useChartData'
+import type { ChartDataCtx, MetricAggResponse } from '@/composables/useChartData'
 
 export default async function fetchAggsLabelsData (ctx: ChartDataCtx) {
   const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage } = ctx
 
-  const params: any = {
+  const params: Record<string, string | number | undefined> = {
     ...baseParams.value,
     metric: 'sum',
     finalizedAt: finalizedAt.value
@@ -13,7 +13,7 @@ export default async function fetchAggsLabelsData (ctx: ChartDataCtx) {
 
   const metrics = await Promise.all(chart.value!.config.valuesFields?.map((v: string) => {
     params.field = v
-    return ofetch(`${datasetUrl.value}/metric_agg`, { params }).catch((e: any) => {
+    return ofetch<MetricAggResponse>(`${datasetUrl.value}/metric_agg`, { params }).catch((e) => {
       errorMessage.value = e.status + ' - ' + e.data
       displayError.value = true
       return { metric: 0 }
@@ -21,17 +21,17 @@ export default async function fetchAggsLabelsData (ctx: ChartDataCtx) {
   }) || [])
 
   const orderedValuesFields = getOrderedLabels(chart.value!.config.valuesFields || [], chart.value!.config.colorOrder)
-  const metricsMap = new Map<string, any>(chart.value!.config.valuesFields!.map((f: string, i: number) => [f, metrics[i]]))
+  const metricsMap = new Map<string, MetricAggResponse>(chart.value!.config.valuesFields!.map((f: string, i: number) => [f, metrics[i]]))
 
-  const labels = orderedValuesFields
-    .map((f: string) => fields.value[f].label || fields.value[f].title || fields.value[f]['x-originalName'] || f)
+  const labels: string[] = orderedValuesFields
+    .map((f: string) => (fields.value[f].label || fields.value[f].title || fields.value[f]['x-originalName'] || f) as string)
     .map((l: string) => chart.value!.config.removeFromLabels ? l.replace(chart.value!.config.removeFromLabels, '') : l)
 
   const colors = getColors(orderedValuesFields, chart.value!.config.colorOrder)
   const datasets: any[] = [{
     labels,
     borderColor: 'white',
-    backgroundColor: orderedValuesFields.map((l: string) => colors[l] || (chart.value!.config.colorOrder as any)?.defaultColor || '#828282'),
+    backgroundColor: orderedValuesFields.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
     data: orderedValuesFields.map((f: string) => getValue(metricsMap.get(f)!.metric))
   }]
 

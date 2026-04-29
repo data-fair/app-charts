@@ -1,5 +1,5 @@
 import { inject, computed, ref, type App, type Ref } from 'vue'
-import type { Application } from '@data-fair/lib-common-types/application/index.js'
+import type { Application, Dataset, Field } from '@data-fair/lib-common-types/application/index.js'
 import type { _JlResolved } from '@/config/.type/index.js'
 import type { AnyChart, AnyChartConfig, AnyConfig } from '@/types'
 
@@ -7,9 +7,9 @@ export interface ConfigState {
   application: Application
   config: Ref<AnyConfig>
   setConfig: (newConfig: AnyConfig) => void
-  dataset: Ref<Record<string, any> | undefined>
+  dataset: Ref<Dataset | undefined>
   chart: Ref<AnyChart & { config: AnyChartConfig }>
-  fields: Ref<Record<string, any>>
+  fields: Ref<Record<string, Field>>
   datasetUrl: Ref<string | undefined>
   dynamicMetric: Ref<boolean | undefined>
   finalizedAt: Ref<string | undefined>
@@ -17,14 +17,14 @@ export interface ConfigState {
 }
 
 export function createConfig () {
-  const application = (window as any).APPLICATION as Application
-  const config = ref<AnyConfig>(application?.configuration || {})
+  const application = window.APPLICATION
+  const config = ref<AnyConfig>((application?.configuration || {}) as AnyConfig)
 
-  const dataset = computed(() => config.value?.datasets?.[0] as Record<string, any> | undefined)
+  const dataset = computed(() => config.value?.datasets?.[0] as Dataset | undefined)
   const chart = computed(() => (config.value?.chart || {}) as AnyChart & { config: AnyChartConfig })
   const dynamicMetric = computed(() => chart.value?.config?.valueCalc?.dynamicMetric || chart.value?.config?.dynamicMetric)
-  const fields = computed(() => dataset.value?.schema?.reduce((a: Record<string, any>, b: any) => { a[b.key] = b; return a }, {}) ?? {})
-  const datasetUrl = computed(() => dataset.value?.href as string | undefined)
+  const fields = computed(() => dataset.value?.schema?.reduce((a: Record<string, Field>, b: Field) => { a[b.key] = b; return a }, {}) ?? {})
+  const datasetUrl = computed(() => dataset.value?.href)
   const finalizedAt = computed(() => dataset.value?.finalizedAt)
 
   const error = computed(() => {
@@ -37,9 +37,9 @@ export function createConfig () {
     config.value = newConfig
   }
 
-  function setByPath (obj: any, path: string, value: any) {
+  function setByPath (obj: Record<string, unknown>, path: string, value: unknown) {
     const keys = path.split('.')
-    let current = obj
+    let current: any = obj
     for (let i = 0; i < keys.length - 1; i++) {
       const key = keys[i]
       if (!(key in current) || typeof current[key] !== 'object' || current[key] === null) {

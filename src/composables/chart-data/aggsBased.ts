@@ -1,13 +1,14 @@
 import { ofetch } from 'ofetch'
 import { getSortStr, getColors, getOrderedLabels, splitString } from '@/assets/utils'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
-import type { ChartDataCtx } from '@/composables/useChartData'
+import type { ChartDataCtx, AggItem, ValuesAggResponse } from '@/composables/useChartData'
+import type { ThemeInstance } from 'vuetify'
 
-export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any) {
+export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: ThemeInstance) {
   const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, stacked, metric } = ctx
 
   const fill = chart.value!.area || (chart.value!.type === 'multi-line' && stacked === 'true')
-  const params: any = {
+  const params: Record<string, string | number | undefined> = {
     ...baseParams.value,
     size: 0,
     field: chart.value!.config.groupBy!.field,
@@ -37,14 +38,14 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
     params.sort = params.sort + ';-' + chart.value!.config.valueCalc!.type
   }
 
-  const { aggs } = await ofetch(`${datasetUrl.value}/values_agg`, { params }).catch((e: any) => {
+  const { aggs } = await ofetch<ValuesAggResponse>(`${datasetUrl.value}/values_agg`, { params }).catch((e) => {
     errorMessage.value = e.status + ' - ' + e.data
     displayError.value = true
     return { aggs: [] }
   })
 
-  const rawLabels = aggs.slice(0, chart.value!.config.size).map((a: any) => a.value)
-  const labels = rawLabels.map((a: any) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[a] || a)
+  const rawLabels = aggs.slice(0, chart.value!.config.size).map((a) => a.value as string)
+  const labels = rawLabels.map((a) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[a] || a)
   let datasets: any[]
 
   if (chart.value!.config.color) {
@@ -52,7 +53,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
     datasets = [{
       borderColor: color,
       backgroundColor: color,
-      data: aggs.slice(0, chart.value!.config.size).map((a: any) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)),
+      data: aggs.slice(0, chart.value!.config.size).map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)),
       pointStyle: chart.value!.hidePoints ? false : 'circle',
       fill
     }]
@@ -62,53 +63,53 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
       if (chart.value!.config.colorOrder?.type === 'manual') {
         series = chart.value!.config.colorOrder.entries.map((s: any) => s.key)
       } else {
-        const seriesSet = [...new Set([].concat(...aggs.map((a: any) => a.aggs.map((ag: any) => ag.value + ''))) as string[])]
+        const seriesSet = [...new Set(([] as string[]).concat(...aggs.map((a) => (a.aggs || []).map((ag) => ag.value + ''))))]
         series = getOrderedLabels(seriesSet, chart.value!.config.colorOrder)
       }
       const colors = getColors(series, chart.value!.config.colorOrder)
-      datasets = series.map((label: string) => ({
+      datasets = series.map((label) => ({
         label: fields.value[chart.value!.config.groupsField]?.['x-labels']?.[label] || label,
         borderColor: colors[label],
         backgroundColor: colors[label],
         pointStyle: chart.value!.hidePoints ? false : 'circle',
         fill,
-        data: aggs.slice(0, chart.value!.config.size).map((a: any) => {
-          const val = a.aggs.find((ag: any) => (ag.value + '') === label)
+        data: aggs.slice(0, chart.value!.config.size).map((a) => {
+          const val = (a.aggs || []).find((ag) => (ag.value + '') === label)
           return val ? getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
         })
       }))
       if (chart.value!.percentage) {
-        for (const i in datasets[0].data) {
-          const sum = datasets.reduce((acc: number, d: any) => acc + (d.data[i] || 0), 0)
-          if (sum) datasets.forEach((d: any) => { d.data[i] *= 100 / sum })
+        for (const i in datasets[0].data as number[]) {
+          const sum = datasets.reduce((acc: number, d) => acc + ((d.data as number[])[i] || 0), 0)
+          if (sum) datasets.forEach((d) => { (d.data as number[])[i] *= 100 / sum })
         }
       }
     } else {
       if (chart.value!.config.type === 'aggsBasedCategories') {
         const valuesCalc = getOrderedLabels(chart.value!.config.valuesCalc, chart.value!.config.colorOrder)
         const colors = getColors(valuesCalc, chart.value!.config.colorOrder)
-        datasets = valuesCalc.map((field: string, i: number) => ({
+        datasets = valuesCalc.map((field, i) => ({
           label: chart.value!.config.removeFromLabels
-            ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
-            : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
+            ? ((fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field) as string).replace(chart.value!.config.removeFromLabels, '')
+            : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field) as string,
           borderColor: colors[field],
           backgroundColor: colors[field],
           pointStyle: chart.value!.hidePoints ? false : 'circle',
           fill,
-          data: aggs.map((a: any) => getValue(field === params.metric_field ? a.metric : a[field + '_' + chart.value!.config.metric]))
+          data: aggs.map((a) => getValue(field === params.metric_field ? a.metric : (a as any)[field + '_' + chart.value!.config.metric]))
         }))
         if (chart.value!.percentage) {
-          for (const i in datasets[0].data) {
-            const sum = datasets.reduce((acc: number, d: any) => acc + (d.data[i] || 0), 0)
-            if (sum) datasets.forEach((d: any) => { d.data[i] *= 100 / sum })
+          for (const i in datasets[0].data as number[]) {
+            const sum = datasets.reduce((acc: number, d) => acc + ((d.data as number[])[i] || 0), 0)
+            if (sum) datasets.forEach((d) => { (d.data as number[])[i] *= 100 / sum })
           }
         }
       } else {
-        const dataValues = aggs.slice(0, chart.value!.config.size).map((a: any) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
+        const dataValues = aggs.slice(0, chart.value!.config.size).map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
 
         let orderedRawLabels = getOrderedLabels(rawLabels, chart.value!.config.colorOrder)
-        let orderedLabels = orderedRawLabels.map((l: string) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[l] || l)
-        let orderedData = orderedRawLabels.map((l: string) => {
+        let orderedLabels = orderedRawLabels.map((l) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[l] || l)
+        let orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
         })
@@ -116,15 +117,15 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
         if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          const otherSum = aggs.slice(chart.value!.config.size).reduce((acc: number, a: any) => acc + (chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total), 0)
+          const otherSum = aggs.slice(chart.value!.config.size).reduce((acc: number, a) => acc + (chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)!, 0)
           orderedData.push(getValue(otherSum))
         }
 
         const colors = getColors(orderedRawLabels, chart.value!.config.colorOrder)
         datasets = [{
           labels: orderedLabels,
-          borderColor: chart.value!.type === 'pie' ? 'white' : orderedRawLabels.map((l: string) => colors[l]),
-          backgroundColor: orderedRawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
+          borderColor: chart.value!.type === 'pie' ? 'white' : orderedRawLabels.map((l) => colors[l]),
+          backgroundColor: orderedRawLabels.map((l) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
           data: orderedData
         }]
 
@@ -141,11 +142,11 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
   }
 
   if (chart.value!.type === 'paired-histogram') {
-    datasets[0].data = datasets[0].data.map((d: number | undefined) => -(d ?? 0))
+    datasets[0].data = (datasets[0].data as (number | undefined)[]).map((d) => -(d ?? 0))
   }
 
   return {
-    labels: labels.map((l: string) => splitString(config.value.labelsMaxWidth ?? 20, l + '')),
+    labels: labels.map((l) => splitString(config.value.labelsMaxWidth ?? 20, l + '')),
     datasets
   }
 }

@@ -6,11 +6,45 @@ import { filters2qs } from '@data-fair/lib-utils/filters'
 import { normalizeFilters } from '@/assets/utils'
 import { useConfig } from '@/composables/config'
 import type { ConfigState } from '@/composables/config'
+import type { ThemeInstance } from 'vuetify'
 
 import fetchRowsBasedData from './chart-data/rowsBased'
 import fetchAggsBasedData from './chart-data/aggsBased'
 import fetchAggsBasedLabelsData from './chart-data/aggsBasedLabels'
 import fetchAggsLabelsData from './chart-data/aggsLabels'
+
+export interface CategoryItem {
+  value: string
+  label: string
+}
+
+export interface DatasetLine {
+  [key: string]: unknown
+}
+
+export interface AggItem {
+  value: string | number
+  total?: number
+  metric?: number
+  aggs?: AggItem[]
+}
+
+export interface LinesResponse {
+  results: DatasetLine[]
+}
+
+export interface ValuesAggResponse {
+  aggs: AggItem[]
+}
+
+export interface MetricAggResponse {
+  metric: number
+}
+
+export interface ValuesLabelsItem {
+  value: string
+  label: string
+}
 
 export const displayError = ref(false)
 export const errorMessage = ref('')
@@ -21,11 +55,11 @@ export interface ChartDataCtx {
   fields: ConfigState['fields']
   datasetUrl: ConfigState['datasetUrl']
   finalizedAt: ConfigState['finalizedAt']
-  baseParams: Ref<any>
+  baseParams: Ref<Record<string, string>>
   getValue: (value: number | null | undefined) => number | undefined
   stacked: string | undefined
   metric: string | undefined
-  categories: any[] | undefined
+  categories: CategoryItem[] | undefined
   displayError: Ref<boolean>
   errorMessage: Ref<string>
 }
@@ -45,14 +79,14 @@ export function useChartData () {
   }, { deep: true })
 
   const baseParams = useDebounce(computed(() => {
-    const params: any = { ...conceptFilters }
-    const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters)!).split(' AND ') : []
+    const params: Record<string, string> = { ...conceptFilters }
+    const qs = config.value.staticFilters?.length ? filters2qs(normalizeFilters(config.value.staticFilters as any) as any).split(' AND ') : []
     if (qs.length) params.qs = qs.join(' AND ')
     return params
   }), 500)
   const getValue = (value: number | null | undefined) => value != null ? value / (config.value.divider ?? 1) : undefined
 
-  let categories: any[] | undefined
+  let categories: CategoryItem[] | undefined
 
   const ctx: ChartDataCtx = {
     config,
@@ -67,7 +101,7 @@ export function useChartData () {
     get stacked () { return reactiveSearchParams.stacked },
     get metric () { return reactiveSearchParams.metric },
     get categories () { return categories }
-  } as ChartDataCtx
+  }
 
   const queryKey = computed(() => {
     const c = chart.value!.config
@@ -110,7 +144,7 @@ export function useChartData () {
     })
   })
 
-  const getData = (theme: any) => ({
+  const getData = (theme: ThemeInstance) => ({
     rowsBased: async () => {
       displayError.value = false
       errorMessage.value = ''

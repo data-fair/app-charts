@@ -1,6 +1,7 @@
 import chroma from 'chroma-js'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { AnyChartConfig } from '@/types'
+import type { Filter } from '@data-fair/lib-utils/filters'
 
 export function getSortStr (config: AnyChartConfig) {
   const sortOrder = reactiveSearchParams['sort-order'] || config?.sortOrder
@@ -26,7 +27,7 @@ export function getOrderedLabels (labels: string[], colorOrder: AnyChartConfig['
     return ordered
   }
   if (colorOrder.type === 'manual' && colorOrder.entries?.length) {
-    const ordered = colorOrder.entries.map((s: any) => s.key).filter((k: string) => labels.includes(k))
+    const ordered = colorOrder.entries.map((s: { key: string }) => s.key).filter((k: string) => labels.includes(k))
     ordered.push(...labels.filter((label: string) => !ordered.includes(label)))
     return ordered
   }
@@ -43,11 +44,11 @@ export function getColors (labels: string[], colorOrder: AnyChartConfig['colorOr
     })
     return colors
   } else {
-    return Object.assign({}, ...(colorOrder?.entries?.map((s: any) => ({ [s.key]: s.color })) || []))
+    return Object.assign({}, ...(colorOrder?.entries?.map((s: { key: string; color?: string }) => ({ [s.key]: s.color })) || []))
   }
 }
 
-export function normalizeFilters (filters: any[]) {
+export function normalizeFilters (filters: Filter[]) {
   return filters?.map(f => {
     if (!f) return f
     if (typeof f.field === 'string') {
