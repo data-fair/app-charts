@@ -14,7 +14,7 @@ import {
   BarElement, PointElement, ArcElement, LineElement,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler
 } from 'chart.js'
-import type { ChartOptions, ChartData, TooltipItem } from 'chart.js'
+import type { TooltipItem } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import OutLabels from '@energiency/chartjs-plugin-piechart-outlabels'
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm'
@@ -159,7 +159,7 @@ const options = computed(() => {
     if (chart.value!.sumInTitle) {
       options.plugins!.title!.display = true
       ;(options.plugins!.title as Record<string, unknown>).text = function (context: TooltipItem<'pie'>) {
-        const data = (context.chart.data.datasets[0].data as number[])
+        const data = context.chart.data.datasets[0].data as number[]
         const sum = data.reduce((acc, v) => acc + v, 0)
         return (config.value.title ? config.value.title + ' : ' : '') + sum.toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
       }
