@@ -35,11 +35,7 @@
               },
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "api/v1/datasets?status=finalized&q={q}&select=id,title,schema&${context.datasetFilter}&sort=createdAt:-1",
-                    "pure": true
-                  },
+                  "url": "api/v1/datasets?status=finalized&q={q}&select=id,title,schema&${context.datasetFilter}&sort=createdAt:-1",
                   "itemKey": "data[\"href\"]",
                   "itemTitle": "data[\"title\"]",
                   "itemsResults": "data[\"results\"]"
@@ -74,11 +70,7 @@
                     "title": "Colonne de filtre",
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/schema?calculated=false",
                         "itemKey": "data[\"key\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -92,11 +84,7 @@
                     },
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
                         "itemKey": "data[\"value\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -120,11 +108,7 @@
                     "title": "Colonne de filtre",
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/schema?calculated=false",
                         "itemKey": "data[\"key\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -135,11 +119,7 @@
                     "title": "Valeur min",
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=asc&${parent.data.field}_gte={q}&stringify=true",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=asc&${parent.data.field}_gte={q}&stringify=true",
                         "itemKey": "data[\"value\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -150,11 +130,7 @@
                     "title": "Valeur max",
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=desc&${parent.data.field}_lte={q}&stringify=true",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=desc&${parent.data.field}_lte={q}&stringify=true",
                         "itemKey": "data[\"value\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -179,11 +155,7 @@
                     "title": "Colonne de filtre",
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/schema?calculated=false",
                         "itemKey": "data[\"key\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -197,11 +169,7 @@
                     },
                     "layout": {
                       "getItems": {
-                        "url": {
-                          "type": "js-tpl",
-                          "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
-                          "pure": false
-                        },
+                        "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
                         "itemKey": "data[\"value\"]",
                         "itemTitle": "data[\"label\"]"
                       }
@@ -290,11 +258,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -313,11 +277,7 @@
                           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -460,11 +420,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -492,11 +448,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -548,11 +500,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -613,11 +561,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -812,11 +756,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -835,11 +775,7 @@
                           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -965,11 +901,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -988,11 +920,7 @@
                           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -1003,11 +931,7 @@
                           "title": "Champ de catégorie",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -1126,12 +1050,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.categoriesField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -1175,12 +1096,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.categoriesField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -1238,11 +1156,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1270,11 +1184,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1326,11 +1236,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1391,11 +1297,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1600,11 +1502,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -1628,11 +1526,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -1756,12 +1650,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -1809,12 +1700,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -1873,11 +1761,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1905,11 +1789,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1961,11 +1841,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -1988,11 +1864,7 @@
                           "title": "Grouper les valeurs en fonction de cette colonne",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -2041,11 +1913,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -2197,12 +2065,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -2246,12 +2111,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -2309,11 +2171,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -2341,11 +2199,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -2397,11 +2251,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -2430,11 +2280,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -2500,17 +2346,9 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": {
-                              "type": "js-eval",
-                              "expr": "parent.data.sortBy === 'value'",
-                              "pure": false
-                            },
+                            "if": "parent.data.sortBy === 'value'",
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -2610,12 +2448,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -2664,12 +2499,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -2710,11 +2542,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -2731,11 +2559,7 @@
                           "description": "Choisissez une colonne des libellés des différentes séries.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -2854,12 +2678,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -2903,12 +2724,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -2994,11 +2812,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -3022,11 +2836,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -3150,12 +2960,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -3203,12 +3010,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -3267,11 +3071,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3299,11 +3099,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3355,11 +3151,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3382,11 +3174,7 @@
                           "title": "Grouper les valeurs en fonction de cette colonne",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -3435,11 +3223,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3591,12 +3375,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -3640,12 +3421,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -3703,11 +3481,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3735,11 +3509,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3791,11 +3561,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -3824,11 +3590,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -3894,17 +3656,9 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": {
-                              "type": "js-eval",
-                              "expr": "parent.data.sortBy === 'value'",
-                              "pure": false
-                            },
+                            "if": "parent.data.sortBy === 'value'",
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -4004,12 +3758,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -4058,12 +3809,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -4104,11 +3852,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -4125,11 +3869,7 @@
                           "description": "Choisissez une colonne des libellés des différentes séries.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -4248,12 +3988,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -4297,12 +4034,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -4369,11 +4103,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -4397,11 +4127,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -4525,12 +4251,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -4578,12 +4301,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -4642,11 +4362,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -4674,11 +4390,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -4730,11 +4442,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -4757,11 +4465,7 @@
                           "title": "Grouper les valeurs en fonction de cette colonne",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -4810,11 +4514,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -4966,12 +4666,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -5015,12 +4712,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -5078,11 +4772,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -5110,11 +4800,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -5166,11 +4852,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -5199,11 +4881,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -5269,17 +4947,9 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": {
-                              "type": "js-eval",
-                              "expr": "parent.data.sortBy === 'value'",
-                              "pure": false
-                            },
+                            "if": "parent.data.sortBy === 'value'",
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -5379,12 +5049,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -5433,12 +5100,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -5479,11 +5143,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -5500,11 +5160,7 @@
                           "description": "Choisissez une colonne des libellés des différentes séries.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -5623,12 +5279,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -5672,12 +5325,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -5779,11 +5429,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -5802,11 +5448,7 @@
                           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -5915,12 +5557,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.labelsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -5964,12 +5603,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.labelsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -6027,11 +5663,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -6059,11 +5691,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -6115,11 +5743,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -6180,11 +5804,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -6330,12 +5950,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupBy?.field",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -6379,12 +5996,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupBy?.field",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -6431,11 +6045,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -6519,12 +6129,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -6572,12 +6179,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -6643,11 +6247,7 @@
                           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -6671,11 +6271,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -6799,12 +6395,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -6852,12 +6445,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -6916,11 +6506,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -6948,11 +6534,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -7004,11 +6586,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -7031,11 +6609,7 @@
                           "title": "Grouper les valeurs en fonction de cette colonne",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -7084,11 +6658,7 @@
                                   "title": "Colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -7240,12 +6810,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -7289,12 +6856,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.groupsField",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -7352,11 +6916,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -7384,11 +6944,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -7440,11 +6996,7 @@
                                   "title": "Grouper en fonction de cette colonne",
                                   "layout": {
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                                       "itemKey": "data[\"key\"]",
                                       "itemTitle": "data[\"label\"]"
                                     }
@@ -7473,11 +7025,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -7543,17 +7091,9 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": {
-                              "type": "js-eval",
-                              "expr": "parent.data.sortBy === 'value'",
-                              "pure": false
-                            },
+                            "if": "parent.data.sortBy === 'value'",
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -7653,12 +7193,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemValue": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -7707,12 +7244,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['label']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -7753,11 +7287,7 @@
                           },
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -7774,11 +7304,7 @@
                           "description": "Choisissez une colonne des libellés des différentes séries.",
                           "layout": {
                             "getItems": {
-                              "url": {
-                                "type": "js-tpl",
-                                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                                "pure": false
-                              },
+                              "url": "${rootData.datasets[0].href}/schema?calculated=false",
                               "itemKey": "data[\"key\"]",
                               "itemTitle": "data[\"label\"]"
                             }
@@ -7897,12 +7423,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
                                       "itemsResults": "data[\"aggs\"]"
@@ -7946,12 +7469,9 @@
                                   },
                                   "layout": {
                                     "comp": "list",
+                                    "if": "rootData.chart.config.valuesLabel",
                                     "getItems": {
-                                      "url": {
-                                        "type": "js-tpl",
-                                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                                        "pure": false
-                                      },
+                                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
                                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -8068,11 +7588,7 @@
           },
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "api/v1/datasets?status=finalized&q={q}&select=id,title,schema&${context.datasetFilter}&sort=createdAt:-1",
-                "pure": true
-              },
+              "url": "api/v1/datasets?status=finalized&q={q}&select=id,title,schema&${context.datasetFilter}&sort=createdAt:-1",
               "itemKey": "data[\"href\"]",
               "itemTitle": "data[\"title\"]",
               "itemsResults": "data[\"results\"]"
@@ -8103,11 +7619,7 @@
       "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
       "layout": {
         "getItems": {
-          "url": {
-            "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-            "pure": false
-          },
+          "url": "${rootData.datasets[0].href}/schema?calculated=false",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
@@ -8119,11 +7631,7 @@
       "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
       "layout": {
         "getItems": {
-          "url": {
-            "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-            "pure": false
-          },
+          "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
@@ -8140,11 +7648,7 @@
       },
       "layout": {
         "getItems": {
-          "url": {
-            "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-            "pure": false
-          },
+          "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
@@ -8159,11 +7663,7 @@
       },
       "layout": {
         "getItems": {
-          "url": {
-            "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-            "pure": false
-          },
+          "url": "${rootData.datasets[0].href}/schema?calculated=false",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
@@ -8175,11 +7675,7 @@
       "description": "Choisissez une colonne des libellés des différentes séries.",
       "layout": {
         "getItems": {
-          "url": {
-            "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-            "pure": false
-          },
+          "url": "${rootData.datasets[0].href}/schema?calculated=false",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
@@ -8339,11 +7835,7 @@
               "title": "Grouper en fonction de cette colonne",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -8371,11 +7863,7 @@
               "title": "Grouper en fonction de cette colonne",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -8427,11 +7915,7 @@
               "title": "Grouper en fonction de cette colonne",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -8485,11 +7969,7 @@
               "title": "Colonne",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -8549,11 +8029,7 @@
           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -8572,11 +8048,7 @@
           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -8702,11 +8174,7 @@
           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -8725,11 +8193,7 @@
           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -8740,11 +8204,7 @@
           "title": "Champ de catégorie",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -8863,12 +8323,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.categoriesField",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"]"
@@ -8912,12 +8369,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.categoriesField",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -8975,11 +8429,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9007,11 +8457,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9063,11 +8509,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9128,11 +8570,7 @@
                   "title": "Colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9290,11 +8728,7 @@
           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -9318,11 +8752,7 @@
           },
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -9446,12 +8876,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                       "itemKey": "data['key']",
                       "itemValue": "data['label']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -9499,12 +8926,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['label']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -9563,11 +8987,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9595,11 +9015,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9651,11 +9067,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9678,11 +9090,7 @@
           "title": "Grouper les valeurs en fonction de cette colonne",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -9731,11 +9139,7 @@
                   "title": "Colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -9887,12 +9291,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.groupsField",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"]"
@@ -9936,12 +9337,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.groupsField",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -9999,11 +9397,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -10031,11 +9425,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -10087,11 +9477,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -10120,11 +9506,7 @@
           },
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -10190,17 +9572,9 @@
           "title": "Champ de tri",
           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
           "layout": {
-            "if": {
-              "type": "js-eval",
-              "expr": "parent.data.sortBy === 'value'",
-              "pure": false
-            },
+            "if": "parent.data.sortBy === 'value'",
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -10300,12 +9674,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesCalc?.length",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                       "itemKey": "data['key']",
                       "itemValue": "data['label']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -10354,12 +9725,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesCalc?.length",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['label']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -10400,11 +9768,7 @@
           },
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -10421,11 +9785,7 @@
           "description": "Choisissez une colonne des libellés des différentes séries.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -10544,12 +9904,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"]"
@@ -10593,12 +9950,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -10643,11 +9997,7 @@
               "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -10671,11 +10021,7 @@
               },
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -10799,12 +10145,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.valuesFields?.length",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                           "itemKey": "data['key']",
                           "itemValue": "data['label']",
                           "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -10852,12 +10195,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.valuesFields?.length",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                           "itemKey": "data['key']",
                           "itemTitle": "data['label']",
                           "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -10916,11 +10256,7 @@
                       "title": "Grouper en fonction de cette colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -10948,11 +10284,7 @@
                       "title": "Grouper en fonction de cette colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -11004,11 +10336,7 @@
                       "title": "Grouper en fonction de cette colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -11031,11 +10359,7 @@
               "title": "Grouper les valeurs en fonction de cette colonne",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -11084,11 +10408,7 @@
                       "title": "Colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -11240,12 +10560,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.groupsField",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                           "itemKey": "data[\"value\"]",
                           "itemValue": "data[\"value\"]",
                           "itemsResults": "data[\"aggs\"]"
@@ -11289,12 +10606,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.groupsField",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                           "itemKey": "data['key']",
                           "itemTitle": "data['key']",
                           "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -11352,11 +10666,7 @@
                       "title": "Grouper en fonction de cette colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -11384,11 +10694,7 @@
                       "title": "Grouper en fonction de cette colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -11440,11 +10746,7 @@
                       "title": "Grouper en fonction de cette colonne",
                       "layout": {
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                           "itemKey": "data[\"key\"]",
                           "itemTitle": "data[\"label\"]"
                         }
@@ -11473,11 +10775,7 @@
               },
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -11543,17 +10841,9 @@
               "title": "Champ de tri",
               "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
               "layout": {
-                "if": {
-                  "type": "js-eval",
-                  "expr": "parent.data.sortBy === 'value'",
-                  "pure": false
-                },
+                "if": "parent.data.sortBy === 'value'",
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -11653,12 +10943,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.valuesCalc?.length",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                           "itemKey": "data['key']",
                           "itemValue": "data['label']",
                           "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -11707,12 +10994,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.valuesCalc?.length",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                           "itemKey": "data['key']",
                           "itemTitle": "data['label']",
                           "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
@@ -11753,11 +11037,7 @@
               },
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -11774,11 +11054,7 @@
               "description": "Choisissez une colonne des libellés des différentes séries.",
               "layout": {
                 "getItems": {
-                  "url": {
-                    "type": "js-tpl",
-                    "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                    "pure": false
-                  },
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false",
                   "itemKey": "data[\"key\"]",
                   "itemTitle": "data[\"label\"]"
                 }
@@ -11897,12 +11173,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.valuesLabel",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                           "itemKey": "data[\"value\"]",
                           "itemValue": "data[\"value\"]",
                           "itemsResults": "data[\"aggs\"]"
@@ -11946,12 +11219,9 @@
                       },
                       "layout": {
                         "comp": "list",
+                        "if": "rootData.chart.config.valuesLabel",
                         "getItems": {
-                          "url": {
-                            "type": "js-tpl",
-                            "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                            "pure": false
-                          },
+                          "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                           "itemKey": "data['key']",
                           "itemTitle": "data['key']",
                           "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -11993,11 +11263,7 @@
           "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -12016,11 +11282,7 @@
           "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -12129,12 +11391,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.labelsField",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"]"
@@ -12178,12 +11437,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.labelsField",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -12241,11 +11497,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -12273,11 +11525,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&format=date,date-time",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -12329,11 +11577,7 @@
                   "title": "Grouper en fonction de cette colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -12394,11 +11638,7 @@
                   "title": "Colonne",
                   "layout": {
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                       "itemKey": "data[\"key\"]",
                       "itemTitle": "data[\"label\"]"
                     }
@@ -12544,12 +11784,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"]"
@@ -12593,12 +11830,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
@@ -12645,11 +11879,7 @@
           },
           "layout": {
             "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-                "pure": false
-              },
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -12733,12 +11963,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                       "itemKey": "data['key']",
                       "itemValue": "data['label']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -12786,12 +12013,9 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
-                      "url": {
-                        "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                        "pure": false
-                      },
+                      "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['label']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
@@ -12841,11 +12065,7 @@
                 "title": "Colonne de filtre",
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/schema?calculated=false",
                     "itemKey": "data[\"key\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12859,11 +12079,7 @@
                 },
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12887,11 +12103,7 @@
                 "title": "Colonne de filtre",
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/schema?calculated=false",
                     "itemKey": "data[\"key\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12902,11 +12114,7 @@
                 "title": "Valeur min",
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=asc&${parent.data.field}_gte={q}&stringify=true",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=asc&${parent.data.field}_gte={q}&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12917,11 +12125,7 @@
                 "title": "Valeur max",
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=desc&${parent.data.field}_lte={q}&stringify=true",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=desc&${parent.data.field}_lte={q}&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12946,11 +12150,7 @@
                 "title": "Colonne de filtre",
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/schema?calculated=false",
                     "itemKey": "data[\"key\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12964,11 +12164,7 @@
                 },
                 "layout": {
                   "getItems": {
-                    "url": {
-                      "type": "js-tpl",
-                      "expr": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
-                      "pure": false
-                    },
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -12984,11 +12180,7 @@
       "title": "Colonne de filtre",
       "layout": {
         "getItems": {
-          "url": {
-            "type": "js-tpl",
-            "expr": "${rootData.datasets[0].href}/schema?calculated=false",
-            "pure": false
-          },
+          "url": "${rootData.datasets[0].href}/schema?calculated=false",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
