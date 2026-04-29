@@ -872,35 +872,63 @@
         "dynamicSort": {
           "$ref": "#/definitions/dynamicSort"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "pure": false
+                      },
+                      "itemKey": "data[\"value\"]",
+                      "itemValue": "data[\"value\"]",
+                      "itemsResults": "data[\"aggs\"]"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
-                      "value"
+                      "key"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                      "value": {
+                      "key": {
                         "type": "string",
                         "layout": "none"
                       },
@@ -930,26 +958,6 @@
             "type": "palette",
             "name": "Accent",
             "offset": 0
-          }
-        },
-        "groupSort": {
-          "type": "array",
-          "title": "Ordre des séries",
-          "items": {
-            "type": "string"
-          },
-          "layout": {
-            "comp": "list",
-            "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                "pure": false
-              },
-              "itemKey": "data[\"value\"]",
-              "itemTitle": "data[\"value\"]",
-              "itemsResults": "data[\"aggs\"]"
-            }
           }
         }
       }
@@ -1050,39 +1058,69 @@
         "dynamicSort": {
           "$ref": "#/definitions/dynamicSort"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
+                        "pure": false
+                      },
+                      "itemKey": "data['key']",
+                      "itemValue": "data['label']",
+                      "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
                       "key"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                       "key": {
                         "type": "string",
                         "layout": "none"
                       },
                       "label": {
-                        "type": "string"
+                        "type": "string",
+                        "layout": "none"
                       },
                       "color": {
                         "$ref": "#/definitions/hexColor"
@@ -1092,9 +1130,14 @@
                   "layout": {
                     "comp": "list",
                     "getItems": {
-                      "type": "js-eval",
-                      "expr": "parent.parent.parent.data.valuesFields",
-                      "pure": false
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
+                        "pure": false
+                      },
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['label']",
+                      "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                     }
                   }
                 }
@@ -1105,21 +1148,6 @@
             "type": "palette",
             "name": "Accent",
             "offset": 0
-          }
-        },
-        "groupSort": {
-          "type": "array",
-          "title": "Ordre des séries",
-          "items": {
-            "type": "string"
-          },
-          "layout": {
-            "comp": "list",
-            "getItems": {
-              "type": "js-eval",
-              "expr": "parent.parent.parent.data.valuesFields",
-              "pure": false
-            }
           }
         }
       }
@@ -1177,35 +1205,63 @@
         "dynamicSort": {
           "$ref": "#/definitions/dynamicSort"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                        "pure": false
+                      },
+                      "itemKey": "data[\"value\"]",
+                      "itemValue": "data[\"value\"]",
+                      "itemsResults": "data[\"aggs\"]"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
-                      "value"
+                      "key"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                      "value": {
+                      "key": {
                         "type": "string",
                         "layout": "none"
                       },
@@ -1235,26 +1291,6 @@
             "type": "palette",
             "name": "Accent",
             "offset": 0
-          }
-        },
-        "groupSort": {
-          "type": "array",
-          "title": "Ordre des séries",
-          "items": {
-            "type": "string"
-          },
-          "layout": {
-            "comp": "list",
-            "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
-                "pure": false
-              },
-              "itemKey": "data[\"value\"]",
-              "itemTitle": "data[\"value\"]",
-              "itemsResults": "data[\"aggs\"]"
-            }
           }
         }
       }
@@ -1345,39 +1381,69 @@
         "dynamicSort": {
           "$ref": "#/definitions/dynamicSort"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
+                        "pure": false
+                      },
+                      "itemKey": "data['key']",
+                      "itemValue": "data['label']",
+                      "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
-                      "key"
+                      "key", "label"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                       "key": {
                         "type": "string",
                         "layout": "none"
                       },
                       "label": {
-                        "type": "string"
+                        "type": "string",
+                        "layout": "none"
                       },
                       "color": {
                         "$ref": "#/definitions/hexColor"
@@ -1387,9 +1453,14 @@
                   "layout": {
                     "comp": "list",
                     "getItems": {
-                      "type": "js-eval",
-                      "expr": "parent.parent.parent.data.valuesCalc",
-                      "pure": false
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
+                        "pure": false
+                      },
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['label']",
+                      "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                     }
                   }
                 }
@@ -1400,21 +1471,6 @@
             "type": "palette",
             "name": "Accent",
             "offset": 0
-          }
-        },
-        "groupSort": {
-          "type": "array",
-          "title": "Ordre des séries",
-          "items": {
-            "type": "string"
-          },
-          "layout": {
-            "comp": "list",
-            "getItems": {
-              "type": "js-eval",
-              "expr": "parent.parent.parent.data.valuesCalc",
-              "pure": false
-            }
           }
         }
       }
@@ -1478,35 +1534,63 @@
         "size": {
           "$ref": "#/definitions/size"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "pure": false
+                      },
+                      "itemKey": "data[\"value\"]",
+                      "itemValue": "data[\"value\"]",
+                      "itemsResults": "data[\"aggs\"]"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
-                      "value"
+                      "key"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                      "value": {
+                      "key": {
                         "type": "string",
                         "layout": "none"
                       },
@@ -1536,26 +1620,6 @@
             "type": "palette",
             "name": "Accent",
             "offset": 0
-          }
-        },
-        "groupSort": {
-          "type": "array",
-          "title": "Ordre des séries",
-          "items": {
-            "type": "string"
-          },
-          "layout": {
-            "comp": "list",
-            "getItems": {
-              "url": {
-                "type": "js-tpl",
-                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                "pure": false
-              },
-              "itemKey": "data[\"value\"]",
-              "itemTitle": "data[\"value\"]",
-              "itemsResults": "data[\"aggs\"]"
-            }
           }
         }
       }
@@ -1622,35 +1686,63 @@
         "sortOrder": {
           "$ref": "#/definitions/sortOrder"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "pure": false
+                      },
+                      "itemKey": "data[\"value\"]",
+                      "itemValue": "data[\"value\"]",
+                      "itemsResults": "data[\"aggs\"]"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
-                      "value"
+                      "key"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                      "value": {
+                      "key": {
                         "type": "string",
                         "layout": "none"
                       },
@@ -1723,35 +1815,63 @@
         "sortOrder": {
           "$ref": "#/definitions/sortOrder"
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupBy.field}&interval=${parent.parent.parent.data.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                        "pure": false
+                      },
+                      "itemKey": "data[\"value\"]",
+                      "itemValue": "data[\"value\"]",
+                      "itemsResults": "data[\"aggs\"]"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
-                      "value"
+                      "key"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                      "value": {
+                      "key": {
                         "type": "string",
                         "layout": "none"
                       },
@@ -1807,39 +1927,69 @@
           "type": "string",
           "default": ""
         },
-        "colors": {
+        "colorOrder": {
           "type": "object",
-          "title": "Couleurs",
+          "title": "Couleurs et ordre",
           "oneOf": [
+        {
+          "title": "Palette précalculée",
+          "allOf": [
             {
               "$ref": "#/definitions/colorPalette"
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "getItems": {
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
+                        "pure": false
+                      },
+                      "itemKey": "data['key']",
+                      "itemValue": "data['label']",
+                      "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
+                    }
+                  }
+                }
+              }
             },
             {
               "title": "Palette personnalisée",
               "required": [
                 "type",
-                "styles"
+                "entries"
               ],
               "additionalProperties": false,
               "properties": {
                 "type": {
                   "const": "manual"
                 },
-                "styles": {
-                  "title": "Couleurs et ordre",
+                "entries": {
+                  "title":"Valeurs",
                   "type": "array",
                   "items": {
                     "type": "object",
                     "required": [
                       "key"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                       "key": {
                         "type": "string",
                         "layout": "none"
                       },
                       "label": {
-                        "type": "string"
+                        "type": "string",
+                        "layout": "none"
                       },
                       "color": {
                         "$ref": "#/definitions/hexColor"
@@ -1849,9 +1999,14 @@
                   "layout": {
                     "comp": "list",
                     "getItems": {
-                      "type": "js-eval",
-                      "expr": "parent.parent.parent.data.valuesFields",
-                      "pure": false
+                      "url": {
+                        "type": "js-tpl",
+                        "expr": "${rootData.datasets[0].href}/schema?calculated=false",
+                        "pure": false
+                      },
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['label']",
+                      "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                     }
                   }
                 },
@@ -2031,7 +2186,6 @@
         "type",
         "name"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
           "const": "palette"

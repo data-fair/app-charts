@@ -49,7 +49,7 @@ const options = computed(() => {
     },
     plugins: {
       legend: {
-        display: chart.value!.type !== 'pie' && !!chart.value!.config.colors &&
+        display: chart.value!.type !== 'pie' && !!chart.value!.config.colorOrder &&
         !(chart.value!.config.groupBy?.type === 'value' && chart.value!.config.groupBy.field === chart.value!.config.groupsField),
         position: config.value.legendPosition || 'top'
       },

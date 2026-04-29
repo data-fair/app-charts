@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { getColors, splitString } from '@/assets/utils'
+import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
 import type { ChartDataCtx } from '@/composables/useChartData'
 
 export default async function fetchAggsBasedLabelsData (ctx: ChartDataCtx, theme: any) {
@@ -37,19 +37,11 @@ export default async function fetchAggsBasedLabelsData (ctx: ChartDataCtx, theme
     s.label = fields.value?.[chart.value!.config.valuesLabel]?.['x-labels']?.[s.value] || s.value
   })
 
-  const groupSort = chart.value!.config.groupSort
-  if (groupSort?.length) {
-    series = [...series].sort((a: any, b: any) => {
-      const aIdx = groupSort.indexOf(a.value + '')
-      const bIdx = groupSort.indexOf(b.value + '')
-      if (aIdx === -1 && bIdx === -1) return 0
-      if (aIdx === -1) return 1
-      if (bIdx === -1) return -1
-      return aIdx - bIdx
-    })
-  }
+  const seriesValues = series.map((s: any) => s.value + '')
+  const orderedValues = getOrderedLabels(seriesValues, chart.value!.config.colorOrder)
+  series = orderedValues.map((v: string) => series.find((s: any) => (s.value + '') === v)!)
 
-  const colors = getColors(series.map((s: any) => s.value), chart.value!.config.colors)
+  const colors = getColors(series.map((s: any) => s.value), chart.value!.config.colorOrder)
   const datasets = series.map((serie: any, _i: number) => ({
     label: serie.label,
     borderColor: colors[serie.value],

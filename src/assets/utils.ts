@@ -18,17 +18,32 @@ export function getSortStr (config: AnyChartConfig) {
   return str
 }
 
-export function getColors (labels: string[], colorsConfig: AnyChartConfig['colors']) {
-  if (colorsConfig?.type === 'palette') {
+export function getOrderedLabels (labels: string[], colorOrder: AnyChartConfig['colorOrder']): string[] {
+  if (!colorOrder) return labels
+  if (colorOrder.type === 'palette' && colorOrder.seriesOrder?.length) {
+    const ordered = colorOrder.seriesOrder.filter((item: string) => labels.includes(item))
+    ordered.push(...labels.filter((label: string) => !ordered.includes(label)))
+    return ordered
+  }
+  if (colorOrder.type === 'manual' && colorOrder.entries?.length) {
+    const ordered = colorOrder.entries.map((s: any) => s.key).filter((k: string) => labels.includes(k))
+    ordered.push(...labels.filter((label: string) => !ordered.includes(label)))
+    return ordered
+  }
+  return labels
+}
+
+export function getColors (labels: string[], colorOrder: AnyChartConfig['colorOrder']) {
+  if (colorOrder?.type === 'palette') {
     const colors: Record<string, string> = {}
-    const numColors = 12 // Math.min(12, labels.length + chart.config.colors.offset)
-    const palette = chroma.scale(colorsConfig.name).mode('lch').colors(numColors)
+    const numColors = 12
+    const palette = chroma.scale(colorOrder.name).mode('lch').colors(numColors)
     labels.forEach((label, i) => {
-      colors[label] = palette[i + (colorsConfig.offset ?? 0) % 12]
+      colors[label] = palette[(i + (colorOrder.offset ?? 0)) % numColors]
     })
     return colors
   } else {
-    return Object.assign({}, ...(colorsConfig?.styles?.map((s: any) => ({ [s.value || s.key]: s.color })) || []))
+    return Object.assign({}, ...(colorOrder?.entries?.map((s: any) => ({ [s.key]: s.color })) || []))
   }
 }
 

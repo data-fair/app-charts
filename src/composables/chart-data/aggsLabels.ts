@@ -24,11 +24,11 @@ export default async function fetchAggsLabelsData (ctx: ChartDataCtx) {
     .map((f: string) => fields.value[f].label || fields.value[f].title || fields.value[f]['x-originalName'] || f)
     .map((l: string) => chart.value!.config.removeFromLabels ? l.replace(chart.value!.config.removeFromLabels, '') : l)
 
-  const colors = getColors(chart.value!.config.valuesFields, chart.value!.config.colors)
+  const colors = getColors(chart.value!.config.valuesFields, chart.value!.config.colorOrder)
   const datasets: any[] = [{
     labels,
     borderColor: 'white',
-    backgroundColor: chart.value!.config.valuesFields.map((l: string) => colors[l] || (chart.value!.config.colors as any)?.defaultColor || '#828282'),
+    backgroundColor: chart.value!.config.valuesFields.map((l: string) => colors[l] || (chart.value!.config.colorOrder as any)?.defaultColor || '#828282'),
     data: metrics.map((a: any) => getValue(a.metric))
   }]
 

@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { getSortStr, getColors, splitString } from '@/assets/utils'
+import { getSortStr, getColors, getOrderedLabels, splitString } from '@/assets/utils'
 import type { ChartDataCtx } from '@/composables/useChartData'
 
 export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any) {
@@ -51,22 +51,13 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any)
       labels.push('Autre')
       rawLabels.push('Autre')
     }
-    const colors = getColors(categories?.map((c: any) => c.value) || (chart.value!.config.valuesField && rawLabels) || chart.value!.config.valuesFields || [], chart.value!.config.colors)
+    const colors = getColors(categories?.map((c: any) => c.value) || (chart.value!.config.valuesField && rawLabels) || chart.value!.config.valuesFields || [], chart.value!.config.colorOrder)
 
     if (chart.value!.config.valuesField) {
       if (categories) {
-        let sortedCategories = categories
-        const groupSort = chart.value!.config.groupSort
-        if (groupSort?.length) {
-          sortedCategories = [...categories].sort((a: any, b: any) => {
-            const aIdx = groupSort.indexOf(a.value + '')
-            const bIdx = groupSort.indexOf(b.value + '')
-            if (aIdx === -1 && bIdx === -1) return 0
-            if (aIdx === -1) return 1
-            if (bIdx === -1) return -1
-            return aIdx - bIdx
-          })
-        }
+        const categoryValues = categories.map((c: any) => c.value + '')
+        const orderedValues = getOrderedLabels(categoryValues, chart.value!.config.colorOrder)
+        const sortedCategories = orderedValues.map((v: string) => categories.find((c: any) => (c.value + '') === v)!)
         datasets = sortedCategories.map(({ value, label }: any) => ({
           label: label || value,
           borderColor: colors[value],
@@ -79,13 +70,13 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any)
         datasets = [{
           labels,
           borderColor: chart.value!.type === 'pie' ? 'white' : rawLabels.map((l: string) => colors[l]),
-          backgroundColor: rawLabels.map((l: string) => colors[l] || chart.value!.config.colors?.defaultColor || '#828282'),
+          backgroundColor: rawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
           data: results.slice(0, chart.value!.config.size).map((r: any) => getValue(r[chart.value!.config.valuesField!]))
         }]
         if (chart.value!.type === 'pie' && results.length > chart.value!.config.size) {
           const otherSum = results.slice(chart.value!.config.size).reduce((acc: number, r: any) => acc + r[chart.value!.config.valuesField!], 0)
           datasets[0].data.push(getValue(otherSum))
-          datasets[0].backgroundColor.push((chart.value!.config.colors as any)?.defaultColor || '#828282')
+          datasets[0].backgroundColor.push((chart.value!.config.colorOrder as any)?.defaultColor || '#828282')
         }
         if (['percentages', 'both'].includes(chart.value!.display as string)) {
           const sum = datasets[0].data.reduce((acc: number, d: number | undefined) => acc + (d || 0), 0)
@@ -93,18 +84,7 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any)
         }
       }
     } else {
-      let valuesFields = chart.value!.config.valuesFields || []
-      const groupSort = chart.value!.config.groupSort
-      if (groupSort?.length) {
-        valuesFields = [...valuesFields].sort((a: string, b: string) => {
-          const aIdx = groupSort.indexOf(a)
-          const bIdx = groupSort.indexOf(b)
-          if (aIdx === -1 && bIdx === -1) return 0
-          if (aIdx === -1) return 1
-          if (bIdx === -1) return -1
-          return aIdx - bIdx
-        })
-      }
+      const valuesFields = getOrderedLabels(chart.value!.config.valuesFields || [], chart.value!.config.colorOrder)
       datasets = valuesFields.map((field: string) => ({
         label: chart.value!.config.removeFromLabels
           ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')

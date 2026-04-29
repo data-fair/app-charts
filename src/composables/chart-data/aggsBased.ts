@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { getSortStr, getColors, splitString } from '@/assets/utils'
+import { getSortStr, getColors, getOrderedLabels, splitString } from '@/assets/utils'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { ChartDataCtx } from '@/composables/useChartData'
 
@@ -59,19 +59,13 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
   } else {
     if (chart.value!.config.groupsField) {
       let series: string[]
-      if (chart.value!.config.colors?.type === 'manual') {
-        series = chart.value!.config.colors.styles.map((s: any) => s.value)
+      if (chart.value!.config.colorOrder?.type === 'manual') {
+        series = chart.value!.config.colorOrder.entries.map((s: any) => s.key)
       } else {
         const seriesSet = [...new Set([].concat(...aggs.map((a: any) => a.aggs.map((ag: any) => ag.value + ''))) as string[])]
-        const groupSort = chart.value!.config.groupSort
-        if (groupSort?.length) {
-          series = groupSort.filter((s: string) => seriesSet.includes(s))
-          series.push(...seriesSet.filter((s: string) => !groupSort.includes(s)))
-        } else {
-          series = seriesSet
-        }
+        series = getOrderedLabels(seriesSet, chart.value!.config.colorOrder)
       }
-      const colors = getColors(series, chart.value!.config.colors)
+      const colors = getColors(series, chart.value!.config.colorOrder)
       datasets = series.map((label: string) => ({
         label: fields.value[chart.value!.config.groupsField]?.['x-labels']?.[label] || label,
         borderColor: colors[label],
@@ -91,19 +85,8 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
       }
     } else {
       if (chart.value!.config.type === 'aggsBasedCategories') {
-        let valuesCalc: string[] = chart.value!.config.valuesCalc
-        const groupSort = chart.value!.config.groupSort
-        if (groupSort?.length) {
-          valuesCalc = [...valuesCalc].sort((a: string, b: string) => {
-            const aIdx = groupSort.indexOf(a)
-            const bIdx = groupSort.indexOf(b)
-            if (aIdx === -1 && bIdx === -1) return 0
-            if (aIdx === -1) return 1
-            if (bIdx === -1) return -1
-            return aIdx - bIdx
-          })
-        }
-        const colors = getColors(valuesCalc, chart.value!.config.colors)
+        const valuesCalc = getOrderedLabels(chart.value!.config.valuesCalc, chart.value!.config.colorOrder)
+        const colors = getColors(valuesCalc, chart.value!.config.colorOrder)
         datasets = valuesCalc.map((field: string, i: number) => ({
           label: chart.value!.config.removeFromLabels
             ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
@@ -125,17 +108,17 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
           labels.push('Autre')
           rawLabels.push('Autre')
         }
-        const colors = getColors(rawLabels, chart.value!.config.colors)
+        const colors = getColors(rawLabels, chart.value!.config.colorOrder)
         datasets = [{
           labels,
           borderColor: chart.value!.type === 'pie' ? 'white' : rawLabels.map((l: string) => colors[l]),
-          backgroundColor: rawLabels.map((l: string) => colors[l] || chart.value!.config.colors?.defaultColor || '#828282'),
+          backgroundColor: rawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
           data: aggs.slice(0, chart.value!.config.size).map((a: any) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
         }]
         if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
           const otherSum = aggs.slice(chart.value!.config.size).reduce((acc: number, a: any) => acc + (chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total), 0)
           datasets[0].data.push(getValue(otherSum))
-          datasets[0].backgroundColor.push((chart.value!.config.colors as any)?.defaultColor || '#828282')
+          datasets[0].backgroundColor.push((chart.value!.config.colorOrder as any)?.defaultColor || '#828282')
         }
         if (['percentages', 'both'].includes(chart.value!.display as string)) {
           const sum = datasets[0].data.reduce((acc: number, d: number | undefined) => acc + (d || 0), 0)
