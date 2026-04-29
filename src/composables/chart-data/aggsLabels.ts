@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { getColors, splitString } from '@/assets/utils'
+import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
 import type { ChartDataCtx } from '@/composables/useChartData'
 
 export default async function fetchAggsLabelsData (ctx: ChartDataCtx) {
@@ -20,16 +20,19 @@ export default async function fetchAggsLabelsData (ctx: ChartDataCtx) {
     })
   }) || [])
 
-  const labels = chart.value!.config.valuesFields
+  const orderedValuesFields = getOrderedLabels(chart.value!.config.valuesFields || [], chart.value!.config.colorOrder)
+  const metricsMap = new Map<string, any>(chart.value!.config.valuesFields!.map((f: string, i: number) => [f, metrics[i]]))
+
+  const labels = orderedValuesFields
     .map((f: string) => fields.value[f].label || fields.value[f].title || fields.value[f]['x-originalName'] || f)
     .map((l: string) => chart.value!.config.removeFromLabels ? l.replace(chart.value!.config.removeFromLabels, '') : l)
 
-  const colors = getColors(chart.value!.config.valuesFields, chart.value!.config.colorOrder)
+  const colors = getColors(orderedValuesFields, chart.value!.config.colorOrder)
   const datasets: any[] = [{
     labels,
     borderColor: 'white',
-    backgroundColor: chart.value!.config.valuesFields.map((l: string) => colors[l] || (chart.value!.config.colorOrder as any)?.defaultColor || '#828282'),
-    data: metrics.map((a: any) => getValue(a.metric))
+    backgroundColor: orderedValuesFields.map((l: string) => colors[l] || (chart.value!.config.colorOrder as any)?.defaultColor || '#828282'),
+    data: orderedValuesFields.map((f: string) => getValue(metricsMap.get(f)!.metric))
   }]
 
   if (['percentages', 'both'].includes(chart.value!.display as string)) {

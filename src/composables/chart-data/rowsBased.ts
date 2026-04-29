@@ -67,20 +67,36 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any)
           data: results.map((r: any) => (r[chart.value!.config.categoriesField!] === value && getValue(r[chart.value!.config.valuesField!])) || undefined)
         }))
       } else {
-        datasets = [{
-          labels,
-          borderColor: chart.value!.type === 'pie' ? 'white' : rawLabels.map((l: string) => colors[l]),
-          backgroundColor: rawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
-          data: results.slice(0, chart.value!.config.size).map((r: any) => getValue(r[chart.value!.config.valuesField!]))
-        }]
+        const dataValues = results.slice(0, chart.value!.config.size).map((r: any) => getValue(r[chart.value!.config.valuesField!]))
+
+        let orderedRawLabels = getOrderedLabels(rawLabels, chart.value!.config.colorOrder)
+        let orderedLabels = orderedRawLabels.map((l: string) => fields.value[chart.value!.config.labelsField!]?.['x-labels']?.[l] || l)
+        let orderedData = orderedRawLabels.map((l: string) => {
+          const index = rawLabels.indexOf(l)
+          return dataValues[index]
+        })
+
         if (chart.value!.type === 'pie' && results.length > chart.value!.config.size) {
+          orderedRawLabels.push('Autre')
+          orderedLabels.push('Autre')
           const otherSum = results.slice(chart.value!.config.size).reduce((acc: number, r: any) => acc + r[chart.value!.config.valuesField!], 0)
-          datasets[0].data.push(getValue(otherSum))
-          datasets[0].backgroundColor.push((chart.value!.config.colorOrder as any)?.defaultColor || '#828282')
+          orderedData.push(getValue(otherSum))
         }
+
+        datasets = [{
+          labels: orderedLabels,
+          borderColor: chart.value!.type === 'pie' ? 'white' : orderedRawLabels.map((l: string) => colors[l]),
+          backgroundColor: orderedRawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
+          data: orderedData
+        }]
+
         if (['percentages', 'both'].includes(chart.value!.display as string)) {
           const sum = datasets[0].data.reduce((acc: number, d: number | undefined) => acc + (d || 0), 0)
           datasets[0].percentages = datasets[0].data.map((d: number | undefined) => d! * 100 / sum)
+        }
+
+        if (chart.value!.type === 'pie') {
+          labels.splice(0, labels.length, ...orderedLabels)
         }
       }
     } else {

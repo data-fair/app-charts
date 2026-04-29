@@ -61,7 +61,17 @@
                   "title": "Cacher les points"
                 },
                 "config": {
-                  "$ref": "#/definitions/singleDataType"
+                  "type": "object",
+                  "title": "Préparation des données",
+                  "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/rowsDataSingle"
+                    },
+                    {
+                      "$ref": "#/definitions/aggsDataSingle"
+                    }
+                  ]
                 }
               }
             },
@@ -88,7 +98,20 @@
                   "$ref": "#/definitions/horizontal"
                 },
                 "config": {
-                  "$ref": "#/definitions/singleDataType"
+                  "type": "object",
+                  "title": "Préparation des données",
+                  "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/rowsDataSingle"
+                    },
+                    {
+                      "$ref": "#/definitions/rowsDataSingleCategories"
+                    },
+                    {
+                      "$ref": "#/definitions/aggsDataSingle"
+                    }
+                  ]
                 }
               }
             },
@@ -229,7 +252,20 @@
                   "title": "Afficher la somme dans le titre"
                 },
                 "config": {
-                  "$ref": "#/definitions/categories"
+                  "type": "object",
+                  "title": "Préparation des données",
+                  "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/rowsCategories"
+                    },
+                    {
+                      "$ref": "#/definitions/aggsCategories"
+                    },
+                    {
+                      "$ref": "#/definitions/aggsLabels"
+                    }
+                  ]
                 }
               }
             },
@@ -827,7 +863,8 @@
         "sortOrder",
         "size",
         "labelsField",
-        "valuesField"
+        "valuesField",
+        "categoriesField"
       ],
       "additionalProperties": false,
       "properties": {
@@ -847,11 +884,6 @@
           "type": "string",
           "title": "Champ de catégorie",
           "layout": {
-            "if": {
-              "type": "js-eval",
-              "expr": "parent.parent.parent.parent.data.categorizable",
-              "pure": false
-            },
             "getItems": {
               "url": {
                 "type": "js-tpl",
@@ -896,7 +928,7 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                         "pure": false
                       },
                       "itemKey": "data[\"value\"]",
@@ -942,12 +974,12 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                         "pure": false
                       },
-                      "itemKey": "data[\"value\"]",
-                      "itemTitle": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['key']",
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
                     }
                   }
                 }
@@ -1005,22 +1037,7 @@
         }
       }
     },
-    "singleDataType": {
-      "type": "object",
-      "title": "Préparation des données",
-      "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
-      "oneOf": [
-        {
-          "$ref": "#/definitions/rowsDataSingle"
-        },
-        {
-          "$ref": "#/definitions/rowsDataSingleCategories"
-        },
-        {
-          "$ref": "#/definitions/aggsDataSingle"
-        }
-      ]
-    },
+
     "rowsDataMultiple": {
       "title": "Lire les lignes une par une",
       "type": "object",
@@ -1229,7 +1246,7 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                         "pure": false
                       },
                       "itemKey": "data[\"value\"]",
@@ -1275,12 +1292,12 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                         "pure": false
                       },
-                      "itemKey": "data[\"value\"]",
-                      "itemTitle": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['key']",
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
                     }
                   }
                 }
@@ -1558,7 +1575,7 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                         "pure": false
                       },
                       "itemKey": "data[\"value\"]",
@@ -1604,12 +1621,12 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                         "pure": false
                       },
-                      "itemKey": "data[\"value\"]",
-                      "itemTitle": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['key']",
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
                     }
                   }
                 }
@@ -1710,7 +1727,7 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                         "pure": false
                       },
                       "itemKey": "data[\"value\"]",
@@ -1756,17 +1773,14 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                         "pure": false
                       },
-                      "itemKey": "data[\"value\"]",
-                      "itemTitle": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['key']",
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
                     }
                   }
-                },
-                "defaultColor": {
-                  "$ref": "#/definitions/defaultColor"
                 }
               }
             }
@@ -1839,7 +1853,7 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupBy.field}&interval=${parent.parent.parent.data.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                         "pure": false
                       },
                       "itemKey": "data[\"value\"]",
@@ -1885,12 +1899,12 @@
                     "getItems": {
                       "url": {
                         "type": "js-tpl",
-                        "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupBy.field}&interval=${parent.parent.parent.data.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                        "expr": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                         "pure": false
                       },
-                      "itemKey": "data[\"value\"]",
-                      "itemTitle": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['key']",
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
                     }
                   }
                 },
@@ -2024,22 +2038,7 @@
         }
       }
     },
-    "categories": {
-      "type": "object",
-      "title": "Préparation des données",
-      "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
-      "oneOf": [
-        {
-          "$ref": "#/definitions/rowsCategories"
-        },
-        {
-          "$ref": "#/definitions/aggsCategories"
-        },
-        {
-          "$ref": "#/definitions/aggsLabels"
-        }
-      ]
-    },
+
     "filters": {
       "title": "Filtres prédéfinis",
       "type": "array",

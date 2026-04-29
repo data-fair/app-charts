@@ -104,25 +104,37 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
           }
         }
       } else {
+        const dataValues = aggs.slice(0, chart.value!.config.size).map((a: any) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
+
+        let orderedRawLabels = getOrderedLabels(rawLabels, chart.value!.config.colorOrder)
+        let orderedLabels = orderedRawLabels.map((l: string) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[l] || l)
+        let orderedData = orderedRawLabels.map((l: string) => {
+          const index = rawLabels.indexOf(l)
+          return dataValues[index]
+        })
+
         if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
-          labels.push('Autre')
-          rawLabels.push('Autre')
-        }
-        const colors = getColors(rawLabels, chart.value!.config.colorOrder)
-        datasets = [{
-          labels,
-          borderColor: chart.value!.type === 'pie' ? 'white' : rawLabels.map((l: string) => colors[l]),
-          backgroundColor: rawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
-          data: aggs.slice(0, chart.value!.config.size).map((a: any) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
-        }]
-        if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
+          orderedRawLabels.push('Autre')
+          orderedLabels.push('Autre')
           const otherSum = aggs.slice(chart.value!.config.size).reduce((acc: number, a: any) => acc + (chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total), 0)
-          datasets[0].data.push(getValue(otherSum))
-          datasets[0].backgroundColor.push((chart.value!.config.colorOrder as any)?.defaultColor || '#828282')
+          orderedData.push(getValue(otherSum))
         }
+
+        const colors = getColors(orderedRawLabels, chart.value!.config.colorOrder)
+        datasets = [{
+          labels: orderedLabels,
+          borderColor: chart.value!.type === 'pie' ? 'white' : orderedRawLabels.map((l: string) => colors[l]),
+          backgroundColor: orderedRawLabels.map((l: string) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
+          data: orderedData
+        }]
+
         if (['percentages', 'both'].includes(chart.value!.display as string)) {
           const sum = datasets[0].data.reduce((acc: number, d: number | undefined) => acc + (d || 0), 0)
           datasets[0].percentages = datasets[0].data.map((d: number | undefined) => d! * 100 / sum)
+        }
+
+        if (chart.value!.type === 'pie') {
+          labels.splice(0, labels.length, ...orderedLabels)
         }
       }
     }
