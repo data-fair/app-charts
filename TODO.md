@@ -2,15 +2,6 @@
 
 ## Typage (amélioration en cours)
 
-### ✅ Fait
-- **Réponses API typées** : `DatasetLine`, `AggItem`, `ValuesAggResponse`, `MetricAggResponse`, `ValuesLabelsItem`, `CategoryItem` dans `useChartData.ts`.
-- **Thème Vuetify typé** : `theme: ThemeInstance` dans tous les loaders chart-data.
-- **`window` globals typés** : `window.APPLICATION` et `window.vIframeOptions` déclarés dans `src/types.d.ts`.
-- **Shims nettoyés** : suppression des shims `any` pour les packages `@data-fair/lib-*` qui ont déjà des types dans `node_modules`.
-- **`normalizeFilters` typé** : utilise `Filter[]` de `@data-fair/lib-utils/filters`.
-- **`config.ts` amélioré** : `dataset` typé `Dataset`, `fields` typé `Record<string, Field>`.
-- **Callbacks Chart.js typés** : `TooltipItem` utilisé dans `Chart.vue`.
-
 ### 🔵 Reste à faire (18 `any` restants)
 
 | Fichier | Ligne(s) | Pourquoi |

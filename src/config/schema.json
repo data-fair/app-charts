@@ -34,12 +34,16 @@
             "type": "line"
           },
           "required": [
+            "type",
             "config"
           ],
           "oneOf": [
             {
               "title": "Courbe",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "line"
@@ -63,7 +67,7 @@
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
-                  "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+                  "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une, couleur unique** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données et représentées avec une couleur unique.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.",
                   "oneOf": [
                     {
                       "$ref": "#/definitions/rowsDataSingle"
@@ -78,6 +82,9 @@
             {
               "title": "Histogramme",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "bar",
@@ -100,7 +107,7 @@
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
-                  "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+                  "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une, couleur unique** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données et représentées avec une couleur unique.\n\n**Lire les lignes une par une, plusieurs couleurs** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.",
                   "oneOf": [
                     {
                       "$ref": "#/definitions/rowsDataSingle"
@@ -118,6 +125,9 @@
             {
               "title": "Plusieurs courbes",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "multi-line"
@@ -153,6 +163,9 @@
             {
               "title": "Histogramme multivalué",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "multi-bar",
@@ -189,6 +202,9 @@
             {
               "title": "Radar",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "radar"
@@ -204,6 +220,9 @@
             {
               "title": "Camembert",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "pie"
@@ -254,7 +273,7 @@
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
-                  "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+                  "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.\n\n**Sommes calculées sur plusieurs colonnes** :\nles valeurs affichées sont obtenues en faisant la somme de plusieurs colonnes numériques sur l'ensemble du jeu de données. Chaque colonne devient une part du graphique.",
                   "oneOf": [
                     {
                       "$ref": "#/definitions/rowsCategories"
@@ -272,6 +291,9 @@
             {
               "title": "Paire d'histogrammes",
               "additionalProperties": false,
+              "required": [
+                "type"
+              ],
               "properties": {
                 "type": {
                   "const": "paired-histogram",
@@ -577,6 +599,9 @@
         {
           "title": "Thème",
           "additionalProperties": false,
+          "required": [
+            "type"
+          ],
           "properties": {
             "type": {
               "const": "theme"
@@ -600,6 +625,9 @@
         {
           "title": "Personnalisée",
           "additionalProperties": false,
+          "required": [
+            "type"
+          ],
           "properties": {
             "type": {
               "const": "custom"
@@ -624,6 +652,10 @@
       "oneOf": [
         {
           "title": "Valeurs exactes d'une colonne",
+          "required": [
+            "type",
+            "field"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -653,6 +685,7 @@
         {
           "title": "Intervalles d'une colonne de type date",
           "required": [
+            "type",
             "field",
             "interval"
           ],
@@ -708,6 +741,7 @@
         {
           "title": "Intervalles d'une colonne numérique",
           "required": [
+            "type",
             "field",
             "interval"
           ],
@@ -752,6 +786,9 @@
       "oneOf": [
         {
           "title": "Nombre de lignes",
+          "required": [
+            "type"
+          ],
           "additionalProperties": false,
           "properties": {
             "type": {
@@ -762,6 +799,7 @@
         {
           "title": "Calcul depuis les valeurs d'une colonne",
           "required": [
+            "type",
             "field",
             "metric"
           ],
@@ -821,6 +859,7 @@
       "title": "Lire les lignes une par une, couleur unique",
       "type": "object",
       "required": [
+        "type",
         "sortBy",
         "sortOrder",
         "size",
@@ -859,6 +898,7 @@
       "title": "Lire les lignes une par une, plusieurs couleurs",
       "type": "object",
       "required": [
+        "type",
         "sortBy",
         "sortOrder",
         "size",
@@ -998,6 +1038,7 @@
       "title": "Grouper les lignes",
       "type": "object",
       "required": [
+        "type",
         "sortBy",
         "sortOrder",
         "size",
@@ -1042,8 +1083,10 @@
       "title": "Lire les lignes une par une",
       "type": "object",
       "required": [
+        "type",
         "sortBy",
         "sortOrder",
+        "size",
         "labelsField",
         "valuesFields"
       ],
@@ -1170,11 +1213,13 @@
       }
     },
     "aggsDataMultiple": {
-      "title": "Grouper les lignes, valeurs dans une seule colonne",
+      "title": "Grouper les lignes, séries définies par une colonne de catégories",
       "type": "object",
       "required": [
+        "type",
         "sortBy",
         "sortOrder",
+        "size",
         "groupBy",
         "groupsField",
         "valueCalc"
@@ -1313,11 +1358,13 @@
       }
     },
     "aggsDataMultipleCategories": {
-      "title": "Grouper les lignes, valeurs dans plusieurs colonnes",
+      "title": "Grouper les lignes, séries définies par plusieurs colonnes numériques",
       "type": "object",
       "required": [
+        "type",
         "sortBy",
         "sortOrder",
+        "size",
         "groupBy",
         "valuesCalc"
       ],
@@ -1493,9 +1540,11 @@
       }
     },
     "aggsDataMultipleLabels": {
-      "title": "Grouper les lignes, libellés dans plusieurs colonnes",
+      "title": "Grouper les lignes, abscisses définies par plusieurs colonnes",
       "type": "object",
       "required": [
+        "type",
+        "size",
         "labelsValues",
         "valuesLabel"
       ],
@@ -1644,7 +1693,7 @@
     "multipleDataType": {
       "type": "object",
       "title": "Préparation des données",
-      "description": "Choisissez la manière de traiter les données avant de les présenter dans un graphique.\n\n**lire les lignes une par une**:\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**grouper les lignes et les compter**:\nles lignes du jeu de données sont groupées selon un critère et les valeurs affichées sont les nombres de lignes pour chaque groupe.\n\n**grouper les lignes et calculer des valeurs dans ces groupes**:\nles lignes du jeu de données sont groupées selon un critère puis les valeurs sont obtenues par calcul sur une colonne numérique pour chaque groupe (somme, moyenne, etc.)",
+      "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux colonnes numériques sélectionnées.\n\n**Grouper les lignes, séries définies par une colonne de catégories** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes, séries définies par plusieurs colonnes numériques** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent à plusieurs colonnes numériques, agrégées indépendamment.\n\n**Grouper les lignes, abscisses définies par plusieurs colonnes** :\nles lignes sont groupées selon une colonne de catégories pour former les séries (affichées dans la légende). Les libellés sur l'axe des X correspondent à plusieurs colonnes numériques.",
       "oneOf": [
         {
           "$ref": "#/definitions/rowsDataMultiple"
@@ -1664,6 +1713,10 @@
       "title": "Lire les lignes une par une",
       "type": "object",
       "required": [
+        "type",
+        "sortBy",
+        "sortOrder",
+        "size",
         "labelsField",
         "valuesField"
       ],
@@ -1797,6 +1850,10 @@
       "title": "Grouper les lignes",
       "type": "object",
       "required": [
+        "type",
+        "sortBy",
+        "sortOrder",
+        "size",
         "groupBy",
         "valueCalc"
       ],
@@ -1926,6 +1983,7 @@
       "title": "Sommes calculées sur plusieurs colonnes",
       "type": "object",
       "required": [
+        "type",
         "valuesFields"
       ],
       "additionalProperties": false,
@@ -2051,6 +2109,7 @@
           {
             "title": "Restreindre à des valeurs",
             "required": [
+              "type",
               "field",
               "values"
             ],
@@ -2085,6 +2144,7 @@
           {
             "title": "Restreindre à un interval de valeurs",
             "required": [
+              "type",
               "field"
             ],
             "additionalProperties": false,
@@ -2130,6 +2190,7 @@
           {
             "title": "Exclure des valeurs",
             "required": [
+              "type",
               "field",
               "values"
             ],
