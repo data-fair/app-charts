@@ -635,6 +635,26 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
+                          }
                         }
                       }
                     },
@@ -1362,6 +1382,26 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
+                          }
                         }
                       }
                     },
@@ -1940,6 +1980,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesFields",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -2338,6 +2393,26 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
+                          }
                         }
                       }
                     },
@@ -2713,6 +2788,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesCalc",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -2922,6 +3012,26 @@
                             "type": "palette",
                             "name": "Accent",
                             "offset": 0
+                          }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
                           }
                         }
                       }
@@ -3184,6 +3294,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesFields",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -3582,6 +3707,26 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
+                          }
                         }
                       }
                     },
@@ -3957,6 +4102,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesCalc",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -4166,6 +4326,26 @@
                             "type": "palette",
                             "name": "Accent",
                             "offset": 0
+                          }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
                           }
                         }
                       }
@@ -4409,6 +4589,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesFields",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -4807,6 +5002,26 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
+                          }
                         }
                       }
                     },
@@ -5182,6 +5397,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesCalc",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -5391,6 +5621,26 @@
                             "type": "palette",
                             "name": "Accent",
                             "offset": 0
+                          }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
                           }
                         }
                       }
@@ -6429,6 +6679,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesFields",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -6827,6 +7092,26 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
+                          }
                         }
                       }
                     },
@@ -7202,6 +7487,21 @@
                             "name": "Accent",
                             "offset": 0
                           }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "type": "js-eval",
+                              "expr": "parent.parent.parent.data.valuesCalc",
+                              "pure": false
+                            }
+                          }
                         }
                       }
                     },
@@ -7411,6 +7711,26 @@
                             "type": "palette",
                             "name": "Accent",
                             "offset": 0
+                          }
+                        },
+                        "groupSort": {
+                          "type": "array",
+                          "title": "Ordre des séries",
+                          "items": {
+                            "type": "string"
+                          },
+                          "layout": {
+                            "comp": "list",
+                            "getItems": {
+                              "url": {
+                                "type": "js-tpl",
+                                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                                "pure": false
+                              },
+                              "itemKey": "data[\"value\"]",
+                              "itemTitle": "data[\"value\"]",
+                              "itemsResults": "data[\"aggs\"]"
+                            }
                           }
                         }
                       }
@@ -8331,6 +8651,26 @@
             "name": "Accent",
             "offset": 0
           }
+        },
+        "groupSort": {
+          "type": "array",
+          "title": "Ordre des séries",
+          "items": {
+            "type": "string"
+          },
+          "layout": {
+            "comp": "list",
+            "getItems": {
+              "url": {
+                "type": "js-tpl",
+                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                "pure": false
+              },
+              "itemKey": "data[\"value\"]",
+              "itemTitle": "data[\"value\"]",
+              "itemsResults": "data[\"aggs\"]"
+            }
+          }
         }
       }
     },
@@ -9029,6 +9369,26 @@
                 "name": "Accent",
                 "offset": 0
               }
+            },
+            "groupSort": {
+              "type": "array",
+              "title": "Ordre des séries",
+              "items": {
+                "type": "string"
+              },
+              "layout": {
+                "comp": "list",
+                "getItems": {
+                  "url": {
+                    "type": "js-tpl",
+                    "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                    "pure": false
+                  },
+                  "itemKey": "data[\"value\"]",
+                  "itemTitle": "data[\"value\"]",
+                  "itemsResults": "data[\"aggs\"]"
+                }
+              }
             }
           }
         },
@@ -9565,6 +9925,21 @@
             "name": "Accent",
             "offset": 0
           }
+        },
+        "groupSort": {
+          "type": "array",
+          "title": "Ordre des séries",
+          "items": {
+            "type": "string"
+          },
+          "layout": {
+            "comp": "list",
+            "getItems": {
+              "type": "js-eval",
+              "expr": "parent.parent.parent.data.valuesFields",
+              "pure": false
+            }
+          }
         }
       }
     },
@@ -9963,6 +10338,26 @@
             "name": "Accent",
             "offset": 0
           }
+        },
+        "groupSort": {
+          "type": "array",
+          "title": "Ordre des séries",
+          "items": {
+            "type": "string"
+          },
+          "layout": {
+            "comp": "list",
+            "getItems": {
+              "url": {
+                "type": "js-tpl",
+                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                "pure": false
+              },
+              "itemKey": "data[\"value\"]",
+              "itemTitle": "data[\"value\"]",
+              "itemsResults": "data[\"aggs\"]"
+            }
+          }
         }
       }
     },
@@ -10338,6 +10733,21 @@
             "name": "Accent",
             "offset": 0
           }
+        },
+        "groupSort": {
+          "type": "array",
+          "title": "Ordre des séries",
+          "items": {
+            "type": "string"
+          },
+          "layout": {
+            "comp": "list",
+            "getItems": {
+              "type": "js-eval",
+              "expr": "parent.parent.parent.data.valuesCalc",
+              "pure": false
+            }
+          }
         }
       }
     },
@@ -10547,6 +10957,26 @@
             "type": "palette",
             "name": "Accent",
             "offset": 0
+          }
+        },
+        "groupSort": {
+          "type": "array",
+          "title": "Ordre des séries",
+          "items": {
+            "type": "string"
+          },
+          "layout": {
+            "comp": "list",
+            "getItems": {
+              "url": {
+                "type": "js-tpl",
+                "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                "pure": false
+              },
+              "itemKey": "data[\"value\"]",
+              "itemTitle": "data[\"value\"]",
+              "itemsResults": "data[\"aggs\"]"
+            }
           }
         }
       }
@@ -10770,6 +11200,21 @@
                 "type": "palette",
                 "name": "Accent",
                 "offset": 0
+              }
+            },
+            "groupSort": {
+              "type": "array",
+              "title": "Ordre des séries",
+              "items": {
+                "type": "string"
+              },
+              "layout": {
+                "comp": "list",
+                "getItems": {
+                  "type": "js-eval",
+                  "expr": "parent.parent.parent.data.valuesFields",
+                  "pure": false
+                }
               }
             }
           }
@@ -11169,6 +11614,26 @@
                 "name": "Accent",
                 "offset": 0
               }
+            },
+            "groupSort": {
+              "type": "array",
+              "title": "Ordre des séries",
+              "items": {
+                "type": "string"
+              },
+              "layout": {
+                "comp": "list",
+                "getItems": {
+                  "url": {
+                    "type": "js-tpl",
+                    "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${parent.parent.parent.data.missingLabel}",
+                    "pure": false
+                  },
+                  "itemKey": "data[\"value\"]",
+                  "itemTitle": "data[\"value\"]",
+                  "itemsResults": "data[\"aggs\"]"
+                }
+              }
             }
           }
         },
@@ -11544,6 +12009,21 @@
                 "name": "Accent",
                 "offset": 0
               }
+            },
+            "groupSort": {
+              "type": "array",
+              "title": "Ordre des séries",
+              "items": {
+                "type": "string"
+              },
+              "layout": {
+                "comp": "list",
+                "getItems": {
+                  "type": "js-eval",
+                  "expr": "parent.parent.parent.data.valuesCalc",
+                  "pure": false
+                }
+              }
             }
           }
         },
@@ -11753,6 +12233,26 @@
                 "type": "palette",
                 "name": "Accent",
                 "offset": 0
+              }
+            },
+            "groupSort": {
+              "type": "array",
+              "title": "Ordre des séries",
+              "items": {
+                "type": "string"
+              },
+              "layout": {
+                "comp": "list",
+                "getItems": {
+                  "url": {
+                    "type": "js-tpl",
+                    "expr": "${rootData.datasets[0].href}/values_agg?field=${parent.parent.parent.data.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                    "pure": false
+                  },
+                  "itemKey": "data[\"value\"]",
+                  "itemTitle": "data[\"value\"]",
+                  "itemsResults": "data[\"aggs\"]"
+                }
               }
             }
           }

@@ -32,10 +32,22 @@ export default async function fetchAggsBasedLabelsData (ctx: ChartDataCtx, theme
     .map((l: string) => fields.value?.[l].label || fields.value?.[l].title || fields.value?.[l]['x-originalName'] || l)
     .map((l: string) => chart.value!.config.removeFromLabels ? l.replace(chart.value!.config.removeFromLabels, '') : l)
 
-  const series = aggs.slice(0, chart.value!.config.size)
+  let series = aggs.slice(0, chart.value!.config.size)
   series.forEach((s: any) => {
     s.label = fields.value?.[chart.value!.config.valuesLabel]?.['x-labels']?.[s.value] || s.value
   })
+
+  const groupSort = chart.value!.config.groupSort
+  if (groupSort?.length) {
+    series = [...series].sort((a: any, b: any) => {
+      const aIdx = groupSort.indexOf(a.value + '')
+      const bIdx = groupSort.indexOf(b.value + '')
+      if (aIdx === -1 && bIdx === -1) return 0
+      if (aIdx === -1) return 1
+      if (bIdx === -1) return -1
+      return aIdx - bIdx
+    })
+  }
 
   const colors = getColors(series.map((s: any) => s.value), chart.value!.config.colors)
   const datasets = series.map((serie: any, _i: number) => ({

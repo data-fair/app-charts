@@ -95,8 +95,7 @@ export function useChartData () {
       sortBy: c.sortBy,
       sortField: c.sortField,
       sortOrder: c.sortOrder,
-      groupSortBy: c.groupSortBy,
-      groupSortOrder: c.groupSortOrder,
+      groupSort: c.groupSort,
       color: c.color,
       colors: c.colors,
       divider: config.value.divider,
@@ -108,8 +107,6 @@ export function useChartData () {
       'reactiveSearchParams.sort-by': reactiveSearchParams['sort-by'],
       'reactiveSearchParams.sort-field': reactiveSearchParams['sort-field'],
       'reactiveSearchParams.sort-order': reactiveSearchParams['sort-order'],
-      'reactiveSearchParams.group-sort-by': reactiveSearchParams['group-sort-by'],
-      'reactiveSearchParams.group-sort-order': reactiveSearchParams['group-sort-order'],
       'reactiveSearchParams.stacked': reactiveSearchParams.stacked
     })
   })

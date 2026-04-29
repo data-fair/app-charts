@@ -55,7 +55,19 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any)
 
     if (chart.value!.config.valuesField) {
       if (categories) {
-        datasets = categories.map(({ value, label }: any) => ({
+        let sortedCategories = categories
+        const groupSort = chart.value!.config.groupSort
+        if (groupSort?.length) {
+          sortedCategories = [...categories].sort((a: any, b: any) => {
+            const aIdx = groupSort.indexOf(a.value + '')
+            const bIdx = groupSort.indexOf(b.value + '')
+            if (aIdx === -1 && bIdx === -1) return 0
+            if (aIdx === -1) return 1
+            if (bIdx === -1) return -1
+            return aIdx - bIdx
+          })
+        }
+        datasets = sortedCategories.map(({ value, label }: any) => ({
           label: label || value,
           borderColor: colors[value],
           backgroundColor: colors[value],
@@ -81,7 +93,19 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: any)
         }
       }
     } else {
-      datasets = (chart.value!.config.valuesFields || []).map((field: string) => ({
+      let valuesFields = chart.value!.config.valuesFields || []
+      const groupSort = chart.value!.config.groupSort
+      if (groupSort?.length) {
+        valuesFields = [...valuesFields].sort((a: string, b: string) => {
+          const aIdx = groupSort.indexOf(a)
+          const bIdx = groupSort.indexOf(b)
+          if (aIdx === -1 && bIdx === -1) return 0
+          if (aIdx === -1) return 1
+          if (bIdx === -1) return -1
+          return aIdx - bIdx
+        })
+      }
+      datasets = valuesFields.map((field: string) => ({
         label: chart.value!.config.removeFromLabels
           ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
           : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),

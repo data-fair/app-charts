@@ -1,6 +1,5 @@
 import { ofetch } from 'ofetch'
 import { getSortStr, getColors, splitString } from '@/assets/utils'
-import { orderBy } from 'natural-orderby'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { ChartDataCtx } from '@/composables/useChartData'
 
@@ -63,25 +62,13 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
       if (chart.value!.config.colors?.type === 'manual') {
         series = chart.value!.config.colors.styles.map((s: any) => s.value)
       } else {
-        const seriesSet = [...new Set([].concat(...aggs.map((a: any) => a.aggs.map((ag: any) => ag.value + ''))))]
-        const groupSortBy = reactiveSearchParams['group-sort-by'] || chart.value!.config.groupSortBy
-        const groupSortOrder = reactiveSearchParams['group-sort-order'] || chart.value!.config.groupSortOrder
-        if (groupSortBy === 'value') {
-          const seriesTotals: Record<string, number> = {}
-          aggs.forEach((a: any) => {
-            a.aggs.forEach((ag: any) => {
-              const rawVal = chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? ag.metric : ag.total
-              const val = getValue(rawVal) ?? 0
-              seriesTotals[ag.value + ''] = (seriesTotals[ag.value + ''] || 0) + val
-            })
-          })
-          series = seriesSet.sort((a: string, b: string) => {
-            const diff = (seriesTotals[a] || 0) - (seriesTotals[b] || 0)
-            return groupSortOrder === 'desc' ? -diff : diff
-          })
+        const seriesSet = [...new Set([].concat(...aggs.map((a: any) => a.aggs.map((ag: any) => ag.value + ''))) as string[])]
+        const groupSort = chart.value!.config.groupSort
+        if (groupSort?.length) {
+          series = groupSort.filter((s: string) => seriesSet.includes(s))
+          series.push(...seriesSet.filter((s: string) => !groupSort.includes(s)))
         } else {
-          const groupField = fields.value[chart.value!.config.groupsField]
-          series = orderBy(seriesSet, (v: string) => groupField?.['x-labels']?.[v] || v, groupSortOrder === 'desc' ? 'desc' : 'asc')
+          series = seriesSet
         }
       }
       const colors = getColors(series, chart.value!.config.colors)
@@ -104,24 +91,36 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: any)
       }
     } else {
       if (chart.value!.config.type === 'aggsBasedCategories') {
-        const colors = getColors(chart.value!.config.valuesCalc, chart.value!.config.colors)
-          datasets = chart.value!.config.valuesCalc.map((field: string, i: number) => ({
-            label: chart.value!.config.removeFromLabels
-              ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
-              : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
-            borderColor: colors[field],
-            backgroundColor: colors[field],
-            pointStyle: chart.value!.hidePoints ? false : 'circle',
-            fill,
-            data: aggs.map((a: any) => getValue(field === params.metric_field ? a.metric : a[field + '_' + chart.value!.config.metric]))
-          }))
-          if (chart.value!.percentage) {
-            for (const i in datasets[0].data) {
-              const sum = datasets.reduce((acc: number, d: any) => acc + (d.data[i] || 0), 0)
-              if (sum) datasets.forEach((d: any) => { d.data[i] *= 100 / sum })
-            }
+        let valuesCalc: string[] = chart.value!.config.valuesCalc
+        const groupSort = chart.value!.config.groupSort
+        if (groupSort?.length) {
+          valuesCalc = [...valuesCalc].sort((a: string, b: string) => {
+            const aIdx = groupSort.indexOf(a)
+            const bIdx = groupSort.indexOf(b)
+            if (aIdx === -1 && bIdx === -1) return 0
+            if (aIdx === -1) return 1
+            if (bIdx === -1) return -1
+            return aIdx - bIdx
+          })
+        }
+        const colors = getColors(valuesCalc, chart.value!.config.colors)
+        datasets = valuesCalc.map((field: string, i: number) => ({
+          label: chart.value!.config.removeFromLabels
+            ? (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field).replace(chart.value!.config.removeFromLabels, '')
+            : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field),
+          borderColor: colors[field],
+          backgroundColor: colors[field],
+          pointStyle: chart.value!.hidePoints ? false : 'circle',
+          fill,
+          data: aggs.map((a: any) => getValue(field === params.metric_field ? a.metric : a[field + '_' + chart.value!.config.metric]))
+        }))
+        if (chart.value!.percentage) {
+          for (const i in datasets[0].data) {
+            const sum = datasets.reduce((acc: number, d: any) => acc + (d.data[i] || 0), 0)
+            if (sum) datasets.forEach((d: any) => { d.data[i] *= 100 / sum })
           }
-        } else {
+        }
+      } else {
         if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
           labels.push('Autre')
           rawLabels.push('Autre')
