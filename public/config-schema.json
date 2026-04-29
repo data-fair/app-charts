@@ -2958,14 +2958,7 @@
                 },
                 "percentage": {
                   "type": "boolean",
-                  "title": "Pourcentages",
-                  "layout": {
-                    "if": {
-                      "type": "js-eval",
-                      "expr": "parent.data.stacked",
-                      "pure": false
-                    }
-                  }
+                  "title": "Pourcentages"
                 },
                 "disableDynamicStack": {
                   "type": "boolean",

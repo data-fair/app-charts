@@ -6,20 +6,18 @@ import { useConfig } from './composables/config'
 import { ofetch } from 'ofetch'
 import { filters2qs } from '@data-fair/lib-utils/filters'
 import { normalizeFilters } from './assets/utils'
-import { watch, nextTick, ref } from 'vue'
+import { watch } from 'vue'
 
 (window as any).vIframeOptions = { reactiveParams: reactiveSearchParams }
 
 const { config, error } = useConfig()
 
-const isUpdating = ref(false)
-
 watch(() => config.value?.staticFilters, (staticFilters) => {
-  if (isUpdating.value) return
-  if (window.parent && reactiveSearchParams.draft === 'true' && staticFilters?.length && !config.value?.qsFilter) {
-    isUpdating.value = true
-    window.parent.postMessage({ type: 'set-config', content: { field: 'qsFilter', value: filters2qs(normalizeFilters(staticFilters)!) } }, '*')
-    nextTick(() => { isUpdating.value = false })
+  if (window.parent && reactiveSearchParams.draft === 'true' && staticFilters?.length) {
+    const qsFilter = filters2qs(normalizeFilters(staticFilters)!)
+    if (!qsFilter && !config.value?.qsFilter) return
+    if (qsFilter === config.value?.qsFilter) return
+    window.parent.postMessage({ type: 'set-config', content: { field: 'qsFilter', value: qsFilter } }, '*')
   }
 }, { immediate: true, deep: true })
 

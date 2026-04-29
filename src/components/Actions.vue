@@ -128,7 +128,7 @@ const sortFieldItems = computed(() => {
         />
       </v-col>
       <v-col
-        v-if="['multi-bar', 'multi-line'].includes(chart.type as string) && (!chart.disableDynamicStack && !chart.percentage)"
+        v-if="['multi-bar', 'multi-line'].includes(chart.type as string) && !chart.disableDynamicStack"
         cols="12"
         sm="6"
         md="4"
