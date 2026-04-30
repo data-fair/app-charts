@@ -1649,12 +1649,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                                     }
                                   }
@@ -2447,12 +2448,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                                     }
                                   }
@@ -2959,12 +2961,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                                     }
                                   }
@@ -3757,12 +3760,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                                     }
                                   }
@@ -4250,12 +4254,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                                     }
                                   }
@@ -5048,12 +5053,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                                     }
                                   }
@@ -6128,12 +6134,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                                     }
                                   }
@@ -6394,12 +6401,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesFields?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                                     }
                                   }
@@ -7192,12 +7200,13 @@
                                     "readOnly": true
                                   },
                                   "layout": {
+                                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                                     "comp": "list",
                                     "if": "rootData.chart.config.valuesCalc?.length",
                                     "getItems": {
                                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                                       "itemKey": "data['key']",
-                                      "itemValue": "data['label']",
+                                      "itemValue": "data['key']",
                                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                                     }
                                   }
@@ -8875,12 +8884,13 @@
                     "readOnly": true
                   },
                   "layout": {
+                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                     "comp": "list",
                     "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                       "itemKey": "data['key']",
-                      "itemValue": "data['label']",
+                      "itemValue": "data['key']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                     }
                   }
@@ -9673,12 +9683,13 @@
                     "readOnly": true
                   },
                   "layout": {
+                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                     "comp": "list",
                     "if": "rootData.chart.config.valuesCalc?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                       "itemKey": "data['key']",
-                      "itemValue": "data['label']",
+                      "itemValue": "data['key']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                     }
                   }
@@ -10144,12 +10155,13 @@
                         "readOnly": true
                       },
                       "layout": {
+                        "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                         "comp": "list",
                         "if": "rootData.chart.config.valuesFields?.length",
                         "getItems": {
                           "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                           "itemKey": "data['key']",
-                          "itemValue": "data['label']",
+                          "itemValue": "data['key']",
                           "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                         }
                       }
@@ -10942,12 +10954,13 @@
                         "readOnly": true
                       },
                       "layout": {
+                        "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                         "comp": "list",
                         "if": "rootData.chart.config.valuesCalc?.length",
                         "getItems": {
                           "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
                           "itemKey": "data['key']",
-                          "itemValue": "data['label']",
+                          "itemValue": "data['key']",
                           "itemsResults": "data.filter(f => rootData.chart.config.valuesCalc.includes(f.key))"
                         }
                       }
@@ -11962,12 +11975,13 @@
                     "readOnly": true
                   },
                   "layout": {
+                    "itemTitle": "rootData.datasets[0].schema.find(f => f.key === data).title",
                     "comp": "list",
                     "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
                       "itemKey": "data['key']",
-                      "itemValue": "data['label']",
+                      "itemValue": "data['key']",
                       "itemsResults": "data.filter(f => rootData.chart.config.valuesFields.includes(f.key))"
                     }
                   }
