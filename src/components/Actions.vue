@@ -11,7 +11,7 @@ watch(() => chart.value?.config, (chartConfig) => {
     reactiveSearchParams.metric = chartConfig.valueCalc.metric
   }
   if (chartConfig?.dynamicSort) {
-    reactiveSearchParams['sort-by'] = chartConfig.sortBy
+    reactiveSearchParams['sort-by'] = chartConfig.rowSortBy || chartConfig.aggSortBy
     reactiveSearchParams['sort-order'] = chartConfig.sortOrder
     if (chartConfig.sortField) reactiveSearchParams['sort-field'] = chartConfig.sortField
     else delete reactiveSearchParams['sort-field']
@@ -48,7 +48,7 @@ if (chart.value?.config.type?.replace('Categories', '') === 'rowsBased') {
 }
 
 const showSortField = computed(() => {
-  const sortBy = reactiveSearchParams['sort-by'] || chart.value?.config.sortBy
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value?.config.aggSortBy
   return sortBy === 'value' && chart.value?.config.type === 'aggsBasedCategories' && chart.value?.config.valuesCalc?.length > 1
 })
 

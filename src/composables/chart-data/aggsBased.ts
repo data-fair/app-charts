@@ -21,7 +21,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
   if (chart.value!.config.missingLabel) params.missing = chart.value!.config.missingLabel
   if (chart.value!.config.valueCalc?.type === 'metric' || chart.value!.config.valuesCalc) {
     params.metric = metric || chart.value!.config.metric || chart.value!.config.valueCalc!.metric
-    const sortByValue = reactiveSearchParams['sort-by'] || chart.value!.config.sortBy
+    const sortByValue = reactiveSearchParams['sort-by'] || chart.value!.config.aggSortBy
     const sortField = sortByValue === 'value' ? (reactiveSearchParams['sort-field'] || chart.value!.config.sortField) : undefined
     params.metric_field = sortField || chart.value!.config.valuesCalc?.[0] || chart.value!.config.valueCalc!.field
     if (chart.value!.config.valuesCalc?.length > 1) {
@@ -45,7 +45,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
   })
 
   const rawLabels = aggs.slice(0, chart.value!.config.size).map((a) => a.value as string)
-  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.sortBy
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.aggSortBy
   const shouldFormatDateLabels = chart.value!.config.groupBy?.type === 'date' && sortBy === 'value'
   const dateInterval = chart.value!.config.groupBy?.interval || 'value'
   const labels = shouldFormatDateLabels

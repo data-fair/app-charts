@@ -19,7 +19,7 @@ export function formatDateLabel (value: string, interval: string): string {
 
 export function getSortStr (config: AnyChartConfig) {
   const sortOrder = reactiveSearchParams['sort-order'] || config?.sortOrder
-  const sortBy = reactiveSearchParams['sort-by'] || config?.sortBy
+  const sortBy = reactiveSearchParams['sort-by'] || config?.rowSortBy || config?.aggSortBy
   let str = (sortOrder === 'desc' ? '-' : '')
   if (sortBy === 'value') {
     if (config?.valuesField || config?.valuesFields?.[0]) {

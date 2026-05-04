@@ -104,7 +104,7 @@ const options = computed(() => {
       }
     }
   }
-  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.sortBy
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.rowSortBy || chart.value!.config.aggSortBy
   if (((chart.value!.config.groupBy && chart.value!.config.groupBy.type === 'date') || (chart.value!.config.labelsField && fields.value?.[chart.value!.config.labelsField]?.format === 'date')) && sortBy !== 'value') {
     options.scales!.x!.type = 'time'
     const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder

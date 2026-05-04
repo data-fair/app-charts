@@ -241,7 +241,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -283,7 +283,7 @@
                             }
                           }
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -385,7 +385,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -604,7 +604,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -739,7 +739,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -781,7 +781,7 @@
                             }
                           }
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -883,7 +883,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -937,7 +937,7 @@
                             }
                           }
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -1055,7 +1055,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -1101,7 +1101,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -1121,7 +1121,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -1340,7 +1340,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -1485,7 +1485,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -1537,7 +1537,7 @@
                           "type": "string",
                           "default": ""
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -1726,7 +1726,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -1957,7 +1957,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -2071,7 +2071,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -2117,7 +2117,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -2137,7 +2137,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -2327,7 +2327,7 @@
                           "maximum": 200,
                           "default": 10
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -2347,7 +2347,7 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": "parent.data.sortBy === 'value'",
+                            "if": "parent.data.aggSortBy === 'value'",
                             "getItems": {
                               "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
@@ -2685,7 +2685,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -2731,7 +2731,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -2797,7 +2797,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -2849,7 +2849,7 @@
                           "type": "string",
                           "default": ""
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -3038,7 +3038,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -3269,7 +3269,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -3383,7 +3383,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -3429,7 +3429,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -3449,7 +3449,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -3639,7 +3639,7 @@
                           "maximum": 200,
                           "default": 10
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -3659,7 +3659,7 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": "parent.data.sortBy === 'value'",
+                            "if": "parent.data.aggSortBy === 'value'",
                             "getItems": {
                               "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
@@ -3997,7 +3997,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -4043,7 +4043,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -4090,7 +4090,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -4142,7 +4142,7 @@
                           "type": "string",
                           "default": ""
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -4331,7 +4331,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -4562,7 +4562,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -4676,7 +4676,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -4722,7 +4722,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -4742,7 +4742,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -4932,7 +4932,7 @@
                           "maximum": 200,
                           "default": 10
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -4952,7 +4952,7 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": "parent.data.sortBy === 'value'",
+                            "if": "parent.data.aggSortBy === 'value'",
                             "getItems": {
                               "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
@@ -5290,7 +5290,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -5336,7 +5336,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -5418,7 +5418,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -5460,7 +5460,7 @@
                             }
                           }
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "value",
@@ -5568,7 +5568,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -5614,7 +5614,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -5634,7 +5634,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -5853,7 +5853,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -5961,7 +5961,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -6007,7 +6007,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 },
@@ -6237,7 +6237,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "rowSortBy",
                         "sortOrder",
                         "size",
                         "labelsField",
@@ -6289,7 +6289,7 @@
                           "type": "string",
                           "default": ""
                         },
-                        "sortBy": {
+                        "rowSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "row",
@@ -6478,7 +6478,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -6709,7 +6709,7 @@
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -6823,7 +6823,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -6869,7 +6869,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -6889,7 +6889,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "sortBy",
+                        "aggSortBy",
                         "sortOrder",
                         "size",
                         "groupBy",
@@ -7079,7 +7079,7 @@
                           "maximum": 200,
                           "default": 10
                         },
-                        "sortBy": {
+                        "aggSortBy": {
                           "type": "string",
                           "title": "Trier par",
                           "default": "label",
@@ -7099,7 +7099,7 @@
                           "title": "Champ de tri",
                           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
                           "layout": {
-                            "if": "parent.data.sortBy === 'value'",
+                            "if": "parent.data.aggSortBy === 'value'",
                             "getItems": {
                               "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                               "itemKey": "data[\"key\"]",
@@ -7437,7 +7437,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data[\"value\"]",
                                       "itemValue": "data[\"value\"]",
-                                      "itemsResults": "data[\"aggs\"]"
+                                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -7483,7 +7483,7 @@
                                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                                       "itemKey": "data['key']",
                                       "itemTitle": "data['key']",
-                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                                     }
                                   }
                                 }
@@ -8021,7 +8021,7 @@
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "rowSortBy",
         "sortOrder",
         "size",
         "labelsField",
@@ -8063,7 +8063,7 @@
             }
           }
         },
-        "sortBy": {
+        "rowSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "row",
@@ -8160,250 +8160,12 @@
         }
       }
     },
-    "rowsDataSingleCategories": {
-      "title": "Lire les lignes une par une, plusieurs couleurs",
-      "type": "object",
-      "required": [
-        "type",
-        "sortBy",
-        "sortOrder",
-        "size",
-        "labelsField",
-        "valuesField",
-        "categoriesField"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "rowsBasedCategories"
-        },
-        "labelsField": {
-          "type": "string",
-          "title": "Colonne de libellés",
-          "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
-          "layout": {
-            "getItems": {
-              "url": "${rootData.datasets[0].href}/schema?calculated=false",
-              "itemKey": "data[\"key\"]",
-              "itemTitle": "data[\"label\"]"
-            }
-          }
-        },
-        "size": {
-          "type": "integer",
-          "title": "Nombre maximal d'élements",
-          "minimum": 1,
-          "maximum": 200,
-          "default": 10
-        },
-        "valuesField": {
-          "type": "string",
-          "title": "Colonne de valeurs",
-          "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
-          "layout": {
-            "getItems": {
-              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
-              "itemKey": "data[\"key\"]",
-              "itemTitle": "data[\"label\"]"
-            }
-          }
-        },
-        "categoriesField": {
-          "type": "string",
-          "title": "Champ de catégorie",
-          "layout": {
-            "getItems": {
-              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
-              "itemKey": "data[\"key\"]",
-              "itemTitle": "data[\"label\"]"
-            }
-          }
-        },
-        "sortBy": {
-          "type": "string",
-          "title": "Trier par",
-          "default": "row",
-          "oneOf": [
-            {
-              "const": "row",
-              "title": "Ligne"
-            },
-            {
-              "const": "value",
-              "title": "Valeur"
-            },
-            {
-              "const": "label",
-              "title": "Libellé"
-            }
-          ]
-        },
-        "sortOrder": {
-          "type": "string",
-          "title": "Ordre",
-          "default": "asc",
-          "oneOf": [
-            {
-              "const": "asc",
-              "title": "Ascendant"
-            },
-            {
-              "const": "desc",
-              "title": "Descendant"
-            }
-          ]
-        },
-        "dynamicSort": {
-          "type": "boolean",
-          "title": "Trier dynamiquement",
-          "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
-          "default": false
-        },
-        "colorOrder": {
-          "type": "object",
-          "title": "Couleurs et ordre",
-          "oneOf": [
-            {
-              "title": "Palette précalculée",
-              "allOf": [
-                {
-                  "title": "Palette précalculée",
-                  "required": [
-                    "type",
-                    "name"
-                  ],
-                  "properties": {
-                    "type": {
-                      "const": "palette"
-                    },
-                    "name": {
-                      "type": "string",
-                      "oneOf": [
-                        {
-                          "const": "Accent",
-                          "title": "Accent"
-                        },
-                        {
-                          "const": "Dark2",
-                          "title": "Foncé"
-                        },
-                        {
-                          "const": "Paired",
-                          "title": "Paires"
-                        },
-                        {
-                          "const": "Set1",
-                          "title": "Ensemble 1"
-                        },
-                        {
-                          "const": "Set2",
-                          "title": "Ensemble 2"
-                        },
-                        {
-                          "const": "Set3",
-                          "title": "Ensemble 3"
-                        },
-                        {
-                          "const": "Pastel1",
-                          "title": "Pastel 1"
-                        },
-                        {
-                          "const": "Pastel2",
-                          "title": "Pastel 2"
-                        }
-                      ],
-                      "default": "Accent"
-                    },
-                    "offset": {
-                      "type": "integer",
-                      "title": "Décallage",
-                      "default": 0
-                    }
-                  }
-                }
-              ],
-              "properties": {
-                "seriesOrder": {
-                  "type": "array",
-                  "title": "Ordre des séries",
-                  "items": {
-                    "type": "string",
-                    "readOnly": true
-                  },
-                  "layout": {
-                    "comp": "list",
-                    "if": "rootData.chart.config.categoriesField",
-                    "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                      "itemKey": "data[\"value\"]",
-                      "itemValue": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
-                    }
-                  }
-                }
-              }
-            },
-            {
-              "title": "Palette personnalisée",
-              "required": [
-                "type",
-                "entries"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "type": {
-                  "const": "manual"
-                },
-                "entries": {
-                  "title": "Valeurs",
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "key"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "key": {
-                        "type": "string",
-                        "layout": "none"
-                      },
-                      "color": {
-                        "type": "string",
-                        "title": "Couleur",
-                        "default": "#828282",
-                        "layout": "color-picker"
-                      }
-                    }
-                  },
-                  "layout": {
-                    "comp": "list",
-                    "if": "rootData.chart.config.categoriesField",
-                    "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
-                      "itemKey": "data['key']",
-                      "itemTitle": "data['key']",
-                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
-                    }
-                  }
-                }
-              }
-            }
-          ],
-          "default": {
-            "type": "palette",
-            "name": "Accent",
-            "offset": 0
-          }
-        }
-      }
-    },
     "aggsDataSingle": {
       "title": "Grouper les lignes",
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "aggSortBy",
         "sortOrder",
         "size",
         "groupBy",
@@ -8622,7 +8384,7 @@
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
         },
-        "sortBy": {
+        "aggSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "label",
@@ -8715,12 +8477,250 @@
         }
       }
     },
+    "rowsDataSingleCategories": {
+      "title": "Lire les lignes une par une, plusieurs couleurs",
+      "type": "object",
+      "required": [
+        "type",
+        "rowSortBy",
+        "sortOrder",
+        "size",
+        "labelsField",
+        "valuesField",
+        "categoriesField"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "rowsBasedCategories"
+        },
+        "labelsField": {
+          "type": "string",
+          "title": "Colonne de libellés",
+          "description": "Choisissez la colonne contenant les libellés à présenter en légende. Dans le cas d'un diagramme en ligne, cette colonne va correspondre aux valeurs présentées en abscisse.",
+          "layout": {
+            "getItems": {
+              "url": "${rootData.datasets[0].href}/schema?calculated=false",
+              "itemKey": "data[\"key\"]",
+              "itemTitle": "data[\"label\"]"
+            }
+          }
+        },
+        "size": {
+          "type": "integer",
+          "title": "Nombre maximal d'élements",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 10
+        },
+        "valuesField": {
+          "type": "string",
+          "title": "Colonne de valeurs",
+          "description": "Choisissez une colonne de valeurs numériques à présenter dans le graphique.",
+          "layout": {
+            "getItems": {
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+              "itemKey": "data[\"key\"]",
+              "itemTitle": "data[\"label\"]"
+            }
+          }
+        },
+        "categoriesField": {
+          "type": "string",
+          "title": "Champ de catégorie",
+          "layout": {
+            "getItems": {
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&maxCardinality=12",
+              "itemKey": "data[\"key\"]",
+              "itemTitle": "data[\"label\"]"
+            }
+          }
+        },
+        "rowSortBy": {
+          "type": "string",
+          "title": "Trier par",
+          "default": "row",
+          "oneOf": [
+            {
+              "const": "row",
+              "title": "Ligne"
+            },
+            {
+              "const": "value",
+              "title": "Valeur"
+            },
+            {
+              "const": "label",
+              "title": "Libellé"
+            }
+          ]
+        },
+        "sortOrder": {
+          "type": "string",
+          "title": "Ordre",
+          "default": "asc",
+          "oneOf": [
+            {
+              "const": "asc",
+              "title": "Ascendant"
+            },
+            {
+              "const": "desc",
+              "title": "Descendant"
+            }
+          ]
+        },
+        "dynamicSort": {
+          "type": "boolean",
+          "title": "Trier dynamiquement",
+          "description": "Si cette option est activée, l'utilisateur pourra choisir la colonne de tri et l'ordre de tri dans le formulaire de filtres interactifs.",
+          "default": false
+        },
+        "colorOrder": {
+          "type": "object",
+          "title": "Couleurs et ordre",
+          "oneOf": [
+            {
+              "title": "Palette précalculée",
+              "allOf": [
+                {
+                  "title": "Palette précalculée",
+                  "required": [
+                    "type",
+                    "name"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "palette"
+                    },
+                    "name": {
+                      "type": "string",
+                      "oneOf": [
+                        {
+                          "const": "Accent",
+                          "title": "Accent"
+                        },
+                        {
+                          "const": "Dark2",
+                          "title": "Foncé"
+                        },
+                        {
+                          "const": "Paired",
+                          "title": "Paires"
+                        },
+                        {
+                          "const": "Set1",
+                          "title": "Ensemble 1"
+                        },
+                        {
+                          "const": "Set2",
+                          "title": "Ensemble 2"
+                        },
+                        {
+                          "const": "Set3",
+                          "title": "Ensemble 3"
+                        },
+                        {
+                          "const": "Pastel1",
+                          "title": "Pastel 1"
+                        },
+                        {
+                          "const": "Pastel2",
+                          "title": "Pastel 2"
+                        }
+                      ],
+                      "default": "Accent"
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "title": "Décallage",
+                      "default": 0
+                    }
+                  }
+                }
+              ],
+              "properties": {
+                "seriesOrder": {
+                  "type": "array",
+                  "title": "Ordre des séries",
+                  "items": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "if": "rootData.chart.config.categoriesField",
+                    "getItems": {
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "itemKey": "data[\"value\"]",
+                      "itemValue": "data[\"value\"]",
+                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "title": "Palette personnalisée",
+              "required": [
+                "type",
+                "entries"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "manual"
+                },
+                "entries": {
+                  "title": "Valeurs",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "key"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "layout": "none"
+                      },
+                      "color": {
+                        "type": "string",
+                        "title": "Couleur",
+                        "default": "#828282",
+                        "layout": "color-picker"
+                      }
+                    }
+                  },
+                  "layout": {
+                    "comp": "list",
+                    "if": "rootData.chart.config.categoriesField",
+                    "getItems": {
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "itemKey": "data['key']",
+                      "itemTitle": "data['key']",
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    },
     "rowsDataMultiple": {
       "title": "Lire les lignes une par une",
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "rowSortBy",
         "sortOrder",
         "size",
         "labelsField",
@@ -8772,7 +8772,7 @@
           "type": "string",
           "default": ""
         },
-        "sortBy": {
+        "rowSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "row",
@@ -8961,7 +8961,7 @@
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "aggSortBy",
         "sortOrder",
         "size",
         "groupBy",
@@ -9192,7 +9192,7 @@
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
         },
-        "sortBy": {
+        "aggSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "label",
@@ -9306,7 +9306,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                     }
                   }
                 }
@@ -9352,7 +9352,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
-                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                     }
                   }
                 }
@@ -9372,7 +9372,7 @@
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "aggSortBy",
         "sortOrder",
         "size",
         "groupBy",
@@ -9562,7 +9562,7 @@
           "maximum": 200,
           "default": 10
         },
-        "sortBy": {
+        "aggSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "label",
@@ -9582,7 +9582,7 @@
           "title": "Champ de tri",
           "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
           "layout": {
-            "if": "parent.data.sortBy === 'value'",
+            "if": "parent.data.aggSortBy === 'value'",
             "getItems": {
               "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
               "itemKey": "data[\"key\"]",
@@ -9920,7 +9920,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                     }
                   }
                 }
@@ -9966,7 +9966,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
-                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                     }
                   }
                 }
@@ -9991,7 +9991,7 @@
           "type": "object",
           "required": [
             "type",
-            "sortBy",
+            "rowSortBy",
             "sortOrder",
             "size",
             "labelsField",
@@ -10043,7 +10043,7 @@
               "type": "string",
               "default": ""
             },
-            "sortBy": {
+            "rowSortBy": {
               "type": "string",
               "title": "Trier par",
               "default": "row",
@@ -10232,7 +10232,7 @@
           "type": "object",
           "required": [
             "type",
-            "sortBy",
+            "aggSortBy",
             "sortOrder",
             "size",
             "groupBy",
@@ -10463,7 +10463,7 @@
               "title": "Groupe pour les éléments non renseignés",
               "default": ""
             },
-            "sortBy": {
+            "aggSortBy": {
               "type": "string",
               "title": "Trier par",
               "default": "label",
@@ -10577,7 +10577,7 @@
                           "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                           "itemKey": "data[\"value\"]",
                           "itemValue": "data[\"value\"]",
-                          "itemsResults": "data[\"aggs\"]"
+                          "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                         }
                       }
                     }
@@ -10623,7 +10623,7 @@
                           "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                           "itemKey": "data['key']",
                           "itemTitle": "data['key']",
-                          "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                          "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                         }
                       }
                     }
@@ -10643,7 +10643,7 @@
           "type": "object",
           "required": [
             "type",
-            "sortBy",
+            "aggSortBy",
             "sortOrder",
             "size",
             "groupBy",
@@ -10833,7 +10833,7 @@
               "maximum": 200,
               "default": 10
             },
-            "sortBy": {
+            "aggSortBy": {
               "type": "string",
               "title": "Trier par",
               "default": "label",
@@ -10853,7 +10853,7 @@
               "title": "Champ de tri",
               "description": "Champ utilisé pour le tri par valeur. Par défaut le premier champ de la liste des valeurs est utilisé.",
               "layout": {
-                "if": "parent.data.sortBy === 'value'",
+                "if": "parent.data.aggSortBy === 'value'",
                 "getItems": {
                   "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
                   "itemKey": "data[\"key\"]",
@@ -11191,7 +11191,7 @@
                           "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                           "itemKey": "data[\"value\"]",
                           "itemValue": "data[\"value\"]",
-                          "itemsResults": "data[\"aggs\"]"
+                          "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                         }
                       }
                     }
@@ -11237,7 +11237,7 @@
                           "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                           "itemKey": "data['key']",
                           "itemTitle": "data['key']",
-                          "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                          "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                         }
                       }
                     }
@@ -11259,7 +11259,7 @@
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "rowSortBy",
         "sortOrder",
         "size",
         "labelsField",
@@ -11301,7 +11301,7 @@
             }
           }
         },
-        "sortBy": {
+        "rowSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "value",
@@ -11409,7 +11409,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                     }
                   }
                 }
@@ -11455,7 +11455,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
-                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                     }
                   }
                 }
@@ -11475,7 +11475,7 @@
       "type": "object",
       "required": [
         "type",
-        "sortBy",
+        "aggSortBy",
         "sortOrder",
         "size",
         "groupBy",
@@ -11694,7 +11694,7 @@
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
         },
-        "sortBy": {
+        "aggSortBy": {
           "type": "string",
           "title": "Trier par",
           "default": "label",
@@ -11802,7 +11802,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
-                      "itemsResults": "data[\"aggs\"]"
+                      "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
                     }
                   }
                 }
@@ -11848,7 +11848,7 @@
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
-                      "itemsResults": "data['aggs'].map(a => ({ key: a.value }))"
+                      "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
                     }
                   }
                 },
