@@ -3,6 +3,7 @@ import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-glob
 import dayjs from 'dayjs'
 import type { AnyChartConfig } from '@/types'
 import type { Filter } from '@data-fair/lib-utils/filters'
+import type { AggItem } from '@/composables/useChartData'
 
 export function formatDateLabel (value: string, interval: string): string {
   const d = dayjs(value)
@@ -87,5 +88,49 @@ export function splitString (n: number, str: string) {
     }
   }
   if (subStr.length) { result.push(subStr) }
+  return result
+}
+
+export function fillMissingDateAggs (aggs: AggItem[], interval: string, sortOrder?: string): AggItem[] {
+  if (!aggs.length) return aggs
+  const dates = aggs.map(a => dayjs(a.value as string)).filter(d => d.isValid())
+  if (!dates.length) return aggs
+
+  let min = dates[0]
+  let max = dates[0]
+  for (const d of dates) {
+    if (d.isBefore(min)) min = d
+    if (d.isAfter(max)) max = d
+  }
+
+  const existing = new Map<string, AggItem>()
+  for (const a of aggs) {
+    existing.set(dayjs(a.value as string).format('YYYY-MM-DD'), a)
+  }
+
+  const result: AggItem[] = []
+  let current = min.clone().startOf(interval as any)
+  const end = max.clone().startOf(interval as any)
+
+  while (!current.isAfter(end)) {
+    const key = current.format('YYYY-MM-DD')
+    const existingAgg = existing.get(key)
+    if (existingAgg) {
+      result.push(existingAgg)
+    } else {
+      result.push({
+        value: key,
+        total: undefined,
+        metric: undefined,
+        aggs: []
+      })
+    }
+    current = current.add(1, interval as any)
+  }
+
+  if (sortOrder === 'desc') {
+    result.reverse()
+  }
+
   return result
 }

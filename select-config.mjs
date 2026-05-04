@@ -15,10 +15,10 @@ if (args.length === 0) {
     const name = f.replace('.json', '')
     console.log(`  ${num.padStart(2, '0')}. ${name}`)
   })
-  console.log(`\nUsage: node select-config.mjs <numero-ou-nom>`)
-  console.log(`Exemples:`)
-  console.log(`  node select-config.mjs 01`)
-  console.log(`  node select-config.mjs 01-line-rowsBased`)
+  console.log('\nUsage: node select-config.mjs <numero-ou-nom>')
+  console.log('Exemples:')
+  console.log('  node select-config.mjs 01')
+  console.log('  node select-config.mjs 01-line-rowsBased')
   process.exit(0)
 }
 

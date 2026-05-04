@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { getSortStr, getColors, getOrderedLabels, splitString, formatDateLabel } from '@/assets/utils'
+import { getSortStr, getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs } from '@/assets/utils'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { ChartDataCtx, AggItem, ValuesAggResponse } from '@/composables/useChartData'
 import type { ThemeInstance } from 'vuetify'
@@ -38,15 +38,22 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
     params.sort = params.sort + ';-' + chart.value!.config.valueCalc!.type
   }
 
-  const { aggs } = await ofetch<ValuesAggResponse>(`${datasetUrl.value}/values_agg`, { params }).catch((e) => {
+  const { aggs: apiAggs } = await ofetch<ValuesAggResponse>(`${datasetUrl.value}/values_agg`, { params }).catch((e) => {
     errorMessage.value = e.status + ' - ' + e.data
     displayError.value = true
     return { aggs: [] }
   })
 
-  const rawLabels = aggs.slice(0, chart.value!.config.size).map((a) => a.value as string)
+  let aggs = apiAggs
   const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.aggSortBy
-  const shouldFormatDateLabels = chart.value!.config.groupBy?.type === 'date' && sortBy === 'value'
+  const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder
+  if (chart.value!.config.groupBy?.type === 'date' && sortBy === 'label') {
+    aggs = fillMissingDateAggs(aggs, chart.value!.config.groupBy!.interval || 'value', sortOrder)
+  }
+
+  const limitedAggs = aggs.slice(0, chart.value!.config.size)
+  const rawLabels = limitedAggs.map((a) => a.value as string)
+  const shouldFormatDateLabels = chart.value!.config.groupBy?.type === 'date'
   const dateInterval = chart.value!.config.groupBy?.interval || 'value'
   const labels = shouldFormatDateLabels
     ? rawLabels.map((val) => formatDateLabel(val, dateInterval))
@@ -58,7 +65,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
     datasets = [{
       borderColor: color,
       backgroundColor: color,
-      data: aggs.slice(0, chart.value!.config.size).map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)),
+      data: limitedAggs.map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)),
       pointStyle: chart.value!.hidePoints ? false : 'circle',
       fill
     }]
@@ -78,7 +85,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
         backgroundColor: colors[label],
         pointStyle: chart.value!.hidePoints ? false : 'circle',
         fill,
-        data: aggs.slice(0, chart.value!.config.size).map((a) => {
+        data: limitedAggs.map((a) => {
           const val = (a.aggs || []).find((ag) => (ag.value + '') === label)
           return val ? getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
         })
@@ -110,7 +117,7 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
           }
         }
       } else {
-        const dataValues = aggs.slice(0, chart.value!.config.size).map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
+        const dataValues = limitedAggs.map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
 
         let orderedRawLabels = getOrderedLabels(rawLabels, chart.value!.config.colorOrder)
         let orderedLabels = shouldFormatDateLabels
@@ -121,10 +128,10 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
           return dataValues[index]
         })
 
-        if (chart.value!.type === 'pie' && aggs.length > chart.value!.config.size) {
+        if (chart.value!.type === 'pie' && apiAggs.length > chart.value!.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          const otherSum = aggs.slice(chart.value!.config.size).reduce((acc: number, a) => acc + (chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)!, 0)
+          const otherSum = apiAggs.slice(chart.value!.config.size).reduce((acc: number, a) => acc + (chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total)!, 0)
           orderedData.push(getValue(otherSum))
         }
 

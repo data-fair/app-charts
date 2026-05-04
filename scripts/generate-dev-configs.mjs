@@ -6,7 +6,7 @@ const configsDir = './dev-configs'
 if (!fs.existsSync(configsDir)) fs.mkdirSync(configsDir)
 
 // Helpers
-function loadDataset(filePath, localId) {
+function loadDataset (filePath, localId) {
   const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'))
   return {
     href: `http://localhost:5888/data-fair/api/v1/datasets/${localId}`,
@@ -24,7 +24,7 @@ const dsLoyers = loadDataset('/tmp/schema_loyers.json', '358lpu2hhbmw7l560-uskij
 const dsRne = loadDataset('/tmp/schema_rne.json', 'qwhvisdr1tuyecl76qrcnmep')
 const dsDepl = loadDataset('/tmp/schema_deplacements.json', '2rkctur--j35-hc36008blc1')
 
-function createConfig(name, configObj) {
+function createConfig (name, configObj) {
   fs.writeFileSync(path.join(configsDir, `${name}.json`), JSON.stringify(configObj, null, 2) + '\n')
   console.log(`Created ${name}.json`)
 }

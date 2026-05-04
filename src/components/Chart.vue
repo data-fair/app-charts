@@ -63,10 +63,6 @@ const options = computed(() => {
         enabled: !config.value.disableTooltip,
         callbacks: {
           title: (items: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>[]) => {
-            if (chart.value!.config.groupBy?.type === 'date' && options.scales!.x!.type === 'time') {
-              const timestamp = items[0].parsed.x
-              return formatDateLabel(dayjs(timestamp).toISOString(), chart.value!.config.groupBy!.interval || 'value')
-            }
             return items[0].label
           },
           label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
@@ -104,23 +100,18 @@ const options = computed(() => {
       }
     }
   }
-  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.rowSortBy || chart.value!.config.aggSortBy
-  if (((chart.value!.config.groupBy && chart.value!.config.groupBy.type === 'date') || (chart.value!.config.labelsField && fields.value?.[chart.value!.config.labelsField]?.format === 'date')) && sortBy !== 'value') {
-    options.scales!.x!.type = 'time'
-    const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder
-    if (sortBy === 'label' && sortOrder === 'desc') {
-      options.scales!.x!.reverse = true
-    }
-  }
+
   if (chart.value!.yAxisStartsZero !== undefined) {
     options.scales!.y!.beginAtZero = chart.value!.yAxisStartsZero
   }
   if (chart.value!.percentage) {
     if (chart.value!.horizontal) {
+      options.scales!.x!.max = 100
       options.scales!.x!.ticks = {
         callback: (v: number) => v + ' %'
       }
     } else {
+      options.scales!.y!.max = 100
       options.scales!.y!.ticks = {
         callback: (v: number) => v + ' %'
       }
