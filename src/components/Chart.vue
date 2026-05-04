@@ -7,6 +7,7 @@ import { useTheme } from 'vuetify'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import dayjs from 'dayjs'
 import chroma from 'chroma-js'
+import { formatDateLabel } from '@/assets/utils'
 
 import { Line, Bar, Pie, Radar } from 'vue-chartjs'
 import {
@@ -61,6 +62,13 @@ const options = computed(() => {
       tooltip: {
         enabled: !config.value.disableTooltip,
         callbacks: {
+          title: (items: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>[]) => {
+            if (chart.value!.config.groupBy?.type === 'date' && options.scales!.x!.type === 'time') {
+              const timestamp = items[0].parsed.x
+              return formatDateLabel(dayjs(timestamp).toISOString(), chart.value!.config.groupBy!.interval || 'value')
+            }
+            return items[0].label
+          },
           label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
             return (context.dataset.label ? context.dataset.label + ' : ' : '') + ((chart.value!.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r).toLocaleString('fr') + (config.value.unit ? ' ' + config.value.unit : '')
           }
@@ -96,8 +104,13 @@ const options = computed(() => {
       }
     }
   }
-  if ((chart.value!.config.groupBy && chart.value!.config.groupBy.type === 'date') || (chart.value!.config.labelsField && fields.value?.[chart.value!.config.labelsField]?.format === 'date')) {
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.sortBy
+  if (((chart.value!.config.groupBy && chart.value!.config.groupBy.type === 'date') || (chart.value!.config.labelsField && fields.value?.[chart.value!.config.labelsField]?.format === 'date')) && sortBy !== 'value') {
     options.scales!.x!.type = 'time'
+    const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder
+    if (sortBy === 'label' && sortOrder === 'desc') {
+      options.scales!.x!.reverse = true
+    }
   }
   if (chart.value!.yAxisStartsZero !== undefined) {
     options.scales!.y!.beginAtZero = chart.value!.yAxisStartsZero

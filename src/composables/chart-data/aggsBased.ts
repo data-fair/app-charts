@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import { getSortStr, getColors, getOrderedLabels, splitString } from '@/assets/utils'
+import { getSortStr, getColors, getOrderedLabels, splitString, formatDateLabel } from '@/assets/utils'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { ChartDataCtx, AggItem, ValuesAggResponse } from '@/composables/useChartData'
 import type { ThemeInstance } from 'vuetify'
@@ -45,7 +45,12 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
   })
 
   const rawLabels = aggs.slice(0, chart.value!.config.size).map((a) => a.value as string)
-  const labels = rawLabels.map((a) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[a] || a)
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.sortBy
+  const shouldFormatDateLabels = chart.value!.config.groupBy?.type === 'date' && sortBy === 'value'
+  const dateInterval = chart.value!.config.groupBy?.interval || 'value'
+  const labels = shouldFormatDateLabels
+    ? rawLabels.map((val) => formatDateLabel(val, dateInterval))
+    : rawLabels.map((a) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[a] || a)
   let datasets: any[]
 
   if (chart.value!.config.color) {
@@ -108,7 +113,9 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
         const dataValues = aggs.slice(0, chart.value!.config.size).map((a) => getValue(chart.value!.config.valueCalc && chart.value!.config.valueCalc.type === 'metric' ? a.metric : a.total))
 
         let orderedRawLabels = getOrderedLabels(rawLabels, chart.value!.config.colorOrder)
-        let orderedLabels = orderedRawLabels.map((l) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[l] || l)
+        let orderedLabels = shouldFormatDateLabels
+          ? orderedRawLabels.map((val) => formatDateLabel(val, dateInterval))
+          : orderedRawLabels.map((l) => fields.value[chart.value!.config.groupBy!.field]?.['x-labels']?.[l] || l)
         let orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]

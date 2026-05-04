@@ -1,7 +1,21 @@
 import chroma from 'chroma-js'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
+import dayjs from 'dayjs'
 import type { AnyChartConfig } from '@/types'
 import type { Filter } from '@data-fair/lib-utils/filters'
+
+export function formatDateLabel (value: string, interval: string): string {
+  const d = dayjs(value)
+  if (!d.isValid()) return value
+  switch (interval) {
+    case 'year': return d.format('YYYY')
+    case 'month': return d.format('MMM YYYY')
+    case 'day': return d.format('DD/MM/YYYY')
+    case 'week': return d.format('DD/MM/YYYY')
+    case 'quarter': return `T${Math.floor(d.month() / 3) + 1} ${d.format('YYYY')}`
+    default: return value
+  }
+}
 
 export function getSortStr (config: AnyChartConfig) {
   const sortOrder = reactiveSearchParams['sort-order'] || config?.sortOrder
