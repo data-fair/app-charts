@@ -5418,8 +5418,6 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "rowSortBy",
-                        "sortOrder",
                         "size",
                         "labelsField",
                         "valuesField"
@@ -5459,36 +5457,6 @@
                               "itemTitle": "data[\"label\"]"
                             }
                           }
-                        },
-                        "rowSortBy": {
-                          "type": "string",
-                          "title": "Trier par",
-                          "default": "value",
-                          "oneOf": [
-                            {
-                              "const": "value",
-                              "title": "Valeur"
-                            },
-                            {
-                              "const": "label",
-                              "title": "Libellé"
-                            }
-                          ]
-                        },
-                        "sortOrder": {
-                          "type": "string",
-                          "title": "Ordre",
-                          "default": "asc",
-                          "oneOf": [
-                            {
-                              "const": "asc",
-                              "title": "Ascendant"
-                            },
-                            {
-                              "const": "desc",
-                              "title": "Descendant"
-                            }
-                          ]
                         },
                         "colorOrder": {
                           "type": "object",
@@ -5634,8 +5602,6 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "aggSortBy",
-                        "sortOrder",
                         "size",
                         "groupBy",
                         "valueCalc"
@@ -5852,36 +5818,6 @@
                           "type": "string",
                           "title": "Groupe pour les éléments non renseignés",
                           "default": ""
-                        },
-                        "aggSortBy": {
-                          "type": "string",
-                          "title": "Trier par",
-                          "default": "label",
-                          "oneOf": [
-                            {
-                              "const": "value",
-                              "title": "Valeur calculée"
-                            },
-                            {
-                              "const": "label",
-                              "title": "Libellé"
-                            }
-                          ]
-                        },
-                        "sortOrder": {
-                          "type": "string",
-                          "title": "Ordre",
-                          "default": "asc",
-                          "oneOf": [
-                            {
-                              "const": "asc",
-                              "title": "Ascendant"
-                            },
-                            {
-                              "const": "desc",
-                              "title": "Descendant"
-                            }
-                          ]
                         },
                         "colorOrder": {
                           "type": "object",
@@ -11259,8 +11195,6 @@
       "type": "object",
       "required": [
         "type",
-        "rowSortBy",
-        "sortOrder",
         "size",
         "labelsField",
         "valuesField"
@@ -11300,36 +11234,6 @@
               "itemTitle": "data[\"label\"]"
             }
           }
-        },
-        "rowSortBy": {
-          "type": "string",
-          "title": "Trier par",
-          "default": "value",
-          "oneOf": [
-            {
-              "const": "value",
-              "title": "Valeur"
-            },
-            {
-              "const": "label",
-              "title": "Libellé"
-            }
-          ]
-        },
-        "sortOrder": {
-          "type": "string",
-          "title": "Ordre",
-          "default": "asc",
-          "oneOf": [
-            {
-              "const": "asc",
-              "title": "Ascendant"
-            },
-            {
-              "const": "desc",
-              "title": "Descendant"
-            }
-          ]
         },
         "colorOrder": {
           "type": "object",
@@ -11475,8 +11379,6 @@
       "type": "object",
       "required": [
         "type",
-        "aggSortBy",
-        "sortOrder",
         "size",
         "groupBy",
         "valueCalc"
@@ -11693,36 +11595,6 @@
           "type": "string",
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
-        },
-        "aggSortBy": {
-          "type": "string",
-          "title": "Trier par",
-          "default": "label",
-          "oneOf": [
-            {
-              "const": "value",
-              "title": "Valeur calculée"
-            },
-            {
-              "const": "label",
-              "title": "Libellé"
-            }
-          ]
-        },
-        "sortOrder": {
-          "type": "string",
-          "title": "Ordre",
-          "default": "asc",
-          "oneOf": [
-            {
-              "const": "asc",
-              "title": "Ascendant"
-            },
-            {
-              "const": "desc",
-              "title": "Descendant"
-            }
-          ]
         },
         "colorOrder": {
           "type": "object",

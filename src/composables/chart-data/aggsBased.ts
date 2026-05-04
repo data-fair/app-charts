@@ -49,6 +49,13 @@ export default async function fetchAggsBasedData (ctx: ChartDataCtx, theme: Them
   const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder
   if (chart.value!.config.groupBy?.type === 'date' && sortBy === 'label') {
     aggs = fillMissingDateAggs(aggs, chart.value!.config.groupBy!.interval || 'value', sortOrder)
+  } else if (sortBy === 'label') {
+    const groupByField = chart.value!.config.groupBy!.field
+    aggs = [...aggs].sort((a, b) => {
+      const labelA = fields.value[groupByField]?.['x-labels']?.[a.value as string] || (a.value as string)
+      const labelB = fields.value[groupByField]?.['x-labels']?.[b.value as string] || (b.value as string)
+      return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
+    })
   }
 
   const limitedAggs = aggs.slice(0, chart.value!.config.size)

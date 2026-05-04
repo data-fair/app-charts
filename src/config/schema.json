@@ -1629,8 +1629,6 @@
       "type": "object",
       "required": [
         "type",
-        "rowSortBy",
-        "sortOrder",
         "size",
         "labelsField",
         "valuesField"
@@ -1652,24 +1650,6 @@
         },
         "valuesField": {
           "$ref": "#/definitions/valuesField"
-        },
-        "rowSortBy": {
-          "type": "string",
-          "title": "Trier par",
-          "default": "value",
-          "oneOf": [
-            {
-              "const": "value",
-              "title": "Valeur"
-            },
-            {
-              "const": "label",
-              "title": "Libellé"
-            }
-          ]
-        },
-        "sortOrder": {
-          "$ref": "#/definitions/sortOrder"
         },
         "colorOrder": {
           "type": "object",
@@ -1760,8 +1740,6 @@
       "type": "object",
       "required": [
         "type",
-        "aggSortBy",
-        "sortOrder",
         "size",
         "groupBy",
         "valueCalc"
@@ -1788,12 +1766,6 @@
           "type": "string",
           "title": "Groupe pour les éléments non renseignés",
           "default": ""
-        },
-        "aggSortBy": {
-          "$ref": "#/definitions/aggSort"
-        },
-        "sortOrder": {
-          "$ref": "#/definitions/sortOrder"
         },
         "colorOrder": {
           "type": "object",

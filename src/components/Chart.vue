@@ -7,7 +7,6 @@ import { useTheme } from 'vuetify'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import dayjs from 'dayjs'
 import chroma from 'chroma-js'
-import { formatDateLabel } from '@/assets/utils'
 
 import { Line, Bar, Pie, Radar } from 'vue-chartjs'
 import {
@@ -26,7 +25,7 @@ ChartJS.register(Title, Tooltip, Legend,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler,
   ChartDataLabels, OutLabels)
 
-const { config, chart, fields, dynamicMetric } = useConfig()
+const { config, chart, dynamicMetric } = useConfig()
 const theme = useTheme()
 const loading = ref(false)
 const { getData, queryKey } = useChartData()

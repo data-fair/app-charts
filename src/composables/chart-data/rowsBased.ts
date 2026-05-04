@@ -1,5 +1,6 @@
 import { ofetch } from 'ofetch'
 import { getSortStr, getColors, getOrderedLabels, splitString } from '@/assets/utils'
+import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { ChartDataCtx, CategoryItem, DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 import type { ThemeInstance } from 'vuetify'
 
@@ -33,6 +34,17 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: Them
     displayError.value = true
     return { results: [] }
   })
+
+  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.rowSortBy
+  const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder
+  if (sortBy === 'label') {
+    const labelsField = chart.value!.config.labelsField!
+    results.sort((a, b) => {
+      const labelA = fields.value[labelsField]?.['x-labels']?.[a[labelsField] as string] || (a[labelsField] as string)
+      const labelB = fields.value[labelsField]?.['x-labels']?.[b[labelsField] as string] || (b[labelsField] as string)
+      return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
+    })
+  }
 
   const labels = results.map((r) => fields.value[chart.value!.config.labelsField!]?.['x-labels']?.[r[chart.value!.config.labelsField!] as string] || r[chart.value!.config.labelsField!] as string).slice(0, chart.value!.config.size)
   let datasets: any[]
