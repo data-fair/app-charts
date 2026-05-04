@@ -1,0 +1,461 @@
+{
+  "datasets": [
+    {
+      "href": "http://localhost:5888/data-fair/api/v1/datasets/a4jz4xdfoymfiquex913bfgp",
+      "title": "Résultats des contrôles officiels sanitaires : dispositif d'information « Alim’confiance »",
+      "id": "a4jz4xdfoymfiquex913bfgp",
+      "schema": [
+        {
+          "key": "siret",
+          "description": "",
+          "title": "SIRET",
+          "type": "string",
+          "x-originalName": "siret",
+          "x-cardinality": 64933,
+          "x-refersTo": "http://www.datatourisme.fr/ontology/core/1.0/#siret",
+          "x-concept": {
+            "id": "siret",
+            "title": "SIRET",
+            "primary": true
+          },
+          "label": "SIRET",
+          "x-capabilities": {}
+        },
+        {
+          "key": "libelle_etablissement",
+          "title": "Établissement",
+          "type": "string",
+          "x-refersTo": "http://www.w3.org/2000/01/rdf-schema#label",
+          "x-concept": {
+            "id": "label",
+            "title": "Libellé",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 53390
+        },
+        {
+          "key": "type_activite",
+          "title": "Activité",
+          "type": "string",
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 55
+        },
+        {
+          "key": "adresse_activite",
+          "title": "Adresse",
+          "type": "string",
+          "x-refersTo": "http://schema.org/streetAddress",
+          "x-concept": {
+            "id": "streetAddress",
+            "title": "Rue ou lieu-dit",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 60858
+        },
+        {
+          "key": "code_postal",
+          "title": "Code postal",
+          "type": "string",
+          "x-refersTo": "http://schema.org/postalCode",
+          "x-concept": {
+            "id": "postalCode",
+            "title": "Code postal",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 5945
+        },
+        {
+          "key": "code_commune",
+          "description": "",
+          "title": "Code_commune",
+          "type": "string",
+          "x-originalName": "code_commune",
+          "x-cardinality": 12064,
+          "x-refersTo": "http://rdf.insee.fr/def/geo#codeCommune",
+          "x-concept": {
+            "id": "codeCommune",
+            "title": "Code commune",
+            "primary": true
+          },
+          "label": "Code_commune",
+          "x-capabilities": {}
+        },
+        {
+          "key": "libelle_commune",
+          "title": "Commune",
+          "type": "string",
+          "x-refersTo": "http://schema.org/City",
+          "x-concept": {
+            "id": "city",
+            "title": "Commune",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 12165
+        },
+        {
+          "key": "numero_inspection",
+          "description": "",
+          "title": "Numero_inspection",
+          "type": "string",
+          "x-originalName": "numero_inspection",
+          "x-cardinality": 72455,
+          "label": "Numero_inspection",
+          "x-capabilities": {}
+        },
+        {
+          "key": "date_inspection",
+          "title": "Date inspection",
+          "type": "string",
+          "format": "date-time",
+          "x-refersTo": "http://schema.org/Date",
+          "x-concept": {
+            "id": "date",
+            "title": "Date d'évènement",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 303
+        },
+        {
+          "key": "contexte_inpection",
+          "description": "",
+          "title": "Contexte_inspection",
+          "type": "string",
+          "x-originalName": "contexte_inpection",
+          "x-cardinality": 6,
+          "label": "Contexte_inspection",
+          "x-capabilities": {},
+          "enum": [
+            "Programmation",
+            "Re-contrôle",
+            "Plainte / Signalement",
+            "Inspection ciblée",
+            "Demande d'approbation",
+            "TIAC"
+          ]
+        },
+        {
+          "key": "procede",
+          "description": "",
+          "title": "Procede",
+          "type": "string",
+          "x-originalName": "procede",
+          "x-cardinality": 1933,
+          "label": "Procede",
+          "x-capabilities": {}
+        },
+        {
+          "key": "synthese_eval_sanit",
+          "title": "Evaluation",
+          "type": "string",
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 4,
+          "enum": [
+            "Satisfaisant",
+            "Très satisfaisant",
+            "A améliorer",
+            "A corriger de manière urgente"
+          ]
+        },
+        {
+          "key": "filtre",
+          "title": "Filtres",
+          "type": "string",
+          "description": "Alim’confiance : Résultats des contrôles sanitaires (restaurants, commerces alimentaires) avec 4 niveaux d’hygiène (très satisfaisant à insatisfaisant). Transparence pour les consommateurs et professionnels.",
+          "x-capabilities": {},
+          "x-cardinality": 5,
+          "enum": [
+            "Restaurants",
+            "Métiers de bouche",
+            "Supermarchés/alimentation générale",
+            "Restauration collective",
+            "Producteurs fermiers"
+          ]
+        },
+        {
+          "key": "evaluation_globale",
+          "description": "",
+          "title": "Evaluation_globale",
+          "type": "string",
+          "x-originalName": "evaluation_globale",
+          "x-cardinality": 7,
+          "label": "Evaluation_globale",
+          "x-capabilities": {},
+          "enum": [
+            "Maîtrise des risques acceptable",
+            "Maîtrise des risques satisfaisante",
+            "Maîtrise des risques insuffisante",
+            "Perte de maîtrise des risques (urgence)",
+            "A - Conforme",
+            "B - Non conformité mineure",
+            "C - Non conformité moyenne"
+          ]
+        },
+        {
+          "key": "type_suite",
+          "description": "",
+          "title": "Type_suite",
+          "type": "string",
+          "x-originalName": "type_suite",
+          "x-cardinality": 10,
+          "label": "Type_suite",
+          "x-capabilities": {},
+          "enum": [
+            "Avertissement",
+            "Mise en demeure",
+            "Décision",
+            "Avertissement|Procès verbal",
+            "Mise en demeure|Procès verbal",
+            "Avertissement|Mise en demeure",
+            "Procès verbal",
+            "Décision|Mise en demeure",
+            "Décision|Procès verbal",
+            "Avertissement|Décision"
+          ]
+        },
+        {
+          "key": "secteur_activite",
+          "description": "",
+          "title": "Secteur_activite",
+          "type": "string",
+          "x-originalName": "secteur_activite",
+          "x-cardinality": 5,
+          "label": "Secteur_activite",
+          "x-capabilities": {},
+          "enum": [
+            "Remise directe",
+            "Restauration collective",
+            "Mise sur le marché",
+            "Abattage",
+            "Élevage ou détention animaux de rente"
+          ]
+        },
+        {
+          "key": "geores",
+          "description": "",
+          "title": "geores",
+          "x-refersTo": "http://www.w3.org/2003/01/geo/wgs84_pos#lat_long",
+          "x-concept": {
+            "id": "latLon",
+            "title": "Latitude / Longitude",
+            "primary": true
+          },
+          "type": "string",
+          "x-originalName": "geores",
+          "x-cardinality": 57586,
+          "label": "geores",
+          "x-capabilities": {}
+        },
+        {
+          "key": "agrement",
+          "title": "Agrement",
+          "type": "integer",
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 6382
+        },
+        {
+          "key": "reg_name",
+          "title": "Région",
+          "type": "string",
+          "x-refersTo": "https://schema.org/addressRegion",
+          "x-concept": {
+            "id": "region",
+            "title": "Région",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 20,
+          "enum": [
+            "Île-de-France",
+            "Auvergne-Rhône-Alpes",
+            "Occitanie",
+            "Provence-Alpes-Côte d'Azur",
+            "Nouvelle-Aquitaine",
+            "Grand Est",
+            "Hauts-de-France",
+            "Pays de la Loire",
+            "Bretagne",
+            "Normandie",
+            "Bourgogne-Franche-Comté",
+            "Centre-Val de Loire",
+            "Corse",
+            "Martinique",
+            "Guadeloupe",
+            "La Réunion",
+            "Mayotte",
+            "Guyane",
+            "Saint-Pierre-et-Miquelon",
+            "Saint-Martin"
+          ]
+        },
+        {
+          "key": "reg_code",
+          "description": "",
+          "title": "reg_code",
+          "type": "string",
+          "x-originalName": "reg_code",
+          "x-cardinality": 20,
+          "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+          "x-concept": {
+            "id": "codeRegion",
+            "title": "Code région",
+            "primary": true
+          },
+          "label": "reg_code",
+          "x-capabilities": {},
+          "enum": [
+            "11",
+            "84",
+            "76",
+            "93",
+            "75",
+            "44",
+            "32",
+            "52",
+            "53",
+            "28",
+            "27",
+            "24",
+            "94",
+            "02",
+            "01",
+            "04",
+            "06",
+            "03",
+            "975",
+            "978"
+          ]
+        },
+        {
+          "key": "dep_name",
+          "title": "Département",
+          "type": "string",
+          "x-refersTo": "http://rdf.insee.fr/def/geo#Departement",
+          "x-concept": {
+            "id": "departement",
+            "title": "Département",
+            "primary": true
+          },
+          "description": "",
+          "x-capabilities": {},
+          "x-cardinality": 103
+        },
+        {
+          "key": "dep_code",
+          "description": "",
+          "title": "dep_code",
+          "type": "string",
+          "x-originalName": "dep_code",
+          "x-cardinality": 103,
+          "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+          "x-concept": {
+            "id": "codeDepartement",
+            "title": "Code département",
+            "primary": true
+          },
+          "label": "dep_code",
+          "x-capabilities": {}
+        },
+        {
+          "x-calculated": true,
+          "key": "_geopoint",
+          "type": "string",
+          "title": "Coordonnée géographique",
+          "description": "Centroïde au format \"lat,lon\""
+        },
+        {
+          "x-calculated": true,
+          "key": "_id",
+          "type": "string",
+          "format": "uri-reference",
+          "title": "Identifiant",
+          "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+        },
+        {
+          "x-calculated": true,
+          "key": "_i",
+          "type": "integer",
+          "title": "Numéro de ligne",
+          "description": "Indice de la ligne dans le fichier d'origine"
+        },
+        {
+          "x-calculated": true,
+          "key": "_rand",
+          "type": "integer",
+          "title": "Nombre aléatoire",
+          "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+        }
+      ],
+      "finalizedAt": "2026-05-04T05:04:50.789Z"
+    }
+  ],
+  "qsFilter": "",
+  "title": "Résultats des inspections par région",
+  "xTitle": "Région",
+  "yTitle": "Nombre d'inspections",
+  "unit": "",
+  "labelsMaxWidth": 30,
+  "legendPosition": "right",
+  "chart": {
+    "type": "bar",
+    "horizontal": true,
+    "hideYAxis": true,
+    "yAxisStartsZero": true,
+    "config": {
+      "type": "rowsBasedCategories",
+      "labelsField": "reg_name",
+      "valuesField": "_i",
+      "categoriesField": "evaluation_globale",
+      "size": 10,
+      "rowSortBy": "value",
+      "sortOrder": "desc",
+      "dynamicSort": false,
+      "colorOrder": {
+        "type": "manual",
+        "entries": [
+          {
+            "key": "A - Conforme",
+            "color": "#59a14f"
+          },
+          {
+            "key": "B - Non conformité mineure",
+            "color": "#edc948"
+          },
+          {
+            "key": "C - Non conformité moyenne",
+            "color": "#f28e2c"
+          },
+          {
+            "key": "Maîtrise des risques acceptable",
+            "color": "#76b7b2"
+          },
+          {
+            "key": "Maîtrise des risques insuffisante",
+            "color": "#e15759"
+          },
+          {
+            "key": "Maîtrise des risques satisfaisante",
+            "color": "#4e79a7"
+          },
+          {
+            "key": "Perte de maîtrise des risques (urgence)",
+            "color": "#b07aa1"
+          }
+        ]
+      }
+    }
+  }
+}

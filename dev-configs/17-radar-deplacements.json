@@ -1,0 +1,367 @@
+{
+  "datasets": [
+    {
+      "href": "http://localhost:5888/data-fair/api/v1/datasets/2rkctur--j35-hc36008blc1",
+      "title": "Déplacements domicile-travail - Exploitation principale",
+      "id": "2rkctur--j35-hc36008blc1",
+      "schema": [
+        {
+          "key": "code_com",
+          "title": "Code Commune",
+          "type": "string",
+          "x-refersTo": "http://rdf.insee.fr/def/geo#codeCommune",
+          "x-originalName": "code_com",
+          "x-concept": {
+            "id": "codeCommune",
+            "title": "Code commune",
+            "primary": true
+          },
+          "x-cardinality": 34712,
+          "description": ""
+        },
+        {
+          "key": "time_period",
+          "title": "Période",
+          "type": "integer",
+          "x-labels": {
+            "2011": "2011",
+            "2016": "2016",
+            "2022": "2022"
+          },
+          "x-originalName": "time_period",
+          "x-cardinality": 3,
+          "enum": [
+            2011,
+            2016,
+            2022
+          ],
+          "description": ""
+        },
+        {
+          "key": "2_roues",
+          "title": "Deux-roues",
+          "type": "number",
+          "x-originalName": "2_roues",
+          "x-cardinality": 20173,
+          "description": ""
+        },
+        {
+          "key": "2rm",
+          "title": "Deux-roues motorisé",
+          "type": "number",
+          "x-originalName": "2rm",
+          "x-cardinality": 19110,
+          "description": ""
+        },
+        {
+          "key": "aucun_trans",
+          "title": "Pas de transport",
+          "type": "number",
+          "x-originalName": "aucun_trans",
+          "x-cardinality": 48442,
+          "description": ""
+        },
+        {
+          "key": "aut_com",
+          "title": "Dans une autre commune",
+          "type": "number",
+          "x-originalName": "aut_com",
+          "x-cardinality": 79458,
+          "description": ""
+        },
+        {
+          "key": "aut_dep_reg",
+          "title": "Autre commune du département",
+          "type": "number",
+          "x-originalName": "aut_dep_reg",
+          "x-cardinality": 78654,
+          "description": ""
+        },
+        {
+          "key": "aut_reg",
+          "title": "Autre département de la région",
+          "type": "number",
+          "x-originalName": "aut_reg",
+          "x-cardinality": 65017,
+          "description": ""
+        },
+        {
+          "key": "hors_met",
+          "title": "Autre région hors métropole (yc étranger)",
+          "type": "number",
+          "x-originalName": "hors_met",
+          "x-cardinality": 31942,
+          "description": ""
+        },
+        {
+          "key": "hors_reg",
+          "title": "Hors de la région en métropole",
+          "type": "number",
+          "x-originalName": "hors_reg",
+          "x-cardinality": 64115,
+          "description": ""
+        },
+        {
+          "key": "mem_com",
+          "title": "Dans la commune de résidence actuelle",
+          "type": "number",
+          "x-originalName": "mem_com",
+          "x-cardinality": 74737,
+          "description": ""
+        },
+        {
+          "key": "pied",
+          "title": "Marche à pied",
+          "type": "number",
+          "x-originalName": "pied",
+          "x-cardinality": 45468,
+          "description": ""
+        },
+        {
+          "key": "total",
+          "title": "Total",
+          "type": "number",
+          "x-originalName": "total",
+          "x-cardinality": 79127,
+          "description": ""
+        },
+        {
+          "key": "trans_com",
+          "title": "Transport en commun",
+          "type": "number",
+          "x-originalName": "trans_com",
+          "x-cardinality": 40878,
+          "description": ""
+        },
+        {
+          "key": "velo",
+          "title": "Vélo",
+          "type": "number",
+          "x-originalName": "velo",
+          "x-cardinality": 17066,
+          "description": ""
+        },
+        {
+          "key": "voit",
+          "title": "Voiture, camion ou fourgonnette",
+          "type": "number",
+          "x-originalName": "voit",
+          "x-cardinality": 54365,
+          "description": ""
+        },
+        {
+          "key": "_infos_commune.nom_commune",
+          "x-originalName": "_infos_commune.nom_commune",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Nom commune",
+          "description": "Nom de la commune",
+          "type": "string",
+          "x-refersTo": "http://schema.org/City",
+          "x-concept": {
+            "id": "city",
+            "title": "Commune",
+            "primary": true
+          },
+          "x-cardinality": 32621
+        },
+        {
+          "key": "_infos_commune.code_departement",
+          "x-originalName": "_infos_commune.code_departement",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Code département",
+          "description": "Code du département",
+          "type": "string",
+          "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+          "x-capabilities": {
+            "textStandard": false,
+            "insensitive": false,
+            "text": false
+          },
+          "x-concept": {
+            "id": "codeDepartement",
+            "title": "Code département",
+            "primary": true
+          },
+          "x-cardinality": 100
+        },
+        {
+          "key": "_infos_commune.nom_departement",
+          "x-originalName": "_infos_commune.nom_departement",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Nom département",
+          "description": "Nom du département",
+          "type": "string",
+          "x-refersTo": "http://rdf.insee.fr/def/geo#Departement",
+          "x-concept": {
+            "id": "departement",
+            "title": "Département",
+            "primary": true
+          },
+          "x-cardinality": 100
+        },
+        {
+          "key": "_infos_commune.code_epci",
+          "x-originalName": "_infos_commune.code_epci",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Code EPCI",
+          "description": "Code de l'établissement public de coopération intercommunale",
+          "type": "string",
+          "x-refersTo": "http://rdf.insee.fr/def/geo#EtablissementPublicDeCooperationIntercommunale",
+          "x-capabilities": {
+            "textStandard": false,
+            "insensitive": false,
+            "text": false
+          },
+          "x-concept": {
+            "id": "codeEPCI",
+            "title": "Code EPCI",
+            "primary": true
+          },
+          "x-cardinality": 1248
+        },
+        {
+          "key": "_infos_commune.nom_epci",
+          "x-originalName": "_infos_commune.nom_epci",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Nom EPCI",
+          "description": "Nom de l'établissement public de coopération intercommunale",
+          "type": "string",
+          "x-cardinality": 1246
+        },
+        {
+          "key": "_infos_commune.code_region",
+          "x-originalName": "_infos_commune.code_region",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Code région",
+          "description": "Code de la région",
+          "type": "string",
+          "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+          "x-capabilities": {
+            "textStandard": false,
+            "insensitive": false,
+            "text": false
+          },
+          "x-concept": {
+            "id": "codeRegion",
+            "title": "Code région",
+            "primary": true
+          },
+          "x-cardinality": 17,
+          "enum": [
+            "44",
+            "76",
+            "75",
+            "84",
+            "32",
+            "27",
+            "28",
+            "24",
+            "11",
+            "52",
+            "53",
+            "93",
+            "94",
+            "02",
+            "01",
+            "04",
+            "03"
+          ]
+        },
+        {
+          "key": "_infos_commune.nom_region",
+          "x-originalName": "_infos_commune.nom_region",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Nom région",
+          "description": "Nom de la région",
+          "type": "string",
+          "x-refersTo": "https://schema.org/addressRegion",
+          "x-concept": {
+            "id": "region",
+            "title": "Région",
+            "primary": true
+          },
+          "x-cardinality": 17,
+          "enum": [
+            "Grand Est",
+            "Occitanie",
+            "Nouvelle-Aquitaine",
+            "Auvergne-Rhône-Alpes",
+            "Hauts-de-France",
+            "Bourgogne-Franche-Comté",
+            "Normandie",
+            "Centre-Val de Loire",
+            "Île-de-France",
+            "Pays de la Loire",
+            "Bretagne",
+            "Provence-Alpes-Côte d'Azur",
+            "Corse",
+            "Martinique",
+            "Guadeloupe",
+            "La Réunion",
+            "Guyane"
+          ]
+        },
+        {
+          "key": "_infos_commune._error",
+          "type": "string",
+          "x-originalName": "_error",
+          "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+          "title": "Erreur de récupération de données de référence",
+          "description": "Une erreur lors de la récupération des informations depuis un service distant",
+          "x-calculated": true
+        },
+        {
+          "x-calculated": true,
+          "key": "_id",
+          "type": "string",
+          "format": "uri-reference",
+          "title": "Identifiant",
+          "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+        },
+        {
+          "x-calculated": true,
+          "key": "_i",
+          "type": "integer",
+          "title": "Numéro de ligne",
+          "description": "Indice de la ligne dans le fichier d'origine"
+        },
+        {
+          "x-calculated": true,
+          "key": "_rand",
+          "type": "integer",
+          "title": "Nombre aléatoire",
+          "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+        }
+      ],
+      "finalizedAt": "2026-04-28T15:10:02.796Z"
+    }
+  ],
+  "qsFilter": "",
+  "title": "Modes de transport par période",
+  "unit": "dépl.",
+  "divider": 1000,
+  "labelsMaxWidth": 30,
+  "legendPosition": "top",
+  "chart": {
+    "type": "radar",
+    "tension": 1,
+    "config": {
+      "type": "aggsBasedLabels",
+      "labelsValues": [
+        "voit",
+        "velo",
+        "trans_com"
+      ],
+      "valuesLabel": "time_period",
+      "metric": "sum",
+      "dynamicMetric": false,
+      "size": 10,
+      "missingLabel": "",
+      "colorOrder": {
+        "type": "palette",
+        "name": "Dark2",
+        "offset": 0
+      }
+    }
+  }
+}

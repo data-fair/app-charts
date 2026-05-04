@@ -118,6 +118,55 @@ npm run type-check   # vue-tsc --noEmit
 
 When modifying `src/config/schema.json`, always run `npm run build-types` to keep TypeScript types synchronized.
 
+## Dev Configs
+
+The folder `dev-configs/` contains **20 pre-built configurations** based on **6 real-world datasets** from the Koumoul open data catalog. They cover all chart types, data modes, and key configuration options:
+
+| # | File | Dataset | Chart type | Data mode | Key options tested |
+|---|------|---------|------------|-----------|--------------------|
+| 01 | `01-pie-alim-secteur.json` | Alim'confiance | pie | aggsBased | cutout, display both, sumInTitle |
+| 02 | `02-bar-alim-region-eval.json` | Alim'confiance | bar | rowsBasedCategories | horizontal, hideYAxis, manual colors |
+| 03 | `03-line-alim-temporal.json` | Alim'confiance | line | aggsBased | groupBy date (month), area, tension |
+| 04 | `04-pie-rpg-cultures.json` | RPG | pie | aggsBased | rotation, percentages, missingLabel |
+| 05 | `05-bar-rpg-surface.json` | RPG | bar | aggsBased | groupBy value, avg metric |
+| 06 | `06-multi-bar-bpe-secteur.json` | BPE | multi-bar | aggsBased | stacked, groupsField, palette |
+| 07 | `07-pie-bpe-type.json` | BPE | pie | aggsBased | simple count, palette |
+| 08 | `08-bar-bpe-capacite.json` | BPE | bar | aggsBased | sum on numeric, theme color |
+| 09 | `09-multi-bar-bpe-domaine.json` | BPE | multi-bar | aggsBased | groupsField (domaine), palette |
+| 10 | `10-bar-bpe-salles.json` | BPE | bar | aggsBased | avg on small integer |
+| 11 | `11-bar-loyers-dep.json` | Loyers maisons | bar | aggsBased | tri desc, dynamicSort |
+| 12 | `12-multi-line-loyers-intervalle.json` | Loyers maisons | multi-line | rowsBased | 3 valuesFields, palette |
+| 13 | `13-pie-loyers-composantes.json` | Loyers maisons | pie | aggsLabels | multiple valuesFields, cutout |
+| 14 | `14-pie-rne-sexe.json` | RNE | pie | aggsBased | manual colors (2 categories) |
+| 15 | `15-multi-bar-rne-age.json` | RNE | multi-bar | aggsBased | dynamicMetric, sortField |
+| 16 | `16-paired-histo-deplacements.json` | Déplacements D-T | paired-histogram | rowsBased | sign flip, 2 valuesFields |
+| 17 | `17-radar-deplacements.json` | Déplacements D-T | radar | aggsBasedLabels | labelsValues, valuesLabel |
+| 18 | `18-bar-alim-filtre-paris.json` | Alim'confiance | bar | aggsBased | **staticFilters** (Paris) |
+| 19 | `19-multi-bar-bpe-metrics.json` | BPE | multi-bar | aggsBasedCategories | valuesCalc, avg, dynamicMetric, sortField |
+| 20 | `20-line-loyers-distribution.json` | Loyers maisons | line | aggsBased | **groupBy number** interval |
+
+**Datasets used:**
+- **Alim'confiance** (`a4jz4xdfoymfiquex913bfgp`) — Sanitary inspections
+- **RPG** (`5v2ar5y04jjrbuewjpssauy5`) — Agricultural land registry
+- **BPE** (`im3-1xqdhf1nxtfzuhtz2--l`) — Public facilities
+- **Loyers maisons** (`358lpu2hhbmw7l560-uskijn`) — Rental prices
+- **RNE** (`qwhvisdr1tuyecl76qrcnmep`) — Regional councilors
+- **Déplacements D-T** (`2rkctur--j35-hc36008blc1`) — Home-work commutes
+
+Use the helper script to switch between them:
+
+```bash
+node select-config.mjs              # list available configs
+node select-config.mjs 01           # apply config by number
+node select-config.mjs 01-pie-alim-secteur   # apply config by name
+```
+
+The script copies the chosen file to `.dev-config.json` (ignored by git). Reload the browser to see the change. To regenerate the configs from the script, run:
+
+```bash
+node scripts/generate-dev-configs.mjs
+```
+
 ## Notes for Agents
 
 - Do **not** change `window.APPLICATION` logic; it is the contract with DataFair.
