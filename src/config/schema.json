@@ -969,6 +969,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.categoriesField",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
@@ -1012,6 +1013,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.categoriesField",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
@@ -1093,6 +1095,7 @@
                   "layout": {
                     "itemTitle":"rootData.datasets[0].schema.find(f => f.key === data).title",
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
@@ -1140,6 +1143,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
@@ -1232,6 +1236,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.groupsField",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
@@ -1275,6 +1280,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.groupsField",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
@@ -1401,6 +1407,7 @@
                   "layout": {
                     "itemTitle":"rootData.datasets[0].schema.find(f => f.key === data).title",
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.valuesCalc?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
@@ -1448,6 +1455,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.valuesCalc?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesCalc?.length}",
@@ -1554,6 +1562,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
@@ -1597,6 +1606,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
@@ -1684,6 +1694,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.labelsField",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
@@ -1727,6 +1738,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.labelsField",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
@@ -1800,6 +1812,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
@@ -1843,6 +1856,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
@@ -1908,6 +1922,7 @@
                   "layout": {
                     "itemTitle":"rootData.datasets[0].schema.find(f => f.key === data).title",
                     "comp": "list",
+                    "listActions": ["sort"],
                     "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
@@ -1955,6 +1970,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.valuesFields?.length",
                     "getItems": {
                       "url": "${rootData.datasets[0].href}/schema?calculated=false&t=${rootData.chart.config.valuesFields?.length}",
