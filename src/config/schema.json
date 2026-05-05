@@ -803,6 +803,10 @@
                 {
                   "const": "sum",
                   "title": "Somme"
+                },
+                {
+                  "const": "cardinality",
+                  "title": "Cardinalité"
                 }
               ]
             },
@@ -1338,6 +1342,10 @@
             {
               "const": "sum",
               "title": "Somme"
+            },
+            {
+              "const": "cardinality",
+              "title": "Cardinalité"
             }
           ]
         },
@@ -1510,6 +1518,10 @@
             {
               "const": "sum",
               "title": "Somme"
+            },
+            {
+              "const": "cardinality",
+              "title": "Cardinalité"
             }
           ]
         },

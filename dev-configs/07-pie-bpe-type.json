@@ -1624,8 +1624,6 @@
         "type": "count"
       },
       "missingLabel": "",
-      "aggSortBy": "value",
-      "sortOrder": "desc",
       "colorOrder": {
         "type": "palette",
         "name": "Accent",

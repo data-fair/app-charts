@@ -804,8 +804,6 @@
         "dynamicMetric": false
       },
       "missingLabel": "Autres cultures",
-      "aggSortBy": "value",
-      "sortOrder": "desc",
       "colorOrder": {
         "type": "palette",
         "name": "Set2",
