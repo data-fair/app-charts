@@ -40,8 +40,8 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: Them
   if (sortBy === 'label') {
     const labelsField = chart.value!.config.labelsField!
     results.sort((a, b) => {
-      const labelA = fields.value[labelsField]?.['x-labels']?.[a[labelsField] as string] || (a[labelsField] as string)
-      const labelB = fields.value[labelsField]?.['x-labels']?.[b[labelsField] as string] || (b[labelsField] as string)
+      const labelA = (fields.value[labelsField]?.['x-labels']?.[a[labelsField] as string] || (a[labelsField] as string)) + ''
+      const labelB = (fields.value[labelsField]?.['x-labels']?.[b[labelsField] as string] || (b[labelsField] as string)) + ''
       return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
     })
   }
