@@ -10,6 +10,7 @@
     "dev": "zellij --layout .zellij.kdl",
     "dev-server": "cross-env APP_URL=http://localhost:3000/app/ df-dev-server",
     "dev-app": "vite --port 3000",
+    "test:webserver": "cross-env PORT=4100 vite",
     "build": "cross-env-shell PUBLIC_URL=https://cdn.jsdelivr.net/npm/@data-fair/app-charts@${npm_package_version}/dist \"npm run prepareBuild && vite build\"",
     "build-preview": "npm run prepareBuild && vite build",
     "build-staging": "npm run prepareBuild && cross-env-shell PUBLIC_URL=https://staging-koumoul.com/apps/charts/master/ \"vite build\"",
@@ -17,6 +18,9 @@
     "lint": "eslint . --fix",
     "precommit": "npm run lint",
     "type-check": "vue-tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:install": "playwright install --with-deps chromium",
     "prepareBuild": "rimraf dist && npm run build-types",
     "prepublishOnly": "npm run build",
     "preview": "vite preview"
@@ -37,7 +41,6 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "chroma-js": "^3.2.0",
     "dayjs": "^1.11.20",
-    "natural-orderby": "^5.0.0",
     "ofetch": "^1.5.1",
     "vue": "^3.5.33",
     "vue-chartjs": "^5.3.3",
@@ -46,6 +49,7 @@
   "devDependencies": {
     "@data-fair/dev-server": "^2.0.24",
     "@data-fair/lib-types-builder": "^1.12.0",
+    "@playwright/test": "^1.60.0",
     "@types/chroma-js": "^3.1.2",
     "@types/node": "^25.6.0",
     "@typescript-eslint/parser": "^8.59.1",

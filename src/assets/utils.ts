@@ -1,5 +1,4 @@
 import chroma from 'chroma-js'
-import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import dayjs from 'dayjs'
 import type { AnyChartConfig } from '@/types'
 import type { Filter } from '@data-fair/lib-utils/filters'
@@ -16,22 +15,6 @@ export function formatDateLabel (value: string, interval: string): string {
     case 'quarter': return `T${Math.floor(d.month() / 3) + 1} ${d.format('YYYY')}`
     default: return value
   }
-}
-
-export function getSortStr (config: AnyChartConfig) {
-  const sortOrder = reactiveSearchParams['sort-order'] || config?.sortOrder
-  const sortBy = reactiveSearchParams['sort-by'] || config?.rowSortBy || config?.aggSortBy
-  let str = (sortOrder === 'desc' ? '-' : '')
-  if (sortBy === 'value') {
-    if (config?.valuesField || config?.valuesFields?.[0]) {
-      str += (config?.valuesField || config?.valuesFields?.[0])
-    } else {
-      str += (config?.valueCalc?.type || 'metric')
-    }
-  }
-  else if (sortBy === 'label') str += (config?.labelsField || (config?.groupBy && config?.groupBy.field))
-  else if (sortBy === 'row') str += '_i'
-  return str
 }
 
 export function getOrderedLabels (labels: string[], colorOrder: AnyChartConfig['colorOrder']): string[] {

@@ -1,0 +1,832 @@
+{
+  "01-pie-alim-secteur": {
+    "dataset": "alim",
+    "comment": "pie aggsBased — cutout, sumInTitle, display both",
+    "config": {
+      "title": "Répartition des inspections par secteur d'activité",
+      "unit": "inspections",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "pie",
+        "cutout": 30,
+        "rotation": 0,
+        "display": "both",
+        "sumInTitle": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "secteur_activite",
+            "interval": ""
+          },
+          "size": 5,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Set3",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "02-bar-alim-region-eval": {
+    "dataset": "alim",
+    "comment": "bar rowsBasedCategories horizontal, hideYAxis, manual colors",
+    "config": {
+      "title": "Résultats des inspections par région",
+      "xTitle": "Région",
+      "yTitle": "Nombre d'inspections",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "right",
+      "chart": {
+        "type": "bar",
+        "horizontal": true,
+        "hideYAxis": true,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "rowsBasedCategories",
+          "labelsField": "reg_name",
+          "valuesField": "_i",
+          "categoriesField": "evaluation_globale",
+          "size": 10,
+          "rowSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "manual",
+            "entries": [
+              {
+                "key": "A - Conforme",
+                "color": "#59a14f"
+              },
+              {
+                "key": "B - Non conformité mineure",
+                "color": "#edc948"
+              },
+              {
+                "key": "C - Non conformité moyenne",
+                "color": "#f28e2c"
+              },
+              {
+                "key": "Maîtrise des risques acceptable",
+                "color": "#76b7b2"
+              },
+              {
+                "key": "Maîtrise des risques insuffisante",
+                "color": "#e15759"
+              },
+              {
+                "key": "Maîtrise des risques satisfaisante",
+                "color": "#4e79a7"
+              },
+              {
+                "key": "Perte de maîtrise des risques (urgence)",
+                "color": "#b07aa1"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "03-line-alim-temporal": {
+    "dataset": "alim",
+    "comment": "line aggsBased date (month), area, tension",
+    "config": {
+      "title": "Évolution mensuelle des inspections sanitaires",
+      "xTitle": "Mois",
+      "yTitle": "Nombre d'inspections",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "line",
+        "tension": 2,
+        "area": true,
+        "hidePoints": true,
+        "yAxisStartsZero": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "date",
+            "field": "date_inspection",
+            "interval": "month"
+          },
+          "size": 50,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "primary"
+          }
+        }
+      }
+    }
+  },
+  "04-pie-rpg-cultures": {
+    "dataset": "rpg",
+    "comment": "pie rotation, percentages, missingLabel",
+    "config": {
+      "title": "Surfaces agricoles par groupe de culture",
+      "unit": "ha",
+      "divider": 10000,
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "pie",
+        "cutout": 0,
+        "rotation": 0,
+        "display": "percentages",
+        "sumInTitle": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "code_group",
+            "interval": ""
+          },
+          "size": 10,
+          "valueCalc": {
+            "type": "metric",
+            "field": "surf_parc",
+            "metric": "sum",
+            "dynamicMetric": false
+          },
+          "missingLabel": "Autres cultures",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Set2",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "05-bar-rpg-surface": {
+    "dataset": "rpg",
+    "comment": "bar aggsBased avg metric",
+    "config": {
+      "title": "Surface moyenne des parcelles par culture",
+      "xTitle": "Culture",
+      "yTitle": "Surface moyenne",
+      "unit": "m²",
+      "labelsMaxWidth": 40,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "culture_d1",
+            "interval": ""
+          },
+          "size": 12,
+          "valueCalc": {
+            "type": "metric",
+            "field": "surf_parc",
+            "metric": "avg",
+            "dynamicMetric": false
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "custom",
+            "hexValue": "#59a14f"
+          }
+        }
+      }
+    }
+  },
+  "06-multi-bar-bpe-secteur": {
+    "dataset": "bpe",
+    "comment": "multi-bar aggsBased stacked, groupsField, palette",
+    "config": {
+      "title": "Équipements par région (public vs privé)",
+      "xTitle": "Région",
+      "yTitle": "Nombre d'équipements",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": true,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "reg",
+            "interval": ""
+          },
+          "groupsField": "sect",
+          "size": 10,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Paired",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "07-pie-bpe-type": {
+    "dataset": "bpe",
+    "comment": "pie aggsBased simple count, palette",
+    "config": {
+      "title": "Répartition des équipements par type",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "pie",
+        "cutout": 0,
+        "rotation": 0,
+        "display": "values",
+        "sumInTitle": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "type",
+            "interval": ""
+          },
+          "size": 5,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "08-bar-bpe-capacite": {
+    "dataset": "bpe",
+    "comment": "bar aggsBased sum numeric, theme color",
+    "config": {
+      "title": "Capacité totale des équipements culturels",
+      "xTitle": "Catégorie",
+      "yTitle": "Capacité totale",
+      "unit": "places",
+      "labelsMaxWidth": 40,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "categorie",
+            "interval": ""
+          },
+          "size": 12,
+          "valueCalc": {
+            "type": "metric",
+            "field": "capacite",
+            "metric": "sum",
+            "dynamicMetric": false
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "secondary"
+          }
+        }
+      }
+    }
+  },
+  "09-multi-bar-bpe-domaine": {
+    "dataset": "bpe",
+    "comment": "multi-bar aggsBased groupsField, palette",
+    "config": {
+      "title": "Équipements par région et domaine",
+      "xTitle": "Région",
+      "yTitle": "Nombre",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "bottom",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": false,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "reg",
+            "interval": ""
+          },
+          "groupsField": "dom",
+          "size": 10,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Set1",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "10-bar-bpe-salles": {
+    "dataset": "bpe",
+    "comment": "bar aggsBased avg small integer",
+    "config": {
+      "title": "Nombre moyen de salles par type d'équipement",
+      "xTitle": "Type",
+      "yTitle": "Salles moyennes",
+      "unit": "salles",
+      "labelsMaxWidth": 40,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "type",
+            "interval": ""
+          },
+          "size": 5,
+          "valueCalc": {
+            "type": "metric",
+            "field": "nbsalles",
+            "metric": "avg",
+            "dynamicMetric": false
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "custom",
+            "hexValue": "#4e79a7"
+          }
+        }
+      }
+    }
+  },
+  "11-bar-loyers-dep": {
+    "dataset": "loyers",
+    "comment": "bar aggsBased tri desc, dynamicSort",
+    "config": {
+      "title": "Loyer moyen au m² par département (maisons)",
+      "xTitle": "Département",
+      "yTitle": "Loyer (€/m²)",
+      "unit": "€/m²",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "dep",
+            "interval": ""
+          },
+          "size": 15,
+          "valueCalc": {
+            "type": "metric",
+            "field": "loypredm2",
+            "metric": "avg",
+            "dynamicMetric": false
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": true,
+          "color": {
+            "type": "theme",
+            "strValue": "primary"
+          }
+        }
+      }
+    }
+  },
+  "12-multi-line-loyers-intervalle": {
+    "dataset": "loyers",
+    "comment": "multi-line rowsBased 3 valuesFields, palette",
+    "config": {
+      "title": "Loyer prédit avec intervalle de confiance",
+      "xTitle": "Commune",
+      "yTitle": "Loyer (€/m²)",
+      "unit": "€/m²",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "multi-line",
+        "tension": 1,
+        "stacked": false,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "yAxisStartsZero": false,
+        "hidePoints": false,
+        "config": {
+          "type": "rowsBased",
+          "labelsField": "libgeo",
+          "valuesFields": [
+            "loypredm2",
+            "lwripm2",
+            "upripm2"
+          ],
+          "size": 20,
+          "rowSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Dark2",
+            "offset": 0,
+            "seriesOrder": [
+              "loypredm2",
+              "lwripm2",
+              "upripm2"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "13-pie-loyers-composantes": {
+    "dataset": "loyers",
+    "comment": "pie aggsLabels multiple valuesFields, cutout",
+    "config": {
+      "title": "Répartition des composantes de loyer",
+      "unit": "€/m²",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "pie",
+        "cutout": 40,
+        "rotation": 0,
+        "display": "both",
+        "sumInTitle": true,
+        "config": {
+          "type": "aggsLabels",
+          "valuesFields": [
+            "loypredm2",
+            "lwripm2",
+            "upripm2"
+          ],
+          "removeFromLabels": "",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Pastel1",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "14-pie-rne-sexe": {
+    "dataset": "rne",
+    "comment": "pie aggsBased manual 2 categories",
+    "config": {
+      "title": "Répartition des conseillers régionaux par sexe",
+      "unit": "élus",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "pie",
+        "cutout": 0,
+        "rotation": 0,
+        "display": "percentages",
+        "sumInTitle": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "code_sexe",
+            "interval": ""
+          },
+          "size": 5,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "colorOrder": {
+            "type": "manual",
+            "entries": [
+              {
+                "key": "F",
+                "color": "#e15759"
+              },
+              {
+                "key": "M",
+                "color": "#4e79a7"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "15-multi-bar-rne-age": {
+    "dataset": "rne",
+    "comment": "multi-bar aggsBased dynamicMetric, sortField",
+    "config": {
+      "title": "Âge moyen des conseillers régionaux",
+      "xTitle": "Région",
+      "yTitle": "Âge moyen",
+      "unit": "ans",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": false,
+        "stacked": false,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "libelle_de_la_region",
+            "interval": ""
+          },
+          "groupsField": "code_sexe",
+          "size": 14,
+          "valueCalc": {
+            "type": "metric",
+            "field": "age",
+            "metric": "avg",
+            "dynamicMetric": true
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": true,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Set2",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "16-paired-histo-deplacements": {
+    "dataset": "depl",
+    "comment": "paired-histogram rowsBased sign flip",
+    "config": {
+      "title": "Comparaison voiture vs vélo",
+      "xTitle": "Période",
+      "yTitle": "Déplacements",
+      "unit": "dépl.",
+      "divider": 1000,
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "paired-histogram",
+        "config": {
+          "type": "rowsBased",
+          "labelsField": "time_period",
+          "valuesFields": [
+            "voit",
+            "velo"
+          ],
+          "size": 200,
+          "rowSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Set1",
+            "offset": 0,
+            "seriesOrder": [
+              "voit",
+              "velo"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "17-radar-deplacements": {
+    "dataset": "depl",
+    "comment": "radar aggsBasedLabels labelsValues, valuesLabel",
+    "config": {
+      "title": "Modes de transport par période",
+      "unit": "dépl.",
+      "divider": 1000,
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "radar",
+        "tension": 1,
+        "config": {
+          "type": "aggsBasedLabels",
+          "labelsValues": [
+            "voit",
+            "velo",
+            "trans_com"
+          ],
+          "valuesLabel": "time_period",
+          "metric": "sum",
+          "dynamicMetric": false,
+          "size": 10,
+          "missingLabel": "",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Dark2",
+            "offset": 0
+          }
+        }
+      }
+    }
+  },
+  "18-bar-alim-filtre-paris": {
+    "dataset": "alim",
+    "comment": "bar aggsBased staticFilters Paris",
+    "config": {
+      "staticFilters": [
+        {
+          "type": "in",
+          "field": "dep_name",
+          "values": [
+            "Paris"
+          ]
+        }
+      ],
+      "title": "Inspections à Paris par secteur",
+      "xTitle": "Secteur",
+      "yTitle": "Nombre d'inspections",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "secteur_activite",
+            "interval": ""
+          },
+          "size": 5,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "primary"
+          }
+        }
+      }
+    }
+  },
+  "19-multi-bar-bpe-metrics": {
+    "dataset": "bpe",
+    "comment": "multi-bar aggsBasedCategories valuesCalc",
+    "config": {
+      "title": "Moyennes par région (capacité, salles, lieux)",
+      "xTitle": "Région",
+      "yTitle": "Moyenne",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "bottom",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": false,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBasedCategories",
+          "groupBy": {
+            "type": "value",
+            "field": "reg",
+            "interval": ""
+          },
+          "valuesCalc": [
+            "capacite",
+            "nbsalles",
+            "nblieux"
+          ],
+          "metric": "avg",
+          "dynamicMetric": true,
+          "size": 10,
+          "aggSortBy": "value",
+          "sortField": "capacite",
+          "sortOrder": "desc",
+          "dynamicSort": true,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Paired",
+            "offset": 0,
+            "seriesOrder": [
+              "capacite",
+              "nbsalles",
+              "nblieux"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "20-line-loyers-distribution": {
+    "dataset": "loyers",
+    "comment": "line aggsBased groupBy number interval",
+    "config": {
+      "title": "Distribution des loyers au m²",
+      "xTitle": "Loyer (€/m²)",
+      "yTitle": "Nombre de communes",
+      "unit": "communes",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "line",
+        "tension": 0,
+        "area": true,
+        "hidePoints": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "number",
+            "field": "loypredm2",
+            "interval": 2
+          },
+          "size": 20,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "secondary"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3592 @@
+{
+  "alim": {
+    "id": "a4jz4xdfoymfiquex913bfgp",
+    "title": "Résultats des contrôles officiels sanitaires : dispositif d'information « Alim’confiance »",
+    "finalizedAt": "2026-05-04T05:04:50.789Z",
+    "schema": [
+      {
+        "key": "siret",
+        "description": "",
+        "title": "SIRET",
+        "type": "string",
+        "x-originalName": "siret",
+        "x-cardinality": 64933,
+        "x-refersTo": "http://www.datatourisme.fr/ontology/core/1.0/#siret",
+        "x-concept": {
+          "id": "siret",
+          "title": "SIRET",
+          "primary": true
+        },
+        "label": "SIRET",
+        "x-capabilities": {}
+      },
+      {
+        "key": "libelle_etablissement",
+        "title": "Établissement",
+        "type": "string",
+        "x-refersTo": "http://www.w3.org/2000/01/rdf-schema#label",
+        "x-concept": {
+          "id": "label",
+          "title": "Libellé",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 53390
+      },
+      {
+        "key": "type_activite",
+        "title": "Activité",
+        "type": "string",
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 55
+      },
+      {
+        "key": "adresse_activite",
+        "title": "Adresse",
+        "type": "string",
+        "x-refersTo": "http://schema.org/streetAddress",
+        "x-concept": {
+          "id": "streetAddress",
+          "title": "Rue ou lieu-dit",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 60858
+      },
+      {
+        "key": "code_postal",
+        "title": "Code postal",
+        "type": "string",
+        "x-refersTo": "http://schema.org/postalCode",
+        "x-concept": {
+          "id": "postalCode",
+          "title": "Code postal",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 5945
+      },
+      {
+        "key": "code_commune",
+        "description": "",
+        "title": "Code_commune",
+        "type": "string",
+        "x-originalName": "code_commune",
+        "x-cardinality": 12064,
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeCommune",
+        "x-concept": {
+          "id": "codeCommune",
+          "title": "Code commune",
+          "primary": true
+        },
+        "label": "Code_commune",
+        "x-capabilities": {}
+      },
+      {
+        "key": "libelle_commune",
+        "title": "Commune",
+        "type": "string",
+        "x-refersTo": "http://schema.org/City",
+        "x-concept": {
+          "id": "city",
+          "title": "Commune",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 12165
+      },
+      {
+        "key": "numero_inspection",
+        "description": "",
+        "title": "Numero_inspection",
+        "type": "string",
+        "x-originalName": "numero_inspection",
+        "x-cardinality": 72455,
+        "label": "Numero_inspection",
+        "x-capabilities": {}
+      },
+      {
+        "key": "date_inspection",
+        "title": "Date inspection",
+        "type": "string",
+        "format": "date-time",
+        "x-refersTo": "http://schema.org/Date",
+        "x-concept": {
+          "id": "date",
+          "title": "Date d'évènement",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 303
+      },
+      {
+        "key": "contexte_inpection",
+        "description": "",
+        "title": "Contexte_inspection",
+        "type": "string",
+        "x-originalName": "contexte_inpection",
+        "x-cardinality": 6,
+        "label": "Contexte_inspection",
+        "x-capabilities": {},
+        "enum": [
+          "Programmation",
+          "Re-contrôle",
+          "Plainte / Signalement",
+          "Inspection ciblée",
+          "Demande d'approbation",
+          "TIAC"
+        ]
+      },
+      {
+        "key": "procede",
+        "description": "",
+        "title": "Procede",
+        "type": "string",
+        "x-originalName": "procede",
+        "x-cardinality": 1933,
+        "label": "Procede",
+        "x-capabilities": {}
+      },
+      {
+        "key": "synthese_eval_sanit",
+        "title": "Evaluation",
+        "type": "string",
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 4,
+        "enum": [
+          "Satisfaisant",
+          "Très satisfaisant",
+          "A améliorer",
+          "A corriger de manière urgente"
+        ]
+      },
+      {
+        "key": "filtre",
+        "title": "Filtres",
+        "type": "string",
+        "description": "Alim’confiance : Résultats des contrôles sanitaires (restaurants, commerces alimentaires) avec 4 niveaux d’hygiène (très satisfaisant à insatisfaisant). Transparence pour les consommateurs et professionnels.",
+        "x-capabilities": {},
+        "x-cardinality": 5,
+        "enum": [
+          "Restaurants",
+          "Métiers de bouche",
+          "Supermarchés/alimentation générale",
+          "Restauration collective",
+          "Producteurs fermiers"
+        ]
+      },
+      {
+        "key": "evaluation_globale",
+        "description": "",
+        "title": "Evaluation_globale",
+        "type": "string",
+        "x-originalName": "evaluation_globale",
+        "x-cardinality": 7,
+        "label": "Evaluation_globale",
+        "x-capabilities": {},
+        "enum": [
+          "Maîtrise des risques acceptable",
+          "Maîtrise des risques satisfaisante",
+          "Maîtrise des risques insuffisante",
+          "Perte de maîtrise des risques (urgence)",
+          "A - Conforme",
+          "B - Non conformité mineure",
+          "C - Non conformité moyenne"
+        ]
+      },
+      {
+        "key": "type_suite",
+        "description": "",
+        "title": "Type_suite",
+        "type": "string",
+        "x-originalName": "type_suite",
+        "x-cardinality": 10,
+        "label": "Type_suite",
+        "x-capabilities": {},
+        "enum": [
+          "Avertissement",
+          "Mise en demeure",
+          "Décision",
+          "Avertissement|Procès verbal",
+          "Mise en demeure|Procès verbal",
+          "Avertissement|Mise en demeure",
+          "Procès verbal",
+          "Décision|Mise en demeure",
+          "Décision|Procès verbal",
+          "Avertissement|Décision"
+        ]
+      },
+      {
+        "key": "secteur_activite",
+        "description": "",
+        "title": "Secteur_activite",
+        "type": "string",
+        "x-originalName": "secteur_activite",
+        "x-cardinality": 5,
+        "label": "Secteur_activite",
+        "x-capabilities": {},
+        "enum": [
+          "Remise directe",
+          "Restauration collective",
+          "Mise sur le marché",
+          "Abattage",
+          "Élevage ou détention animaux de rente"
+        ]
+      },
+      {
+        "key": "geores",
+        "description": "",
+        "title": "geores",
+        "x-refersTo": "http://www.w3.org/2003/01/geo/wgs84_pos#lat_long",
+        "x-concept": {
+          "id": "latLon",
+          "title": "Latitude / Longitude",
+          "primary": true
+        },
+        "type": "string",
+        "x-originalName": "geores",
+        "x-cardinality": 57586,
+        "label": "geores",
+        "x-capabilities": {}
+      },
+      {
+        "key": "agrement",
+        "title": "Agrement",
+        "type": "integer",
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 6382
+      },
+      {
+        "key": "reg_name",
+        "title": "Région",
+        "type": "string",
+        "x-refersTo": "https://schema.org/addressRegion",
+        "x-concept": {
+          "id": "region",
+          "title": "Région",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 20,
+        "enum": [
+          "Île-de-France",
+          "Auvergne-Rhône-Alpes",
+          "Occitanie",
+          "Provence-Alpes-Côte d'Azur",
+          "Nouvelle-Aquitaine",
+          "Grand Est",
+          "Hauts-de-France",
+          "Pays de la Loire",
+          "Bretagne",
+          "Normandie",
+          "Bourgogne-Franche-Comté",
+          "Centre-Val de Loire",
+          "Corse",
+          "Martinique",
+          "Guadeloupe",
+          "La Réunion",
+          "Mayotte",
+          "Guyane",
+          "Saint-Pierre-et-Miquelon",
+          "Saint-Martin"
+        ]
+      },
+      {
+        "key": "reg_code",
+        "description": "",
+        "title": "reg_code",
+        "type": "string",
+        "x-originalName": "reg_code",
+        "x-cardinality": 20,
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+        "x-concept": {
+          "id": "codeRegion",
+          "title": "Code région",
+          "primary": true
+        },
+        "label": "reg_code",
+        "x-capabilities": {},
+        "enum": [
+          "11",
+          "84",
+          "76",
+          "93",
+          "75",
+          "44",
+          "32",
+          "52",
+          "53",
+          "28",
+          "27",
+          "24",
+          "94",
+          "02",
+          "01",
+          "04",
+          "06",
+          "03",
+          "975",
+          "978"
+        ]
+      },
+      {
+        "key": "dep_name",
+        "title": "Département",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#Departement",
+        "x-concept": {
+          "id": "departement",
+          "title": "Département",
+          "primary": true
+        },
+        "description": "",
+        "x-capabilities": {},
+        "x-cardinality": 103
+      },
+      {
+        "key": "dep_code",
+        "description": "",
+        "title": "dep_code",
+        "type": "string",
+        "x-originalName": "dep_code",
+        "x-cardinality": 103,
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+        "x-concept": {
+          "id": "codeDepartement",
+          "title": "Code département",
+          "primary": true
+        },
+        "label": "dep_code",
+        "x-capabilities": {}
+      },
+      {
+        "x-calculated": true,
+        "key": "_geopoint",
+        "type": "string",
+        "title": "Coordonnée géographique",
+        "description": "Centroïde au format \"lat,lon\""
+      },
+      {
+        "x-calculated": true,
+        "key": "_id",
+        "type": "string",
+        "format": "uri-reference",
+        "title": "Identifiant",
+        "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+      },
+      {
+        "x-calculated": true,
+        "key": "_i",
+        "type": "integer",
+        "title": "Numéro de ligne",
+        "description": "Indice de la ligne dans le fichier d'origine"
+      },
+      {
+        "x-calculated": true,
+        "key": "_rand",
+        "type": "integer",
+        "title": "Nombre aléatoire",
+        "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      }
+    ]
+  },
+  "rpg": {
+    "id": "5v2ar5y04jjrbuewjpssauy5",
+    "title": "Registre Parcellaire Graphique (RPG)",
+    "finalizedAt": "2025-10-20T09:34:26.274Z",
+    "schema": [
+      {
+        "type": "string",
+        "key": "geometry",
+        "x-originalName": "geometry",
+        "x-refersTo": "https://purl.org/geojson/vocab#geometry",
+        "x-concept": {
+          "id": "geometry",
+          "title": "Géométrie GeoJSON ou WKT",
+          "primary": true
+        },
+        "x-cardinality": 214141,
+        "description": "",
+        "x-capabilities": {
+          "vtPrepare": true
+        },
+        "title": "Géométrie",
+        "label": "Géométrie"
+      },
+      {
+        "key": "id_parcel",
+        "x-originalName": "ID_PARCEL",
+        "type": "string",
+        "x-cardinality": 9880898,
+        "description": "",
+        "x-transform": {
+          "expr": "",
+          "examples": [
+            ""
+          ],
+          "type": "string"
+        },
+        "title": "Identifiant parcelle",
+        "label": "Identifiant parcelle"
+      },
+      {
+        "key": "surf_parc",
+        "x-originalName": "SURF_PARC",
+        "type": "number",
+        "x-cardinality": 11904,
+        "description": "",
+        "title": "Surface parcelle",
+        "label": "Surface parcelle"
+      },
+      {
+        "key": "code_cultu",
+        "x-originalName": "CODE_CULTU",
+        "type": "string",
+        "x-cardinality": 137,
+        "description": "",
+        "x-labels": {
+          "BTH": "Blé tendre d’hiver",
+          "BTP": "Blé tendre de printemps",
+          "MID": "Maïs doux",
+          "MIE": "Maïs ensilage",
+          "MIS": "Maïs",
+          "ORH": "Orge d'hiver",
+          "ORP": "Orge de printemps",
+          "AVH": "Avoine d’hiver",
+          "AVP": "Avoine de printemps",
+          "BDH": "Blé dur d’hiver",
+          "BDP": "Blé dur de printemps",
+          "BDT": "Blé dur de printemps semé tardivement (après le 31/05)",
+          "CAG": "Autre céréale d’un autre genre",
+          "CGF": "Autre céréale de genre Fagopyrum",
+          "CGH": "Autre céréale de genre Phalaris",
+          "CGO": "Autre céréale de genre Sorghum",
+          "CGP": "Autre céréale de genre Panicum",
+          "CGS": "Autre céréale de genre Setaria",
+          "CHA": "Autre céréale d’hiver de genre Avena",
+          "CHH": "Autre céréale d’hiver de genre Hordeum",
+          "CHS": "Autre céréale d’hiver de genre Secale",
+          "CHT": "Autre céréale d’hiver de genre Triticum",
+          "CPA": "Autre céréale de printemps de genre Avena",
+          "CPH": "Autre céréale de printemps de genre Hordeum",
+          "CPS": "Autre céréale de printemps de genre Secale",
+          "CPT": "Autre céréale de printemps de genre Triticum",
+          "CPZ": "Autre céréale de printemps de genre Zea",
+          "EPE": "Épeautre",
+          "MCR": "Mélange de céréales",
+          "MLT": "Millet",
+          "SGH": "Seigle d’hiver",
+          "SGP": "Seigle de printemps",
+          "SOG": "Sorgho",
+          "SRS": "Sarrasin",
+          "TTH": "Triticale d’hiver",
+          "TTP": "Triticale de printemps",
+          "CZH": "Colza d’hiver",
+          "CZP": "Colza de printemps",
+          "TRN": "Tournesol",
+          "ARA": "Arachide",
+          "LIH": "Lin non textile d’hiver",
+          "LIP": "Lin non textile de printemps",
+          "MOL": "Mélange d’oléagineux",
+          "NVE": "Navette d’été",
+          "NVH": "Navette d’hiver",
+          "OAG": "Autre oléagineux d’un autre genre",
+          "OEH": "Autre oléagineux d’espèce Helianthus",
+          "OEI": "Œillette",
+          "OHN": "Autre oléagineux d’hiver d’espèce Brassica napus",
+          "OHR": "Autre oléagineux d’hiver d’espèce Brassica rapa",
+          "OPN": "Autre oléagineux de printemps d’espèce Brassica napus",
+          "OPR": "Autre oléagineux de printemps d’espèce Brassica rapa",
+          "SOJ": "Soja",
+          "FEV": "Fève",
+          "FVL": "Féverole semée avant le 31/05",
+          "FVT": "Féverole semée tardivement (après le 31/05)",
+          "LDH": "Lupin doux d’hiver",
+          "LDP": "Lupin doux de printemps semé avant le 31/05",
+          "LDT": "Lupin doux de printemps semé tardivement (après le 31/05)",
+          "MPC": "Mélange de protéagineux (pois et/ou lupin et/ou féverole) prépondérants semés avant le 31/05 et de céréales",
+          "MPP": "Mélange de protéagineux (pois et/ou lupin et/ou féverole)",
+          "MPT": "Mélange de protéagineux semés tardivement (après le 31/05)",
+          "PAG": "Autre protéagineux d’un autre genre",
+          "PHI": "Pois d’hiver",
+          "PPR": "Pois de printemps semé avant le 31/05",
+          "PPT": "Pois de printemps semé tardivement (après le 31/05)",
+          "CHV": "Chanvre",
+          "LIF": "Lin fibres",
+          "J5M": "Jachère de 5 ans ou moins",
+          "J6P": "Jachère de 6 ans ou plus",
+          "J6S": "Jachère de 6 ans ou plus déclarée comme Surface d’intérêt écologique",
+          "JNO": "Jachère noire",
+          "RIZ": "Riz",
+          "LEC": "Lentille cultivée (non fourragère)",
+          "PCH": "Pois chiche",
+          "BVF": "Betterave fourragère",
+          "CAF": "Carotte fourragère",
+          "CHF": "Chou fourrager",
+          "CPL": "Fourrage composé de céréales et/ou de protéagineux (en proportion < 50%) et/ou de légumineuses fourragères (en proportion < 50%)",
+          "DTY": "Dactyle de 5 ans ou moins",
+          "FAG": "Autre fourrage annuel d’un autre genre",
+          "FET": "Fétuque de 5 ans ou moins",
+          "FF5": "Féverole fourragère implantée pour la récolte 2015",
+          "FF6": "Féverole fourragère implantée pour la récolte 2016",
+          "FF7": "Féverole fourragère implantée pour la récolte 2017",
+          "FF8": "Féverole fourragère implantée pour la récolte 2018",
+          "FFO": "Autre féverole fourragère",
+          "FLO": "Fléole de 5 ans ou moins",
+          "FSG": "Autre plante fourragère sarclée d’un autre genre",
+          "GAI": "Gaillet",
+          "GES": "Gesse",
+          "GFP": "Autre graminée fourragère pure de 5 ans ou moins",
+          "JO5": "Jarosse implantée pour la récolte 2015",
+          "JO6": "Jarosse implantée pour la récolte 2016",
+          "JO7": "Jarosse implantée pour la récolte 2017",
+          "JO8": "Jarosse implantée pour la récolte 2018",
+          "JOD": "Jarosse déshydratée",
+          "JOS": "Autre jarosse",
+          "LEF": "Lentille fourragère",
+          "LFH": "Autre lupin fourrager d’hiver",
+          "LFP": "Autre lupin fourrager de printemps",
+          "LH5": "Lupin fourrager d’hiver implanté pour la récolte 2015",
+          "LH6": "Lupin fourrager d’hiver implanté pour la récolte 2016",
+          "LH7": "Lupin fourrager d’hiver implanté pour la récolte 2017",
+          "LH8": "Lupin fourrager d'hiver implanté pour la récolte 2018",
+          "LO7": "Lotier implanté pour la récolte 2017",
+          "LO8": "Lotier implanté pour la récolte 2018",
+          "LOT": "Lotier",
+          "LP5": "Lupin fourrager de printemps implanté pour la récolte 2015",
+          "LP6": "Lupin fourrager de printemps implanté pour la récolte 2016",
+          "LP7": "Lupin fourrager de printemps implanté pour la récolte 2017",
+          "LP8": "Lupin fourrager de printemps implanté pour la récolte 2018",
+          "LU5": "Luzerne implantée pour la récolte 2015",
+          "LU6": "Luzerne implantée pour la récolte 2016",
+          "LU7": "Luzerne implantée pour la récolte 2017",
+          "LU8": "Luzerne implantée pour la récolte 2018",
+          "LUD": "Luzerne déshydratée",
+          "LUZ": "Autre luzerne",
+          "MC5": "Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2015 et de céréales",
+          "MC6": "Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2016 et de céréales",
+          "MC7": "Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2017 et de céréales",
+          "MC8": "Mélange de légumineuses fourragères prépondérantes implantées pour la récolte 2018 et de céréales et d’oléagineux",
+          "ME5": "Mélilot implanté pour la récolte 2015",
+          "ME6": "Mélilot implanté pour la récolte 2016",
+          "ME7": "Mélilot implanté pour la récolte 2017",
+          "ME8": "Mélilot implanté pour la récolte 2018",
+          "MED": "Mélilot déshydraté",
+          "MEL": "Autre mélilot",
+          "MH5": "Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2015 et d’herbacées ou de graminées fourragères",
+          "MH6": "Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2016 et d’herbacées ou de graminées fourragères",
+          "MH7": "Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2017 et d’herbacées ou de graminées fourragères",
+          "MI7": "Minette implanté pour la récolte 2017",
+          "MI8": "Minette implanté pour la récolte 2018",
+          "MIN": "Minette",
+          "ML5": "Mélange de légumineuses fourragères implantées pour la récolte 2015 (entre elles)",
+          "ML6": "Mélange de légumineuses fourragères implantées pour la récolte 2016 (entre elles)",
+          "ML7": "Mélange de légumineuses fourragères implantées pour la récolte 2017 (entre elles)",
+          "ML8": "Mélange de légumineuses fourragères implantées pour la récolte 2018 (entre elles)",
+          "MLC": "Mélange de légumineuses fourragères prépondérantes et de céréales et/ou d’oléagineux",
+          "MLD": "Mélange de légumineuses déshydratées (entre elles)",
+          "MLF": "Mélange de légumineuses fourragères (entre elles)",
+          "MLG": "Mélange de légumineuses prépondérantes au semis et de graminées fourragères de 5 ans ou moins",
+          "MOH": "Moha",
+          "NVF": "Navet fourrager",
+          "PAT": "Pâturin commun de 5 ans ou moins",
+          "PFH": "Autre pois fourrager d’hiver",
+          "PFP": "Autre pois fourrager de printemps",
+          "PH5": "Pois fourrager d’hiver implanté pour la récolte 2015",
+          "PH6": "Pois fourrager d’hiver implanté pour la récolte 2016",
+          "PH7": "Pois fourrager d’hiver implanté pour la récolte 2017",
+          "PH8": "Pois fourrager d’hiver implanté pour la récolte 2018",
+          "PP5": "Pois fourrager de printemps implanté pour la récolte 2015",
+          "PP6": "Pois fourrager de printemps implanté pour la récolte 2016",
+          "PP7": "Pois fourrager de printemps implanté pour la récolte 2017",
+          "PP8": "Pois fourrager de printemps implanté pour la récolte 2018",
+          "RDF": "Radis fourrager",
+          "SA5": "Sainfoin implanté pour la récolte 2015",
+          "SA6": "Sainfoin implanté pour la récolte 2016",
+          "SA7": "Sainfoin implanté pour la récolte 2017",
+          "SA8": "Sainfoin implanté pour la récolte 2018",
+          "SAD": "Sainfoin déshydraté",
+          "SAI": "Autre sainfoin",
+          "SE5": "Serradelle implantée pour la récolte 2015",
+          "SE6": "Serradelle implantée pour la récolte 2016",
+          "SE7": "Serradelle implantée pour la récolte 2017",
+          "SE8": "Serradelle implantée pour la récolte 2018",
+          "SED": "Serradelle déshydratée",
+          "SER": "Autre serradelle",
+          "TR5": "Trèfle implanté pour la récolte 2015",
+          "TR6": "Trèfle implanté pour la récolte 2016",
+          "TR7": "Trèfle implanté pour la récolte 2017",
+          "TR8": "Trèfle implanté pour la récolte 2018",
+          "TRD": "Trèfle déshydraté",
+          "TRE": "Autre trèfle",
+          "VE5": "Vesce implantée pour la récolte 2015",
+          "VE6": "Vesce implantée pour la récolte 2016",
+          "VE7": "Vesce implantée pour la récolte 2017",
+          "VE8": "Vesce implantée pour la récolte 2018",
+          "VED": "Vesce déshydratée",
+          "VES": "Autre vesce",
+          "XFE": "X-Felium de 5 ans ou moins",
+          "BOP": "Bois pâturé",
+          "SPH": "Surface pastorale - herbe prédominante et ressources fourragères ligneuses présentes",
+          "SPL": "Surface pastorale - ressources fourragères ligneuses prédominantes",
+          "PPH": "Prairie permanente - herbe prédominante (ressources fourragères ligneuses absentes ou peu présentes)",
+          "PRL": "Prairie en rotation longue (6 ans ou plus)",
+          "PTR": "Autre prairie temporaire de 5 ans ou moins",
+          "RGA": "Ray-grass de 5 ans ou moins",
+          "AGR": "Agrume",
+          "ANA": "Ananas",
+          "AVO": "Avocat",
+          "BCA": "Banane créole (fruit et légume) - autre",
+          "BCF": "Banane créole (fruit et légume) - fermage",
+          "BCI": "Banane créole (fruit et légume) - indivision",
+          "BCP": "Banane créole (fruit et légume) - propriété ou faire valoir direct",
+          "BCR": "Banane créole (fruit et légume) - réforme foncière",
+          "BEA": "Banane export - autre",
+          "BEF": "Banane export - fermage",
+          "BEI": "Banane export - indivision",
+          "BEP": "Banane export - propriété ou faire valoir direct",
+          "BER": "Banane export - réforme foncière",
+          "CAC": "Café / Cacao",
+          "CBT": "Cerise bigarreau pour transformation",
+          "PFR": "Petit fruit rouge",
+          "PRU": "Prune d’Ente pour transformation",
+          "PVT": "Pêche Pavie pour transformation",
+          "PWT": "Poire Williams pour transformation",
+          "VGD": "Verger (DROM)",
+          "VRG": "Verger",
+          "RVI": "Restructuration du vignoble",
+          "VRC": "Vigne : raisins de cuve",
+          "VRN": "Vigne : raisins de cuve non en production",
+          "VRT": "Vigne : raisins de table",
+          "CAB": "Caroube",
+          "CTG": "Châtaigne",
+          "NOS": "Noisette",
+          "NOX": "Noix",
+          "PIS": "Pistache",
+          "OLI": "Oliveraie",
+          "ANE": "Aneth",
+          "ANG": "Angélique",
+          "ANI": "Anis",
+          "BAR": "Bardane",
+          "BAS": "Basilic",
+          "BRH": "Bourrache de 5 ans ou moins",
+          "BTN": "Betterave non fourragère / Bette",
+          "CAV": "Carvi",
+          "CHR": "Chardon Marie",
+          "CIB": "Ciboulette",
+          "CML": "Cameline",
+          "CMM": "Camomille",
+          "CRD": "Coriandre",
+          "CRF": "Cerfeuil",
+          "CUM": "Cumin",
+          "CUR": "Curcuma",
+          "EST": "Estragon",
+          "FNO": "Fenouil",
+          "FNU": "Fenugrec",
+          "HBL": "Houblon",
+          "LAV": "Lavande / Lavandin",
+          "MAV": "Mauve",
+          "MLI": "Mélisse",
+          "MLP": "Millepertuis",
+          "MOT": "Moutarde",
+          "MRJ": "Marjolaine / Origan",
+          "MTH": "Menthe",
+          "ORT": "Ortie",
+          "OSE": "Oseille",
+          "PAR": "Plante aromatique (autre que vanille)",
+          "PMD": "Plante médicinale",
+          "PPA": "Autre plante à parfum, aromatique et médicinale annuelle",
+          "PPF": "Plante à parfum (autre que géranium et vétiver)",
+          "PPP": "Autre plante à parfum, aromatique et médicinale pérenne",
+          "PSL": "Persil",
+          "PSN": "Psyllium noir de Provence",
+          "PSY": "Plantain psyllium",
+          "ROM": "Romarin",
+          "SGE": "Sauge",
+          "SRI": "Sarriette",
+          "TAB": "Tabac",
+          "THY": "Thym",
+          "TOT": "Tomate pour transformation",
+          "VAL": "Valériane",
+          "VNB": "Vanille sous bois",
+          "VNL": "Vanille",
+          "VNV": "Vanille verte",
+          "YLA": "Ylang-ylang",
+          "AIL": "Ail",
+          "ART": "Artichaut",
+          "AUB": "Aubergine",
+          "BLT": "Bleuet",
+          "BUR": "Bugle rampante",
+          "CAR": "Carotte",
+          "CCN": "Concombre / Cornichon",
+          "CCT": "Courgette / Citrouille",
+          "CEL": "Céleri",
+          "CES": "Chicorée / Endive / Scarole",
+          "CHU": "Chou",
+          "CMB": "Courge musquée / Butternut",
+          "CRA": "Cresson alénois de 5 ans ou moins",
+          "CRN": "Cornille",
+          "CRS": "Cresson",
+          "CSS": "Culture sous serre hors sol",
+          "DOL": "Dolique",
+          "EPI": "Épinard",
+          "FLA": "Autre légume ou fruit annuel",
+          "FLP": "Autre légume ou fruit pérenne",
+          "FRA": "Fraise",
+          "GER": "Géranium",
+          "HAR": "Haricot / Flageolet",
+          "HPC": "Horticulture ornementale de plein champ",
+          "HSA": "Horticulture ornementale sous abri",
+          "LBF": "Laitue / Batavia / Feuille de chêne",
+          "LSA": "Légume sous abri",
+          "MAC": "Mâche",
+          "MLO": "Melon",
+          "MRG": "Marguerite",
+          "NVT": "Navet",
+          "OIG": "Oignon / Échalote",
+          "PAN": "Panais",
+          "PAQ": "Pâquerette",
+          "PAS": "Pastèque",
+          "PMV": "Primevère",
+          "POR": "Poireau",
+          "POT": "Potiron / Potimarron",
+          "PPO": "Petits pois",
+          "PSE": "Pensée",
+          "PTC": "Pomme de terre de consommation",
+          "PTF": "Pomme de terre féculière",
+          "PVP": "Poivron / Piment",
+          "RDI": "Radis",
+          "ROQ": "Roquette",
+          "RUT": "Rutabaga",
+          "SFI": "Salsifis",
+          "TOM": "Tomate",
+          "TOP": "Topinambour",
+          "VER": "Véronique",
+          "CSA": "Canne à sucre - autre",
+          "CSF": "Canne à sucre - fermage",
+          "CSI": "Canne à sucre - indivision",
+          "CSP": "Canne à sucre - propriété ou faire valoir direct",
+          "CSR": "Canne à sucre - réforme foncière",
+          "ACA": "Autre culture non précisée dans la liste (admissible)",
+          "BFP": "Bande admissible le long d’une forêt avec production",
+          "BFS": "Bande admissible le long d’une forêt sans production",
+          "BOR": "Bordure de champ",
+          "BRO": "Brome de 5 ans ou moins",
+          "BTA": "Bande tampon",
+          "CAE": "Châtaigneraie entretenue par des porcins ou des petits ruminants",
+          "CEE": "Chênaie entretenue par des porcins ou des petits ruminants",
+          "CID": "Cultures conduites en interrangs : 2 cultures représentant chacune plus de 25%",
+          "CIT": "Cultures conduites en interrangs : 3 cultures représentant chacune plus de 25%",
+          "CUA": "Culture sous abattis",
+          "MCT": "Miscanthus",
+          "MPA": "Autre mélange de plantes fixant l’azote",
+          "MRS": "Marais salant",
+          "NYG": "Nyger",
+          "PCL": "Phacélie de 5 ans ou moins",
+          "PEP": "Pépinière",
+          "ROS": "Roselière",
+          "SBO": "Surface boisée sur une ancienne terre agricole",
+          "SNA": "Surface non agricole non visible sur l’orthophotographie",
+          "SNE": "Surface agricole temporairement non exploitée",
+          "TBT": "Tubercule tropical",
+          "TCR": "Taillis à courte rotation",
+          "TRU": "Truffière (chênaie de plants mycorhizés)",
+          "VET": "Vétiver",
+          "ZZZ": "Culture inconnue"
+        },
+        "title": "Culture",
+        "label": "Culture"
+      },
+      {
+        "key": "code_group",
+        "x-originalName": "CODE_GROUP",
+        "type": "string",
+        "x-cardinality": 23,
+        "description": "",
+        "x-transform": {
+          "expr": "",
+          "examples": [
+            ""
+          ],
+          "type": "string"
+        },
+        "x-labels": {
+          "1": "Blé tendre",
+          "2": "Maïs grain et ensilage",
+          "3": "Orge",
+          "4": "Autres céréales",
+          "5": "Colza",
+          "6": "Tournesol",
+          "7": "Autres oléagineux",
+          "8": "Protéagineux",
+          "9": "Plantes à fibres",
+          "11": "Gel (surfaces gelées sans production)",
+          "14": "Riz",
+          "15": "Légumineuses à grains",
+          "16": "Fourrage",
+          "17": "Estives et landes",
+          "18": "Prairies permanentes",
+          "19": "Prairies temporaires",
+          "20": "Vergers",
+          "21": "Vignes",
+          "22": "Fruits à coque",
+          "23": "Oliviers",
+          "24": "Autres cultures industrielles",
+          "25": "Légumes ou fleurs",
+          "26": "Canne à sucre",
+          "28": "Divers"
+        },
+        "title": "Groupe de culture",
+        "label": "Groupe de culture",
+        "enum": [
+          "18",
+          "28",
+          "1",
+          "2",
+          "19",
+          "11",
+          "21",
+          "16",
+          "3",
+          "17",
+          "4",
+          "5",
+          "6",
+          "25",
+          "20",
+          "24",
+          "8",
+          "7",
+          "22",
+          "9",
+          "23",
+          "15",
+          "14"
+        ]
+      },
+      {
+        "key": "culture_d1",
+        "x-originalName": "CULTURE_D1",
+        "type": "string",
+        "x-cardinality": 47,
+        "description": "",
+        "x-labels": {
+          "DBM": "Brôme",
+          "DBR": "Bourrache",
+          "DCF": "Chou fourrager",
+          "DCM": "Cameline",
+          "DCR": "Cresson alénois",
+          "DCZ": "Colza",
+          "DDC": "Dactyle",
+          "DFL": "Fléole",
+          "DFN": "Fenugrec",
+          "DFT": "Fétuque",
+          "DFV": "Féverole",
+          "DGS": "Gesse cultivée",
+          "DLN": "Lin",
+          "DLL": "Lentille",
+          "DLP": "Lupin (blanc, bleu, jaune)",
+          "DLT": "Lotier corniculé",
+          "DLZ": "Luzerne cultivée",
+          "DMD": "Moutarde",
+          "DMH": "Moha",
+          "DML": "Millet jaune, perlé",
+          "DMN": "Minette",
+          "DMT": "Mélilot",
+          "DNG": "Nyger",
+          "DNT": "Navette",
+          "DNV": "Navet",
+          "DPC": "Pois chiche",
+          "DPH": "Phacélie",
+          "DPS": "Pois",
+          "DPT": "Pâturin commun",
+          "DRD": "Radis (fourrager, chinois)",
+          "DRG": "Ray-grass",
+          "DRQ": "Roquette",
+          "DSD": "Serradelle",
+          "DSF": "Sorgho fourrager",
+          "DSG": "Seigle",
+          "DSH": "Sous semis d'herbe",
+          "DSJ": "Soja",
+          "DSN": "Sainfoin",
+          "DSR": "Sarrasin",
+          "DTN": "Tournesol",
+          "DTR": "Trèfle",
+          "DVN": "Avoine",
+          "DVS": "Vesce",
+          "DXF": "X-Festulolium",
+          "ZZZ": "Culture inconnue"
+        },
+        "title": "Culture dérobée 1",
+        "label": "Culture dérobée 1"
+      },
+      {
+        "key": "culture_d2",
+        "x-originalName": "CULTURE_D2",
+        "type": "string",
+        "x-cardinality": 46,
+        "description": "",
+        "x-labels": {
+          "DBM": "Brôme",
+          "DBR": "Bourrache",
+          "DCF": "Chou fourrager",
+          "DCM": "Cameline",
+          "DCR": "Cresson alénois",
+          "DCZ": "Colza",
+          "DDC": "Dactyle",
+          "DFL": "Fléole",
+          "DFN": "Fenugrec",
+          "DFT": "Fétuque",
+          "DFV": "Féverole",
+          "DGS": "Gesse cultivée",
+          "DLN": "Lin",
+          "DLL": "Lentille",
+          "DLP": "Lupin (blanc, bleu, jaune)",
+          "DLT": "Lotier corniculé",
+          "DLZ": "Luzerne cultivée",
+          "DMD": "Moutarde",
+          "DMH": "Moha",
+          "DML": "Millet jaune, perlé",
+          "DMN": "Minette",
+          "DMT": "Mélilot",
+          "DNG": "Nyger",
+          "DNT": "Navette",
+          "DNV": "Navet",
+          "DPC": "Pois chiche",
+          "DPH": "Phacélie",
+          "DPS": "Pois",
+          "DPT": "Pâturin commun",
+          "DRD": "Radis (fourrager, chinois)",
+          "DRG": "Ray-grass",
+          "DRQ": "Roquette",
+          "DSD": "Serradelle",
+          "DSF": "Sorgho fourrager",
+          "DSG": "Seigle",
+          "DSH": "Sous semis d'herbe",
+          "DSJ": "Soja",
+          "DSN": "Sainfoin",
+          "DSR": "Sarrasin",
+          "DTN": "Tournesol",
+          "DTR": "Trèfle",
+          "DVN": "Avoine",
+          "DVS": "Vesce",
+          "DXF": "X-Festulolium",
+          "ZZZ": "Culture inconnue"
+        },
+        "title": "Culture dérobée 2",
+        "label": "Culture dérobée 1"
+      },
+      {
+        "key": "nom_com",
+        "x-originalName": "nom_com",
+        "x-extension": "dataset:contours-des-communes/masterData_bulkSearch_reverse-geoloc-commune",
+        "title": "Commune",
+        "description": "",
+        "type": "string",
+        "x-refersTo": "http://schema.org/City",
+        "x-capabilities": {},
+        "x-concept": {
+          "id": "city",
+          "title": "Commune",
+          "primary": true
+        }
+      },
+      {
+        "key": "insee_com",
+        "x-originalName": "insee_com",
+        "x-extension": "dataset:contours-des-communes/masterData_bulkSearch_reverse-geoloc-commune",
+        "title": "Code commune",
+        "description": "",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeCommune",
+        "x-capabilities": {},
+        "x-concept": {
+          "id": "codeCommune",
+          "title": "Code commune",
+          "primary": true
+        }
+      },
+      {
+        "key": "_reverse_geoloc-commune._error",
+        "type": "string",
+        "x-originalName": "_error",
+        "x-extension": "dataset:contours-des-communes/masterData_bulkSearch_reverse-geoloc-commune",
+        "title": "Erreur de récupération de données de référence",
+        "description": "Une erreur lors de la récupération des informations depuis un service distant",
+        "x-calculated": true
+      },
+      {
+        "key": "nom_epci",
+        "x-originalName": "nom_epci",
+        "x-extension": "dataset:contours-des-epci/masterData_bulkSearch_reverse-geoloc-epci",
+        "title": "Nom EPCI",
+        "description": "",
+        "type": "string",
+        "x-capabilities": {}
+      },
+      {
+        "key": "code_epci",
+        "x-originalName": "code_epci",
+        "x-extension": "dataset:contours-des-epci/masterData_bulkSearch_reverse-geoloc-epci",
+        "title": "Code EPCI",
+        "description": "",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#EtablissementPublicDeCooperationIntercommunale",
+        "x-capabilities": {},
+        "x-concept": {
+          "id": "codeEPCI",
+          "title": "Code EPCI",
+          "primary": true
+        }
+      },
+      {
+        "key": "_reverse_geoloc-epci._error",
+        "type": "string",
+        "x-originalName": "_error",
+        "x-extension": "dataset:contours-des-epci/masterData_bulkSearch_reverse-geoloc-epci",
+        "title": "Erreur de récupération de données de référence",
+        "description": "Une erreur lors de la récupération des informations depuis un service distant",
+        "x-calculated": true
+      },
+      {
+        "key": "insee_dep",
+        "x-originalName": "insee_dep",
+        "x-extension": "dataset:contours-des-departements/masterData_bulkSearch_reverse-geoloc-departement",
+        "title": "Code département",
+        "description": "",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+        "x-capabilities": {},
+        "x-concept": {
+          "id": "codeDepartement",
+          "title": "Code département",
+          "primary": true
+        }
+      },
+      {
+        "key": "nom_dep",
+        "x-originalName": "nom_dep",
+        "x-extension": "dataset:contours-des-departements/masterData_bulkSearch_reverse-geoloc-departement",
+        "title": "Nom département",
+        "description": "",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#Departement",
+        "x-capabilities": {},
+        "x-concept": {
+          "id": "departement",
+          "title": "Département",
+          "primary": true
+        }
+      },
+      {
+        "key": "insee_reg",
+        "x-originalName": "insee_reg",
+        "x-extension": "dataset:contours-des-departements/masterData_bulkSearch_reverse-geoloc-departement",
+        "title": "Code région",
+        "description": "",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+        "x-capabilities": {},
+        "x-concept": {
+          "id": "codeRegion",
+          "title": "Code région",
+          "primary": true
+        }
+      },
+      {
+        "key": "nom_reg",
+        "x-originalName": "nom_reg",
+        "x-extension": "dataset:contours-des-departements/masterData_bulkSearch_reverse-geoloc-departement",
+        "title": "Nom région",
+        "description": "",
+        "type": "string",
+        "x-capabilities": {}
+      },
+      {
+        "key": "_reverse_geoloc-departement._error",
+        "type": "string",
+        "x-originalName": "_error",
+        "x-extension": "dataset:contours-des-departements/masterData_bulkSearch_reverse-geoloc-departement",
+        "title": "Erreur de récupération de données de référence",
+        "description": "Une erreur lors de la récupération des informations depuis un service distant",
+        "x-calculated": true
+      },
+      {
+        "x-calculated": true,
+        "key": "_geoshape",
+        "type": "object",
+        "title": "Géométrie",
+        "description": "Au format d'une géométrie GeoJSON",
+        "x-capabilities": {
+          "vtPrepare": true
+        }
+      },
+      {
+        "x-calculated": true,
+        "key": "_geocorners",
+        "type": "array",
+        "title": "Boite englobante de la géométrie",
+        "description": "Sous forme d'un tableau de coordonnées au format \"lat,lon\""
+      },
+      {
+        "x-calculated": true,
+        "key": "_geopoint",
+        "type": "string",
+        "title": "Coordonnée géographique",
+        "description": "Centroïde au format \"lat,lon\"",
+        "x-refersTo": "http://www.w3.org/2003/01/geo/wgs84_pos#lat_long",
+        "x-concept": {
+          "id": "latLon",
+          "title": "Latitude / Longitude",
+          "primary": true
+        }
+      },
+      {
+        "x-calculated": true,
+        "key": "_id",
+        "type": "string",
+        "format": "uri-reference",
+        "title": "Identifiant",
+        "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+      },
+      {
+        "x-calculated": true,
+        "key": "_i",
+        "type": "integer",
+        "title": "Numéro de ligne",
+        "description": "Indice de la ligne dans le fichier d'origine"
+      },
+      {
+        "x-calculated": true,
+        "key": "_rand",
+        "type": "integer",
+        "title": "Nombre aléatoire",
+        "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      }
+    ]
+  },
+  "bpe": {
+    "id": "im3-1xqdhf1nxtfzuhtz2--l",
+    "title": "Base Permanente des Equipements - 2023",
+    "finalizedAt": "2025-06-20T11:04:46.077Z",
+    "schema": [
+      {
+        "key": "an",
+        "x-originalName": "AN",
+        "type": "integer",
+        "title": "Millésime de la base",
+        "x-cardinality": 1,
+        "description": "",
+        "enum": [
+          2023
+        ]
+      },
+      {
+        "key": "nomrs",
+        "x-originalName": "NOMRS",
+        "type": "string",
+        "x-refersTo": "http://www.w3.org/2000/01/rdf-schema#label",
+        "title": "Nom ou raison sociale",
+        "x-concept": {
+          "id": "label",
+          "title": "Libellé",
+          "primary": true
+        },
+        "x-cardinality": 2078332,
+        "description": ""
+      },
+      {
+        "key": "cnomrs",
+        "x-originalName": "CNOMRS",
+        "type": "string",
+        "title": "Complément du nom",
+        "x-cardinality": 513977,
+        "description": ""
+      },
+      {
+        "key": "numvoie",
+        "x-originalName": "NUMVOIE",
+        "type": "string",
+        "x-refersTo": "http://www.ontotext.com/proton/protonext#StreetNumber",
+        "title": "Numéro de voie",
+        "x-concept": {
+          "id": "streetNumber",
+          "title": "Numéro de rue",
+          "primary": true
+        },
+        "x-cardinality": 5018,
+        "description": ""
+      },
+      {
+        "key": "indrep",
+        "x-originalName": "INDREP",
+        "type": "string",
+        "title": "Indice de répétition du numéro de voie",
+        "x-cardinality": 8,
+        "description": ""
+      },
+      {
+        "key": "typvoie",
+        "x-originalName": "TYPVOIE",
+        "type": "string",
+        "title": "Type de voie",
+        "x-cardinality": 186,
+        "description": ""
+      },
+      {
+        "key": "libvoie",
+        "x-originalName": "LIBVOIE",
+        "type": "string",
+        "x-refersTo": "http://schema.org/streetAddress",
+        "title": "Libellé de la voie",
+        "x-concept": {
+          "id": "streetAddress",
+          "title": "Rue ou lieu-dit",
+          "primary": true
+        },
+        "x-cardinality": 376911,
+        "description": ""
+      },
+      {
+        "key": "cadr",
+        "x-originalName": "CADR",
+        "type": "string",
+        "title": "Complément d'adresse",
+        "x-cardinality": 256307,
+        "description": ""
+      },
+      {
+        "key": "libcom",
+        "x-originalName": "LIBCOM",
+        "type": "string",
+        "x-refersTo": "http://schema.org/City",
+        "title": "Commune",
+        "x-concept": {
+          "id": "city",
+          "title": "Commune",
+          "primary": true
+        },
+        "x-cardinality": 32318,
+        "description": ""
+      },
+      {
+        "key": "codpos",
+        "x-originalName": "CODPOS",
+        "type": "string",
+        "x-refersTo": "http://schema.org/postalCode",
+        "title": "Code postal",
+        "x-concept": {
+          "id": "postalCode",
+          "title": "Code postal",
+          "primary": true
+        },
+        "x-cardinality": 10494,
+        "description": ""
+      },
+      {
+        "key": "depcom",
+        "x-originalName": "DEPCOM",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeCommune",
+        "x-capabilities": {
+          "textAgg": true
+        },
+        "title": "Code commune",
+        "x-concept": {
+          "id": "codeCommune",
+          "title": "Code commune",
+          "primary": true
+        },
+        "x-cardinality": 34928,
+        "description": ""
+      },
+      {
+        "key": "dep",
+        "x-originalName": "DEP",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+        "title": "Code département",
+        "x-concept": {
+          "id": "codeDepartement",
+          "title": "Code département",
+          "primary": true
+        },
+        "x-cardinality": 101,
+        "description": ""
+      },
+      {
+        "key": "reg",
+        "x-originalName": "REG",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+        "title": "Région",
+        "x-labels": {
+          "11": "Ile-de-France",
+          "24": "Centre-Val de Loire",
+          "27": "Bourgogne-Franche-Comté",
+          "28": "Normandie",
+          "32": "Hauts-de-France",
+          "44": "Grand Est",
+          "52": "Pays de la Loire",
+          "53": "Bretagne",
+          "75": "Nouvelle-Aquitaine",
+          "76": "Occitanie",
+          "84": "Auvergne-Rhône-Alpes",
+          "93": "Provence-Alpes-Côte d'Azur",
+          "94": "Corse",
+          "01": "Guadeloupe",
+          "02": "Martinique",
+          "03": "Guyane",
+          "04": "La Réunion",
+          "06": "Mayotte"
+        },
+        "x-concept": {
+          "id": "codeRegion",
+          "title": "Code région",
+          "primary": true
+        },
+        "x-cardinality": 18,
+        "description": "",
+        "enum": [
+          "11",
+          "84",
+          "76",
+          "93",
+          "75",
+          "44",
+          "32",
+          "52",
+          "53",
+          "28",
+          "27",
+          "24",
+          "04",
+          "94",
+          "01",
+          "02",
+          "03",
+          "06"
+        ]
+      },
+      {
+        "key": "dom",
+        "x-originalName": "DOM",
+        "type": "string",
+        "title": "Domaine d'appartenance",
+        "x-labels": {
+          "A": "Services aux particuliers",
+          "B": "Commerces",
+          "C": "Enseignement",
+          "D": "Santé et action sociale",
+          "E": "Transports et déplacements",
+          "F": "Sports, loisirs et culture",
+          "G": "Tourisme"
+        },
+        "x-cardinality": 7,
+        "description": "",
+        "enum": [
+          "A",
+          "D",
+          "B",
+          "F",
+          "E",
+          "C",
+          "G"
+        ]
+      },
+      {
+        "key": "sdom",
+        "x-originalName": "SDOM",
+        "type": "string",
+        "title": "Sous-domaine d'appartenance",
+        "x-labels": {
+          "A1": "Services publics",
+          "A2": "Services généraux",
+          "A3": "Services automobiles",
+          "A4": "Artisanat du bâtiment",
+          "A5": "Autres services à la population",
+          "B1": "Grandes surfaces",
+          "B2": "Commerces alimentaires",
+          "B3": "Commerces spécialisés non-alimentaires",
+          "C1": "Enseignement du premier degré",
+          "C2": "Enseignement du second degré - premier cycle",
+          "C3": "Enseignement du second degré - second cycle",
+          "C4": "Enseignement supérieur non-universitaire",
+          "C5": "Enseignement supérieur universitaire",
+          "C6": "Formation continue",
+          "C7": "Autres services de l'éducation",
+          "D1": "Etablissements et services de santé",
+          "D2": "Fonctions médicales et paramédicales (à titre libéral)",
+          "D3": "Autres établissements et services à caractère sanitaire",
+          "D4": "Action sociale pour personnes âgées",
+          "D5": "Action sociale pour enfants en bas-âge",
+          "D6": "Action sociale pour handicapés",
+          "D7": "Autres services d'action sociale",
+          "E1": "Infrastructures de transports",
+          "F1": "Equipements sportifs",
+          "F2": "Equipements de loisirs",
+          "F3": "Equipements culturels et socioculturels",
+          "G1": "Tourisme"
+        },
+        "x-cardinality": 27,
+        "description": "",
+        "enum": [
+          "A4",
+          "A5",
+          "D2",
+          "B3",
+          "F1",
+          "B2",
+          "A3",
+          "E1",
+          "D5",
+          "A1",
+          "C1",
+          "A2",
+          "G1",
+          "D3",
+          "F2",
+          "F3",
+          "D6",
+          "D4",
+          "B1",
+          "D1",
+          "D7",
+          "C2",
+          "C6",
+          "C3",
+          "C4",
+          "C5",
+          "C7"
+        ]
+      },
+      {
+        "key": "typequ",
+        "x-originalName": "TYPEQU",
+        "type": "string",
+        "title": "Type d'équipement",
+        "x-labels": {
+          "A101": "POLICE-",
+          "A104": "GENDARMERIE",
+          "A105": "COUR D'APPEL (CA)",
+          "A108": "CONSEIL DE PRUD'HOMMES (CPH)",
+          "A109": "TRIBUNAL DE COMMERCE (TCO)",
+          "A120": "DRFIP (DIRECTION RÉGIONALE DES FINANCES PUBLIQUES)",
+          "A121": "DDFIP (DIRECTION DÉPARTEMENTALE DES FINANCES PUBLIQUES)",
+          "A122": "RÉSEAU DE PROXIMITÉ PÔLE EMPLOI",
+          "A124": "MAISON DE JUSTICE ET DU DROIT",
+          "A125": "ANTENNE DE JUSTICE",
+          "A126": "CONSEIL DÉPARTEMENTAL D'ACCÈS AU DROIT (CDAD)",
+          "A128": "IMPLANTATIONS FRANCE SERVICES (IFS)",
+          "A129": "MAIRIE",
+          "A130": "BUREAU D'AIDE JURIDICTIONNELLE (BAJ)",
+          "A131": "TRIBUNAL JUDICIAIRE (TJ)",
+          "A132": "TRIBUNAL DE PROXIMITÉ (TPRX)",
+          "A133": "DÉCHÈTERIE",
+          "A203": "BANQUE, CAISSE D'ÉPARGNE",
+          "A205": "SERVICES FUNÉRAIRES",
+          "A206": "BUREAU DE POSTE",
+          "A207": "RELAIS POSTE",
+          "A208": "AGENCE POSTALE",
+          "A301": "RÉPARATION AUTOMOBILE ET DE MATÉRIEL AGRICOLE",
+          "A302": "CONTRÔLE TECHNIQUE AUTOMOBILE",
+          "A303": "LOCATION AUTO-UTILITAIRES LÉGERS",
+          "A304": "ÉCOLE DE CONDUITE",
+          "A401": "MAÇON",
+          "A402": "PLÂTRIER PEINTRE",
+          "A403": "MENUISIER CHARPENTIER SERRURIER",
+          "A404": "PLOMBIER COUVREUR CHAUFFAGISTE",
+          "A405": "ÉLECTRICIEN",
+          "A406": "ENTREPRISE GÉNÉRALE DU BÂTIMENT",
+          "A501": "COIFFURE",
+          "A502": "VÉTÉRINAIRE",
+          "A503": "AGENCE DE TRAVAIL TEMPORAIRE",
+          "A504": "RESTAURANT- RESTAURATION RAPIDE",
+          "A505": "AGENCE IMMOBILIÈRE",
+          "A506": "PRESSING-LAVERIE AUTOMATIQUE",
+          "A507": "INSTITUT DE BEAUTÉ-ONGLERIE",
+          "B103": "GRANDE SURFACE DE BRICOLAGE",
+          "B104": "HYPERMARCHÉ ET GRAND MAGASIN",
+          "B105": "SUPERMARCHÉ ET MAGASIN MULTI-COMMERCE",
+          "B201": "SUPÉRETTE",
+          "B202": "ÉPICERIE",
+          "B204": "BOUCHERIE CHARCUTERIE",
+          "B205": "PRODUITS SURGELÉS",
+          "B206": "POISSONNERIE",
+          "B207": "BOULANGERIE-PÂTISSERIE",
+          "B208": "COMMERCE SPÉCIALISÉ EN FRUITS ET LÉGUMES",
+          "B209": "COMMERCE DE BOISSONS",
+          "B210": "AUTRES COMMERCES ALIMENTAIRES",
+          "B302": "MAGASIN DE VÊTEMENTS",
+          "B303": "MAGASIN D'ÉQUIPEMENTS DU FOYER",
+          "B304": "MAGASIN DE CHAUSSURES",
+          "B306": "MAGASIN DE MEUBLES",
+          "B307": "MAGASIN D'ARTICLES DE SPORTS ET DE LOISIRS",
+          "B308": "MAGASIN DE REVÊTEMENTS MURS ET SOLS",
+          "B309": "DROGUERIE QUINCAILLERIE BRICOLAGE",
+          "B310": "PARFUMERIE-COSMÉTIQUE",
+          "B311": "HORLOGERIE-BIJOUTERIE",
+          "B312": "FLEURISTE-JARDINERIE-ANIMALERIE",
+          "B313": "MAGASIN D'OPTIQUE",
+          "B315": "MAGASIN DE MATÉRIEL MÉDICAL ET ORTHOPÉDIQUE",
+          "B316": "STATION-SERVICE",
+          "B317": "COMMERCE DE TISSUS ET MERCERIE",
+          "B318": "COMMERCE DE JEUX ET JOUETS",
+          "B319": "MAROQUINERIE ET ARTICLES DE VOYAGE",
+          "B320": "COMMERCE DE COMBUSTIBLES DOMESTIQUES",
+          "B321": "MAGASIN ÉLECTROMÉNAGER, MATÉRIEL AUDIO VIDÉO INFORMATIQUE",
+          "B322": "MAGASIN DE MATÉRIELS DE TÉLÉCOMMUNICATION",
+          "B323": "COMMERCE DE BIENS D’OCCASION",
+          "B324": "LIBRAIRIE",
+          "B325": "PAPETERIE ET PRESSE",
+          "C107": "ÉCOLE MATERNELLE",
+          "C108": "ÉCOLE PRIMAIRE",
+          "C109": "ÉCOLE ÉLÉMENTAIRE",
+          "C201": "COLLÈGE",
+          "C301": "LYCÉE D'ENSEIGNEMENT GÉNÉRAL ET/OU TECHNOLOGIQUE",
+          "C302": "LYCÉE D'ENSEIGNEMENT PROFESSIONNEl",
+          "C303": "LYCÉE D'ENSEIGNEMENT TECHNIQUE ET/OU PROFESSIONNEL AGRICOLE",
+          "C304": "SGT SECTION D'ENSEIGNEMENT GÉNÉRAL ET TECHNOLOGIQUE",
+          "C305": "SEP SECTION D'ENSEIGNEMENT PROFESSIONNEl",
+          "C401": "STS SECTION TECHNICIEN SUPÉRIEUR, CPGE CLASSE PRÉPARATOIRE AUX GRANDES ÉCOLES",
+          "C402": "FORMATION SANTÉ",
+          "C403": "FORMATION COMMERCE",
+          "C409": "AUTRE FORMATION POST BAC NON UNIVERSITAIRE",
+          "C501": "UFR",
+          "C502": "INSTITUT UNIVERSITAIRE",
+          "C503": "ÉCOLE D'INGÉNIEURS",
+          "C504": "ENSEIGNEMENT GÉNÉRAL SUPÉRIEUR PRIVÉ",
+          "C505": "ÉCOLE D'ENSEIGNEMENT SUPÉRIEUR AGRICOLE",
+          "C509": "AUTRE ENSEIGNEMENT SUPÉRIEUR",
+          "C601": "CENTRE DE FORMATION D'APPRENTIS HORS AGRICULTURE",
+          "C602": "GRETA",
+          "C603": "CENTRE DISPENSANT DE LA FORMATION CONTINUE AGRICOLE",
+          "C604": "FORMATION AUX MÉTIERS DU SPORT",
+          "C605": "CENTRE DISPENSANT DES FORMATIONS D'APPRENTISSAGE AGRICOLE",
+          "C609": "AUTRE FORMATION CONTINUE",
+          "C701": "RÉSIDENCE UNIVERSITAIRE",
+          "C702": "RESTAURANT UNIVERSITAIRE",
+          "D101": "ÉTABLISSEMENT SANTÉ COURT SÉJOUR",
+          "D102": "ÉTABLISSEMENT SANTÉ MOYEN SÉJOUR",
+          "D103": "ÉTABLISSEMENT SANTÉ LONG SÉJOUR",
+          "D104": "ÉTABLISSEMENT PSYCHIATRIQUE",
+          "D105": "CENTRE LUTTE CANCER",
+          "D106": "URGENCES",
+          "D107": "MATERNITÉ",
+          "D108": "CENTRE DE SANTÉ",
+          "D109": "STRUCTURE PSYCHIATRIQUE EN AMBULATOIRE",
+          "D110": "CENTRE MÉDECINE PRÉVENTIVE",
+          "D111": "DIALYSE",
+          "D112": "HOSPITALISATION À DOMICILE",
+          "D113": "MAISON DE SANTÉ PLURIDISCIPLINAIRE",
+          "D201": "MÉDECIN GÉNÉRALISTE",
+          "D202": "SPÉCIALISTE EN CARDIOLOGIE",
+          "D203": "SPÉCIALISTE EN DERMATOLOGIE VÉNÉRÉOLOGIE",
+          "D206": "SPÉCIALISTE EN GASTRO-ENTÉROLOGIE HÉPATOLOGIE",
+          "D207": "SPÉCIALISTE EN PSYCHIATRIE",
+          "D208": "SPÉCIALISTE EN OPHTALMOLOGIE",
+          "D209": "SPÉCIALISTE EN OTO-RHINO-LARYNGOLOGIE",
+          "D210": "SPÉCIALISTE EN PÉDIATRIE",
+          "D211": "SPÉCIALISTE EN PNEUMOLOGIE",
+          "D212": "SPÉCIALISTE EN RADIODIAGNOSTIC ET IMAGERIE MÉDICALE",
+          "D213": "SPÉCIALISTE EN STOMATOLOGIE",
+          "D214": "SPÉCIALISTE EN GYNÉCOLOGIE (MÉDICALE ET/OU OBSTÉTRIQUE)",
+          "D221": "CHIRURGIEN DENTISTE",
+          "D231": "SAGE-FEMME",
+          "D233": "MASSEUR KINÉSITHÉRAPEUTE",
+          "D235": "ORTHOPHONISTE",
+          "D236": "ORTHOPTISTE",
+          "D237": "PÉDICURE-PODOLOGUE",
+          "D238": "AUDIO PROTHÉSISTE",
+          "D239": "ERGOTHÉRAPEUTE",
+          "D240": "PSYCHOMOTRICIEN",
+          "D242": "DIÉTÉTICIEN",
+          "D243": "PSYCHOLOGUE",
+          "D244": "INFIRMIER",
+          "D302": "LABORATOIRE D ANALYSES ET DE BIOLOGIE MÉDICALE",
+          "D303": "AMBULANCE",
+          "D304": "TRANSFUSION SANGUINE",
+          "D305": "ÉTABLISSEMENT THERMAl",
+          "D307": "PHARMACIE",
+          "D401": "PERSONNES ÂGÉES : HÉBERGEMENT",
+          "D402": "PERSONNES ÂGÉES : SOINS À DOMICILE",
+          "D403": "PERSONNES ÂGÉES : SERVICES D'AIDE",
+          "D502": "ÉTABLISSEMENT D'ACCUEIL DU JEUNE ENFANT (EAJE)",
+          "D503": "LIEUX D'ACCUEIL ENFANT-PARENT (LAEP)",
+          "D504": "RELAIS PETITE ENFANCE",
+          "D505": "ACCUEIL DE LOISIR SANS HÉBERGEMENT (ALSH)",
+          "D506": "CENTRES SOCIAUX",
+          "D507": "MÉDIATION FAMILIALE",
+          "D601": "ENFANTS HANDICAPÉS : HÉBERGEMENT",
+          "D602": "ENFANTS HANDICAPÉS : SERVICES À DOMICILE OU AMBULATOIRES",
+          "D603": "ADULTES HANDICAPÉS : ACCUEIL/HÉBERGEMENT",
+          "D604": "ADULTES HANDICAPÉS : SERVICES D'AIDE",
+          "D605": "TRAVAIL PROTÉGÉ",
+          "D606": "ADULTES HANDICAPÉS : SERVICES DE SOINS À DOMICILE",
+          "D701": "PROTECTION DE L'ENFANCE - HÉBERGEMENT",
+          "D702": "PROTECTION DE L'ENFANCE - ACTION ÉDUCATIVE",
+          "D703": "CHRS : CENTRE D'HÉBERGEMENT ET DE RÉINSERTION SOCIALE",
+          "D704": "CENTRE PROVISOIRE D'HÉBERGEMENT",
+          "D705": "CENTRE ACCUEIL DEMANDEUR D'ASILE",
+          "D709": "AUTRES ÉTABLISSEMENTS POUR ADULTES ET FAMILLES EN DIFFICULTÉ",
+          "E101": "TAXI-VTC",
+          "E102": "AÉROPORT",
+          "E107": "GARE DE VOYAGEURS D'INTÉRÊT NATIONAl",
+          "E108": "GARE DE VOYAGEURS D'INTÉRÊT RÉGIONAl",
+          "E109": "GARE DE VOYAGEURS D'INTÉRÊT LOCAl",
+          "F101": "BASSIN DE NATATION",
+          "F102": "BOULODROME",
+          "F103": "TENNIS",
+          "F104": "ÉQUIPEMENT DE CYCLISME",
+          "F105": "DOMAINE SKIABLE",
+          "F106": "CENTRE ÉQUESTRE",
+          "F107": "ATHLÉTISME",
+          "F108": "TERRAIN DE GOLF",
+          "F109": "PARCOURS SPORTIF/SANTÉ",
+          "F110": "SPORTS DE GLACE",
+          "F111": "PLATEAUX ET TERRAINS DE JEUX EXTÉRIEURS",
+          "F112": "SALLES SPÉCIALISÉES",
+          "F113": "TERRAINS DE GRANDS JEUX",
+          "F114": "SALLES DE COMBAT",
+          "F116": "SALLES NON SPÉCIALISÉES",
+          "F117": "ROLLER-SKATE-VÉLO BICROSS OU FREESTYLE",
+          "F118": "SPORTS NAUTIQUES",
+          "F119": "BOWLING",
+          "F120": "SALLES DE REMISE EN FORME",
+          "F121": "SALLES MULTISPORTS (GYMNASES)",
+          "F122": "CIRCUIT / PISTE DE SPORTS MÉCANIQUES",
+          "F123": "MUR ET FRONTON",
+          "F124": "PAS DE TIR",
+          "F125": "SITE D'ACTIVITÉS AÉRIENNES",
+          "F126": "SITE DE MODÉLISME",
+          "F201": "BAIGNADE AMENAGÉE",
+          "F202": "PORT DE PLAISANCE – MOUILLAGE",
+          "F203": "BOUCLE DE RANDONNÉE",
+          "F204": "ÉQUIPEMENTS DE SPORTS DE NATURE",
+          "F303": "CINÉMA",
+          "F305": "CONSERVATOIRE",
+          "F307": "BIBLIOTHÈQUE",
+          "F312": "EXPOSITION ET MEDIATION CULTURELLE",
+          "F313": "ESPACE REMARQUABLE ET PATRIMOINE",
+          "F314": "ARCHIVES",
+          "F315": "ARTS DU SPECTACLE",
+          "G101": "AGENCE DE VOYAGE",
+          "G102": "HÔTEl",
+          "G103": "CAMPING",
+          "G104": "INFORMATION TOURISTIQUE",
+          "G105": "AUTRES HÉBERGEMENTS COLLECTIFS TOURISTIQUES (AHCT)"
+        },
+        "x-cardinality": 209,
+        "description": ""
+      },
+      {
+        "key": "siret",
+        "x-originalName": "SIRET",
+        "type": "string",
+        "x-refersTo": "http://www.datatourisme.fr/ontology/core/1.0/#siret",
+        "title": "Numéro SIRET",
+        "x-concept": {
+          "id": "siret",
+          "title": "SIRET",
+          "primary": true
+        },
+        "x-cardinality": 1989728,
+        "description": ""
+      },
+      {
+        "key": "statut_diffusion",
+        "x-originalName": "STATUT_DIFFUSION",
+        "type": "string",
+        "x-labels": {
+          "O": "Diffusion totale",
+          "P": "Diffusion partielle",
+          "_Z": "Sans objet"
+        },
+        "title": "Statut de diffusion Sirene",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "O",
+          "_Z",
+          "P"
+        ]
+      },
+      {
+        "key": "cantine",
+        "x-originalName": "CANTINE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence ou absence d'une cantine",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "0",
+          "_U"
+        ]
+      },
+      {
+        "key": "internat",
+        "x-originalName": "INTERNAT",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence ou absence d'un internat",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1",
+          "_U"
+        ]
+      },
+      {
+        "key": "rpi",
+        "x-originalName": "RPI",
+        "type": "string",
+        "x-labels": {
+          "C": "RPI concentré",
+          "D": "RPI dispersé",
+          "_Z": "Sans objet"
+        },
+        "title": "Type de regroupement pédagogique intercommunal",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "_Z",
+          "D",
+          "C"
+        ]
+      },
+      {
+        "key": "ep",
+        "x-originalName": "EP",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence ou absence d'un dispositif d'éducation prioritaire",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "key": "cl_pge",
+        "x-originalName": "CL_PGE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence ou absence d'une classe préparatoire aux grandes écoles en lycée",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "key": "sect",
+        "x-originalName": "SECT",
+        "type": "string",
+        "x-labels": {
+          "PR": "Secteur privé",
+          "PU": "Secteur public",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Appartenance au secteur public ou privé d'enseignement",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "_Z",
+          "PU",
+          "PR"
+        ]
+      },
+      {
+        "key": "acces_aire_pratique",
+        "x-originalName": "ACCES_AIRE_PRATIQUE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Aménagement permettant l'accessibilité",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "0",
+          "_U"
+        ]
+      },
+      {
+        "key": "acces_libre",
+        "x-originalName": "ACCES_LIBRE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Accès libre permanent",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1",
+          "_U"
+        ]
+      },
+      {
+        "key": "acces_sanitaire",
+        "x-originalName": "ACCES_SANITAIRE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Accessibilité des sanitaires",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1",
+          "_U"
+        ]
+      },
+      {
+        "key": "acces_vestiaire",
+        "x-originalName": "ACCES_VESTIAIRE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Accessibilité des vestiaires",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "_U",
+          "1"
+        ]
+      },
+      {
+        "key": "capacite_d_accueil",
+        "x-originalName": "CAPACITE_D_ACCUEIL",
+        "type": "string",
+        "x-labels": {
+          "1": "Au-dessus de 1500 personnes",
+          "2": "De 701 à 1500 personnes",
+          "3": "De 301 à 700 Personnes",
+          "4": "De 101 à 300 personnes",
+          "5": "Inférieur ou égal à 100 personnes",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Catégorie d’ERP",
+        "x-cardinality": 7,
+        "description": "",
+        "enum": [
+          "_Z",
+          "_U",
+          "5",
+          "3",
+          "4",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "key": "pres_douche",
+        "x-originalName": "PRES_DOUCHE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence de douches",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1",
+          "_U"
+        ]
+      },
+      {
+        "key": "pres_sanitaire",
+        "x-originalName": "PRES_SANITAIRE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence de sanitaires",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "0",
+          "_U"
+        ]
+      },
+      {
+        "key": "saisonnier",
+        "x-originalName": "SAISONNIER",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Ouverture exclusivement saisonnière",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1",
+          "_U"
+        ]
+      },
+      {
+        "key": "couvert",
+        "x-originalName": "COUVERT",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Partie couverte",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1",
+          "_U"
+        ]
+      },
+      {
+        "key": "eclaire",
+        "x-originalName": "ECLAIRE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Partie éclairée",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "0",
+          "_U"
+        ]
+      },
+      {
+        "key": "categorie",
+        "x-originalName": "CATEGORIE",
+        "type": "string",
+        "title": "Catégorie d'équipement culturel",
+        "x-cardinality": 43,
+        "description": "",
+        "enum": [
+          "_Z",
+          "TYPE 3",
+          "TYPE 1",
+          "TYPE 2",
+          "ART ET ESSAI",
+          "MUSÉE DE FRANCE",
+          "ARCHIVES COMMUNALES",
+          "THÉÂTRE DE VILLE",
+          "JARDIN REMARQUABLE",
+          "MICROFOLIE",
+          "MAISON DES ILLUSTRES",
+          "CONSERVATOIRE À RAYONNEMENT COMMUNAL",
+          "COMPAGNIE AVEC LIEU",
+          "ARCHIVES DÉPARTEMENTALES",
+          "SCÈNE NATIONALE",
+          "SCÈNE CONVENTIONNÉE D’INTÉRÊT NATIONAL",
+          "CONSERVATOIRE À RAYONNEMENT DÉPARTEMENTAL",
+          "SCÈNE DE MUSIQUES ACTUELLES",
+          "CONSERVATOIRE À RAYONNEMENT INTERCOMMUNAL",
+          "MONUMENT NATIONAL",
+          "THÉÂTRE HORS LABEL",
+          "THÉÂTRE PRIVÉ",
+          "CONSERVATOIRE À RAYONNEMENT RÉGIONAL",
+          "CENTRE D’ART CONTEMPORAIN D’INTÉRÊT NATIONAL",
+          "CENTRE DRAMATIQUE NATIONAL",
+          "FONDS RÉGIONAL D'ART CONTEMPORAIN",
+          "ARCHIVES RÉGIONALES",
+          "CENTRE CULTUREL DE RENCONTRE",
+          "CENTRE CHORÉGRAPHIQUE NATIONAL",
+          "ZÉNITH",
+          "CENTRE D'ART CONTEMPORAIN HORS LABEL",
+          "ORCHESTRE NATIONAL EN RÉGION",
+          "CENTRE DE DÉVELOPPEMENT CHORÉGRAPHIQUE NATIONAL",
+          "CENTRE NATIONAL DES ARTS DE LA RUE ET DE L’ESPACE PUBLIC",
+          "PÔLE NATIONAL CIRQUE",
+          "THÉÂTRE NATIONAL",
+          "CENTRE NATIONAL DE CRÉATION MUSICALE",
+          "OPÉRA NATIONAL EN RÉGION",
+          "CENTRE NATIONAL DE LA MARIONNETTE",
+          "ARCHIVES NATIONALES",
+          "THÉATRE LYRIQUE D'INTÉRÊT NATIONAL",
+          "OPÉRA NATIONAL",
+          "ETABLISSEMENT PUBLIC NATIONAL"
+        ]
+      },
+      {
+        "key": "multiplexe",
+        "x-originalName": "MULTIPLEXE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence d’un cinéma multiplexe",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "key": "accueil",
+        "x-originalName": "ACCUEIL",
+        "type": "string",
+        "title": "Type d'accueil",
+        "x-cardinality": 18,
+        "description": "",
+        "enum": [
+          "_Z",
+          "PÉRISCOLAIRE HORS TAP",
+          "EXTRASCOLAIRE",
+          "MULTI ACCUEIL COLLECTIF",
+          "PÉRISCOLAIRE TAP ET PÉRISCOLAIRE HORS TAP",
+          "DÉCLARÉ ALSH",
+          "CRÈCHE COLLECTIVE",
+          "MICRO CRÈCHE",
+          "HALTE GARDERIE COLLECTIVE",
+          "CRÈCHE FAMILIALE",
+          "CONVENTIONNÉ ACCUEIL DE JEUNES",
+          "DÉCLARÉ ALSH ET CONVENTIONNÉ ACCUEIL DE JEUNES",
+          "PÉRISCOLAIRE TAP",
+          "JARDIN D'ENFANTS",
+          "CRÈCHE PARENTALE",
+          "MULTI ACCUEIL COLLECTIF ET FAMILIAL",
+          "MULTI ACCUEIL PARENTAL",
+          "HALTE GARDERIE PARENTALE"
+        ]
+      },
+      {
+        "key": "itinerance",
+        "x-originalName": "ITINERANCE",
+        "type": "string",
+        "x-labels": {
+          "0": "Absence",
+          "1": "Présence",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Présence d’une structure itinérante",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          "_Z",
+          "0",
+          "1"
+        ]
+      },
+      {
+        "key": "mode_gestion",
+        "x-originalName": "MODE_GESTION",
+        "type": "string",
+        "x-labels": {
+          "ENTRE": "Marché de prestation de service",
+          "GESDE": "Délégation de service public",
+          "PRIVE": "Gestion privée",
+          "REGIE": "Régie",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Mode de gestion",
+        "x-cardinality": 6,
+        "description": "",
+        "enum": [
+          "_Z",
+          "REGIE",
+          "ENTRE",
+          "GESDE",
+          "PRIVE",
+          "_U"
+        ]
+      },
+      {
+        "key": "sstypheb",
+        "x-originalName": "SSTYPHEB",
+        "type": "string",
+        "x-labels": {
+          "AH": "Autres hébergements",
+          "RT": "Résidence de tourisme",
+          "VV": "Village vacances",
+          "_Z": "Sans objet"
+        },
+        "title": "Sous-type d'hébergement",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "RT",
+          "VV",
+          "AH"
+        ]
+      },
+      {
+        "key": "type",
+        "x-originalName": "TYPE",
+        "type": "string",
+        "x-labels": {
+          "ANT": "Antenne",
+          "LF": "Lieu fixe",
+          "MO": "Mobile",
+          "MS": "Multi-sites",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Type de lieux",
+        "x-cardinality": 5,
+        "description": "",
+        "enum": [
+          "_Z",
+          "LF",
+          "MS",
+          "ANT",
+          "MO"
+        ]
+      },
+      {
+        "key": "capacite",
+        "x-originalName": "CAPACITE",
+        "type": "integer",
+        "title": "Capacité",
+        "x-cardinality": 1938,
+        "description": ""
+      },
+      {
+        "key": "indic_capa",
+        "x-originalName": "INDIC_CAPA",
+        "type": "boolean",
+        "title": "Concerné par la capacité",
+        "x-cardinality": 2,
+        "description": "",
+        "enum": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "key": "nbequident",
+        "x-originalName": "NBEQUIDENT",
+        "type": "integer",
+        "title": "Nombre d'équipements identiques",
+        "x-cardinality": 43,
+        "description": ""
+      },
+      {
+        "key": "indic_nbequident",
+        "x-originalName": "INDIC_NBEQUIDENT",
+        "type": "boolean",
+        "title": "Concerné par le nombre d'infrastructures",
+        "x-cardinality": 2,
+        "description": "",
+        "enum": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "key": "nbsalles",
+        "x-originalName": "NBSALLES",
+        "type": "integer",
+        "title": "Nombre de salles",
+        "x-cardinality": 5,
+        "description": ""
+      },
+      {
+        "key": "indic_nbsalles",
+        "x-originalName": "INDIC_NBSALLES",
+        "type": "boolean",
+        "title": "Concerné par le nombre de salles",
+        "x-cardinality": 2,
+        "description": "",
+        "enum": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "key": "nblieux",
+        "x-originalName": "NBLIEUX",
+        "type": "integer",
+        "title": "Nombre de lieux",
+        "x-cardinality": 14,
+        "description": ""
+      },
+      {
+        "key": "indic_nblieux",
+        "x-originalName": "INDIC_NBLIEUX",
+        "type": "boolean",
+        "title": "Concerné par le nombre de lieux",
+        "x-cardinality": 2,
+        "description": "",
+        "enum": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "key": "lambert_x",
+        "x-originalName": "LAMBERT_X",
+        "type": "number",
+        "x-refersTo": "http://data.ign.fr/def/geometrie#coordX",
+        "title": "Coordonnée X de l'équipement",
+        "x-concept": {
+          "id": "coordX",
+          "title": "Coordonnée X",
+          "primary": true
+        },
+        "x-cardinality": 1572792,
+        "description": ""
+      },
+      {
+        "key": "lambert_y",
+        "x-originalName": "LAMBERT_Y",
+        "type": "number",
+        "x-refersTo": "http://data.ign.fr/def/geometrie#coordY",
+        "title": "Coordonnée Y de l'équipement",
+        "x-concept": {
+          "id": "coordY",
+          "title": "Coordonnée Y (projection libre)",
+          "primary": true
+        },
+        "x-cardinality": 1557537,
+        "description": ""
+      },
+      {
+        "key": "longitude",
+        "x-originalName": "LONGITUDE",
+        "type": "number",
+        "x-refersTo": "http://schema.org/longitude",
+        "title": "Longitude",
+        "x-concept": {
+          "id": "longitude",
+          "title": "Longitude",
+          "primary": true
+        },
+        "description": ""
+      },
+      {
+        "key": "latitude",
+        "x-originalName": "LATITUDE",
+        "type": "number",
+        "x-refersTo": "http://schema.org/latitude",
+        "title": "Latitude",
+        "x-concept": {
+          "id": "latitude",
+          "title": "Latitude",
+          "primary": true
+        },
+        "description": ""
+      },
+      {
+        "key": "qualite_xy",
+        "x-originalName": "QUALITE_XY",
+        "type": "string",
+        "title": "Qualité de géolocalisation",
+        "x-labels": {
+          "B": "Bonne",
+          "A": "Acceptable",
+          "M": "Mauvaise",
+          "_Z": "Non-géolocalisé",
+          "_U": "Indéterminée"
+        },
+        "x-cardinality": 5,
+        "description": "",
+        "enum": [
+          "B",
+          "_U",
+          "M",
+          "A",
+          "_Z"
+        ]
+      },
+      {
+        "key": "epsg",
+        "x-originalName": "EPSG",
+        "type": "integer",
+        "title": "Code EPSG du système de coordonnées",
+        "x-labels": {
+          "2154": "Lambert 93",
+          "2972": "UTM 22 Nord",
+          "2975": "UTM 40 Sud",
+          "4471": "UTM 38 Sud",
+          "5490": "UTM 20 Nord"
+        },
+        "x-cardinality": 5,
+        "description": "",
+        "enum": [
+          2154,
+          5490,
+          2975,
+          2972,
+          4471
+        ]
+      },
+      {
+        "key": "qualite_geoloc",
+        "x-originalName": "QUALITE_GEOLOC",
+        "type": "string",
+        "title": "Précision du repérage par l’adresse",
+        "x-labels": {
+          "11": "Voie sûre, Numéro trouvé",
+          "12": "Voie sûre, Position aléatoire dans la voie",
+          "21": "Voie probable, Numéro trouvé",
+          "22": "Voie probable, Position aléatoire dans la voie",
+          "33": "Voie inconnue, Position aléatoire dans la commune",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "x-cardinality": 7,
+        "description": "",
+        "enum": [
+          "11",
+          "_Z",
+          "12",
+          "_U",
+          "33",
+          "21",
+          "22"
+        ]
+      },
+      {
+        "key": "tr_dist_precision",
+        "x-originalName": "TR_DIST_PRECISION",
+        "type": "string",
+        "x-labels": {
+          "< 100": "Moins de 100 mètres",
+          ">= 500": "500 mètres ou plus",
+          "[100 - 500[": "De 100 à moins de 500 mètres",
+          "_U": "Indéterminé",
+          "_Z": "Sans objet"
+        },
+        "title": "Erreur maximum de positionnement dans la voie ou le lieu-dit",
+        "x-cardinality": 5,
+        "description": "",
+        "enum": [
+          "< 100",
+          "_U",
+          "[100 - 500[",
+          ">= 500",
+          "_Z"
+        ]
+      },
+      {
+        "key": "dciris",
+        "x-originalName": "DCIRIS",
+        "type": "string",
+        "title": "Code IRIS d'implantation",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeIRIS",
+        "x-concept": {
+          "id": "codeIRIS",
+          "title": "Code IRIS",
+          "primary": true
+        },
+        "x-cardinality": 51095,
+        "description": ""
+      },
+      {
+        "key": "quali_iris",
+        "x-originalName": "QUALI_IRIS",
+        "type": "string",
+        "title": "Indicateur de qualité du géoréférencement dans l'iris",
+        "x-labels": {
+          "1": "Appartenance sûre au zonage",
+          "2": "Appartenance probable au zonage",
+          "3": "Appartenance aléatoire ou indéterminée au zonage",
+          "X": "Non concerné par le zonage"
+        },
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "1",
+          "_Z",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "key": "irisee",
+        "x-originalName": "IRISEE",
+        "type": "boolean",
+        "title": "Irisation de la commune",
+        "x-cardinality": 2,
+        "description": "",
+        "enum": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "qp2015",
+        "x-originalName": "QP2015",
+        "type": "string",
+        "title": "Quartier prioritaire de la politique de la ville 2015",
+        "x-cardinality": 1403,
+        "description": ""
+      },
+      {
+        "key": "quali_qp2015",
+        "x-originalName": "QUALI_QP2015",
+        "type": "string",
+        "x-labels": {
+          "1": "Appartenance sûre au zonage",
+          "2": "Appartenance probable au zonage",
+          "3": "Appartenance aléatoire ou indéterminée au zonage",
+          "_Z": "Sans objet"
+        },
+        "title": "Qualité du géoréférencement dans le quartier prioritaire 2015",
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "key": "qp",
+        "x-originalName": "QP",
+        "type": "string",
+        "x-refersTo": "https://sig.ville.gouv.fr/qpv",
+        "title": "Quartier prioritaire de la politique de la ville",
+        "x-concept": {
+          "id": "qpv",
+          "title": "Quartier prioritaire (QPV)",
+          "primary": true
+        },
+        "x-cardinality": 1365,
+        "description": ""
+      },
+      {
+        "key": "quali_qp",
+        "x-originalName": "QUALI_QP",
+        "type": "string",
+        "title": "Qualité du géoréférencement dans le quartier prioritaire",
+        "x-labels": {
+          "1": "Appartenance sûre au zonage",
+          "2": "Appartenance probable au zonage",
+          "3": "Appartenance aléatoire ou indéterminée au zonage",
+          "_Z": "Sans objet"
+        },
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "key": "qva",
+        "x-originalName": "QVA",
+        "type": "string",
+        "title": "Quartier de veille active",
+        "x-cardinality": 799,
+        "description": ""
+      },
+      {
+        "key": "quali_qva",
+        "x-originalName": "QUALI_QVA",
+        "type": "string",
+        "title": "Qualité du géoréférencement dans le quartier de veille active",
+        "x-labels": {
+          "1": "Appartenance sûre au zonage",
+          "2": "Appartenance probable au zonage",
+          "3": "Appartenance aléatoire ou indéterminée au zonage",
+          "_Z": "Sans objet"
+        },
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "key": "zus",
+        "x-originalName": "ZUS",
+        "type": "string",
+        "title": "Zone urbaine sensible",
+        "x-cardinality": 751,
+        "description": ""
+      },
+      {
+        "key": "quali_zus",
+        "x-originalName": "QUALI_ZUS",
+        "type": "string",
+        "title": "Qualité du géoréférencement dans la zone urbaine sensible",
+        "x-labels": {
+          "1": "Appartenance sûre au zonage",
+          "2": "Appartenance probable au zonage",
+          "3": "Appartenance aléatoire ou indéterminée au zonage",
+          "_Z": "Sans objet"
+        },
+        "x-cardinality": 4,
+        "description": "",
+        "enum": [
+          "_Z",
+          "1",
+          "3",
+          "2"
+        ]
+      },
+      {
+        "key": "epci",
+        "x-originalName": "EPCI",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#EtablissementPublicDeCooperationIntercommunale",
+        "title": "Etablissement public de coopération intercommunal",
+        "x-concept": {
+          "id": "codeEPCI",
+          "title": "Code EPCI",
+          "primary": true
+        },
+        "x-cardinality": 1256,
+        "description": ""
+      },
+      {
+        "key": "uu2020",
+        "x-originalName": "UU2020",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#UniteUrbaine2020",
+        "title": "Unité urbaine 2020",
+        "x-concept": {
+          "id": "uniteUrbaine2020",
+          "title": "Code unité urbaine 2020",
+          "primary": true
+        },
+        "x-cardinality": 2470,
+        "description": ""
+      },
+      {
+        "key": "bv2022",
+        "x-originalName": "BV2022",
+        "type": "integer",
+        "title": "Bassin de vie 2022",
+        "x-cardinality": 1691,
+        "description": ""
+      },
+      {
+        "key": "aav2020",
+        "x-originalName": "AAV2020",
+        "type": "string",
+        "title": "Zonage en aire d'attraction des villes 2020",
+        "x-cardinality": 700,
+        "description": ""
+      },
+      {
+        "key": "dens3",
+        "x-originalName": "DENS3",
+        "type": "integer",
+        "x-labels": {
+          "1": "Communes densément peuplées",
+          "2": "Communes de densité intermédiaire",
+          "3": "Communes rurales"
+        },
+        "title": "Grille communale de densité à 3 niveaux",
+        "x-cardinality": 3,
+        "description": "",
+        "enum": [
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "key": "dens7",
+        "x-originalName": "DENS7",
+        "type": "integer",
+        "x-labels": {
+          "1": "Grands centres urbains",
+          "2": "Centres urbains intermédiaires",
+          "3": "Petites villes",
+          "4": "Ceintures urbaines",
+          "5": "Bourgs ruraux",
+          "6": "Rural à habitat dispersé",
+          "7": "Rural à habitat très dispersé"
+        },
+        "title": "Grille communale de densité à 3 niveaux",
+        "x-cardinality": 7,
+        "description": "",
+        "enum": [
+          1,
+          5,
+          2,
+          6,
+          4,
+          3,
+          7
+        ]
+      },
+      {
+        "key": "_infos_commune.nom_departement",
+        "x-originalName": "_infos_commune.nom_departement",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Nom département",
+        "description": "Nom du département",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#Departement",
+        "x-concept": {
+          "id": "departement",
+          "title": "Département",
+          "primary": true
+        }
+      },
+      {
+        "key": "_infos_commune.nom_epci",
+        "x-originalName": "_infos_commune.nom_epci",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Nom EPCI",
+        "description": "Nom de l'établissement public de coopération intercommunale",
+        "type": "string"
+      },
+      {
+        "key": "_infos_commune._error",
+        "type": "string",
+        "x-originalName": "_error",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Erreur de récupération de données de référence",
+        "description": "Une erreur lors de la récupération des informations depuis un service distant",
+        "x-calculated": true
+      },
+      {
+        "x-calculated": true,
+        "key": "_geopoint",
+        "type": "string",
+        "title": "Coordonnée géographique",
+        "description": "Centroïde au format \"lat,lon\"",
+        "x-refersTo": "http://www.w3.org/2003/01/geo/wgs84_pos#lat_long",
+        "x-concept": {
+          "id": "latLon",
+          "title": "Latitude / Longitude",
+          "primary": true
+        }
+      },
+      {
+        "x-calculated": true,
+        "key": "_id",
+        "type": "string",
+        "format": "uri-reference",
+        "title": "Identifiant",
+        "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+      },
+      {
+        "x-calculated": true,
+        "key": "_i",
+        "type": "integer",
+        "title": "Numéro de ligne",
+        "description": "Indice de la ligne dans le fichier d'origine"
+      },
+      {
+        "x-calculated": true,
+        "key": "_rand",
+        "type": "integer",
+        "title": "Nombre aléatoire",
+        "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      }
+    ]
+  },
+  "loyers": {
+    "id": "358lpu2hhbmw7l560-uskijn",
+    "title": "Indicateurs de loyers d'annonce par commune - maison - 2025",
+    "finalizedAt": "2026-01-12T09:11:07.679Z",
+    "schema": [
+      {
+        "key": "id_zone",
+        "x-originalName": "id_zone",
+        "type": "integer",
+        "x-cardinality": 2198,
+        "description": "Identification de la maille utilisée pour l’estimation de l’indicateur",
+        "title": "Identifiant maille"
+      },
+      {
+        "key": "insee_c",
+        "x-originalName": "INSEE_C",
+        "type": "integer",
+        "x-cardinality": 34465,
+        "description": "Code INSEE de la commune - Géographie au 1er janvier 2025",
+        "title": "Code commune"
+      },
+      {
+        "key": "libgeo",
+        "x-originalName": "LIBGEO",
+        "type": "string",
+        "x-cardinality": 32636,
+        "description": "",
+        "title": "Nom de la commune"
+      },
+      {
+        "key": "epci",
+        "x-originalName": "EPCI",
+        "type": "string",
+        "x-cardinality": 1251,
+        "description": "",
+        "title": "Siren de l’EPCI"
+      },
+      {
+        "key": "dep",
+        "x-originalName": "DEP",
+        "type": "string",
+        "x-cardinality": 100,
+        "description": "",
+        "title": "Code du département"
+      },
+      {
+        "key": "reg",
+        "x-originalName": "REG",
+        "type": "integer",
+        "x-cardinality": 17,
+        "enum": [
+          44,
+          76,
+          75,
+          84,
+          32,
+          27,
+          28,
+          24,
+          11,
+          52,
+          53,
+          93,
+          94,
+          2,
+          1,
+          4,
+          3
+        ],
+        "description": "",
+        "title": "Code de la région"
+      },
+      {
+        "key": "loypredm2",
+        "x-originalName": "loypredm2",
+        "type": "number",
+        "x-cardinality": 5731,
+        "description": "Loyer d’annonces, charges comprises pour un bien de référence non meublé, pour une annonce mise en ligne au T3 2025",
+        "title": "Indicateur de loyer en €/m2"
+      },
+      {
+        "key": "lwripm2",
+        "x-originalName": "lwr.IPm2",
+        "type": "number",
+        "x-cardinality": 5659,
+        "description": "",
+        "title": "Borne basse intervalle de prédiction"
+      },
+      {
+        "key": "upripm2",
+        "x-originalName": "upr.IPm2",
+        "type": "number",
+        "x-cardinality": 5698,
+        "description": "",
+        "title": "Borne haute intervalle de prédiction"
+      },
+      {
+        "key": "typpred",
+        "x-originalName": "TYPPRED",
+        "type": "string",
+        "x-cardinality": 3,
+        "enum": [
+          "maille",
+          "commune",
+          "EPCI"
+        ],
+        "description": "",
+        "title": "Niveau de la prédiction"
+      },
+      {
+        "key": "nbobs_com",
+        "x-originalName": "nbobs_com",
+        "type": "integer",
+        "x-cardinality": 769,
+        "description": "",
+        "title": "Nombre d’observations dans la commune"
+      },
+      {
+        "key": "nbobs_mail",
+        "x-originalName": "nbobs_mail",
+        "type": "integer",
+        "x-cardinality": 679,
+        "description": "",
+        "title": "Nombre d’observations dans la maille"
+      },
+      {
+        "key": "r2_adj",
+        "x-originalName": "R2_adj",
+        "type": "number",
+        "x-cardinality": 2217,
+        "description": "Le coefficient de détermination est d’autant plus élevé que la valeur de l’indicateur est proche des loyers observés dans les annonces. Le R², compris entre 0 et 1, est jugé bon quand sa valeur est supérieure à 0,5",
+        "title": "Coefficient de détermination"
+      },
+      {
+        "x-calculated": true,
+        "key": "_id",
+        "type": "string",
+        "format": "uri-reference",
+        "title": "Identifiant",
+        "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+      },
+      {
+        "x-calculated": true,
+        "key": "_i",
+        "type": "integer",
+        "title": "Numéro de ligne",
+        "description": "Indice de la ligne dans le fichier d'origine"
+      },
+      {
+        "x-calculated": true,
+        "key": "_rand",
+        "type": "integer",
+        "title": "Nombre aléatoire",
+        "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      }
+    ]
+  },
+  "rne": {
+    "id": "qwhvisdr1tuyecl76qrcnmep",
+    "title": "RNE - Conseillers régionaux",
+    "finalizedAt": "2025-10-13T12:53:11.929Z",
+    "schema": [
+      {
+        "key": "code_de_la_region",
+        "x-originalName": "Code de la région",
+        "type": "string",
+        "x-cardinality": 14,
+        "description": "",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+        "x-concept": {
+          "id": "codeRegion",
+          "title": "Code région",
+          "primary": true
+        },
+        "enum": [
+          "11",
+          "84",
+          "75",
+          "32",
+          "44",
+          "76",
+          "93",
+          "28",
+          "27",
+          "52",
+          "53",
+          "24",
+          "04",
+          "01"
+        ]
+      },
+      {
+        "key": "libelle_de_la_region",
+        "x-originalName": "Libellé de la région",
+        "type": "string",
+        "x-cardinality": 14,
+        "description": "Libellé de la région",
+        "title": "Libellé région",
+        "enum": [
+          "Île-De-France",
+          "Auvergne-Rhône-Alpes",
+          "Nouvelle-Aquitaine",
+          "Hauts-De-France",
+          "Grand Est",
+          "Occitanie",
+          "Provence-Alpes-Cote D'Azur",
+          "Normandie",
+          "Bourgogne-Franche-Comté",
+          "Pays De La Loire",
+          "Bretagne",
+          "Centre-Val De Loire",
+          "La Réunion",
+          "Guadeloupe"
+        ]
+      },
+      {
+        "key": "code_de_la_section_departementale",
+        "x-originalName": "Code de la section départementale",
+        "type": "string",
+        "x-cardinality": 96,
+        "description": "Code de la section départementale",
+        "title": "Code section départementale",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+        "x-concept": {
+          "id": "codeDepartement",
+          "title": "Code département",
+          "primary": true
+        }
+      },
+      {
+        "key": "libelle_de_la_section_departementale",
+        "x-originalName": "Libellé de la section départementale",
+        "type": "string",
+        "x-cardinality": 96,
+        "description": "Libellé de la section départementale",
+        "title": "Libellé section départementale"
+      },
+      {
+        "key": "nom_de_lelu",
+        "x-originalName": "Nom de l'élu",
+        "type": "string",
+        "x-cardinality": 1638,
+        "description": "Nom de l'élu",
+        "title": "Nom de l'élu"
+      },
+      {
+        "key": "prenom_de_lelu",
+        "x-originalName": "Prénom de l'élu",
+        "type": "string",
+        "x-cardinality": 584,
+        "description": "Prénom de l'élu",
+        "title": "Prénom de l'élu"
+      },
+      {
+        "key": "code_sexe",
+        "x-originalName": "Code sexe",
+        "type": "string",
+        "x-cardinality": 2,
+        "description": "Sexe de l'élu",
+        "title": "Code sexe",
+        "enum": [
+          "M",
+          "F"
+        ]
+      },
+      {
+        "key": "date_de_naissance",
+        "x-originalName": "Date de naissance",
+        "type": "string",
+        "format": "date",
+        "x-cardinality": 1637,
+        "description": ""
+      },
+      {
+        "key": "code_de_la_categorie_socioprofessionnelle",
+        "x-originalName": "Code de la catégorie socio-professionnelle",
+        "type": "string",
+        "x-cardinality": 46,
+        "description": "Code de la profession de l'élu",
+        "title": "Code de la catégorie socio-professionnelle",
+        "x-transform": {
+          "expr": "",
+          "examples": [
+            ""
+          ],
+          "type": "string"
+        },
+        "enum": [
+          "33",
+          "37",
+          "31",
+          "34",
+          "74",
+          "85",
+          "22",
+          "23",
+          "43",
+          "45",
+          "12",
+          "46",
+          "38",
+          "54",
+          "42",
+          "52",
+          "75",
+          "21",
+          "35",
+          "72",
+          "86",
+          "84",
+          "11",
+          "55",
+          "77",
+          "47",
+          "13",
+          "48",
+          "56",
+          "119",
+          "71",
+          "139",
+          "62",
+          "53",
+          "65",
+          "69",
+          "78",
+          "63",
+          "64",
+          "105",
+          "106",
+          "118",
+          "120",
+          "129",
+          "137",
+          "156"
+        ]
+      },
+      {
+        "key": "libelle_de_la_categorie_socioprofessionnelle",
+        "x-originalName": "Libellé de la catégorie socio-professionnelle",
+        "type": "string",
+        "x-cardinality": 47,
+        "description": "Profession de l'élu",
+        "title": "Libellé de la catégorie socio-professionnelle",
+        "enum": [
+          "Cadre de la fonction publique",
+          "Cadre administratif et commercial d'entreprise",
+          "Profession libérale",
+          "Professeur, profession scientifique",
+          "Ancien cadre",
+          "Personne diverse sans activité professionnelle de moins de 60 ans (sauf retraité)",
+          "Chef d'entreprise de 10 salariés ou plus",
+          "Commerçant et assimilé",
+          "Profession intermédiaire de la santé et du travail social",
+          "Profession intermédiaire administrative de la fonction publique",
+          "Agriculteur sur moyenne exploitation",
+          "Profession intermédiaire administrative et commerciale des entreprises",
+          "Employé administratif d'entreprise",
+          "Ingénieur et cadre technique d'entreprise",
+          "Professeur des écoles, instituteur et assimilé",
+          "Employé civil et agent de service de la fonction publique",
+          "Ancienne profession intermédiaire",
+          "Artisan",
+          "Profession de l'information, des arts et des spectacles",
+          "Ancien artisan, commerçant, chef d'entreprise",
+          "Personne diverse sans activité professionnelle de 60 ans et plus (sauf retraité)",
+          "Elève, étudiant",
+          "Agriculteur sur petite exploitation",
+          "Ancien employé",
+          "Employé de commerce",
+          "Technicien",
+          "Agriculteur sur grande exploitation",
+          "Contremaître, agent de maîtrise",
+          "Personnel des services directs aux particuliers",
+          "Ancien agriculteur exploitant",
+          "Autre cadre (secteur privé) (obsolète)",
+          "Autre profession libérale (obsolète)",
+          "Ouvrier qualifié de type industriel",
+          "Ancien ouvrier",
+          "Ouvrier agricole",
+          "Ouvrier qualifié de la manutention, du magasinage et du transport",
+          "Policier et militaire",
+          "Chauffeur",
+          "Ouvrier qualifié de type artisanal",
+          "Administrateur de sociétés (obsolète)",
+          "Autre profession (obsolète)",
+          "Avocat (obsolète)",
+          "Cadre supérieur (secteur privé) (obsolète)",
+          "Employé (secteur privé) (obsolète)",
+          "Industriel-Chef entreprise (obsolète)",
+          "Journaliste et autre média (obsolète)",
+          "Non Connu"
+        ]
+      },
+      {
+        "key": "date_de_debut_du_mandat",
+        "x-originalName": "Date de début du mandat",
+        "type": "string",
+        "format": "date",
+        "x-cardinality": 64,
+        "description": "Date de début de mandat de l'élu"
+      },
+      {
+        "key": "libelle_de_la_fonction",
+        "x-originalName": "Libellé de la fonction",
+        "type": "string",
+        "x-cardinality": 16,
+        "description": "Fonction de l'élu",
+        "title": "Fonction"
+      },
+      {
+        "key": "date_de_debut_de_la_fonction",
+        "x-originalName": "Date de début de la fonction",
+        "type": "string",
+        "format": "date",
+        "x-cardinality": 12,
+        "description": "Date de début de fonction de l'élu"
+      },
+      {
+        "key": "age",
+        "x-originalName": "age",
+        "type": "integer",
+        "title": "",
+        "icon": "mdi-numeric",
+        "x-extension": "age",
+        "x-cardinality": 62,
+        "description": ""
+      },
+      {
+        "key": "mandat",
+        "x-originalName": "mandat",
+        "type": "string",
+        "title": "",
+        "icon": "mdi-text-short",
+        "x-capabilities": {
+          "textAgg": false
+        },
+        "maxLength": 200,
+        "x-extension": "mandat",
+        "x-cardinality": 1,
+        "enum": [
+          "regional"
+        ],
+        "description": ""
+      },
+      {
+        "key": "identifiant",
+        "x-originalName": "identifiant",
+        "type": "string",
+        "title": "",
+        "icon": "mdi-text-short",
+        "x-capabilities": {
+          "textAgg": false
+        },
+        "maxLength": 200,
+        "x-extension": "identifiant",
+        "x-cardinality": 1749,
+        "description": ""
+      },
+      {
+        "x-calculated": true,
+        "key": "_id",
+        "type": "string",
+        "format": "uri-reference",
+        "title": "Identifiant",
+        "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+      },
+      {
+        "x-calculated": true,
+        "key": "_i",
+        "type": "integer",
+        "title": "Numéro de ligne",
+        "description": "Indice de la ligne dans le fichier d'origine"
+      },
+      {
+        "x-calculated": true,
+        "key": "_rand",
+        "type": "integer",
+        "title": "Nombre aléatoire",
+        "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      }
+    ]
+  },
+  "depl": {
+    "id": "2rkctur--j35-hc36008blc1",
+    "title": "Déplacements domicile-travail - Exploitation principale",
+    "finalizedAt": "2026-04-28T15:10:02.796Z",
+    "schema": [
+      {
+        "key": "code_com",
+        "title": "Code Commune",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeCommune",
+        "x-originalName": "code_com",
+        "x-concept": {
+          "id": "codeCommune",
+          "title": "Code commune",
+          "primary": true
+        },
+        "x-cardinality": 34712,
+        "description": ""
+      },
+      {
+        "key": "time_period",
+        "title": "Période",
+        "type": "integer",
+        "x-labels": {
+          "2011": "2011",
+          "2016": "2016",
+          "2022": "2022"
+        },
+        "x-originalName": "time_period",
+        "x-cardinality": 3,
+        "enum": [
+          2011,
+          2016,
+          2022
+        ],
+        "description": ""
+      },
+      {
+        "key": "2_roues",
+        "title": "Deux-roues",
+        "type": "number",
+        "x-originalName": "2_roues",
+        "x-cardinality": 20173,
+        "description": ""
+      },
+      {
+        "key": "2rm",
+        "title": "Deux-roues motorisé",
+        "type": "number",
+        "x-originalName": "2rm",
+        "x-cardinality": 19110,
+        "description": ""
+      },
+      {
+        "key": "aucun_trans",
+        "title": "Pas de transport",
+        "type": "number",
+        "x-originalName": "aucun_trans",
+        "x-cardinality": 48442,
+        "description": ""
+      },
+      {
+        "key": "aut_com",
+        "title": "Dans une autre commune",
+        "type": "number",
+        "x-originalName": "aut_com",
+        "x-cardinality": 79458,
+        "description": ""
+      },
+      {
+        "key": "aut_dep_reg",
+        "title": "Autre commune du département",
+        "type": "number",
+        "x-originalName": "aut_dep_reg",
+        "x-cardinality": 78654,
+        "description": ""
+      },
+      {
+        "key": "aut_reg",
+        "title": "Autre département de la région",
+        "type": "number",
+        "x-originalName": "aut_reg",
+        "x-cardinality": 65017,
+        "description": ""
+      },
+      {
+        "key": "hors_met",
+        "title": "Autre région hors métropole (yc étranger)",
+        "type": "number",
+        "x-originalName": "hors_met",
+        "x-cardinality": 31942,
+        "description": ""
+      },
+      {
+        "key": "hors_reg",
+        "title": "Hors de la région en métropole",
+        "type": "number",
+        "x-originalName": "hors_reg",
+        "x-cardinality": 64115,
+        "description": ""
+      },
+      {
+        "key": "mem_com",
+        "title": "Dans la commune de résidence actuelle",
+        "type": "number",
+        "x-originalName": "mem_com",
+        "x-cardinality": 74737,
+        "description": ""
+      },
+      {
+        "key": "pied",
+        "title": "Marche à pied",
+        "type": "number",
+        "x-originalName": "pied",
+        "x-cardinality": 45468,
+        "description": ""
+      },
+      {
+        "key": "total",
+        "title": "Total",
+        "type": "number",
+        "x-originalName": "total",
+        "x-cardinality": 79127,
+        "description": ""
+      },
+      {
+        "key": "trans_com",
+        "title": "Transport en commun",
+        "type": "number",
+        "x-originalName": "trans_com",
+        "x-cardinality": 40878,
+        "description": ""
+      },
+      {
+        "key": "velo",
+        "title": "Vélo",
+        "type": "number",
+        "x-originalName": "velo",
+        "x-cardinality": 17066,
+        "description": ""
+      },
+      {
+        "key": "voit",
+        "title": "Voiture, camion ou fourgonnette",
+        "type": "number",
+        "x-originalName": "voit",
+        "x-cardinality": 54365,
+        "description": ""
+      },
+      {
+        "key": "_infos_commune.nom_commune",
+        "x-originalName": "_infos_commune.nom_commune",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Nom commune",
+        "description": "Nom de la commune",
+        "type": "string",
+        "x-refersTo": "http://schema.org/City",
+        "x-concept": {
+          "id": "city",
+          "title": "Commune",
+          "primary": true
+        },
+        "x-cardinality": 32621
+      },
+      {
+        "key": "_infos_commune.code_departement",
+        "x-originalName": "_infos_commune.code_departement",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Code département",
+        "description": "Code du département",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeDepartement",
+        "x-capabilities": {
+          "textStandard": false,
+          "insensitive": false,
+          "text": false
+        },
+        "x-concept": {
+          "id": "codeDepartement",
+          "title": "Code département",
+          "primary": true
+        },
+        "x-cardinality": 100
+      },
+      {
+        "key": "_infos_commune.nom_departement",
+        "x-originalName": "_infos_commune.nom_departement",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Nom département",
+        "description": "Nom du département",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#Departement",
+        "x-concept": {
+          "id": "departement",
+          "title": "Département",
+          "primary": true
+        },
+        "x-cardinality": 100
+      },
+      {
+        "key": "_infos_commune.code_epci",
+        "x-originalName": "_infos_commune.code_epci",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Code EPCI",
+        "description": "Code de l'établissement public de coopération intercommunale",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#EtablissementPublicDeCooperationIntercommunale",
+        "x-capabilities": {
+          "textStandard": false,
+          "insensitive": false,
+          "text": false
+        },
+        "x-concept": {
+          "id": "codeEPCI",
+          "title": "Code EPCI",
+          "primary": true
+        },
+        "x-cardinality": 1248
+      },
+      {
+        "key": "_infos_commune.nom_epci",
+        "x-originalName": "_infos_commune.nom_epci",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Nom EPCI",
+        "description": "Nom de l'établissement public de coopération intercommunale",
+        "type": "string",
+        "x-cardinality": 1246
+      },
+      {
+        "key": "_infos_commune.code_region",
+        "x-originalName": "_infos_commune.code_region",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Code région",
+        "description": "Code de la région",
+        "type": "string",
+        "x-refersTo": "http://rdf.insee.fr/def/geo#codeRegion",
+        "x-capabilities": {
+          "textStandard": false,
+          "insensitive": false,
+          "text": false
+        },
+        "x-concept": {
+          "id": "codeRegion",
+          "title": "Code région",
+          "primary": true
+        },
+        "x-cardinality": 17,
+        "enum": [
+          "44",
+          "76",
+          "75",
+          "84",
+          "32",
+          "27",
+          "28",
+          "24",
+          "11",
+          "52",
+          "53",
+          "93",
+          "94",
+          "02",
+          "01",
+          "04",
+          "03"
+        ]
+      },
+      {
+        "key": "_infos_commune.nom_region",
+        "x-originalName": "_infos_commune.nom_region",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Nom région",
+        "description": "Nom de la région",
+        "type": "string",
+        "x-refersTo": "https://schema.org/addressRegion",
+        "x-concept": {
+          "id": "region",
+          "title": "Région",
+          "primary": true
+        },
+        "x-cardinality": 17,
+        "enum": [
+          "Grand Est",
+          "Occitanie",
+          "Nouvelle-Aquitaine",
+          "Auvergne-Rhône-Alpes",
+          "Hauts-de-France",
+          "Bourgogne-Franche-Comté",
+          "Normandie",
+          "Centre-Val de Loire",
+          "Île-de-France",
+          "Pays de la Loire",
+          "Bretagne",
+          "Provence-Alpes-Côte d'Azur",
+          "Corse",
+          "Martinique",
+          "Guadeloupe",
+          "La Réunion",
+          "Guyane"
+        ]
+      },
+      {
+        "key": "_infos_commune._error",
+        "type": "string",
+        "x-originalName": "_error",
+        "x-extension": "dataset:communes-de-france/masterData_bulkSearch_infos-commune",
+        "title": "Erreur de récupération de données de référence",
+        "description": "Une erreur lors de la récupération des informations depuis un service distant",
+        "x-calculated": true
+      },
+      {
+        "x-calculated": true,
+        "key": "_id",
+        "type": "string",
+        "format": "uri-reference",
+        "title": "Identifiant",
+        "description": "Identifiant unique parmi toutes les lignes du jeu de données"
+      },
+      {
+        "x-calculated": true,
+        "key": "_i",
+        "type": "integer",
+        "title": "Numéro de ligne",
+        "description": "Indice de la ligne dans le fichier d'origine"
+      },
+      {
+        "x-calculated": true,
+        "key": "_rand",
+        "type": "integer",
+        "title": "Nombre aléatoire",
+        "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      }
+    ]
+  }
+}

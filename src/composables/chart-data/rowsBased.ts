@@ -1,130 +1,122 @@
-import { ofetch } from 'ofetch'
-import { getSortStr, getColors, getOrderedLabels, splitString } from '@/assets/utils'
-import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
-import type { ChartDataCtx, CategoryItem, DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
-import type { ThemeInstance } from 'vuetify'
+import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
+import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
-export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: ThemeInstance) {
-  const { config, chart, fields, datasetUrl, finalizedAt, baseParams, getValue, displayError, errorMessage, stacked, categories: existingCategories } = ctx
+export interface RowsBasedContext {
+  config: any
+  chart: any
+  fields: Record<string, any>
+  finalizedAt: string | undefined
+  baseParams: Record<string, string>
+  getValue: (value: number | null | undefined) => number | undefined
+  stacked: string | undefined
+  // current value of theme.current ref (InternalThemeDefinition)
+  theme: { colors: Record<string, string> }
+  sortBy: string | undefined
+  sortOrder: string | undefined
+  // API responses
+  results: DatasetLine[]
+  categories: ValuesLabelsItem[] | null
+}
 
-  const fill = chart.value!.area || (chart.value!.type === 'multi-line' && stacked === 'true')
-  const select = [chart.value!.config.labelsField!].concat(chart.value!.config.valuesField || chart.value!.config.valuesFields || [])
-  const params: Record<string, string | number | undefined> = {
-    ...baseParams.value,
-    size: chart.value!.type === 'pie' ? 10000 : chart.value!.config.size,
-    sort: getSortStr(chart.value!.config),
-    finalizedAt: finalizedAt.value
-  }
+export default function transformRowsBased (ctx: RowsBasedContext) {
+  const { chart, fields, getValue, results: apiResults, config, theme, sortBy: rspSortBy, sortOrder: rspSortOrder, categories: apiCategories } = ctx
 
-  let categories = existingCategories
-  if (chart.value!.config.categoriesField) {
-    select.push(chart.value!.config.categoriesField)
-    if (!categories) {
-      categories = await ofetch<ValuesLabelsItem[]>(`${datasetUrl.value}/values-labels/${chart.value!.config.categoriesField}`).catch((e) => {
-        errorMessage.value = e.status + ' - ' + e.data
-        displayError.value = true
-        return []
-      })
-    }
-  }
+  const fill = chart.area || (chart.type === 'multi-line' && ctx.stacked === 'true')
 
-  params.select = select.join(',')
-  const { results } = await ofetch<{ results: DatasetLine[] }>(`${datasetUrl.value}/lines`, { params }).catch((e) => {
-    errorMessage.value = e.status + ' - ' + e.data
-    displayError.value = true
-    return { results: [] }
-  })
+  // Don't mutate apiResults: copy before sorting
+  const results = [...apiResults]
 
-  const sortBy = reactiveSearchParams['sort-by'] || chart.value!.config.rowSortBy
-  const sortOrder = reactiveSearchParams['sort-order'] || chart.value!.config.sortOrder
+  const sortBy = rspSortBy || chart.config.rowSortBy
+  const sortOrder = rspSortOrder || chart.config.sortOrder
   if (sortBy === 'label') {
-    const labelsField = chart.value!.config.labelsField!
+    const labelsField = chart.config.labelsField!
     results.sort((a, b) => {
-      const labelA = (fields.value[labelsField]?.['x-labels']?.[a[labelsField] as string] || (a[labelsField] as string)) + ''
-      const labelB = (fields.value[labelsField]?.['x-labels']?.[b[labelsField] as string] || (b[labelsField] as string)) + ''
+      const labelA = (fields[labelsField]?.['x-labels']?.[a[labelsField] as string] || (a[labelsField] as string)) + ''
+      const labelB = (fields[labelsField]?.['x-labels']?.[b[labelsField] as string] || (b[labelsField] as string)) + ''
       return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
     })
   }
 
-  const labels = results.map((r) => fields.value[chart.value!.config.labelsField!]?.['x-labels']?.[r[chart.value!.config.labelsField!] as string] || r[chart.value!.config.labelsField!] as string).slice(0, chart.value!.config.size)
+  const categories = apiCategories
+  const labels = results.map((r) => fields[chart.config.labelsField!]?.['x-labels']?.[r[chart.config.labelsField!] as string] || r[chart.config.labelsField!] as string).slice(0, chart.config.size)
   let datasets: any[]
 
-  if (chart.value!.config.color) {
-    const color = chart.value!.config.color.type === 'custom' ? chart.value!.config.color.hexValue : theme.current.value.colors[chart.value!.config.color.strValue!]
+  if (chart.config.color) {
+    const color = chart.config.color.type === 'custom' ? chart.config.color.hexValue : theme.colors[chart.config.color.strValue!]
     datasets = [{
       borderColor: color,
       backgroundColor: color,
-      data: results.map((r) => getValue(r[chart.value!.config.valuesField!] as number)),
-      pointStyle: chart.value!.hidePoints ? false : 'circle',
+      data: results.map((r) => getValue(r[chart.config.valuesField!] as number)),
+      pointStyle: chart.hidePoints ? false : 'circle',
       fill
     }]
   } else {
-    const rawLabels = results.slice(0, chart.value!.config.size).map((r) => r[chart.value!.config.labelsField!] as string)
-    if (chart.value!.type === 'pie' && results.length > chart.value!.config.size) {
+    const rawLabels = results.slice(0, chart.config.size).map((r) => r[chart.config.labelsField!] as string)
+    if (chart.type === 'pie' && results.length > chart.config.size) {
       labels.push('Autre')
       rawLabels.push('Autre')
     }
-    const colors = getColors(categories?.map((c) => c.value) || (chart.value!.config.valuesField && rawLabels) || chart.value!.config.valuesFields || [], chart.value!.config.colorOrder)
+    const colors = getColors(categories?.map((c) => c.value) || (chart.config.valuesField && rawLabels) || chart.config.valuesFields || [], chart.config.colorOrder)
 
-    if (chart.value!.config.valuesField) {
+    if (chart.config.valuesField) {
       if (categories) {
         const categoryValues = categories.map((c) => c.value + '')
-        const orderedValues = getOrderedLabels(categoryValues, chart.value!.config.colorOrder)
-        const sortedCategories = orderedValues.map((v) => categories!.find((c) => (c.value + '') === v)!)
+        const orderedValues = getOrderedLabels(categoryValues, chart.config.colorOrder)
+        const sortedCategories = orderedValues.map((v) => categories.find((c) => (c.value + '') === v)!)
         datasets = sortedCategories.map(({ value, label }) => ({
           label: label || value,
           borderColor: colors[value],
           backgroundColor: colors[value],
-          pointStyle: chart.value!.hidePoints ? false : 'circle',
+          pointStyle: chart.hidePoints ? false : 'circle',
           fill,
-          data: results.map((r) => (r[chart.value!.config.categoriesField!] === value && getValue(r[chart.value!.config.valuesField!] as number)) || undefined)
+          data: results.map((r) => (r[chart.config.categoriesField!] === value && getValue(r[chart.config.valuesField!] as number)) || undefined)
         }))
       } else {
-        const dataValues = results.slice(0, chart.value!.config.size).map((r) => getValue(r[chart.value!.config.valuesField!] as number))
+        const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number))
 
-        let orderedRawLabels = getOrderedLabels(rawLabels, chart.value!.config.colorOrder)
-        let orderedLabels = orderedRawLabels.map((l) => fields.value[chart.value!.config.labelsField!]?.['x-labels']?.[l] || l)
+        let orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
+        let orderedLabels = orderedRawLabels.map((l) => fields[chart.config.labelsField!]?.['x-labels']?.[l] || l)
         let orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
         })
 
-        if (chart.value!.type === 'pie' && results.length > chart.value!.config.size) {
+        if (chart.type === 'pie' && results.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          const otherSum = results.slice(chart.value!.config.size).reduce((acc, r) => acc + (r[chart.value!.config.valuesField!] as number), 0)
+          const otherSum = results.slice(chart.config.size).reduce((acc, r) => acc + (r[chart.config.valuesField!] as number), 0)
           orderedData.push(getValue(otherSum))
         }
 
         datasets = [{
           labels: orderedLabels,
-          borderColor: chart.value!.type === 'pie' ? 'white' : orderedRawLabels.map((l) => colors[l]),
-          backgroundColor: orderedRawLabels.map((l) => colors[l] || chart.value!.config.colorOrder?.defaultColor || '#828282'),
+          borderColor: chart.type === 'pie' ? 'white' : orderedRawLabels.map((l) => colors[l]),
+          backgroundColor: orderedRawLabels.map((l) => colors[l] || chart.config.colorOrder?.defaultColor || '#828282'),
           data: orderedData
         }]
 
-        if (['percentages', 'both'].includes(chart.value!.display as string)) {
+        if (['percentages', 'both'].includes(chart.display as string)) {
           const sum = datasets[0].data.reduce((acc: number, d: number | undefined) => acc + (d || 0), 0)
           datasets[0].percentages = datasets[0].data.map((d: number | undefined) => d! * 100 / sum)
         }
 
-        if (chart.value!.type === 'pie') {
+        if (chart.type === 'pie') {
           labels.splice(0, labels.length, ...orderedLabels)
         }
       }
     } else {
-      const valuesFields = getOrderedLabels(chart.value!.config.valuesFields || [], chart.value!.config.colorOrder)
+      const valuesFields = getOrderedLabels(chart.config.valuesFields || [], chart.config.colorOrder)
       datasets = valuesFields.map((field) => ({
-        label: chart.value!.config.removeFromLabels
-          ? ((fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field) as string).replace(chart.value!.config.removeFromLabels, '')
-          : (fields.value[field].label || fields.value[field].title || fields.value[field]['x-originalName'] || field) as string,
+        label: chart.config.removeFromLabels
+          ? ((fields[field].label || fields[field].title || fields[field]['x-originalName'] || field) as string).replace(chart.config.removeFromLabels, '')
+          : (fields[field].label || fields[field].title || fields[field]['x-originalName'] || field) as string,
         borderColor: colors[field],
         backgroundColor: colors[field],
-        pointStyle: chart.value!.hidePoints ? false : 'circle',
+        pointStyle: chart.hidePoints ? false : 'circle',
         fill,
         data: results.map((r) => getValue(r[field] as number))
       }))
-      if (chart.value!.percentage) {
+      if (chart.percentage) {
         for (const i in datasets[0].data as number[]) {
           const sum = datasets.reduce((acc: number, d) => acc + ((d.data as number[])[i] || 0), 0)
           if (sum) datasets.forEach((d) => { (d.data as number[])[i] *= 100 / sum })
@@ -133,13 +125,12 @@ export default async function fetchRowsBasedData (ctx: ChartDataCtx, theme: Them
     }
   }
 
-  if (chart.value!.type === 'paired-histogram') {
+  if (chart.type === 'paired-histogram') {
     datasets[0].data = (datasets[0].data as (number | undefined)[]).map((d) => -(d ?? 0))
   }
 
   return {
-    labels: labels.map((l) => splitString(config.value.labelsMaxWidth ?? 20, l + '')),
-    datasets,
-    categories
+    labels: labels.map((l) => splitString(config.labelsMaxWidth ?? 20, l + '')),
+    datasets
   }
 }

@@ -1,12 +1,12 @@
 import { inject, computed, ref, type App, type Ref } from 'vue'
-import type { Application, Dataset, Field } from '@data-fair/lib-common-types/application/index.js'
+import type { Dataset, Field } from '@data-fair/lib-common-types/application/index.js'
 import type { _JlResolved } from '@/config/.type/index.js'
 import type { AnyChart, AnyChartConfig, AnyConfig } from '@/types'
 
 export interface ConfigState {
-  application: Application
   config: Ref<AnyConfig>
   setConfig: (newConfig: AnyConfig) => void
+  notifyConfigChange: (field: string, value: unknown) => void
   dataset: Ref<Dataset | undefined>
   chart: Ref<AnyChart & { config: AnyChartConfig }>
   fields: Ref<Record<string, Field>>
@@ -17,8 +17,7 @@ export interface ConfigState {
 }
 
 export function createConfig () {
-  const application = window.APPLICATION
-  const config = ref<AnyConfig>((application?.configuration || {}) as AnyConfig)
+  const config = ref<AnyConfig>((window.APPLICATION?.configuration || {}) as AnyConfig)
 
   const dataset = computed(() => config.value?.datasets?.[0] as Dataset | undefined)
   const chart = computed(() => (config.value?.chart || {}) as AnyChart & { config: AnyChartConfig })
@@ -35,6 +34,15 @@ export function createConfig () {
 
   function setConfig (newConfig: AnyConfig) {
     config.value = newConfig
+  }
+
+  function notifyConfigChange (field: string, value: unknown) {
+    if (window.parent !== window) {
+      window.parent.postMessage({
+        type: 'set-config',
+        content: { field, value }
+      }, '*')
+    }
   }
 
   function setByPath (obj: Record<string, unknown>, path: string, value: unknown) {
@@ -55,9 +63,9 @@ export function createConfig () {
   return {
     install (app: App) {
       app.provide('data-fair-app-config', {
-        application,
         config,
         setConfig,
+        notifyConfigChange,
         dataset,
         chart,
         fields,
@@ -71,11 +79,13 @@ export function createConfig () {
         if (event.data?.type === 'set-config' && event.data?.content) {
           const { content } = event.data
           if (content.configuration) {
+            // Full configuration update from DataFair
             config.value = content.configuration
-          } else if (content.chart || content.datasets) {
-            // DataFair envoie parfois la config complète directement dans content
+          } else if (content.chart || content.datasets || content.layers || content.metrics) {
+            // DataFair sometimes sends the full config directly in content
             config.value = content
           } else if (content.field && 'value' in content) {
+            // Path-based update (e.g. 'chart.colors.0')
             const newConfig = JSON.parse(JSON.stringify(config.value))
             setByPath(newConfig, content.field, content.value)
             config.value = newConfig
@@ -91,5 +101,3 @@ export function useConfig (): ConfigState {
   if (!config) throw new Error('useConfig requires using the plugin createConfig')
   return config
 }
-
-export default useConfig

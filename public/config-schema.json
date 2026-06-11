@@ -716,9 +716,6 @@
                   "const": "bar",
                   "title": "Type de visualisation"
                 },
-                "categorizable": {
-                  "const": "true"
-                },
                 "hideYAxis": {
                   "type": "boolean",
                   "title": "Cacher l'axe Y",
