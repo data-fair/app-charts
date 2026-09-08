@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- pas de lang sur <html> : posé par le proxy data-fair depuis la locale de la requête -->
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="df:overflow" content="false" />
-    <meta name="df:sync-state" content="true" />
-    <meta name="df:filter-concepts" content="true" />
-    <meta name="df:vjsf" content="3" />
-    <meta name="df:sync-config" content="true">
-    <meta name="thumbnail" content="thumbnail.png" />
-    <meta name="application-name" content="Charts" />
-    <meta name="title" content="Graphiques divers" />
-    <meta name="description" lang="fr" content="Une application simple de graphiques pour data-fair." />
-    <meta name="description" lang="en" content="A simple charts application for data-fair." />
-    <meta name="keywords" lang="fr" content="data-fair, charts, graphiques" />
-    <meta name="keywords" lang="en" content="data-fair, charts, graphs" />
-    <meta name="vocabulary-accept" content="http://www.w3.org/2000/01/rdf-schema#label">
-    <meta name="vocabulary-require" content="http://www.w3.org/2003/01/geo/wgs84_pos#lat_long">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- épine l'ordre des cascade layers de Vuetify 4 avant tout style :
+         la priorité y est fixée par l'ordre de première déclaration des noms -->
+    <style>@layer vuetify-core, vuetify-components, vuetify-overrides, vuetify-utilities, vuetify-final;</style>
     <link href="/simple-directory/api/sites/_theme.css" rel="stylesheet">
-    <title lang="fr">data-fair-charts</title>
-    <title lang="en">data-fair-charts</title>
-    <script type="text/javascript">window.APPLICATION=%APPLICATION%;</script>
+    <!-- pose window.__PUBLIC_SITE_INFO, lu par la session sans requête -->
+    <script src="/simple-directory/api/sites/_public.js"></script>
+
+    <title>Charts</title><!-- nom du modèle : le proxy le remplace par le titre de l'application -->
+
+    <!-- contrat data-fair, lu à l'exécution -->
+    <meta name="df:vjsf" content="3">
+    <meta name="df:filter-concepts" content="true">
+    <meta name="df:sync-config" content="true">
+    <meta name="df:sync-state" content="true">
+    <meta name="df:overflow" content="false">
+    <!-- capture : attend triggerCapture jusqu'à 2 s après network idle avant de capturer quand même -->
+    <meta name="df:capture-delay" content="2">
+
+    <!-- catalogue, lu à l'import — migrera vers registry -->
+    <meta name="application-name" content="Charts">
+    <meta name="description" content="A simple charts application for data-fair.">
+
+    <!-- contrat data-fair, unique occurrence du placeholder (remplacement regex non global) -->
+    <script>window.APPLICATION=%APPLICATION%;</script>
   </head>
   <body>
-    <div id="app" style="height:100vh" ></div>
+    <!-- pas de <v-main> dans l'app : <main> porte ici le landmark principal (RGAA 9.2) -->
+    <main id="app" style="height:100vh"></main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

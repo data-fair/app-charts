@@ -58,9 +58,9 @@ export function normalizeFilters (filters: Filter[]) {
 
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length
 export function splitString (n: number, str: string) {
-  const arr = str?.split(' ')
+  const arr = str?.split(' ') ?? []
   const result: string[] = []
-  let subStr = arr[0]
+  let subStr = arr[0] ?? ''
   for (let i = 1; i < arr.length; i++) {
     const word = arr[i]
     if (subStr.length + word.length + 1 <= n) {

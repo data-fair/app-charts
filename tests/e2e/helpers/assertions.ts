@@ -1,5 +1,5 @@
 // Common assertions for chart tests.
-import type { Page, Locator } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 
 /** Assert that at least one Chart.js canvas is visible. */

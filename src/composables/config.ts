@@ -1,6 +1,5 @@
 import { inject, computed, ref, type App, type Ref } from 'vue'
 import type { Dataset, Field } from '@data-fair/lib-common-types/application/index.js'
-import type { _JlResolved } from '@/config/.type/index.js'
 import type { AnyChart, AnyChartConfig, AnyConfig } from '@/types'
 
 export interface ConfigState {

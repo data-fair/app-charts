@@ -2,10 +2,10 @@
 // Covers: multi-line chart, rowsBased mode with valuesFields array,
 // palette 'Dark2' with seriesOrder.
 import { expect, setupChartTest } from '../helpers/test-fixture'
-import { linesFixture_loyers_intervalles } from '../fixtures/api-responses'
+import { linesFixtureLoyersIntervalles } from '../fixtures/api-responses'
 
 const test = setupChartTest('12-multi-line-loyers-intervalle', {
-  lines: linesFixture_loyers_intervalles
+  lines: linesFixtureLoyersIntervalles
 })
 
 test('renders a multi-line chart with 3 valuesFields', async ({ chartPage }) => {

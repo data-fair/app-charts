@@ -26,6 +26,12 @@ if (reactiveSearchParams.draft === 'true') {
     if (message) ofetch(window.APPLICATION.href + '/error', { body: { message }, method: 'POST' })
   }, { immediate: true })
 }
+
+// service de capture : sur erreur de configuration, rien d'autre ne signalera le
+// rendu (pas de chart) — capturer l'état d'erreur plutôt que d'attendre le timeout
+watch(error, (message) => {
+  if (message && window.triggerCapture) window.triggerCapture(false)
+}, { immediate: true })
 </script>
 
 <template>

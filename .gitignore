@@ -17,5 +17,12 @@ dist-ssr
 *.tsbuildinfo
 .type
 
+# état local de dev, généré par df-dev-env — jamais commité
+.env
 .dev-config.json
 stats.html
+
+# playwright
+test-results
+playwright-report
+tests/output

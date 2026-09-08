@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs } from '@/assets/utils'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedContext {
@@ -107,11 +107,11 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
       } else {
         const dataValues = limitedAggs.map((a) => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
 
-        let orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
-        let orderedLabels = shouldFormatDateLabels
+        const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
+        const orderedLabels = shouldFormatDateLabels
           ? orderedRawLabels.map((val) => formatDateLabel(val, dateInterval))
           : orderedRawLabels.map((l) => fields[chart.config.groupBy.field]?.['x-labels']?.[l] || l)
-        let orderedData = orderedRawLabels.map((l) => {
+        const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
         })

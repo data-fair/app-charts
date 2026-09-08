@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
+import { getColors, getOrderedLabels, splitString } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -52,10 +52,6 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     }]
   } else {
     const rawLabels = results.slice(0, chart.config.size).map((r) => r[chart.config.labelsField!] as string)
-    if (chart.type === 'pie' && results.length > chart.config.size) {
-      labels.push('Autre')
-      rawLabels.push('Autre')
-    }
     const colors = getColors(categories?.map((c) => c.value) || (chart.config.valuesField && rawLabels) || chart.config.valuesFields || [], chart.config.colorOrder)
 
     if (chart.config.valuesField) {
@@ -74,9 +70,9 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
       } else {
         const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number))
 
-        let orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
-        let orderedLabels = orderedRawLabels.map((l) => fields[chart.config.labelsField!]?.['x-labels']?.[l] || l)
-        let orderedData = orderedRawLabels.map((l) => {
+        const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
+        const orderedLabels = orderedRawLabels.map((l) => fields[chart.config.labelsField!]?.['x-labels']?.[l] || l)
+        const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
         })

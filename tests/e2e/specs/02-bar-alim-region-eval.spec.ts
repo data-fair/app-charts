@@ -2,11 +2,11 @@
 // Covers: bar chart, rowsBased mode with categoriesField, manual colorOrder,
 // horizontal layout, hideYAxis, xTitle/yTitle.
 import { expect, setupChartTest } from '../helpers/test-fixture'
-import { linesFixture_alim_region, valuesLabelsFixture } from '../fixtures/api-responses'
+import { linesFixtureAlimRegion, valuesLabelsFixture } from '../fixtures/api-responses'
 
 const test = setupChartTest('02-bar-alim-region-eval', {
   valuesLabels: valuesLabelsFixture.alim_evaluation,
-  lines: linesFixture_alim_region
+  lines: linesFixtureAlimRegion
 })
 
 test('renders a bar chart with rowsBased data', async ({ chartPage }) => {

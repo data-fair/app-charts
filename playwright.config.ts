@@ -1,9 +1,20 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const VITE_URL = 'http://localhost:4100'
+const PORT = Number(process.env.E2E_PORT ?? 3100)
+const BASE_URL = `http://localhost:${PORT}`
+
+// webServer est global à la config : le conditionner pour ne pas lancer Vite sur un
+// run purement unitaire (plutôt que de scinder en deux fichiers). Playwright accepte
+// `--project x` et `--project=x` : les deux formes doivent être lues.
+const selectedProjects = process.argv.flatMap((arg, i) => {
+  if (arg === '--project') return [process.argv[i + 1]]
+  if (arg.startsWith('--project=')) return [arg.slice('--project='.length)]
+  return []
+})
+const isUnitOnly = selectedProjects.length > 0 && selectedProjects.every(p => p === 'unit')
 
 export default defineConfig({
-  testDir: './tests-e2e',
+  testMatch: /.*\.spec\.ts$/,
   timeout: 30_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
@@ -11,31 +22,25 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
-
+  outputDir: './tests/output',
   use: {
-    baseURL: VITE_URL,
-    headless: true,
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    baseURL: BASE_URL,
     trace: 'retain-on-failure'
   },
-
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
-    }
+    { name: 'unit', testDir: './tests/unit' },
+    { name: 'e2e', testDir: './tests/e2e', use: { ...devices['Desktop Chrome'] } }
   ],
-
-  // The tests are fully self-contained:
-  // - window.APPLICATION is injected via page.addInitScript() in helpers/test-fixture.ts
-  // - DataFair API endpoints are mocked via page.route() in helpers/mock-api.ts
-  // - Chart configuration is injected via postMessage('set-config') in helpers/inject-config.ts
-  // Only Vite is needed to serve the app HTML/JS bundle.
-  webServer: {
-    command: 'npm run test:webserver',
-    url: `${VITE_URL}/app/`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000
-  }
+  // PUBLIC_URL est vidé dans la commande : protège d'un PUBLIC_URL exporté dans le
+  // shell, qui casserait la base de Vite. APP_PORT est injecté par env (jamais par
+  // --port, qui ne change pas hmr.port) ; DATA_FAIR_TEST marque un serveur de test.
+  webServer: isUnitOnly
+    ? undefined
+    : {
+        command: 'PUBLIC_URL= npm run dev-app',
+        url: `${BASE_URL}/app/`,
+        env: { ...process.env, APP_PORT: String(PORT), DATA_FAIR_TEST: 'true' },
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000
+      }
 })

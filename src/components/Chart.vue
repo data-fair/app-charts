@@ -20,7 +20,7 @@ ChartJS.register(Title, Tooltip, Legend,
   CategoryScale, LinearScale, RadialLinearScale, TimeScale, Filler,
   ChartDataLabels, OutLabels)
 
-const { chart, dynamicMetric } = useConfig()
+const { config, chart, dynamicMetric } = useConfig()
 const { data } = useChartData()
 const { options } = useChartOptions()
 
@@ -37,6 +37,20 @@ const showActions = computed(() =>
 )
 
 const chartType = computed(() => chart.value?.type as string | undefined)
+
+const chartTypeLabels: Record<string, string> = {
+  line: 'Courbe',
+  bar: 'Histogramme',
+  'multi-line': 'Plusieurs courbes',
+  'multi-bar': 'Histogramme multivalué',
+  radar: 'Radar',
+  pie: 'Camembert',
+  'paired-histogram': 'Paire d\'histogrammes'
+}
+
+// alternative textuelle du canvas (RGAA 1.1) : titre de la configuration, sinon
+// le libellé du type de graphique
+const ariaLabel = computed(() => config.value?.title || chartTypeLabels[chartType.value || ''] || 'Graphique')
 </script>
 
 <template lang="html">
@@ -45,6 +59,8 @@ const chartType = computed(() => chart.value?.type as string | undefined)
     <div
       v-if="data"
       style="flex:1"
+      role="img"
+      :aria-label="ariaLabel"
     >
       <Line
         v-if="['line', 'multi-line'].includes(chartType as string)"

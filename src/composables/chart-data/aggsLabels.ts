@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
+import { getColors, getOrderedLabels, splitString } from '../../assets/utils'
 
 export interface AggsLabelsContext {
   config: any
@@ -13,7 +13,7 @@ export interface AggsLabelsContext {
 }
 
 export default function transformAggsLabels (ctx: AggsLabelsContext) {
-  const { chart, fields, getValue, metric, metrics, config } = ctx
+  const { chart, fields, getValue, metrics, config } = ctx
 
   const orderedValuesFields = getOrderedLabels(chart.config.valuesFields || [], chart.config.colorOrder)
   const metricsMap = new Map<string, { metric: number }>(metrics.map((m) => [m.field, m]))

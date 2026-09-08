@@ -2,10 +2,10 @@
 // Covers: paired-histogram chart, rowsBased mode, sign flip on data values,
 // 2 valuesFields (voit, velo), divider=1000, palette 'Set1' with seriesOrder.
 import { expect, setupChartTest } from '../helpers/test-fixture'
-import { linesFixture_deplacements } from '../fixtures/api-responses'
+import { linesFixtureDeplacements } from '../fixtures/api-responses'
 
 const test = setupChartTest('16-paired-histo-deplacements', {
-  lines: linesFixture_deplacements
+  lines: linesFixtureDeplacements
 })
 
 test('renders a paired-histogram chart with sign flip', async ({ chartPage }) => {

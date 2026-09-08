@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString } from '@/assets/utils'
+import { getColors, getOrderedLabels, splitString } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedLabelsContext {

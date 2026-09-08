@@ -5,8 +5,6 @@
 // Tests match URLs by substring (see mock-api.ts) and serve these JSON
 // payloads via page.route().
 
-import type { DatasetKey } from './datasets'
-
 // ──────────────────────────────────────────────────────────────────
 // /values_agg
 // ──────────────────────────────────────────────────────────────────
@@ -161,7 +159,7 @@ export const valuesLabelsFixture = {
 // ──────────────────────────────────────────────────────────────────
 // /lines  (rowsBased)
 // ──────────────────────────────────────────────────────────────────
-export const linesFixture_alim_region = {
+export const linesFixtureAlimRegion = {
   results: [
     { reg_name: 'Île-de-France', evaluation_globale: 'A - Conforme', _i: 1 },
     { reg_name: 'Île-de-France', evaluation_globale: 'B - Non conformité mineure', _i: 1 },
@@ -171,7 +169,7 @@ export const linesFixture_alim_region = {
   ]
 }
 
-export const linesFixture_loyers_intervalles = {
+export const linesFixtureLoyersIntervalles = {
   results: [
     { libgeo: 'Paris', loypredm2: 28.5, lwripm2: 5.2, upripm2: 2.1 },
     { libgeo: 'Lyon', loypredm2: 16.2, lwripm2: 3.4, upripm2: 1.5 },
@@ -179,7 +177,7 @@ export const linesFixture_loyers_intervalles = {
   ]
 }
 
-export const linesFixture_deplacements = {
+export const linesFixtureDeplacements = {
   results: [
     { time_period: '2019', voit: 21000, velo: 1200 },
     { time_period: '2020', voit: 18500, velo: 1800 },

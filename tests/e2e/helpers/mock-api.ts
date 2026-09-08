@@ -15,8 +15,6 @@ export interface MockMap {
   metrics?: Record<string, { metric: number }> // per-field /metric_agg responses
 }
 
-const DATASET_PATH_RE = /\/api\/v1\/datasets\/([^/]+)\//
-
 export async function mockDataFairApi (page: Page, datasetId: string, mocks: MockMap = {}) {
   await page.route(`**/api/v1/datasets/${datasetId}/**`, async (route: Route) => {
     const url = new URL(route.request().url())
@@ -76,19 +74,30 @@ export async function mockDataFairApi (page: Page, datasetId: string, mocks: Moc
 }
 
 // Mocks the /simple-directory endpoints used by createSession() in main.ts.
-// The session module calls /simple-directory/api/sites/_public to fetch the
-// site info (used by vuetifySessionOptions). The keepalive endpoint is only
-// hit when an id_token cookie is present, which is never the case in tests.
+//
+// _public.js is served as application/javascript: it sets window.__PUBLIC_SITE_INFO,
+// which createSession reads without any request. Without this mock the script would
+// fall through to Vite's SPA fallback (200 text/html, broken JS) and the session
+// would silently fall back to the deprecated refreshSiteInfo fetch on _public.
+// The _public JSON endpoint is kept as a fallback mock for that deprecated path.
 //
 // The site info shape is the minimum required by lib-vue's getSession() and
 // lib-vuetify's vuetifySessionOptions(): a plain object with an empty `theme`
 // so that session.site.value is set and colors fall back to the defaults.
 export async function mockSimpleDirectory (page: Page) {
+  const siteInfo = { theme: { colors: {} } }
+  await page.route('**/simple-directory/api/sites/_public.js', async (route: Route) => {
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/javascript',
+      body: `window.__PUBLIC_SITE_INFO = ${JSON.stringify(siteInfo)}`
+    })
+  })
   await page.route('**/simple-directory/api/sites/_public', async (route: Route) => {
     return route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ theme: { colors: {} } })
+      body: JSON.stringify(siteInfo)
     })
   })
   // /simple-directory/api/sites/_theme.css: CSS file linked in index.html.

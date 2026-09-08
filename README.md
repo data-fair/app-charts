@@ -16,10 +16,13 @@ DataFair comes with functionalities to facilitate the development, deployment an
 
 ## Technical stack
 
-This technical stack is just an example of what can be used to build an application for DataFair. It is a quite rich stack for a state of the art development environment. For an application with a more minimalist stack, you can see [app-minimal](https://github.com/data-fair/app-minimal). For a state of the art application generator see the [vue-cli plugin](https://github.com/data-fair/vue-cli-plugin-app).
-- [vuejs](https://vuejs.org/): our favorite framework for client-side code
-- [vuetify](https://vuetifyjs.com/en/): a material design UI framework for vuejs
+This technical stack is just an example of what can be used to build an application for DataFair. It is a quite rich stack for a state of the art development environment. For an application with a more minimalist stack, you can see [app-minimal](https://github.com/data-fair/app-minimal).
+- [vuejs](https://vuejs.org/) 3 with the composition API: our favorite framework for client-side code
+- [vuetify](https://vuetifyjs.com/en/) 4: a material design UI framework for vuejs
+- [vue-i18n](https://vue-i18n.intlify.dev/): internationalization (session locale, number/percent formats)
 - [chartjs](https://www.chartjs.org/): simple charting library
+- [vite](https://vite.dev/): build tool (rolldown) with [vite-plugin-vuetify](https://github.com/vuetifyjs/vuetify-loader)
+- [playwright](https://playwright.dev/): unit and e2e tests
 
 ## Development Setup
 
@@ -40,23 +43,29 @@ npm install
 
 Create a dataset in your data-fair instance. You can use this [public dataset](https://koumoul.com/s/data-fair/dataset/population-communes/description) for example.  
   
-Run the development server and serve the application with hot reload [here](http://localhost:3000):
-
-```bash
-npm run dev-src
-```
-
-You can now add an application configuration pointing to http://localhost:3000 in your data-fair instance. Edit the configuration, edit the source code, etc.  
-
-#### Else
-
-Run the development server and serve the application with hot reload [here](http://localhost:3000):
+Run the development environment (vite + the DataFair dev-server in a zellij layout):
 
 ```bash
 npm run dev
 ```
 
-You will find a dev server running at http://localhost:5888. It contains sample data and a sample configuration. You can edit the source code, edit the configuration, etc.
+The first run generates a git-ignored `.env` file holding three free ports (`APP_PORT`, `DEV_SERVER_PORT`, `E2E_PORT`), so several applications can run side by side. An URL banner in zellij shows the dev-server address; configure your application there and edit the configuration, edit the source code, etc.
+
+You can also run only one side of the environment:
+
+```bash
+npm run dev-app      # vite only (port from .env APP_PORT)
+npm run dev-server   # DataFair dev-server only (port from .env DEV_SERVER_PORT)
+```
+
+#### Else
+
+If you don't have a local data-fair instance, the test suite is fully self-contained (all DataFair APIs are mocked):
+
+```bash
+npm run test-unit    # unit tests: pure transforms + utils (no server needed)
+npm run test-e2e     # e2e tests: full app boot against vite (E2E_PORT from .env)
+```
 
 ## DataFair application specificity
 
@@ -64,7 +73,7 @@ A DataFair application is mostly like any Web application. You can consume DataF
 
 #### `public/config-schema.json`
 
-A JSON schema file that describes the expected configuration. DataFair expects this file to be found at the precise path `%MY_APP%/config-schema.json`.
+A JSON schema file that describes the expected configuration. DataFair expects this file to be found at the precise path `%MY_APP%/config-schema.json`. This hand-edited file **is** the schema (served with its `$defs`/`$ref`); TypeScript types are generated from it with `npm run build-types` (see `src/config/schema.ts`).
 
 The content of this JSON schema is extended with some annotations used by DataFair to automatically create a configuration form. The details of these annotations can be found in demo of the library we maintain to create these forms:  [vuetify-jsonschema-form](https://github.com/koumoul-dev/vuetify-jsonschema-form).
 
@@ -73,11 +82,11 @@ The content of this JSON schema is extended with some annotations used by DataFa
 This the root template used to generate the HTML pages of this application. The key element here is this line:
 
 ```html
-<script type="text/javascript">window.APPLICATION=%APPLICATION%;</script>
+<script>window.APPLICATION=%APPLICATION%;</script>
 ```
 
 The string `%APPLICATION%` will be replaced automatically by the actual content of the configuration, when this application is re-exposed by DataFair. Later code can use the global variable `APPLICATION` (`window.APPLICATION`) to start interacting with the DataFair API.  
-The important part for DataFair is the presence of the meta properties "title" and "description".
+The important parts for DataFair are the `df:*` meta properties (form version, concept filters, config/state sync, overflow, capture delay) and the `application-name` / `description` metas for the catalog.
 
 ## Deployment
 

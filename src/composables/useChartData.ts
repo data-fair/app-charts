@@ -24,6 +24,8 @@ export interface AggItem {
   total?: number
   metric?: number
   aggs?: AggItem[]
+  // champs métriques additionnels renvoyés par l'API (`<field>_<metric>: number`)
+  [key: string]: unknown
 }
 
 export interface ValuesAggResponse {
@@ -183,7 +185,7 @@ export function useChartData () {
       finalizedAt: finalizedAt.value
     }
     try {
-      const       results = await Promise.all(fields.map((field) =>
+      const results = await Promise.all(fields.map((field) =>
         ofetch<MetricAggResponse>(`${datasetUrl.value}/metric_agg`, { params: { ...params, field } })
           .then((r) => ({ field, metric: r.metric }))
           .catch((e) => {

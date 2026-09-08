@@ -2,98 +2,112 @@
 
 `app-charts` is a **DataFair visualization plugin** that renders charts (line, bar, multi-line, multi-bar, pie, radar, paired-histogram) from DataFair datasets. Published on npm as `@data-fair/app-charts` and served via jsDelivr CDN.
 
+The app follows the `skill-apps` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown, lib-vuetify 2.x, VJSF 3 schema, ports via `df-dev-env`, Playwright `unit`/`e2e` projects).
+
 ## Tech Stack
 
 - **Vue 3** (Composition API, `<script setup lang="ts">`)
-- **Vuetify 4**
+- **Vuetify 4** + `@data-fair/lib-vuetify` 2.x (global.scss, `settingsPath`, cascade layers)
+- **vue-i18n 11** (`legacy: false`, `fallbackLocale: 'en'`, `numberFormats` for percent) — required by lib-vuetify components and used for number formatting (`n()`)
 - **Chart.js 4** + vue-chartjs + chartjs-plugin-datalabels + @energiency/chartjs-plugin-piechart-outlabels
 - **TypeScript** (all source files are `.ts` or `.vue` with `lang="ts"`)
 - **@vueuse/core** (useDebounce)
-- **@data-fair/lib-*** (utils, vue, vuetify, common-types)
-- **chroma-js**, **dayjs**, **natural-orderby**
-- **Build:** Vite 8 + vite-plugin-vuetify, types generated from `src/config/schema.json`
-- **E2E tests:** Playwright (`@playwright/test`) with browser-route API mocking
+- **@data-fair/lib-*** (utils, vue, vuetify, common-types) — lib-vue peers (`dayjs`, `ofetch`, `@vueuse/core`, `vue-i18n`) are declared explicitly in package.json
+- **Build:** Vite 8 (rolldown) + vite-plugin-vuetify, types generated from `public/config-schema.json` via `src/config/schema.ts`
+- **Tests:** Playwright (`@playwright/test`) with `unit` + `e2e` projects and browser-route API mocking
 
 ## Project Structure
 
 ```
-├── index.html
-├── playwright.config.ts          # Playwright e2e config (webServer: df-dev-server + vite)
+├── index.html                      # Canonical DataFair skeleton: @layer, _theme.css, _public.js,
+│                                   #   single <title>, df:* metas, <main id="app">, %APPLICATION% once
+├── playwright.config.ts            # projects unit/e2e, E2E_PORT from .env, conditional webServer
+├── commitlint.config.ts
+├── .husky/                         # pre-commit: lint, commit-msg: commitlint, pre-push: quality
 ├── public/
-│   ├── config-schema.json        # Generated from src/config/.type/resolved-schema.json
+│   ├── config-schema.json          # The config schema itself (hand-edited, source of truth, with $defs/$ref)
 │   ├── favicon.ico
 │   └── thumbnail.png
 ├── src/
-│   ├── main.ts                   # Bootstraps Vue app: createSession + createVuetify + plugins (reactiveSearchParams, uiNotif, localeDayjs) + createConfig. vIframeOptions is set at module level.
-│   ├── App.vue                   # Root: v-empty-state on config error, renders Chart + <DfUiNotif />, handles draft messages via notifyConfigChange.
-│   ├── shims.d.ts                # Module declarations for untyped packages
-│   ├── types.d.ts                # Global types: AnyChart, AnyChartConfig, AnyConfig, Window extensions
+│   ├── main.ts                     # Bootstrap: global.scss + main.css, createSession (siteInfo: !window.__PUBLIC_SITE_INFO),
+│   │                               #   createI18n (percent formats), createVuetify, plugins, createConfig. vIframeOptions at module level.
+│   ├── App.vue                     # Root: v-empty-state on config error, renders Chart + <DfUiNotif />,
+│   │                               #   staticFilters -> qsFilter sync (draft), triggerCapture on error
+│   ├── shims.d.ts                  # Module declarations for untyped packages
+│   ├── types.d.ts                  # AnyChart/AnyChartConfig/AnyConfig + Window globals (APPLICATION, vIframeOptions,
+│   │                               #   __PUBLIC_SITE_INFO, triggerCapture)
 │   ├── composables/
-│   │   ├── config.ts             # createConfig plugin + useConfig inject helper (typed ConfigState, aligned with the skill snippet)
-│   │   ├── useChartData.ts       # Hub: debounced baseParams, reactive useFetch calls, error handling via useUiNotif, dispatches to pure transform functions
-│   │   ├── useChartOptions.ts    # Pure builder for Chart.js options based on config + theme
+│   │   ├── config.ts               # createConfig plugin + useConfig inject helper (typed ConfigState)
+│   │   ├── useChartData.ts         # Hub: debounced baseParams, reactive useFetch calls, error handling via useUiNotif, dispatches to pure transform functions
+│   │   ├── useChartOptions.ts      # Chart.js options builder: session locale + n()/percent formats, triggerCapture via animation.onComplete
 │   │   └── chart-data/           # Pure transform functions: API responses -> Chart.js data
 │   │       ├── rowsBased.ts
 │   │       ├── aggsBased.ts
 │   │       ├── aggsBasedLabels.ts
 │   │       └── aggsLabels.ts
 │   ├── components/
-│   │   ├── Chart.vue             # Orchestrator: calls useChartData + useChartOptions, renders the right vue-chartjs component
+│   │   ├── Chart.vue             # Orchestrator: calls useChartData + useChartOptions, renders the right vue-chartjs
+│   │   │                         #   component, role="img" + aria-label on the canvas wrapper (RGAA 1.1)
 │   │   └── Actions.vue           # Metric selector, sort controls, stack toggle
 │   ├── assets/
-│   │   └── utils.ts              # getSortStr, getColors, getOrderedLabels, normalizeFilters, splitString
+│   │   └── utils.ts              # getSortStr, getColors, getOrderedLabels, normalizeFilters, splitString, fillMissingDateAggs
 │   ├── config/
-│   │   ├── schema.json           # Source JSON schema (~1600 lines)
+│   │   ├── schema.ts             # One-line re-export of ../../public/config-schema.json (with { type: 'json' })
 │   │   ├── index.ts              # Re-exports generated types from ./.type/index.js
-│   │   └── .type/                # Generated by df-build-types
-│   │       ├── index.d.ts
-│   │       ├── index.js
-│   │       └── resolved-schema.json
+│   │   └── .type/                # Generated by df-build-types (git-ignored)
 │   └── styles/
-│       └── settings.scss
-├── tests-e2e/                    # Playwright e2e tests
-│   ├── fixtures/
-│   │   ├── datasets.ts           # 6 datasets (alim, rpg, bpe, loyers, rne, depl) with schema
-│   │   ├── configs.ts            # 20 chart configurations aligned with the historical dev-configs
-│   │   ├── api-responses.ts      # Mock JSON responses for the 4 DataFair endpoints
-│   │   ├── _schemas.json         # Extracted dataset schemas (generated)
-│   │   └── _configs.json         # Extracted configurations (generated)
-│   ├── helpers/
-│   │   ├── inject-config.ts      # waitForAppReady + injectConfig via postMessage('set-config')
-│   │   ├── mock-api.ts           # page.route() to mock /values_agg, /lines, /values-labels, /metric_agg
-│   │   ├── assertions.ts         # expectChartVisible, expectViframeOptionsSet, ...
-│   │   └── test-fixture.ts       # setupChartTest(configName, mocks) -> test with a chartPage fixture
-│   └── specs/                    # 22 spec files (20 per config + 2 transverse)
-│       ├── 01-pie-alim-secteur.spec.ts
-│       ├── 02-bar-alim-region-eval.spec.ts
-│       ├── ... (20 total)
-│       ├── actions.spec.ts       # dynamicMetric / dynamicSort / stack toggle
-│       └── iframe-compat.spec.ts # vIframeOptions exposed at module level
-├── vite.config.mjs
+│       └── main.css              # Plain app CSS (html/body overflow, .application.embed)
+├── tests/
+│   ├── unit/                     # Playwright unit project (Node): pure transforms + utils
+│   │   ├── utils.spec.ts
+│   │   ├── rows-based.spec.ts
+│   │   ├── aggs-based.spec.ts
+│   │   ├── aggs-based-labels.spec.ts
+│   │   └── aggs-labels.spec.ts
+│   └── e2e/                      # Playwright e2e project
+│       ├── fixtures/
+│       │   ├── datasets.ts       # 6 datasets (alim, rpg, bpe, loyers, rne, depl) with schema
+│       │   ├── configs.ts        # 20 chart configurations aligned with the historical dev-configs
+│       │   ├── api-responses.ts  # Mock JSON responses for the 4 DataFair endpoints
+│       │   ├── _schemas.json     # Extracted dataset schemas (generated)
+│       │   └── _configs.json     # Extracted configurations (generated)
+│       ├── helpers/
+│       │   ├── inject-config.ts  # waitForAppReady + injectConfig via postMessage('set-config')
+│       │   ├── mock-api.ts       # page.route() to mock /values_agg, /lines, /values-labels, /metric_agg,
+│       │   │                     #   /simple-directory (_public.js as JS setting __PUBLIC_SITE_INFO, _public, _theme.css)
+│       │   ├── assertions.ts     # expectChartVisible, ...
+│       │   └── test-fixture.ts   # setupChartTest(configName, mocks) -> test with a chartPage fixture (origin-agnostic APPLICATION stub)
+│       └── specs/                # 23 spec files (20 per config + 3 transverse)
+├── vite.config.ts                # loadEnv(APP_PORT), hmr aligned, vueI18n({}), settingsPath, server.warmup
 └── package.json
 ```
 
 ## DataFair Conventions
 
-- **`%APPLICATION%`** in `index.html` → `window.APPLICATION` (replaced by DataFair reverse proxy). Typed in `src/types.d.ts` as `Application & { href: string }`.
-- **`public/config-schema.json`** must exist at `/config-schema.json`. DataFair fetches it to build the config form. Generated via `npm run build-types` (`df-build-types && ncp src/config/.type/resolved-schema.json public/config-schema.json`).
-- **Meta tags** in `index.html` (`application-name`, `title`, `description`, `thumbnail`, `df:*`) are used when importing the app.
+- **`%APPLICATION%`** in `index.html` → `window.APPLICATION` (replaced by DataFair reverse proxy, **exactly once** — non-global regex). Typed in `src/types.d.ts` as `Application & { href: string }`.
+- **`public/config-schema.json`** must exist at `/config-schema.json`. DataFair fetches it to build the config form. It **is** the schema, hand-edited, served with its `$defs`/`$ref` (NOT dereferenced — json-layout resolves refs itself and dereferencing multiplies form compile time). Types are generated from it: edit the schema → `npm run build-types` → `src/config/.type/` regenerated (top type: `_Jl`).
+- **Meta tags** in `index.html`: `df:vjsf=3`, `df:filter-concepts`, `df:sync-config`, `df:sync-state`, `df:overflow=false`, `df:capture-delay=2`, plus `application-name` + single `description` for the catalog. Dead metas (`keywords`, `thumbnail`, `meta title`, `vocabulary-*`) are intentionally absent.
+- **`index.html` theme wiring**: `@layer vuetify-*` declaration first, `<link>` to `_theme.css`, `<script src=".../_public.js">` (sets `window.__PUBLIC_SITE_INFO`, read by `createSession` instead of the deprecated `refreshSiteInfo` fetch). No `lang` attribute on `<html>` (set by the proxy).
 - **Concept filters** come from `@data-fair/lib-vue/concept-filters.js` and are merged with `staticFilters` in `useChartData`.
 - **Global notif** is provided by `<DfUiNotif />` from `@data-fair/lib-vuetify/ui-notif.vue` (installed in `App.vue`).
+- **Capture service**: `window.triggerCapture(false)` is called when the chart finished rendering (`animation.onComplete` in `useChartOptions`) and on config error (`App.vue`); `df:capture-delay: 2` is the fallback.
 
 ## Key Patterns
 
 ### createConfig / useConfig
-`createConfig()` is a Vue plugin installed in `main.ts`. It reads `window.APPLICATION`, creates typed reactive refs (`config`, `dataset`, `datasets`, `chart`, `fields`, `datasetUrl`, `dynamicMetric`, `finalizedAt`, `accessKey`, `error`) and provides them via `provide('data-fair-app-config', …)`.
+`createConfig()` is a Vue plugin installed in `main.ts`. It reads `window.APPLICATION`, creates typed reactive refs (`config`, `dataset`, `chart`, `fields`, `datasetUrl`, `dynamicMetric`, `finalizedAt`, `error`) and provides them via `provide('data-fair-app-config', …)`.
 
 `useConfig()` injects the `ConfigState` object. `error` is a computed ref returning a string or `null`; `App.vue` renders a `v-empty-state` when `error` is truthy.
 
 The plugin also listens for `message` events with `type: 'set-config'` to update the configuration reactively (full config, nested path updates, etc.). `notifyConfigChange(field, value)` is also exposed for posting updates from the app to DataFair (e.g. syncing `staticFilters` → `qsFilter` in draft mode).
 
 ### Dynamic Theme + Iframe
-`main.ts` creates a session with `createSession({ directoryUrl: '/simple-directory', siteInfo: true })` and passes `vuetifySessionOptions(session)` to Vuetify. This pulls site colors and dark mode from DataFair dynamically. `index.html` includes `<link href="/simple-directory/api/sites/_theme.css" rel="stylesheet">` for runtime theme CSS.
+`main.ts` awaits `createSession({ directoryUrl: '/simple-directory', siteInfo: !window.__PUBLIC_SITE_INFO })` and passes `vuetifySessionOptions(session)` to Vuetify. This pulls site colors and the 4 themes (default/dark/hc/hc-dark) from DataFair dynamically. Styles: `import '@data-fair/lib-vuetify/style/global.scss'` (never `vuetify/styles`) in `main.ts`, and `styles: { configFile: settingsPath }` (from `@data-fair/lib-vuetify/vite.js`) in `vite.config.ts` — this is what applies the site font (`var(--d-body-font-family)`). Plain app CSS lives in `src/styles/main.css`.
 
 `window.vIframeOptions = { reactiveParams: reactiveSearchParams }` is set at the top of `main.ts` (module level, before `createApp()`) so the `v-iframe-compat/d-frame-content.js` shim injected by DataFair can apply updates without a full page reload when the app is embedded in a parent d-frame.
+
+### i18n & number formats
+`createI18n` is created after the session (`legacy: false`, `locale: session.lang.value`, `fallbackLocale: 'en'`, `numberFormats` with `percent`/`percentPrecise`). Chart texts stay in French (like most of the parc), but **numbers must never be formatted with `toLocaleString('fr')`**: `useChartOptions` takes `n` from `useI18n({ useScope: 'global' })` and sets Chart.js `locale: session.lang`. Percentages are ratios passed to `n(v / 100, 'percent')`. Regression test: `tests/e2e/specs/console-health.spec.ts` asserts zero `[intlify]` console warnings.
 
 ### useChartData
 Composable that calls `useConfig()` internally. It:
@@ -110,18 +124,20 @@ The 4 loaders in `composables/chart-data/` are **pure functions** (no `ofetch`, 
 - `transformAggsBasedLabels(ctx) -> { labels, datasets }`
 - `transformAggsLabels(ctx) -> { labels, datasets }`
 
-They take a context object containing the API responses, the chart/config/theme/fields refs and the reactive search params. They do not call Vue composables — they are pure transformations of API responses into Chart.js data.
+They take a context object containing the API responses, the chart/config/theme/fields refs and the reactive search params. They do not call Vue composables — they are pure transformations of API responses into Chart.js data. They are unit-tested in `tests/unit/`.
+
+> Keep the runtime imports of these pure modules **relative** (`'../../assets/utils'`): Playwright's unit project runs them in Node without tsconfig path resolution. Type-only `@/` imports are fine (erased at transpile).
 
 ### useChartOptions
-`composables/useChartOptions.ts` exposes a single `options` computed that builds the full Chart.js options object from `chart`, `config` and the current Vuetify theme. Kept separate from `Chart.vue` so the component remains a thin orchestrator.
+`composables/useChartOptions.ts` exposes a single `options` computed that builds the full Chart.js options object from `chart`, `config`, the session locale and `n()` formatters. When running under the capture service (`window.triggerCapture` present) it adds `animation.onComplete` to trigger the screenshot once rendering is done. Kept separate from `Chart.vue` so the component remains a thin orchestrator.
 
 ### Chart.vue
-Global Chart.js registration happens once in setup (`ChartJS.register(...)`). Uses a reactive `options` from `useChartOptions` and reactive `data` from `useChartData`. Conditionally renders `<Line>`, `<Bar>`, `<Pie>` or `<Radar>` from `vue-chartjs`.
+Global Chart.js registration happens once in setup (`ChartJS.register(...)`). Uses a reactive `options` from `useChartOptions` and reactive `data` from `useChartData`. Conditionally renders `<Line>`, `<Bar>`, `<Pie>` or `<Radar>` from `vue-chartjs`. The canvas wrapper carries `role="img"` + `aria-label` (config title, else the chart type label) as the accessible alternative (RGAA 1.1).
 
 A `chartKey` computed forces component recreation only for structural changes that Chart.js cannot handle in-place (currently `horizontal` / `indexAxis`).
 
 ### App.vue
-Renders `Chart` (or `v-empty-state` on config error) and `<DfUiNotif />` for global notifications. Watches `staticFilters` to push computed `qsFilter` back to the parent via `postMessage` in draft mode (uses `notifyConfigChange` from `useConfig`).
+Renders `Chart` (or `v-empty-state` on config error) and `<DfUiNotif />` for global notifications. Watches `staticFilters` to push computed `qsFilter` back to the parent via `postMessage` in draft mode (uses `notifyConfigChange` from `useConfig`). The `qsFilter` sync is a legacy pattern kept on purpose: the schema's `getItems` URLs consume `${rootData.qsFilter}` to filter the color/order selects by the static filters.
 
 ### Actions.vue
 Dynamic controls for:
@@ -143,21 +159,34 @@ Dynamic controls for:
 
 ```bash
 npm install
-npm run dev          # dev server + DataFair dev server (zellij layout)
-npm run dev-app      # vite only on :3000
-npm run dev-server   # DataFair dev server only
+npm run dev          # df-dev-env (generates .env ports) + zellij layout (vite + df-dev-server)
+npm run dev-app      # vite only (port from .env APP_PORT)
+npm run dev-server   # df-dev-server only (DEV_SERVER_PORT from .env)
+npm run lint         # eslint . (no --fix; use lint-fix to rewrite)
+npm run type-check   # vue-tsc --noEmit
+npm run build-types  # df-build-types src/config — run after ANY edit of public/config-schema.json
 npm run build-preview
 npm run build-staging
-npm run lint
-npm run type-check   # vue-tsc --noEmit
-npm run test:e2e     # Playwright e2e tests (auto-starts Vite on :4100)
+npm test             # df-dev-env && playwright test (unit + e2e, --max-failures=1)
+npm run test-unit    # playwright test --project unit (no webServer, no port needed)
+npm run test-e2e     # df-dev-env && playwright test --project e2e (E2E_PORT from .env)
+npm run quality      # lint + build-types + type-check + build + test + audit (pre-push hook)
 ```
 
-When modifying `src/config/schema.json`, always run `npm run build-types` to keep TypeScript types synchronized.
+Ports are **never hardcoded**: `df-dev-env` generates a git-ignored `.env` with `APP_PORT` / `DEV_SERVER_PORT` / `E2E_PORT` on first run. Vite reads them via `loadEnv` in `vite.config.ts`; npm scripts use `dotenv --`. A stale `.env` can be regenerated with `df-dev-env --force`.
 
-## E2E Tests
+When modifying `public/config-schema.json`, always run `npm run build-types` to keep TypeScript types synchronized (`src/config/.type/` is git-ignored; `npm run build-types` must run before `type-check`/`build` on a fresh clone).
 
-The `tests-e2e/` folder contains **22 Playwright specs** that cover the main configuration shapes (chart types × data modes × options). They use the historical dev-configs as fixtures (the configs themselves are now in `tests-e2e/fixtures/configs.ts`; the dataset schemas are in `tests-e2e/fixtures/datasets.ts`).
+## Tests
+
+Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
+
+- **`unit`** (`tests/unit/`): pure functions only — the 4 chart-data transforms and `assets/utils.ts`. Run with `npm run test-unit`; no server, no port.
+- **`e2e`** (`tests/e2e/`): full app boot against Vite (webServer conditional on project, `APP_PORT=E2E_PORT`, `PUBLIC_URL=` emptied, `DATA_FAIR_TEST=true`). `E2E_PORT` comes from `.env`, so multiple apps can run side by side. `reuseExistingServer: true` locally.
+
+### e2e specs
+
+**23 Playwright specs** cover the main configuration shapes (chart types × data modes × options). They use the historical dev-configs as fixtures (`tests/e2e/fixtures/configs.ts`; dataset schemas in `fixtures/datasets.ts`).
 
 | # | Spec | Covers |
 |---|------|--------|
@@ -183,6 +212,7 @@ The `tests-e2e/` folder contains **22 Playwright specs** that cover the main con
 | 20 | `20-line-loyers-distribution.spec.ts` | line aggsBased, **groupBy number** interval |
 | — | `actions.spec.ts` | dynamicMetric, dynamicSort, stack toggle |
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |
+| — | `console-health.spec.ts` | zero `[intlify]` console warnings + `__PUBLIC_SITE_INFO` fast path |
 
 **Datasets used** (from the Koumoul open data catalog):
 - **Alim'confiance** (`a4jz4xdfoymfiquex913bfgp`) — Sanitary inspections
@@ -192,11 +222,12 @@ The `tests-e2e/` folder contains **22 Playwright specs** that cover the main con
 - **RNE** (`qwhvisdr1tuyecl76qrcnmep`) — Regional councilors
 - **Déplacements D-T** (`2rkctur--j35-hc36008blc1`) — Home-work commutes
 
-### How tests work
+### How e2e tests work
 
-1. **Playwright starts Vite** via `webServer` in `playwright.config.ts` (Vite on :4100 via `npm run test:webserver`, which sets `PORT=4100`). The test port is intentionally different from the dev port (3000) to avoid conflicts when running multiple Vite visus side-by-side. `reuseExistingServer: true` locally lets you keep your dev session running.
+1. **Playwright starts Vite** via the conditional `webServer` in `playwright.config.ts` (`PUBLIC_URL= npm run dev-app` with `APP_PORT=E2E_PORT`). `reuseExistingServer: true` locally lets you keep your dev session running (E2E_PORT ≠ APP_PORT prevents collisions).
 2. **Each spec** uses `setupChartTest(configName, mocks)` which:
-   - Loads the app at `/app/`.
+   - Injects `window.APPLICATION` via `page.addInitScript` (origin-agnostic stub — URLs derive from the page origin).
+   - Mocks `/simple-directory` (`_public.js` served as JS setting `window.__PUBLIC_SITE_INFO`, `_public` JSON fallback, `_theme.css`).
    - Mocks the DataFair API endpoints (`/values_agg`, `/lines`, `/values-labels/<field>`, `/metric_agg`) via `page.route()`.
    - Injects the configuration via `postMessage({ type: 'set-config', content: { configuration: cfg } })` (the same protocol DataFair uses in draft mode).
    - Waits for a `<canvas>` element to appear.
@@ -205,16 +236,20 @@ The `tests-e2e/` folder contains **22 Playwright specs** that cover the main con
 ### Run
 
 ```bash
-npm run test:e2e:install   # one-time: install Chromium
-npm run test:e2e           # headless run
-npm run test:e2e:ui        # interactive UI mode
+npm run test         # unit + e2e, --max-failures=1
+npm run test-unit    # unit only
+npm run test-e2e     # e2e only
+npx playwright test --ui   # interactive UI mode (pass -- before flags if needed)
+npx playwright install --with-deps chromium  # one-time browser install
 ```
 
 ## Notes for Agents
 
 - Do **not** change `window.APPLICATION` logic; it is the contract with DataFair.
-- Do **not** rename or move `public/config-schema.json` without updating the build script.
+- Do **not** rename or move `public/config-schema.json` — it is the served schema AND the type-generation source (`src/config/schema.ts` re-exports it). After editing it, run `npm run build-types`; the generated top type is `_Jl` (used by `src/types.d.ts`).
+- **Never** bump `package.json` `version` and **never** change the `application-name` meta — both are DataFair identity keys reserved for human maintainers.
 - Chart.js registrations are global (see `Chart.vue`). Registering plugins conditionally inside `options` can cause duplicate-registration warnings; prefer registering once in setup if possible.
 - All source files use TypeScript. When adding new composables or components, use `.ts` / `.vue` with `lang="ts"` and import types explicitly.
-- The `src/types.d.ts` file extends the global `Window` interface; add new globals there if needed.
-- The 4 transform functions in `composables/chart-data/` are **pure** — they must not call Vue composables (`useFetch`, `useConfig`, etc.). The reactivity is provided by the `useChartData` hub which builds `ComputedRef` URL+query and feeds the responses into the transform via a `computed`.
+- The `src/types.d.ts` file extends the global `Window` interface; add new globals there if needed (`APPLICATION`, `vIframeOptions`, `__PUBLIC_SITE_INFO`, `triggerCapture`).
+- The 4 transform functions in `composables/chart-data/` are **pure** — they must not call Vue composables (`useFetch`, `useConfig`, etc.) and must keep relative runtime imports (see above). The reactivity is provided by the `useChartData` hub which builds `ComputedRef` URL+query and feeds the responses into the transform via a `computed`.
+- Format numbers with `n()` from vue-i18n (session locale), never `toLocaleString('fr')`; percentages are ratios through `n(v / 100, 'percent')`.

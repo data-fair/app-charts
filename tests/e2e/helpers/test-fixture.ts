@@ -15,27 +15,27 @@ export interface ChartPageFixture {
   chartPage: Page
 }
 
-// Minimal stand-in for what df-dev-server normally injects via the
-// %APPLICATION% placeholder in index.html. Tests then override the
-// configuration via postMessage('set-config') — see helpers/inject-config.ts.
-export const stubApplication = {
-  id: 'dev-application',
-  title: 'Dev application',
-  configuration: {},
-  exposedUrl: 'http://localhost:4100/app',
-  href: 'http://localhost:4100/config',
-  apiUrl: 'http://localhost:4100/api/v1',
-  wsUrl: 'ws://localhost:4100/ws'
-}
-
 // Register the mocks + addInitScript that the test page needs in order to
 // fully boot the app without an external dev server. Call this BEFORE
 // page.goto(). Transverse tests (that don't use setupChartTest) can also
 // call it directly to share the same setup.
+//
+// The APPLICATION stub mirrors what df-dev-server normally injects via the
+// %APPLICATION% placeholder in index.html. URLs are derived from the actual
+// page origin so the tests stay port-agnostic (E2E_PORT from the .env).
 export async function prepareChartPage (page: Page) {
-  await page.addInitScript((app) => {
-    ;(window as any).APPLICATION = app
-  }, stubApplication)
+  await page.addInitScript(() => {
+    const origin = window.location.origin
+    ;(window as any).APPLICATION = {
+      id: 'dev-application',
+      title: 'Dev application',
+      configuration: {},
+      exposedUrl: `${origin}/app`,
+      href: `${origin}/config`,
+      apiUrl: `${origin}/api/v1`,
+      wsUrl: `ws://${window.location.host}/ws`
+    }
+  })
   await mockSimpleDirectory(page)
 }
 
