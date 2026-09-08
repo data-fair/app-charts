@@ -149,8 +149,17 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       }
     }
 
-    if (c.tension != null) {
-      opts.elements = { line: { tension: c.tension / 10 } }
+    // motif de trait des courbes (line, multi-line, radar) : Chart.js applique
+    // elements.line aux LineElement de tous ces types, légende comprise
+    const lineDashPatterns: Record<string, number[]> = {
+      dashed: [6, 6],
+      dotted: [2, 3]
+    }
+    const lineElement: Record<string, unknown> = {}
+    if (c.tension != null) lineElement.tension = c.tension / 10
+    if (c.lineDash && lineDashPatterns[c.lineDash]) lineElement.borderDash = lineDashPatterns[c.lineDash]
+    if (Object.keys(lineElement).length) {
+      ;(opts as Record<string, unknown>).elements = { line: lineElement }
     }
 
     if (c.horizontal) {

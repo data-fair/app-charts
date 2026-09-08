@@ -50,6 +50,9 @@
                 "tension": {
                   "$ref": "#/$defs/tension"
                 },
+                "lineDash": {
+                  "$ref": "#/$defs/lineDash"
+                },
                 "area": {
                   "type": "boolean",
                   "title": "Remplir l'aire en dessous",
@@ -131,6 +134,9 @@
                 "tension": {
                   "$ref": "#/$defs/tension"
                 },
+                "lineDash": {
+                  "$ref": "#/$defs/lineDash"
+                },
                 "stacked": {
                   "type": "boolean",
                   "title": "Aires empilées"
@@ -207,6 +213,9 @@
                 },
                 "tension": {
                   "$ref": "#/$defs/tension"
+                },
+                "lineDash": {
+                  "$ref": "#/$defs/lineDash"
                 },
                 "config": {
                   "$ref": "#/$defs/multipleDataType"
@@ -550,6 +559,25 @@
       "maximum": 4,
       "default": 1,
       "layout": "slider"
+    },
+    "lineDash": {
+      "type": "string",
+      "title": "Motif de trait",
+      "default": "solid",
+      "oneOf": [
+        {
+          "const": "solid",
+          "title": "Trait plein"
+        },
+        {
+          "const": "dashed",
+          "title": "Tirets"
+        },
+        {
+          "const": "dotted",
+          "title": "Pointillés"
+        }
+      ]
     },
     "hexColor": {
       "type": "string",

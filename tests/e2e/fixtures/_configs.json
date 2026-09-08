@@ -828,5 +828,45 @@
         }
       }
     }
+  },
+  "21-line-alim-dashed": {
+    "dataset": "alim",
+    "comment": "line aggsBased date (month), lineDash dashed",
+    "config": {
+      "title": "Évolution mensuelle des inspections sanitaires (tirets)",
+      "xTitle": "Mois",
+      "yTitle": "Nombre d'inspections",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "line",
+        "tension": 0,
+        "lineDash": "dashed",
+        "area": false,
+        "hidePoints": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "date",
+            "field": "date_inspection",
+            "interval": "month"
+          },
+          "size": 50,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "primary"
+          }
+        }
+      }
+    }
   }
 }
