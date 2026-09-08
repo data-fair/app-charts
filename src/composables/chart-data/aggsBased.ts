@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedContext {
@@ -7,7 +7,9 @@ export interface AggsBasedContext {
   fields: Record<string, any>
   finalizedAt: string | undefined
   baseParams: Record<string, string>
-  getValue: (value: number | null | undefined) => number | undefined
+  getValue: (value: number | null | undefined, source?: unknown) => number | undefined
+  // diviseur normalisé (chart.config.divider) — agrégat par libellé, lu dans le même values_agg
+  divider: DividerConfig
   stacked: string | undefined
   metric: string | undefined
   // current value of theme.current ref (InternalThemeDefinition)
@@ -52,7 +54,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
     datasets = [{
       borderColor: color,
       backgroundColor: color,
-      data: limitedAggs.map((a) => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)),
+      data: limitedAggs.map((a) => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total, a)),
       pointStyle: chart.hidePoints ? false : 'circle',
       fill
     }]
@@ -74,7 +76,8 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         fill,
         data: limitedAggs.map((a) => {
           const val = (a.aggs || []).find((ag) => (ag.value + '') === label)
-          return val ? getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total) : undefined
+          // le diviseur est lu sur l'agrégat du libellé (a) : même diviseur pour toutes les séries
+          return val ? getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total, a) : undefined
         })
       }))
       if (chart.percentage) {
@@ -96,7 +99,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
           backgroundColor: colors[field],
           pointStyle: chart.hidePoints ? false : 'circle',
           fill,
-          data: aggs.map((a) => getValue(field === metricField ? a.metric : (a as any)[field + '_' + chart.config.metric]))
+          data: aggs.map((a) => getValue(field === metricField ? a.metric : (a as any)[field + '_' + chart.config.metric], a))
         }))
         if (chart.percentage) {
           for (const i in datasets[0].data as number[]) {
@@ -105,7 +108,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
           }
         }
       } else {
-        const dataValues = limitedAggs.map((a) => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total))
+        const dataValues = limitedAggs.map((a) => getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total, a))
 
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
         const orderedLabels = shouldFormatDateLabels
@@ -119,8 +122,15 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         if (chart.type === 'pie' && apiAggs.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          const otherSum = apiAggs.slice(chart.config.size).reduce((acc: number, a) => acc + (chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? a.metric : a.total)!, 0)
-          orderedData.push(getValue(otherSum))
+          // part « Autre » : ratio des totaux — un agrégat sans valeur ou sans
+          // diviseur exploitable est exclu du bucket (valeur masquée)
+          const isMetric = chart.config.valueCalc && chart.config.valueCalc.type === 'metric'
+          const others = apiAggs.slice(chart.config.size).filter((a) =>
+            (isMetric ? a.metric : a.total) != null && hasUsableDivider(a, ctx.divider)
+          )
+          const otherSum = others.reduce((acc, a) => acc + (isMetric ? a.metric : a.total)!, 0)
+          const otherDiv = others.reduce((acc, a) => acc + (extractDividerValue(a, ctx.divider) ?? 0), 0)
+          orderedData.push(getValue(otherSum, otherDiv))
         }
 
         const colors = getColors(orderedRawLabels, chart.config.colorOrder)

@@ -83,6 +83,15 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: 'Musée', metric: 4 }
     ]
   },
+  // bar with column divisor (capacite / nblieux per group)
+  bar_bpe_divisor: {
+    aggs: [
+      { value: 'Cinéma', metric: 12400, nblieux_sum: 8 },
+      { value: 'Théâtre', metric: 8120, nblieux_sum: 4 },
+      { value: 'Musée', metric: 6230, nblieux_sum: 5 },
+      { value: 'Médiathèque', metric: 4100 } // pas de diviseur exploitable → point masqué
+    ]
+  },
   // bar loyers dep
   bar_loyers_dep: {
     aggs: [

@@ -77,7 +77,7 @@ The app follows the `skill-apps` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown
 │       │   │                     #   /simple-directory (_public.js as JS setting __PUBLIC_SITE_INFO, _public, _theme.css)
 │       │   ├── assertions.ts     # expectChartVisible, ...
 │       │   └── test-fixture.ts   # setupChartTest(configName, mocks) -> test with a chartPage fixture (origin-agnostic APPLICATION stub)
-│       └── specs/                # 24 spec files (21 per config + 3 transverse)
+│       └── specs/                # 25 spec files (22 per config + 3 transverse)
 ├── vite.config.ts                # loadEnv(APP_PORT), hmr aligned, vueI18n({}), settingsPath, server.warmup
 └── package.json
 ```
@@ -211,6 +211,7 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | 19 | `19-multi-bar-bpe-metrics.spec.ts` | multi-bar aggsBasedCategories, valuesCalc, dynamicMetric, sortField |
 | 20 | `20-line-loyers-distribution.spec.ts` | line aggsBased, **groupBy number** interval |
 | 21 | `21-line-dash.spec.ts` | line aggsBased, **lineDash** dashed (elements.line borderDash) |
+| 22 | `22-bar-bpe-divisor.spec.ts` | bar aggsBased, **divider** = aggregate of another column per group (extra metric `<field>_<metric>`), missing divisor hidden |
 | — | `actions.spec.ts` | dynamicMetric, dynamicSort, stack toggle |
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |
 | — | `console-health.spec.ts` | zero `[intlify]` console warnings + `__PUBLIC_SITE_INFO` fast path |

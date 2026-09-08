@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -7,7 +7,9 @@ export interface RowsBasedContext {
   fields: Record<string, any>
   finalizedAt: string | undefined
   baseParams: Record<string, string>
-  getValue: (value: number | null | undefined) => number | undefined
+  getValue: (value: number | null | undefined, source?: unknown) => number | undefined
+  // diviseur normalisé (chart.config.divider) — lecture ligne par ligne : valeur brute de la colonne
+  divider: DividerConfig
   stacked: string | undefined
   // current value of theme.current ref (InternalThemeDefinition)
   theme: { colors: Record<string, string> }
@@ -46,7 +48,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     datasets = [{
       borderColor: color,
       backgroundColor: color,
-      data: results.map((r) => getValue(r[chart.config.valuesField!] as number)),
+      data: results.map((r) => getValue(r[chart.config.valuesField!] as number, r)),
       pointStyle: chart.hidePoints ? false : 'circle',
       fill
     }]
@@ -65,10 +67,10 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
           backgroundColor: colors[value],
           pointStyle: chart.hidePoints ? false : 'circle',
           fill,
-          data: results.map((r) => (r[chart.config.categoriesField!] === value && getValue(r[chart.config.valuesField!] as number)) || undefined)
+          data: results.map((r) => (r[chart.config.categoriesField!] === value && getValue(r[chart.config.valuesField!] as number, r)) || undefined)
         }))
       } else {
-        const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number))
+        const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number, r))
 
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
         const orderedLabels = orderedRawLabels.map((l) => fields[chart.config.labelsField!]?.['x-labels']?.[l] || l)
@@ -80,8 +82,14 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         if (chart.type === 'pie' && results.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          const otherSum = results.slice(chart.config.size).reduce((acc, r) => acc + (r[chart.config.valuesField!] as number), 0)
-          orderedData.push(getValue(otherSum))
+          // part « Autre » : ratio des totaux — une ligne sans valeur ou sans
+          // diviseur exploitable est exclue du bucket (valeur masquée)
+          const others = results.slice(chart.config.size).filter((r) =>
+            r[chart.config.valuesField!] != null && hasUsableDivider(r, ctx.divider)
+          )
+          const otherSum = others.reduce((acc, r) => acc + (r[chart.config.valuesField!] as number), 0)
+          const otherDiv = others.reduce((acc, r) => acc + (extractDividerValue(r, ctx.divider) ?? 0), 0)
+          orderedData.push(getValue(otherSum, otherDiv))
         }
 
         datasets = [{
@@ -110,7 +118,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         backgroundColor: colors[field],
         pointStyle: chart.hidePoints ? false : 'circle',
         fill,
-        data: results.map((r) => getValue(r[field] as number))
+        data: results.map((r) => getValue(r[field] as number, r))
       }))
       if (chart.percentage) {
         for (const i in datasets[0].data as number[]) {

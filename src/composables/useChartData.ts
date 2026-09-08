@@ -7,7 +7,7 @@ import { useFetch } from '@data-fair/lib-vue/fetch.js'
 import { useUiNotif, getErrorMsg } from '@data-fair/lib-vue/ui-notif.js'
 import { filters2qs } from '@data-fair/lib-utils/filters'
 import { ofetch } from 'ofetch'
-import { normalizeFilters } from '@/assets/utils'
+import { normalizeFilters, normalizeDivider, extractDividerValue, type DividerConfig } from '@/assets/utils'
 import { useConfig } from '@/composables/config'
 
 import transformRowsBased from './chart-data/rowsBased'
@@ -66,7 +66,41 @@ export function useChartData () {
     return params
   }), 500)
 
-  const getValue = (value: number | null | undefined) => value != null ? value / (config.value.divider ?? 1) : undefined
+  // ──────────────────────────────────────────────────────────────────
+  // Multiplicateur global (changement d'unité) et diviseur du chart
+  // L'ancien format « divider » numérique global (avant la refonte) est
+  // interprété en repli comme un multiplicateur 1/N (v/N ≡ v × (1/N)).
+  // ──────────────────────────────────────────────────────────────────
+  const divisor = computed<DividerConfig>(() => normalizeDivider(chart.value?.config?.divider))
+  const multiplier = computed(() => {
+    const m = config.value?.multiplier
+    if (typeof m === 'number' && Number.isFinite(m)) return m
+    const legacy = (config.value as { divider?: unknown } | undefined)?.divider
+    if (typeof legacy === 'number' && Number.isFinite(legacy) && legacy !== 0) return 1 / legacy
+    return 1
+  })
+
+  // Applique multiplicateur et diviseur. `source` porte la valeur de division :
+  // ligne (/lines), item d'agrégat (/values_agg) ou nombre déjà agrégé
+  // (/metric_agg global). Sans diviseur exploitable, la valeur est masquée.
+  const getValue = (value: number | null | undefined, source?: unknown) => {
+    if (value == null) return undefined
+    if (divisor.value.type === 'column') {
+      const d = extractDividerValue(source, divisor.value)
+      if (d === undefined || d === 0) return undefined
+      const v = (value * multiplier.value) / d
+      return Number.isFinite(v) ? v : undefined
+    }
+    const v = value * multiplier.value
+    return Number.isFinite(v) ? v : undefined
+  }
+
+  // Colonne de division absente du schéma (config obsolète) → avertissement
+  watch(divisor, (d) => {
+    if (d.type === 'column' && !fields.value[d.field!]) {
+      sendUiNotif({ type: 'error', msg: `Le diviseur est configuré sur la colonne « ${d.field} », absente du jeu de données.` })
+    }
+  }, { immediate: true })
 
   // ──────────────────────────────────────────────────────────────────
   // Reactive mode selector
@@ -101,7 +135,7 @@ export function useChartData () {
     const c = chart.value!.config
     const sortBy = reactiveSearchParams['sort-by']
     if (isAggsBased.value) {
-      return {
+      const query: Record<string, any> = {
         ...baseParams.value,
         size: 0,
         field: c.groupBy.field,
@@ -111,9 +145,14 @@ export function useChartData () {
         finalizedAt: finalizedAt.value,
         ...aggExtraMetrics(c, sortBy)
       }
+      // le diviseur est agrégé dans le même values_agg que la valeur du graphique
+      if (divisor.value.type === 'column') {
+        query.extra_metrics = mergeExtraMetrics(query.extra_metrics, `${divisor.value.field}:${divisor.value.metric}`)
+      }
+      return query
     }
     // aggsBasedLabels
-    return {
+    const labelsQuery: Record<string, any> = {
       ...baseParams.value,
       size: 0,
       field: c.valuesLabel,
@@ -121,11 +160,16 @@ export function useChartData () {
       agg_size: c.size,
       metric: reactiveSearchParams.metric || c.metric,
       metric_field: c.labelsValues?.[0],
-      finalizedAt: finalizedAt.value,
-      ...(c.labelsValues?.length > 1
-        ? { extra_metrics: c.labelsValues.slice(1).map((v: string) => v + ':' + c.metric).join(',') }
-        : {})
+      finalizedAt: finalizedAt.value
     }
+    const extra = mergeExtraMetrics(
+      c.labelsValues?.length > 1
+        ? c.labelsValues.slice(1).map((v: string) => v + ':' + c.metric).join(',')
+        : undefined,
+      divisor.value.type === 'column' ? `${divisor.value.field}:${divisor.value.metric}` : undefined
+    )
+    if (extra) labelsQuery.extra_metrics = extra
+    return labelsQuery
   })
   const { data: aggsRaw, error: aggsError } = useFetch<ValuesAggResponse>(aggsUrl, { query: aggsQuery as any, notifError: false })
 
@@ -152,6 +196,8 @@ export function useChartData () {
     const c = chart.value!.config
     const select = [c.labelsField!].concat(c.valuesField || c.valuesFields || [])
     if (c.categoriesField) select.push(c.categoriesField)
+    // lecture ligne par ligne : la colonne de division est lue sur chaque ligne
+    if (divisor.value.type === 'column' && !select.includes(divisor.value.field!)) select.push(divisor.value.field!)
     return {
       ...baseParams.value,
       size: chart.value!.type === 'pie' ? 10000 : c.size,
@@ -169,14 +215,18 @@ export function useChartData () {
   // through the explicit dependencies.
   // ──────────────────────────────────────────────────────────────────
   const aggsLabelsMetrics = ref<Array<{ field: string; metric: number }>>([])
+  // diviseur « colonne » agrégé globalement (un seul /metric_agg, même filtres)
+  const divisorMetric = ref<number>()
   watchEffect(async () => {
     if (!isAggsLabels.value || !datasetUrl.value) {
       aggsLabelsMetrics.value = []
+      divisorMetric.value = undefined
       return
     }
     const fields = (chart.value?.config?.valuesFields || []) as string[]
     if (!fields.length) {
       aggsLabelsMetrics.value = []
+      divisorMetric.value = undefined
       return
     }
     const params = {
@@ -194,6 +244,16 @@ export function useChartData () {
           })
       ))
       aggsLabelsMetrics.value = results
+      divisorMetric.value = undefined
+      if (divisor.value.type === 'column') {
+        try {
+          divisorMetric.value = (await ofetch<MetricAggResponse>(`${datasetUrl.value}/metric_agg`, {
+            params: { ...baseParams.value, field: divisor.value.field, metric: divisor.value.metric, finalizedAt: finalizedAt.value }
+          })).metric
+        } catch (e) {
+          sendUiNotif({ type: 'error', msg: getErrorMsg(e as Error), error: e })
+        }
+      }
     } catch {
       aggsLabelsMetrics.value = []
     }
@@ -226,6 +286,7 @@ export function useChartData () {
         finalizedAt: finalizedAt.value,
         baseParams: baseParams.value,
         getValue,
+        divider: divisor.value,
         stacked: reactiveSearchParams.stacked,
         theme: { colors: theme.current.value.colors as unknown as Record<string, string> },
         sortBy,
@@ -243,6 +304,7 @@ export function useChartData () {
         finalizedAt: finalizedAt.value,
         baseParams: baseParams.value,
         getValue,
+        divider: divisor.value,
         stacked: reactiveSearchParams.stacked,
         metric: reactiveSearchParams.metric,
         theme: { colors: theme.current.value.colors as unknown as Record<string, string> },
@@ -275,6 +337,7 @@ export function useChartData () {
         baseParams: baseParams.value,
         metric: reactiveSearchParams.metric,
         getValue,
+        dividerMetric: divisorMetric.value,
         metrics: aggsLabelsMetrics.value
       })
     }
@@ -318,4 +381,10 @@ function aggExtraMetrics (c: any, sortBy: string | undefined) {
     return out
   }
   return {}
+}
+
+/** Fusionne plusieurs listes `champ:métrique` en dédupliquant les entrées. */
+function mergeExtraMetrics (...lists: Array<string | undefined>): string | undefined {
+  const entries = lists.filter(Boolean).flatMap((l) => (l as string).split(',')).filter(Boolean)
+  return entries.length ? [...new Set(entries)].join(',') : undefined
 }

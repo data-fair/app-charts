@@ -7,7 +7,9 @@ export interface AggsLabelsContext {
   finalizedAt: string | undefined
   baseParams: Record<string, string>
   metric: string | undefined
-  getValue: (value: number | null | undefined) => number | undefined
+  getValue: (value: number | null | undefined, source?: unknown) => number | undefined
+  // diviseur « colonne » agrégé globalement via /metric_agg (même diviseur pour toutes les parts)
+  dividerMetric: number | undefined
   // API responses
   metrics: Array<{ field: string; metric: number }>
 }
@@ -27,7 +29,7 @@ export default function transformAggsLabels (ctx: AggsLabelsContext) {
     labels,
     borderColor: 'white',
     backgroundColor: orderedValuesFields.map((l: string) => colors[l] || chart.config.colorOrder?.defaultColor || '#828282'),
-    data: orderedValuesFields.map((f: string) => getValue(metricsMap.get(f)?.metric))
+    data: orderedValuesFields.map((f: string) => getValue(metricsMap.get(f)?.metric, ctx.dividerMetric))
   }]
 
   if (['percentages', 'both'].includes(chart.display as string)) {

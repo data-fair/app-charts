@@ -7,6 +7,9 @@ import {
   fillMissingDateAggs,
   getColors,
   getOrderedLabels,
+  normalizeDivider,
+  extractDividerValue,
+  hasUsableDivider,
   normalizeFilters,
   splitString
 } from '../../src/assets/utils'
@@ -74,4 +77,36 @@ test('fillMissingDateAggs fills gaps and reverses on desc order', () => {
 
   const desc = fillMissingDateAggs(aggs, 'day', 'desc')
   expect(desc.map((a: any) => a.value)).toEqual(['2024-01-03', '2024-01-02', '2024-01-01'])
+})
+
+test('normalizeDivider accepts column configs and falls back to none', () => {
+  expect(normalizeDivider(undefined)).toEqual({ type: 'none' })
+  expect(normalizeDivider(null)).toEqual({ type: 'none' })
+  expect(normalizeDivider(12)).toEqual({ type: 'none' }) // ancien format nombre global : géré par le multiplicateur
+  expect(normalizeDivider({ type: 'none' })).toEqual({ type: 'none' })
+  expect(normalizeDivider({ type: 'column', field: 'pop' })).toEqual({ type: 'column', field: 'pop', metric: 'sum' })
+  expect(normalizeDivider({ type: 'column', field: 'pop', metric: 'avg' })).toEqual({ type: 'column', field: 'pop', metric: 'avg' })
+  expect(normalizeDivider({ type: 'column' })).toEqual({ type: 'none' }) // incomplet
+  expect(normalizeDivider({ type: 'column', field: '', metric: 'sum' })).toEqual({ type: 'none' })
+})
+
+test('extractDividerValue reads rows, agg items and pre-aggregated numbers', () => {
+  const divider = { type: 'column', field: 'pop', metric: 'sum' } as const
+  expect(extractDividerValue({ pop: 42 }, divider)).toBe(42) // ligne : valeur brute de la colonne
+  expect(extractDividerValue({ pop_sum: 42 }, divider)).toBe(42) // item d'agrégat : métrique additionnelle
+  expect(extractDividerValue({ pop_sum: '42' }, divider)).toBe(42)
+  expect(extractDividerValue({ pop_sum: Number.NaN }, divider)).toBeUndefined()
+  expect(extractDividerValue({}, divider)).toBeUndefined()
+  expect(extractDividerValue(undefined, divider)).toBeUndefined()
+  expect(extractDividerValue(120, divider)).toBe(120) // agrégat global déjà extrait
+  expect(extractDividerValue(Number.NaN, divider)).toBeUndefined()
+  expect(extractDividerValue({ pop_sum: 42 }, { type: 'none' })).toBeUndefined()
+})
+
+test('hasUsableDivider only gates column dividers', () => {
+  const divider = { type: 'column', field: 'pop', metric: 'sum' } as const
+  expect(hasUsableDivider({ pop_sum: 0 }, divider)).toBe(false)
+  expect(hasUsableDivider({}, divider)).toBe(false)
+  expect(hasUsableDivider({ pop_sum: 3 }, divider)).toBe(true)
+  expect(hasUsableDivider({}, { type: 'none' })).toBe(true)
 })

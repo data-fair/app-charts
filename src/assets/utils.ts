@@ -56,6 +56,59 @@ export function normalizeFilters (filters: Filter[]) {
   })
 }
 
+// ──────────────────────────────────────────────────────────────────
+// Diviseur (chart.config.divider) — pure helpers, unit-tested
+// ──────────────────────────────────────────────────────────────────
+
+export interface DividerConfig {
+  type: 'none' | 'column'
+  /** Colonne du dataset portant les valeurs de division (type "column") */
+  field?: string
+  /** Agrégat appliqué à la colonne pour chaque groupe (type "column") */
+  metric?: string
+}
+
+/**
+ * Normalise la configuration du diviseur d'un graphique.
+ * Tout format inattendu (absent, incomplet, ancien nombre global géré par le
+ * multiplicateur) est interprété comme « pas de diviseur ».
+ */
+export function normalizeDivider (raw: unknown): DividerConfig {
+  if (!raw || typeof raw !== 'object') return { type: 'none' }
+  const r = raw as { type?: unknown; field?: unknown; metric?: unknown }
+  if (r.type === 'column' && typeof r.field === 'string' && r.field) {
+    return { type: 'column', field: r.field, metric: typeof r.metric === 'string' && r.metric ? r.metric : 'sum' }
+  }
+  return { type: 'none' }
+}
+
+/**
+ * Extrait la valeur de division d'une source :
+ * - item d'agrégat (/values_agg) : métrique additionnelle `<field>_<metric>`
+ * - ligne du dataset (/lines) : propriété brute `<field>`
+ * - nombre déjà agrégé (/metric_agg global) : utilisé directement
+ */
+export function extractDividerValue (source: unknown, divider: DividerConfig): number | undefined {
+  if (divider.type !== 'column') return undefined
+  if (typeof source === 'number') return Number.isFinite(source) ? source : undefined
+  if (!source || typeof source !== 'object') return undefined
+  const s = source as Record<string, unknown>
+  const raw = s[`${divider.field}_${divider.metric}`] ?? s[divider.field!]
+  const value = typeof raw === 'string' ? Number(raw) : raw
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined
+}
+
+/**
+ * Une source est « divisible » quand le diviseur n'est pas de type colonne ou
+ * quand il porte une valeur exploitable (numérique non nulle). Dans le cas
+ * contraire la valeur du graphique est masquée.
+ */
+export function hasUsableDivider (source: unknown, divider: DividerConfig): boolean {
+  if (divider.type !== 'column') return true
+  const d = extractDividerValue(source, divider)
+  return d !== undefined && d !== 0
+}
+
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length
 export function splitString (n: number, str: string) {
   const arr = str?.split(' ') ?? []

@@ -868,5 +868,51 @@
         }
       }
     }
+  },
+  "22-bar-bpe-divisor": {
+    "dataset": "bpe",
+    "comment": "bar aggsBased with column divisor (capacite / nblieux per group)",
+    "config": {
+      "title": "Capacité moyenne par équipement",
+      "xTitle": "Catégorie",
+      "yTitle": "Capacité moyenne",
+      "unit": "places",
+      "labelsMaxWidth": 40,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "categorie",
+            "interval": ""
+          },
+          "size": 12,
+          "valueCalc": {
+            "type": "metric",
+            "field": "capacite",
+            "metric": "sum",
+            "dynamicMetric": false
+          },
+          "divider": {
+            "type": "column",
+            "field": "nblieux",
+            "metric": "sum"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "secondary"
+          }
+        }
+      }
+    }
   }
 }

@@ -345,9 +345,10 @@
           "type": "string",
           "title": "Unité"
         },
-        "divider": {
+        "multiplier": {
           "type": "number",
-          "title": "Diviseur",
+          "title": "Multiplicateur",
+          "description": "Multiplicateur appliqué aux valeurs du graphique, pour changer d'unité (ex : 100 pour exprimer un ratio en pourcentage, 0,001 pour des milliers)",
           "default": 1
         },
         "legendPosition": {
@@ -850,6 +851,80 @@
         }
       ]
     },
+    "divider": {
+      "title": "Diviseur",
+      "type": "object",
+      "description": "Valeur par laquelle diviser les valeurs du graphique (ex : diviser une somme par un nombre de lignes ou d'habitants pour obtenir un ratio). Une division par une constante peut être réalisée avec le multiplicateur.",
+      "discriminator": {
+        "propertyName": "type"
+      },
+      "default": {
+        "type": "none"
+      },
+      "oneOf": [
+        {
+          "title": "Pas de diviseur",
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        },
+        {
+          "title": "Calculée depuis une colonne",
+          "required": [
+            "type",
+            "field",
+            "metric"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "column"
+            },
+            "field": {
+              "type": "string",
+              "title": "Colonne de division",
+              "layout": {
+                "getItems": {
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+                  "itemKey": "data[\"key\"]",
+                  "itemTitle": "data[\"label\"]"
+                }
+              }
+            },
+            "metric": {
+              "type": "string",
+              "title": "Type de calcul",
+              "description": "Calcul appliqué à la colonne pour chaque groupe du graphique. En lecture ligne par ligne, la valeur brute de la colonne est utilisée.",
+              "default": "sum",
+              "oneOf": [
+                {
+                  "const": "avg",
+                  "title": "Moyenne"
+                },
+                {
+                  "const": "min",
+                  "title": "Valeur minimale"
+                },
+                {
+                  "const": "max",
+                  "title": "Valeur maximale"
+                },
+                {
+                  "const": "sum",
+                  "title": "Somme"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
     "rowsDataSingle": {
       "title": "Lire les lignes une par une, couleur unique",
       "type": "object",
@@ -874,6 +949,9 @@
         },
         "valuesField": {
           "$ref": "#/$defs/valuesField"
+        },
+        "divider": {
+          "$ref": "#/$defs/divider"
         },
         "rowSortBy": {
           "$ref": "#/$defs/rowSort"
@@ -913,6 +991,9 @@
         },
         "valueCalc": {
           "$ref": "#/$defs/valueCalc"
+        },
+        "divider": {
+          "$ref": "#/$defs/divider"
         },
         "missingLabel": {
           "type": "string",
@@ -958,6 +1039,9 @@
         },
         "valuesField": {
           "$ref": "#/$defs/valuesField"
+        },
+        "divider": {
+          "$ref": "#/$defs/divider"
         },
         "categoriesField": {
           "type": "string",
@@ -1089,6 +1173,9 @@
         },
         "valuesFields": {
           "$ref": "#/$defs/valuesFields"
+        },
+        "divider": {
+          "$ref": "#/$defs/divider"
         },
         "removeFromLabels": {
           "title": "Texte à retirer des libellés",
@@ -1232,6 +1319,9 @@
         "valueCalc": {
           "$ref": "#/$defs/valueCalc"
         },
+        "divider": {
+          "$ref": "#/$defs/divider"
+        },
         "missingLabel": {
           "type": "string",
           "title": "Groupe pour les éléments non renseignés",
@@ -1353,6 +1443,9 @@
         },
         "valuesCalc": {
           "$ref": "#/$defs/valuesFields"
+        },
+        "divider": {
+          "$ref": "#/$defs/divider"
         },
         "removeFromLabels": {
           "title": "Texte à retirer des libellés",
@@ -1532,6 +1625,9 @@
         "valuesLabel": {
           "$ref": "#/$defs/valuesLabel"
         },
+        "divider": {
+          "$ref": "#/$defs/divider"
+        },
         "missingLabel": {
           "type": "string",
           "title": "Groupe pour les éléments non renseignés",
@@ -1704,6 +1800,9 @@
         "valuesField": {
           "$ref": "#/$defs/valuesField"
         },
+        "divider": {
+          "$ref": "#/$defs/divider"
+        },
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
@@ -1817,6 +1916,9 @@
         "valueCalc": {
           "$ref": "#/$defs/valueCalc"
         },
+        "divider": {
+          "$ref": "#/$defs/divider"
+        },
         "missingLabel": {
           "type": "string",
           "title": "Groupe pour les éléments non renseignés",
@@ -1925,6 +2027,9 @@
         },
         "valuesFields": {
           "$ref": "#/$defs/valuesFields"
+        },
+        "divider": {
+          "$ref": "#/$defs/divider"
         },
         "removeFromLabels": {
           "title": "Texte à retirer des libellés",

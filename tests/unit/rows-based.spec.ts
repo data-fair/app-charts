@@ -1,6 +1,7 @@
 // Unit tests — rowsBased transform (pure API response -> Chart.js data)
 import { test, expect } from '@playwright/test'
 import transformRowsBased, { type RowsBasedContext } from '../../src/composables/chart-data/rowsBased'
+import { extractDividerValue, type DividerConfig } from '../../src/assets/utils'
 
 function baseCtx (overrides: Partial<RowsBasedContext> & { chart: any }): RowsBasedContext {
   return {
@@ -9,6 +10,7 @@ function baseCtx (overrides: Partial<RowsBasedContext> & { chart: any }): RowsBa
     finalizedAt: undefined,
     baseParams: {},
     getValue: (v) => (v == null ? undefined : v),
+    divider: { type: 'none' },
     stacked: undefined,
     theme: { colors: { primary: '#1976D2', secondary: '#424242', accent: '#82B1FF' } },
     sortBy: undefined,
@@ -128,4 +130,50 @@ test('sortBy label orders results through localized comparison', () => {
   })
   const data = transformRowsBased(ctx)
   expect(data.labels).toEqual([['77'], ['75']])
+})
+
+// ── Diviseur « colonne » (valeur brute de la ligne) ──────────────────────────
+
+function dividerGetValue (divider: DividerConfig) {
+  return (v: number | null | undefined, source?: unknown) => {
+    if (v == null) return undefined
+    const d = extractDividerValue(source, divider)
+    if (d === undefined || d === 0) return undefined
+    return v / d
+  }
+}
+
+test('column divider divides each row by its own raw column value and hides missing divisors', () => {
+  const divider = { type: 'column', field: 'pop', metric: 'sum' } as const
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 10 } },
+    divider,
+    getValue: dividerGetValue(divider),
+    results: [
+      { dep: '75', count: 100, pop: 2 },
+      { dep: '77', count: 30, pop: 3 },
+      { dep: '78', count: 50 }, // pas de diviseur exploitable → valeur masquée
+      { dep: '79', count: 40, pop: 0 } // diviseur nul → valeur masquée
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.datasets[0].data).toEqual([50, 10, undefined, undefined])
+})
+
+test('pie Autre bucket divides the ratio of totals when a column divider is set', () => {
+  const divider = { type: 'column', field: 'pop', metric: 'sum' } as const
+  const ctx = baseCtx({
+    chart: { type: 'pie', display: 'values', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 2 } },
+    divider,
+    getValue: dividerGetValue(divider),
+    results: [
+      { dep: '75', count: 100, pop: 2 },
+      { dep: '77', count: 30, pop: 3 },
+      { dep: '78', count: 90, pop: 9 },
+      { dep: '79', count: 10, pop: 1 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  // parts : 75 → 100/2 = 50 ; 77 → 30/3 = 10 ; Autre → (90+10)/(9+1) = 10
+  expect(data.datasets[0].data).toEqual([50, 10, 10])
 })

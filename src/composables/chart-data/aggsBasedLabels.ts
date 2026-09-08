@@ -8,7 +8,7 @@ export interface AggsBasedLabelsContext {
   finalizedAt: string | undefined
   baseParams: Record<string, string>
   metric: string | undefined
-  getValue: (value: number | null | undefined) => number | undefined
+  getValue: (value: number | null | undefined, source?: unknown) => number | undefined
   stacked: string | undefined
   // API responses
   aggs: AggItem[]
@@ -40,7 +40,8 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
     pointStyle: chart.hidePoints ? false : 'circle',
     fill,
     data: chart.config.labelsValues.map((l: string, li: number) =>
-      getValue(!li ? serie.metric : (serie as any)[l + '_' + (ctx.metric || chart.config.metric)])
+      // le diviseur est lu sur la série (agrégat du valuesLabel) : clé <champ>_<métrique>
+      getValue(!li ? serie.metric : (serie as any)[l + '_' + (ctx.metric || chart.config.metric)], serie)
     )
   }))
 
