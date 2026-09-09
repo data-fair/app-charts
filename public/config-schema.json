@@ -405,7 +405,7 @@
           },
           "layout": {
             "getItems": {
-              "url": "api/v1/datasets?status=finalized&size=50&q={q}&select=id,title,schema&${context.datasetFilter}&sort=createdAt:-1",
+              "url": "api/v1/datasets?status=finalized&size=100&q={q}&select=id,title,schema&${context.datasetFilter}",
               "itemKey": "data[\"href\"]",
               "itemTitle": "data[\"title\"]",
               "itemsResults": "data[\"results\"]"
