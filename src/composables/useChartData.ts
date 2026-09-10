@@ -20,7 +20,8 @@ export interface DatasetLine {
 }
 
 export interface AggItem {
-  value: string | number
+  // les champs booléens renvoient leurs valeurs telles quelles (true/false)
+  value: string | number | boolean
   total?: number
   metric?: number
   aggs?: AggItem[]

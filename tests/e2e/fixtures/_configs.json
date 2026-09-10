@@ -1046,5 +1046,47 @@
         }
       }
     }
+  },
+  "26-bar-alim-boolean": {
+    "dataset": "alim",
+    "comment": "bar aggsBased grouped by a boolean field, booleanLabels oui/non",
+    "config": {
+      "title": "Établissements par conformité",
+      "xTitle": "Conforme",
+      "yTitle": "Nombre d'établissements",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "booleanLabels": {
+        "trueLabel": "Oui",
+        "falseLabel": "Non",
+        "numericBooleans": false
+      },
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "conforme",
+            "interval": ""
+          },
+          "size": 12,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "primary"
+          }
+        }
+      }
+    }
   }
 }

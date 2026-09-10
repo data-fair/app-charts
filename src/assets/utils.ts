@@ -17,6 +17,37 @@ export function formatDateLabel (value: string, interval: string): string {
   }
 }
 
+// ──────────────────────────────────────────────────────────────────
+// Libellés des valeurs booléennes (config.booleanLabels) — pure helpers
+// ──────────────────────────────────────────────────────────────────
+
+export interface BooleanLabels {
+  trueLabel?: string
+  falseLabel?: string
+  /** Remplacer aussi les libellés « 0 » et « 1 » (colonnes numériques utilisées comme booléens) */
+  numericBooleans?: boolean
+}
+
+/**
+ * Libellé affiché pour une valeur brute de colonne :
+ * 1. correspondance `x-labels` du schéma du dataset (comportement historique)
+ * 2. libellés booléens configurés (true/false, et 0/1 si numericBooleans)
+ * 3. valeur brute telle quelle
+ */
+export function getValueLabel (raw: unknown, field: any, booleanLabels?: BooleanLabels): string {
+  const xLabel = field?.['x-labels']?.[raw as string]
+  if (xLabel) return xLabel
+  if (booleanLabels) {
+    if (raw === true || raw === 'true') return booleanLabels.trueLabel || String(raw)
+    if (raw === false || raw === 'false') return booleanLabels.falseLabel || String(raw)
+    if (booleanLabels.numericBooleans) {
+      if (raw === 1 || raw === '1') return booleanLabels.trueLabel || String(raw)
+      if (raw === 0 || raw === '0') return booleanLabels.falseLabel || String(raw)
+    }
+  }
+  return String(raw)
+}
+
 export function getOrderedLabels (labels: string[], colorOrder: AnyChartConfig['colorOrder']): string[] {
   if (!colorOrder) return labels
   if (colorOrder.type === 'palette' && colorOrder.seriesOrder?.length) {

@@ -96,3 +96,21 @@ test('column divider divides each serie by its own extra metric', () => {
   expect(data.datasets[0].data).toEqual([15, 6])
   expect(data.datasets[1].data).toEqual([undefined, undefined])
 })
+
+// ── Libellés des valeurs booléennes (config.booleanLabels) ──────────────────
+
+test('boolean valuesLabel values are replaced by the configured labels', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'radar',
+      config: { type: 'aggsBasedLabels', valuesLabel: 'category', labelsValues: ['surface'], size: 10 }
+    },
+    config: { booleanLabels: { trueLabel: 'Oui', falseLabel: 'Non' } },
+    aggs: [
+      { value: true, metric: 30 },
+      { value: false, metric: 40 }
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Oui', 'Non'])
+})

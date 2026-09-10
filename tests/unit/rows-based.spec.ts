@@ -211,3 +211,19 @@ test('pie Autre bucket still divides by the global line count when totalCount is
   // parts : 10 ; 3 ; Autre → (90+10)/10 = 10 (diviseur global, la source est ignorée)
   expect(data.datasets[0].data).toEqual([10, 3, 10])
 })
+
+// ── Libellés des valeurs booléennes (config.booleanLabels) ──────────────────
+
+test('boolean row values are replaced by the configured labels', () => {
+  const ctx = baseCtx({
+    chart: { type: 'line', config: { type: 'rowsBased', labelsField: 'actif', valuesField: 'count', size: 10 } },
+    config: { booleanLabels: { trueLabel: 'Oui', falseLabel: 'Non' } },
+    results: [
+      { actif: true, count: 10 },
+      { actif: false, count: 20 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.labels).toEqual([['Oui'], ['Non']])
+  expect(data.datasets[0].data).toEqual([10, 20])
+})

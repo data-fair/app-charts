@@ -345,6 +345,34 @@
           "default": 30,
           "layout": "slider"
         },
+        "booleanLabels": {
+          "title": "Libellés des valeurs booléennes",
+          "type": "object",
+          "description": "Remplace les valeurs booléennes par des libellés lisibles dans les libellés d'axes et de légende du graphique.",
+          "properties": {
+            "trueLabel": {
+              "type": "string",
+              "title": "Libellé de la valeur vraie",
+              "default": "Oui"
+            },
+            "falseLabel": {
+              "type": "string",
+              "title": "Libellé de la valeur fausse",
+              "default": "Non"
+            },
+            "numericBooleans": {
+              "type": "boolean",
+              "title": "Traiter aussi les valeurs 0 et 1",
+              "description": "Remplace les libellés « 0 » et « 1 » par les libellés vrai/faux, pour les colonnes numériques utilisées comme booléens.",
+              "default": false
+            }
+          },
+          "default": {
+            "trueLabel": "Oui",
+            "falseLabel": "Non",
+            "numericBooleans": false
+          }
+        },
         "unit": {
           "type": "string",
           "title": "Unité"

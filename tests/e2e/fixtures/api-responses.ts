@@ -149,6 +149,13 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: '2024-04-01T00:00:00.000Z', total: 1380 },
       { value: '2024-05-01T00:00:00.000Z', total: 1500 }
     ]
+  },
+  // bar on a boolean field (values returned as JSON booleans, booleanLabels oui/non)
+  bar_alim_boolean: {
+    aggs: [
+      { value: true, total: 8120 },
+      { value: false, total: 3230 }
+    ]
   }
 }
 

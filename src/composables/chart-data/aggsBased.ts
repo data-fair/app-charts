@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, getValueLabel, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedContext {
@@ -34,8 +34,8 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
   } else if (sortBy === 'label') {
     const groupByField = chart.config.groupBy.field
     aggs = [...aggs].sort((a, b) => {
-      const labelA = (fields[groupByField]?.['x-labels']?.[a.value as string] || (a.value as string)) + ''
-      const labelB = (fields[groupByField]?.['x-labels']?.[b.value as string] || (b.value as string)) + ''
+      const labelA = getValueLabel(a.value, fields[groupByField], config.booleanLabels)
+      const labelB = getValueLabel(b.value, fields[groupByField], config.booleanLabels)
       return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
     })
   }
@@ -46,7 +46,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
   const dateInterval = chart.config.groupBy?.interval || 'value'
   const labels = shouldFormatDateLabels
     ? rawLabels.map((val) => formatDateLabel(val, dateInterval))
-    : rawLabels.map((a) => fields[chart.config.groupBy.field]?.['x-labels']?.[a] || a)
+    : rawLabels.map((a) => getValueLabel(a, fields[chart.config.groupBy.field], config.booleanLabels))
   let datasets: any[]
 
   if (chart.config.color) {
@@ -69,7 +69,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
       }
       const colors = getColors(series, chart.config.colorOrder)
       datasets = series.map((label) => ({
-        label: fields[chart.config.groupsField]?.['x-labels']?.[label] || label,
+        label: getValueLabel(label, fields[chart.config.groupsField], config.booleanLabels),
         borderColor: colors[label],
         backgroundColor: colors[label],
         pointStyle: chart.hidePoints ? false : 'circle',
@@ -113,7 +113,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
         const orderedLabels = shouldFormatDateLabels
           ? orderedRawLabels.map((val) => formatDateLabel(val, dateInterval))
-          : orderedRawLabels.map((l) => fields[chart.config.groupBy.field]?.['x-labels']?.[l] || l)
+          : orderedRawLabels.map((l) => getValueLabel(l, fields[chart.config.groupBy.field], config.booleanLabels))
         const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]

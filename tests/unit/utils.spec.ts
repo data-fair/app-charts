@@ -7,6 +7,7 @@ import {
   fillMissingDateAggs,
   getColors,
   getOrderedLabels,
+  getValueLabel,
   normalizeDivider,
   extractDividerValue,
   hasUsableDivider,
@@ -132,4 +133,42 @@ test('hasUsableDivider gates groupCount dividers, not totalCount', () => {
   expect(hasUsableDivider({}, groupCount)).toBe(false)
   expect(hasUsableDivider({ total: 3 }, groupCount)).toBe(true)
   expect(hasUsableDivider({}, { type: 'totalCount' })).toBe(true) // gating global, dans getValue
+})
+
+test('getValueLabel applies boolean labels to true/false values', () => {
+  const labels = { trueLabel: 'Oui', falseLabel: 'Non' }
+  expect(getValueLabel(true, undefined, labels)).toBe('Oui')
+  expect(getValueLabel(false, undefined, labels)).toBe('Non')
+  expect(getValueLabel('true', undefined, labels)).toBe('Oui')
+  expect(getValueLabel('false', undefined, labels)).toBe('Non')
+  // valeurs non booléennes intactes
+  expect(getValueLabel('Paris', undefined, labels)).toBe('Paris')
+  expect(getValueLabel(3, undefined, labels)).toBe('3')
+  // 0/1 non remplacés sans l'option numérique
+  expect(getValueLabel(0, undefined, labels)).toBe('0')
+  expect(getValueLabel(1, undefined, labels)).toBe('1')
+  expect(getValueLabel('0', undefined, labels)).toBe('0')
+  expect(getValueLabel('1', undefined, labels)).toBe('1')
+})
+
+test('getValueLabel applies numeric booleans only when opted in', () => {
+  const labels = { trueLabel: 'Oui', falseLabel: 'Non', numericBooleans: true }
+  expect(getValueLabel(0, undefined, labels)).toBe('Non')
+  expect(getValueLabel(1, undefined, labels)).toBe('Oui')
+  expect(getValueLabel('0', undefined, labels)).toBe('Non')
+  expect(getValueLabel('1', undefined, labels)).toBe('Oui')
+  // autres valeurs numériques intactes
+  expect(getValueLabel(2, undefined, labels)).toBe('2')
+  expect(getValueLabel('10', undefined, labels)).toBe('10')
+})
+
+test('getValueLabel keeps x-labels priority and tolerates a missing config', () => {
+  const field = { 'x-labels': { true: 'Oui', false: 'Non', Paris: 'Paris (75)' } }
+  expect(getValueLabel('Paris', field)).toBe('Paris (75)')
+  expect(getValueLabel(true, field)).toBe('Oui')
+  expect(getValueLabel(false, field)).toBe('Non')
+  // comportement historique sans config : valeurs brutes
+  expect(getValueLabel(true, undefined)).toBe('true')
+  expect(getValueLabel(false, undefined)).toBe('false')
+  expect(getValueLabel('Aix', undefined)).toBe('Aix')
 })

@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, getValueLabel, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -33,14 +33,14 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
   if (sortBy === 'label') {
     const labelsField = chart.config.labelsField!
     results.sort((a, b) => {
-      const labelA = (fields[labelsField]?.['x-labels']?.[a[labelsField] as string] || (a[labelsField] as string)) + ''
-      const labelB = (fields[labelsField]?.['x-labels']?.[b[labelsField] as string] || (b[labelsField] as string)) + ''
+      const labelA = getValueLabel(a[labelsField], fields[labelsField], config.booleanLabels)
+      const labelB = getValueLabel(b[labelsField], fields[labelsField], config.booleanLabels)
       return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
     })
   }
 
   const categories = apiCategories
-  const labels = results.map((r) => fields[chart.config.labelsField!]?.['x-labels']?.[r[chart.config.labelsField!] as string] || r[chart.config.labelsField!] as string).slice(0, chart.config.size)
+  const labels = results.map((r) => getValueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!], config.booleanLabels)).slice(0, chart.config.size)
   let datasets: any[]
 
   if (chart.config.color) {
@@ -62,7 +62,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         const orderedValues = getOrderedLabels(categoryValues, chart.config.colorOrder)
         const sortedCategories = orderedValues.map((v) => categories.find((c) => (c.value + '') === v)!)
         datasets = sortedCategories.map(({ value, label }) => ({
-          label: label || value,
+          label: label || getValueLabel(value, fields[chart.config.categoriesField!], config.booleanLabels),
           borderColor: colors[value],
           backgroundColor: colors[value],
           pointStyle: chart.hidePoints ? false : 'circle',
@@ -73,7 +73,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number, r))
 
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
-        const orderedLabels = orderedRawLabels.map((l) => fields[chart.config.labelsField!]?.['x-labels']?.[l] || l)
+        const orderedLabels = orderedRawLabels.map((l) => getValueLabel(l, fields[chart.config.labelsField!], config.booleanLabels))
         const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]

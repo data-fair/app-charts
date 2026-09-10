@@ -225,3 +225,48 @@ test('pie Autre bucket uses the ratio of line counts when a groupCount divider i
   // parts : A → 100/2 = 50 ; B → 30/3 = 10 ; Autre → (90+10)/(9+1) = 10
   expect(data.datasets[0].data).toEqual([50, 10, 10])
 })
+
+// ── Libellés des valeurs booléennes (config.booleanLabels) ──────────────────
+
+test('boolean group values are replaced by the configured labels and sorted by label', () => {
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'aggsBased', groupBy: { type: 'value', field: 'actif' }, size: 10, aggSortBy: 'label' } },
+    config: { booleanLabels: { trueLabel: 'Oui', falseLabel: 'Non' } },
+    aggs: [
+      { value: true, total: 5 },
+      { value: false, total: 7 }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  // tri ascendant par libellé : « Non » avant « Oui »
+  expect(data.labels).toEqual([['Non'], ['Oui']])
+  expect(data.datasets[0].data).toEqual([7, 5])
+})
+
+test('numeric boolean group values are only replaced when opted in', () => {
+  const chart = { type: 'bar', config: { type: 'aggsBased', groupBy: { type: 'value', field: 'actif' }, size: 10 } }
+  const aggs = [
+    { value: 1, total: 5 },
+    { value: 0, total: 7 }
+  ]
+  const off = transformAggsBased(baseCtx({ chart, aggs }))
+  expect(off.labels).toEqual([['1'], ['0']])
+  const on = transformAggsBased(baseCtx({
+    chart,
+    aggs,
+    config: { booleanLabels: { trueLabel: 'Oui', falseLabel: 'Non', numericBooleans: true } }
+  }))
+  expect(on.labels).toEqual([['Oui'], ['Non']])
+})
+
+test('boolean series labels of a groupsField are replaced too', () => {
+  const ctx = baseCtx({
+    chart: { type: 'multi-bar', config: { type: 'aggsBased', groupBy: { type: 'value', field: 'region' }, groupsField: 'actif', size: 10 } },
+    config: { booleanLabels: { trueLabel: 'Oui', falseLabel: 'Non' } },
+    aggs: [
+      { value: 'A', total: 6, aggs: [{ value: true, total: 4 }, { value: false, total: 2 }] }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Oui', 'Non'])
+})

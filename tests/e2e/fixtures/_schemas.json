@@ -396,6 +396,13 @@
         "type": "integer",
         "title": "Nombre aléatoire",
         "description": "Un nombre aléatoire associé à la ligne qui permet d'obtenir un tri aléatoire par exemple"
+      },
+      {
+        "key": "conforme",
+        "title": "Conforme",
+        "type": "boolean",
+        "description": "",
+        "x-capabilities": {}
       }
     ]
   },
