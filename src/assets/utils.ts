@@ -152,6 +152,17 @@ export function hasUsableDivider (source: unknown, divider: DividerConfig): bool
   return d !== undefined && d !== 0
 }
 
+/**
+ * Affichage d'un libellé de valeur sur une barre (chartjs-plugin-datalabels) :
+ * - false pour une valeur absente ou nulle : pas de modèle vide, qui
+ *   perturberait la détection de chevauchement des autres libellés
+ * - 'auto' sinon : le plugin masque le libellé s'il en chevauche un autre
+ *   (petits segments empilés, barres fines), la valeur reste dans l'infobulle
+ */
+export function chartValueLabelDisplay (value: unknown): false | 'auto' {
+  return value === null || value === undefined || value === 0 ? false : 'auto'
+}
+
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length
 export function splitString (n: number, str: string) {
   const arr = str?.split(' ') ?? []

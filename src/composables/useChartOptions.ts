@@ -5,6 +5,7 @@ import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-glob
 import { useSession } from '@data-fair/lib-vue/session.js'
 import type { TooltipItem } from 'chart.js'
 import { useConfig } from '@/composables/config'
+import { chartValueLabelDisplay } from '@/assets/utils'
 
 export function useChartOptions (): { options: ComputedRef<any> } {
   const { config, chart } = useConfig()
@@ -90,6 +91,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       ;(opts.plugins as Record<string, unknown>).datalabels = {
         anchor: isStacked ? 'center' : 'end',
         align: isStacked ? 'center' : 'end',
+        display: (ctx: { dataset: { data: unknown[] }; dataIndex: number }) =>
+          chartValueLabelDisplay(ctx.dataset.data[ctx.dataIndex]),
         labels: { title: { font: { weight: 'bold' } } },
         formatter: (value: number) => {
           if (!value) return ''

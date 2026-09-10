@@ -77,7 +77,7 @@ The app follows the `skill-apps` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown
 │       │   │                     #   /simple-directory (_public.js as JS setting __PUBLIC_SITE_INFO, _public, _theme.css)
 │       │   ├── assertions.ts     # expectChartVisible, ...
 │       │   └── test-fixture.ts   # setupChartTest(configName, mocks) -> test with a chartPage fixture (origin-agnostic APPLICATION stub)
-│       └── specs/                # 30 spec files (27 per config + 3 transverse)
+│       └── specs/                # 31 spec files (27 per config + 4 transverse)
 ├── vite.config.ts                # loadEnv(APP_PORT), hmr aligned, vueI18n({}), settingsPath, server.warmup
 └── package.json
 ```
@@ -220,6 +220,7 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | — | `actions.spec.ts` | dynamicMetric, dynamicSort, stack toggle |
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |
 | — | `console-health.spec.ts` | zero `[intlify]` console warnings + `__PUBLIC_SITE_INFO` fast path |
+| — | `datalabels-overlap.spec.ts` | value labels of tiny stacked segments (`hideYAxis`) never overlap (`display: 'auto'`), canvas instrumented via `fillText`/`clearRect` |
 
 **Datasets used** (from the Koumoul open data catalog):
 - **Alim'confiance** (`a4jz4xdfoymfiquex913bfgp`) — Sanitary inspections

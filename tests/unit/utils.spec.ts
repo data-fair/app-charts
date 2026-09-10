@@ -12,7 +12,8 @@ import {
   extractDividerValue,
   hasUsableDivider,
   normalizeFilters,
-  splitString
+  splitString,
+  chartValueLabelDisplay
 } from '../../src/assets/utils'
 
 // formatDateLabel formate via dayjs global : aligner la locale sur le comportement
@@ -171,4 +172,13 @@ test('getValueLabel keeps x-labels priority and tolerates a missing config', () 
   expect(getValueLabel(true, undefined)).toBe('true')
   expect(getValueLabel(false, undefined)).toBe('false')
   expect(getValueLabel('Aix', undefined)).toBe('Aix')
+})
+
+test('chartValueLabelDisplay hides empty values and auto-hides overlapping labels otherwise', () => {
+  expect(chartValueLabelDisplay(0)).toBe(false)
+  expect(chartValueLabelDisplay(null)).toBe(false)
+  expect(chartValueLabelDisplay(undefined)).toBe(false)
+  expect(chartValueLabelDisplay(1)).toBe('auto')
+  expect(chartValueLabelDisplay(0.5)).toBe('auto')
+  expect(chartValueLabelDisplay(-3)).toBe('auto')
 })
