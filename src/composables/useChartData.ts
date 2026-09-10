@@ -145,6 +145,15 @@ export function useChartData () {
         finalizedAt: finalizedAt.value,
         ...aggExtraMetrics(c, sortBy)
       }
+      // bucket des valeurs manquantes (libellé configuré)
+      if (c.missingLabel) query.missing = c.missingLabel
+      // sous-séries par groupsField : 2ᵉ dimension d'agrégation, convention
+      // data-fair des params parallèles `;` (field=a;b, agg_size=n;12, sort=x;-metric)
+      if (c.groupsField) {
+        query.field = [query.field, c.groupsField].join(';')
+        query.agg_size = [query.agg_size, '12'].join(';')
+        if (query.sort) query.sort = [query.sort, '-' + (c.valueCalc?.type || 'metric')].join(';')
+      }
       // le diviseur est agrégé dans le même values_agg que la valeur du graphique
       if (divisor.value.type === 'column') {
         query.extra_metrics = mergeExtraMetrics(query.extra_metrics, `${divisor.value.field}:${divisor.value.metric}`)
@@ -370,6 +379,8 @@ function buildSort (c: any, sortBy: string | undefined): string | undefined {
 function aggExtraMetrics (c: any, sortBy: string | undefined) {
   if (c.valueCalc?.type === 'metric' || c.valuesCalc) {
     const out: Record<string, string> = {}
+    // agrégat demandé (sum/avg/min/max) : défaut API = sum, à transmettre explicitement
+    out.metric = reactiveSearchParams.metric || c.metric || c.valueCalc?.metric
     const sortField = sortBy === 'value' ? (reactiveSearchParams['sort-field'] || c.sortField) : undefined
     out.metric_field = sortField || c.valuesCalc?.[0] || c.valueCalc?.field
     if (c.valuesCalc?.length > 1) {

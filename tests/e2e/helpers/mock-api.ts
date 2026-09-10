@@ -15,6 +15,19 @@ export interface MockMap {
   metrics?: Record<string, { metric: number }> // per-field /metric_agg responses
 }
 
+// Un fixture à sous-agrégats (aggs imbriqués) ne peut être servi que si la
+// requête demande la 2ᵉ dimension (groupsField) via la convention data-fair
+// field=<groupBy>;<groupsField>. Sans ce garde-fou, une perte des query params
+// passe inaperçue : le mock servirait les sous-agrégats à une requête qui ne
+// les demande plus et l'API réelle renverrait des graphiques vides.
+function assertNestedAggsRequested (fixture: any, params: URLSearchParams) {
+  const hasNestedAggs = Array.isArray(fixture?.aggs) &&
+    fixture.aggs.some((a: any) => Array.isArray(a?.aggs) && a.aggs.length > 0)
+  if (hasNestedAggs && !params.get('field')?.includes(';')) {
+    throw new Error('fixture with nested aggs served but the /values_agg request has no second aggregation dimension (expected field=<groupBy>;<groupsField>) — check the groupsField query params in useChartData')
+  }
+}
+
 export async function mockDataFairApi (page: Page, datasetId: string, mocks: MockMap = {}) {
   await page.route(`**/api/v1/datasets/${datasetId}/**`, async (route: Route) => {
     const url = new URL(route.request().url())
@@ -24,12 +37,14 @@ export async function mockDataFairApi (page: Page, datasetId: string, mocks: Moc
     // /values_agg
     if (path.endsWith('/values_agg')) {
       if (mocks.valuesAgg) {
+        assertNestedAggsRequested(mocks.valuesAgg, params)
         return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mocks.valuesAgg) })
       }
       // Per-key match (groupBy field)
       if (mocks.valuesAggPerKey) {
         for (const [key, fixture] of Object.entries(mocks.valuesAggPerKey)) {
           if (url.search.includes(key)) {
+            assertNestedAggsRequested(fixture, params)
             return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fixture) })
           }
         }
