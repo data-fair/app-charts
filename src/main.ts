@@ -30,15 +30,19 @@ async function init () {
 
   // options indépendantes de la locale : Intl en déduit séparateurs, marque décimale
   // et espace avant le signe pourcent — même jeu enregistré pour toutes les langues
-  const percentFormats = {
-    percent: { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 },
-    percentPrecise: { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }
+  // de session (une locale non couverte retomberait sur les options 'en' avec ses
+  // séparateurs et un avertissement [intlify])
+  const numberFormats = {
+    decimal: {},
+    percent: { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }
   } as const
+  const locales = ['fr', 'en', 'es', 'pt', 'it', 'de'] as const
+  const numberFormatsByLocale = Object.fromEntries(locales.map(locale => [locale, numberFormats]))
   const i18n = createI18n({
     legacy: false,
     locale: session.lang.value,
     fallbackLocale: 'en',
-    numberFormats: { fr: percentFormats, en: percentFormats }
+    numberFormats: numberFormatsByLocale
   })
 
   const vuetify = createVuetify({

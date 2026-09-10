@@ -36,6 +36,9 @@
             "type",
             "config"
           ],
+          "discriminator": {
+            "propertyName": "type"
+          },
           "oneOf": [
             {
               "title": "Courbe",
@@ -89,8 +92,7 @@
               ],
               "properties": {
                 "type": {
-                  "const": "bar",
-                  "title": "Type de visualisation"
+                  "const": "bar"
                 },
                 "hideYAxis": {
                   "$ref": "#/$defs/hideYAxis"
@@ -170,8 +172,7 @@
               ],
               "properties": {
                 "type": {
-                  "const": "multi-bar",
-                  "title": "Type de visualisation"
+                  "const": "multi-bar"
                 },
                 "hideYAxis": {
                   "$ref": "#/$defs/hideYAxis"
@@ -416,7 +417,7 @@
     },
     "size": {
       "type": "integer",
-      "title": "Nombre maximal d'élements",
+      "title": "Nombre maximal d'éléments",
       "minimum": 1,
       "maximum": 200,
       "default": 10
@@ -428,7 +429,7 @@
     "hideYAxis": {
       "type": "boolean",
       "title": "Cacher l'axe Y",
-      "description": "Les valeurs apparaitront au au dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
+      "description": "Les valeurs apparaîtront au-dessus ou à droite des barres. Cache l'axe des X en affichage horizontal"
     },
     "labelsField": {
       "type": "string",
@@ -1792,7 +1793,7 @@
         },
         "size": {
           "type": "integer",
-          "title": "Nombre maximal d'élements",
+          "title": "Nombre maximal d'éléments",
           "default": 5,
           "minimum": 1,
           "maximum": 12
@@ -1908,7 +1909,7 @@
         },
         "size": {
           "type": "integer",
-          "title": "Nombre maximal d'élements",
+          "title": "Nombre maximal d'éléments",
           "default": 5,
           "minimum": 1,
           "maximum": 12
@@ -2304,7 +2305,7 @@
         },
         "offset": {
           "type": "integer",
-          "title": "Décallage",
+          "title": "Décalage",
           "default": 0
         }
       }

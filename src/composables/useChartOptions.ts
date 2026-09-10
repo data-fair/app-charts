@@ -44,7 +44,9 @@ export function useChartOptions (): { options: ComputedRef<any> } {
           callbacks: {
             title: (items: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>[]) => items[0].label,
             label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
-              return (context.dataset.label ? context.dataset.label + ' : ' : '') + n((c.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r) + (config.value.unit ? ' ' + config.value.unit : '')
+              const value = n((c.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r, 'decimal')
+              const suffix = c.percentage ? ' %' : (config.value.unit ? ' ' + config.value.unit : '')
+              return (context.dataset.label ? context.dataset.label + ' : ' : '') + value + suffix
             }
           }
         }
@@ -69,16 +71,16 @@ export function useChartOptions (): { options: ComputedRef<any> } {
     if (c.percentage) {
       if (c.horizontal) {
         opts.scales!.x!.max = 100
-        opts.scales!.x!.ticks = { callback: (v: number) => n(v) + ' %' }
+        opts.scales!.x!.ticks = { callback: (v: number) => n(v, 'decimal') + ' %' }
       } else {
         opts.scales!.y!.max = 100
-        opts.scales!.y!.ticks = { callback: (v: number) => n(v) + ' %' }
+        opts.scales!.y!.ticks = { callback: (v: number) => n(v, 'decimal') + ' %' }
       }
     } else if (config.value.unit && c.type !== 'paired-histogram') {
       if (c.horizontal) {
-        opts.scales!.x!.ticks = { callback: (v: number) => n(v) + ' ' + config.value.unit }
+        opts.scales!.x!.ticks = { callback: (v: number) => n(v, 'decimal') + ' ' + config.value.unit }
       } else {
-        opts.scales!.y!.ticks = { callback: (v: number) => n(v) + ' ' + config.value.unit }
+        opts.scales!.y!.ticks = { callback: (v: number) => n(v, 'decimal') + ' ' + config.value.unit }
       }
     }
     if (c.hideYAxis) {
@@ -94,7 +96,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
           if (c.percentage) {
             return n(value / 100, 'percent')
           }
-          return n(value) + (config.value.unit ? ' ' + config.value.unit : '')
+          return n(value, 'decimal') + (config.value.unit ? ' ' + config.value.unit : '')
         }
       }
       opts.layout = { padding: c.horizontal ? { right: 64 } : { top: 24 } }
@@ -114,7 +116,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
         ;(opts.plugins!.title as Record<string, unknown>).text = function (context: TooltipItem<'pie'>) {
           const data = context.chart.data.datasets[0].data as number[]
           const sum = data.reduce((acc, v) => acc + v, 0)
-          return (config.value.title ? config.value.title + ' : ' : '') + n(sum) + (config.value.unit ? ' ' + config.value.unit : '')
+          return (config.value.title ? config.value.title + ' : ' : '') + n(sum, 'decimal') + (config.value.unit ? ' ' + config.value.unit : '')
         }
       }
       ;(opts.plugins as Record<string, unknown>).datalabels = { display: false }
@@ -136,7 +138,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
         text: (ctx: { dataset: { data: number[]; labels: string[]; percentages: number[] }; dataIndex: number }) => {
           const lines = [ctx.dataset.labels[ctx.dataIndex]]
           if (['values', 'both'].includes(c.display as string)) {
-            lines.push(n(ctx.dataset.data[ctx.dataIndex]) + (config.value.unit ? ' ' + config.value.unit : ''))
+            lines.push(n(ctx.dataset.data[ctx.dataIndex], 'decimal') + (config.value.unit ? ' ' + config.value.unit : ''))
           }
           if (['percentages', 'both'].includes(c.display as string)) {
             lines.push(n(ctx.dataset.percentages[ctx.dataIndex] / 100, 'percent'))
@@ -145,7 +147,14 @@ export function useChartOptions (): { options: ComputedRef<any> } {
         }
       }
       opts.plugins!.tooltip!.callbacks = {
-        label: (context: TooltipItem<'pie'>) => n(context.parsed) + (config.value.unit ? ' ' + config.value.unit : '')
+        label: (context: TooltipItem<'pie'>) => {
+          const value = n(context.parsed, 'decimal') + (config.value.unit ? ' ' + config.value.unit : '')
+          const percentage = (context.dataset as { percentages?: number[] }).percentages?.[context.dataIndex]
+          if (percentage === undefined) return value
+          if (c.display === 'percentages') return n(percentage / 100, 'percent')
+          if (c.display === 'both') return value + ' (' + n(percentage / 100, 'percent') + ')'
+          return value
+        }
       }
     }
 
@@ -170,7 +179,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       ;(opts as Record<string, unknown>).indexAxis = 'y'
       opts.scales!.x = {
         ticks: {
-          callback: (v: number) => n(v < 0 ? -v : v) + (config.value.unit ? ' ' + config.value.unit : '')
+          callback: (v: number) => n(v < 0 ? -v : v, 'decimal') + (config.value.unit ? ' ' + config.value.unit : '')
         }
       }
       opts.plugins!.tooltip = {
@@ -178,7 +187,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
           label: (cc: TooltipItem<'bar'>) => {
             const value = Number(cc.raw)
             const positiveOnly = value < 0 ? -value : value
-            return `${cc.dataset.label}: ${n(positiveOnly)}` + (config.value.unit ? ' ' + config.value.unit : '')
+            return `${cc.dataset.label}: ${n(positiveOnly, 'decimal')}` + (config.value.unit ? ' ' + config.value.unit : '')
           }
         }
       }
@@ -188,7 +197,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       if (config.value.unit) {
         opts.scales = {
           r: {
-            ticks: { callback: (v: number) => v + ' ' + config.value.unit }
+            ticks: { callback: (v: number) => n(v, 'decimal') + ' ' + config.value.unit }
           }
         }
       } else delete opts.scales

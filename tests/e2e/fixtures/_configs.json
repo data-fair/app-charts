@@ -914,5 +914,48 @@
         }
       }
     }
+  },
+  "23-multi-bar-bpe-percentage": {
+    "dataset": "bpe",
+    "comment": "multi-bar aggsBased stacked in percentage mode, groupsField, palette",
+    "config": {
+      "title": "Équipements par région (public vs privé, en %)",
+      "xTitle": "Région",
+      "yTitle": "Part des équipements",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": true,
+        "percentage": true,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "reg",
+            "interval": ""
+          },
+          "groupsField": "sect",
+          "size": 10,
+          "valueCalc": {
+            "type": "count"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Paired",
+            "offset": 0
+          }
+        }
+      }
+    }
   }
 }

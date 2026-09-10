@@ -70,7 +70,7 @@ The app follows the `skill-apps` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown
 │       │   ├── configs.ts        # 20 chart configurations aligned with the historical dev-configs
 │       │   ├── api-responses.ts  # Mock JSON responses for the 4 DataFair endpoints
 │       │   ├── _schemas.json     # Extracted dataset schemas (generated)
-│       │   └── _configs.json     # Extracted configurations (generated)
+│       │   └── _configs.json     # Chart configurations (source of truth, imported by configs.ts)
 │       ├── helpers/
 │       │   ├── inject-config.ts  # waitForAppReady + injectConfig via postMessage('set-config')
 │       │   ├── mock-api.ts       # page.route() to mock /values_agg, /lines, /values-labels, /metric_agg,
@@ -107,7 +107,7 @@ The plugin also listens for `message` events with `type: 'set-config'` to update
 `window.vIframeOptions = { reactiveParams: reactiveSearchParams }` is set at the top of `main.ts` (module level, before `createApp()`) so the `v-iframe-compat/d-frame-content.js` shim injected by DataFair can apply updates without a full page reload when the app is embedded in a parent d-frame.
 
 ### i18n & number formats
-`createI18n` is created after the session (`legacy: false`, `locale: session.lang.value`, `fallbackLocale: 'en'`, `numberFormats` with `percent`/`percentPrecise`). Chart texts stay in French (like most of the parc), but **numbers must never be formatted with `toLocaleString('fr')`**: `useChartOptions` takes `n` from `useI18n({ useScope: 'global' })` and sets Chart.js `locale: session.lang`. Percentages are ratios passed to `n(v / 100, 'percent')`. Regression test: `tests/e2e/specs/console-health.spec.ts` asserts zero `[intlify]` console warnings.
+`createI18n` is created after the session (`legacy: false`, `locale: session.lang.value`, `fallbackLocale: 'en'`, `numberFormats` with `decimal`/`percent` registered for all six session locales `fr, en, es, pt, it, de` — an uncovered locale falls back to the `en` options with its separators and an `[intlify]` warning). Chart texts stay in French (like most of the parc), but **numbers must never be formatted with `toLocaleString('fr')`** nor with a bare `n(v)`: always pass a named key (`n(v, 'decimal')`, `n(v / 100, 'percent')`). `useChartOptions` takes `n` from `useI18n({ useScope: 'global' })` and sets Chart.js `locale: session.lang`. Regression test: `tests/e2e/specs/console-health.spec.ts` asserts zero `[intlify]` console warnings.
 
 ### useChartData
 Composable that calls `useConfig()` internally. It:
