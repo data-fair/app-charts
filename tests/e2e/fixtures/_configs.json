@@ -1088,5 +1088,49 @@
         }
       }
     }
+  },
+  "27-bar-bpe-total-count": {
+    "dataset": "bpe",
+    "comment": "bar aggsBased with a total line count divisor (capacite / nombre total de lignes via /metric_agg value_count)",
+    "config": {
+      "title": "Capacité moyenne par équipement (par nombre total de lieux)",
+      "xTitle": "Catégorie",
+      "yTitle": "Capacité moyenne",
+      "unit": "places",
+      "labelsMaxWidth": 40,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "categorie",
+            "interval": ""
+          },
+          "size": 12,
+          "valueCalc": {
+            "type": "metric",
+            "field": "capacite",
+            "metric": "sum",
+            "dynamicMetric": false
+          },
+          "divider": {
+            "type": "totalCount"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "secondary"
+          }
+        }
+      }
+    }
   }
 }

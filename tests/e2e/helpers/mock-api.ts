@@ -13,6 +13,10 @@ export interface MockMap {
   valuesLabels?: any
   lines?: any
   metrics?: Record<string, { metric: number }> // per-field /metric_agg responses
+  // Query params of every /metric_agg call, pushed by the handler. A spec can
+  // pass its own array (created before setupChartTest) and assert on it — the
+  // test body runs after waitForChart, too late for a waitForRequest.
+  metricAggRequests?: URLSearchParams[]
 }
 
 // Un fixture à sous-agrégats (aggs imbriqués) ne peut être servi que si la
@@ -66,6 +70,7 @@ export async function mockDataFairApi (page: Page, datasetId: string, mocks: Moc
 
     // /metric_agg (aggsLabels: N parallel calls)
     if (path.endsWith('/metric_agg')) {
+      mocks.metricAggRequests?.push(params)
       const field = params.get('field')
       if (field && mocks.metrics && mocks.metrics[field]) {
         return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mocks.metrics[field]) })

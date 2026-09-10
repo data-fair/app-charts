@@ -106,8 +106,8 @@ export function useChartData () {
   // ──────────────────────────────────────────────────────────────────
   // Nombre total de lignes (diviseur totalCount) :
   // - rowsBased : totalCount renvoyé par /lines (aucun appel)
-  // - modes agrégats : /metric_agg?metric=count sur le champ de regroupement,
-  //   même filtres (baseParams) que le graphique
+  // - modes agrégats : /metric_agg?metric=value_count sur le champ de
+  //   regroupement, même filtres (baseParams) que le graphique
   // ──────────────────────────────────────────────────────────────────
   const globalCount = ref<number>()
   watchEffect(async () => {
@@ -123,7 +123,7 @@ export function useChartData () {
     if (!field) return
     try {
       globalCount.value = (await ofetch<MetricAggResponse>(`${datasetUrl.value}/metric_agg`, {
-        params: { ...baseParams.value, field, metric: 'count', finalizedAt: finalizedAt.value }
+        params: { ...baseParams.value, field, metric: 'value_count', finalizedAt: finalizedAt.value }
       })).metric
     } catch (e) {
       sendUiNotif({ type: 'error', msg: getErrorMsg(e as Error), error: e })
@@ -132,7 +132,7 @@ export function useChartData () {
 
   // Nombre total de lignes du dataset filtré (diviseur totalCount) :
   // - rowsBased : totalCount renvoyé par /lines
-  // - modes agrégats : /metric_agg?metric=count (watchEffect globalCount)
+  // - modes agrégats : /metric_agg?metric=value_count (watchEffect globalCount)
   function getTotalCount (): number | undefined {
     if (isRowsBased.value) return linesRaw.value?.totalCount
     return globalCount.value

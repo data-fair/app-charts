@@ -101,6 +101,16 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: 'Médiathèque', metric: 4100 } // pas de total → point masqué
     ]
   },
+  // bar with a total line count divisor (capacite / nombre total de lignes,
+  // résolu via /metric_agg?metric=value_count sur le champ de regroupement)
+  bar_bpe_total_count: {
+    aggs: [
+      { value: 'Cinéma', metric: 12400 },
+      { value: 'Théâtre', metric: 8120 },
+      { value: 'Musée', metric: 6230 },
+      { value: 'Médiathèque', metric: 4100 }
+    ]
+  },
   // bar loyers dep
   bar_loyers_dep: {
     aggs: [

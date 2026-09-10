@@ -77,7 +77,7 @@ The app follows the `skill-apps` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown
 │       │   │                     #   /simple-directory (_public.js as JS setting __PUBLIC_SITE_INFO, _public, _theme.css)
 │       │   ├── assertions.ts     # expectChartVisible, ...
 │       │   └── test-fixture.ts   # setupChartTest(configName, mocks) -> test with a chartPage fixture (origin-agnostic APPLICATION stub)
-│       └── specs/                # 25 spec files (22 per config + 3 transverse)
+│       └── specs/                # 30 spec files (27 per config + 3 transverse)
 ├── vite.config.ts                # loadEnv(APP_PORT), hmr aligned, vueI18n({}), settingsPath, server.warmup
 └── package.json
 ```
@@ -186,7 +186,7 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 
 ### e2e specs
 
-**24 Playwright specs** cover the main configuration shapes (chart types × data modes × options). They use the historical dev-configs as fixtures (`tests/e2e/fixtures/configs.ts`; dataset schemas in `fixtures/datasets.ts`).
+**27 Playwright specs** cover the main configuration shapes (chart types × data modes × options). They use the historical dev-configs as fixtures (`tests/e2e/fixtures/configs.ts`; dataset schemas in `fixtures/datasets.ts`).
 
 | # | Spec | Covers |
 |---|------|--------|
@@ -212,6 +212,11 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | 20 | `20-line-loyers-distribution.spec.ts` | line aggsBased, **groupBy number** interval |
 | 21 | `21-line-dash.spec.ts` | line aggsBased, **lineDash** dashed (elements.line borderDash) |
 | 22 | `22-bar-bpe-divisor.spec.ts` | bar aggsBased, **divider** = aggregate of another column per group (extra metric `<field>_<metric>`), missing divisor hidden |
+| 23 | `23-multi-bar-bpe-percentage.spec.ts` | multi-bar aggsBased groupsField, stacked + **percentage** mode |
+| 24 | `24-bar-bpe-group-count.spec.ts` | bar aggsBased, **divider** groupCount (bucket `total` of the same values_agg, no extra call) |
+| 25 | `25-multi-line-depl-total-count.spec.ts` | multi-line rowsBased, **divider** totalCount (totalCount of /lines, no extra call) |
+| 26 | `26-boolean-labels.spec.ts` | bar aggsBased grouped by a boolean field, **booleanLabels** oui/non |
+| 27 | `27-bar-bpe-total-count.spec.ts` | bar aggsBased, **divider** totalCount in aggregate mode (global `/metric_agg` with **metric=value_count**, request captured by the mock) |
 | — | `actions.spec.ts` | dynamicMetric, dynamicSort, stack toggle |
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |
 | — | `console-health.spec.ts` | zero `[intlify]` console warnings + `__PUBLIC_SITE_INFO` fast path |
