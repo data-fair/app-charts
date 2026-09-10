@@ -166,6 +166,15 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: true, total: 8120 },
       { value: false, total: 3230 }
     ]
+  },
+  // multi-bar aggsBasedCategories on boolean columns (sum = nombre de oui,
+  // renvoyé par l'API sous la convention `<field>_sum`)
+  multi_bar_bpe_booleans: {
+    aggs: [
+      { value: 'Île-de-France', metric: 1234, indic_capa_sum: 1234, indic_nbsalles_sum: 456, irisee_sum: 789 },
+      { value: 'PACA', metric: 987, indic_capa_sum: 987, indic_nbsalles_sum: 321, irisee_sum: 654 },
+      { value: 'Bretagne', metric: 876, indic_capa_sum: 876, indic_nbsalles_sum: 234, irisee_sum: 543 }
+    ]
   }
 }
 
@@ -230,7 +239,11 @@ export const linesFixtureDeplacements = {
 export const metricAggFixtures: Record<string, { metric: number }> = {
   loypredm2: { metric: 18.4 },
   lwripm2: { metric: 4.1 },
-  upripm2: { metric: 1.7 }
+  upripm2: { metric: 1.7 },
+  // colonnes booléennes (sum = nombre de « oui »)
+  indic_capa: { metric: 1234 },
+  indic_nbsalles: { metric: 456 },
+  irisee: { metric: 789 }
 }
 
 // ──────────────────────────────────────────────────────────────────

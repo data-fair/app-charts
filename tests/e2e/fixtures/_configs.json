@@ -1132,5 +1132,71 @@
         }
       }
     }
+  },
+  "28-multi-bar-bpe-booleans": {
+    "dataset": "bpe",
+    "comment": "multi-bar aggsBasedCategories, séries booléennes empilées, metric sum",
+    "config": {
+      "title": "Équipements par région (indicateurs booléens)",
+      "xTitle": "Région",
+      "yTitle": "Nombre d'équipements",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "bottom",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": true,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBasedCategories",
+          "groupBy": {
+            "type": "value",
+            "field": "reg",
+            "interval": ""
+          },
+          "valuesCalc": [
+            "indic_capa",
+            "indic_nbsalles",
+            "irisee"
+          ],
+          "metric": "sum",
+          "dynamicMetric": false,
+          "size": 10,
+          "aggSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false
+        }
+      }
+    }
+  },
+  "29-pie-bpe-booleans": {
+    "dataset": "bpe",
+    "comment": "pie aggsLabels sur colonnes booléennes (somme = nombre de oui)",
+    "config": {
+      "title": "Équipements concernés (indicateurs booléens)",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "bottom",
+      "chart": {
+        "type": "pie",
+        "cutout": 0,
+        "rotation": 0,
+        "display": "values",
+        "sumInTitle": false,
+        "config": {
+          "type": "aggsLabels",
+          "valuesFields": [
+            "indic_capa",
+            "indic_nbsalles",
+            "irisee"
+          ],
+          "removeFromLabels": ""
+        }
+      }
+    }
   }
 }

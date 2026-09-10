@@ -105,3 +105,20 @@ test('total line count divider divides every value by the global count resolved 
   const data = transformAggsLabels(ctx)
   expect(data.datasets[0].data).toEqual([2.5, 5])
 })
+
+test('boolean columns aggregate their sum of true values as one pie part each', () => {
+  const ctx = baseCtx({
+    chart: { type: 'pie', config: { type: 'aggsLabels', valuesFields: ['indic_capa', 'irisee'] } },
+    fields: {
+      indic_capa: { label: 'Capacité' },
+      irisee: { label: 'Irisée' }
+    },
+    metrics: [
+      { field: 'indic_capa', metric: 1234 },
+      { field: 'irisee', metric: 789 }
+    ]
+  })
+  const data = transformAggsLabels(ctx)
+  expect(data.labels).toEqual([['Capacité'], ['Irisée']])
+  expect(data.datasets[0].data).toEqual([1234, 789])
+})

@@ -270,3 +270,49 @@ test('boolean series labels of a groupsField are replaced too', () => {
   const data = transformAggsBased(ctx)
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Oui', 'Non'])
 })
+
+// ── Séries booléennes (aggsBasedCategories, clés <champ>_<métrique>) ─────────
+
+test('aggsBasedCategories maps boolean sum metrics from <field>_<metric> keys', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      config: { type: 'aggsBasedCategories', groupBy: { type: 'value', field: 'region' }, valuesCalc: ['indic_capa', 'irisee'], metric: 'sum', size: 10 }
+    },
+    fields: {
+      region: { label: 'Région' },
+      indic_capa: { label: 'Concerné par la capacité' },
+      irisee: { label: 'Irisation de la commune' }
+    },
+    aggs: [
+      { value: 'A', metric: 4, indic_capa_sum: 4, irisee_sum: 1 },
+      { value: 'B', metric: 2, indic_capa_sum: 2, irisee_sum: 3 }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Concerné par la capacité', 'Irisation de la commune'])
+  // la première colonne (metric_field) est lue dans a.metric, les suivantes
+  // dans les clés `<champ>_<métrique>` des extra_metrics
+  expect(data.datasets[0].data).toEqual([4, 2])
+  expect(data.datasets[1].data).toEqual([1, 3])
+})
+
+test('aggsBasedCategories maps boolean avg metrics (proportion de oui)', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      config: { type: 'aggsBasedCategories', groupBy: { type: 'value', field: 'region' }, valuesCalc: ['indic_capa', 'irisee'], metric: 'avg', size: 10 }
+    },
+    fields: {
+      region: { label: 'Région' },
+      indic_capa: { label: 'Concerné par la capacité' },
+      irisee: { label: 'Irisation de la commune' }
+    },
+    aggs: [
+      { value: 'A', metric: 0.75, indic_capa_avg: 0.75, irisee_avg: 0.5 }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets[0].data).toEqual([0.75])
+  expect(data.datasets[1].data).toEqual([0.5])
+})

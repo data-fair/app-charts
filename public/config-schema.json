@@ -282,7 +282,7 @@
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
-                  "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.\n\n**Sommes calculées sur plusieurs colonnes** :\nles valeurs affichées sont obtenues en faisant la somme de plusieurs colonnes numériques sur l'ensemble du jeu de données. Chaque colonne devient une part du graphique.",
+                  "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.\n\n**Sommes calculées sur plusieurs colonnes** :\nles valeurs affichées sont obtenues en faisant la somme de plusieurs colonnes numériques ou booléennes sur l'ensemble du jeu de données. Chaque colonne devient une part du graphique.",
                   "oneOf": [
                     {
                       "$ref": "#/$defs/rowsCategories"
@@ -498,6 +498,23 @@
       "layout": {
         "getItems": {
           "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+          "itemKey": "data[\"key\"]",
+          "itemTitle": "data[\"label\"]"
+        }
+      }
+    },
+    "valuesCalcFields": {
+      "type": "array",
+      "title": "Colonnes de valeurs",
+      "description": "Choisissez les colonnes de valeurs à présenter dans le graphique. Les colonnes booléennes sont agrégées : somme = nombre de « oui », moyenne = proportion de « oui ».",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "string"
+      },
+      "layout": {
+        "getItems": {
+          "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number,boolean",
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
@@ -1490,7 +1507,7 @@
       }
     },
     "aggsDataMultipleCategories": {
-      "title": "Grouper les lignes, séries définies par plusieurs colonnes numériques",
+      "title": "Grouper les lignes, séries définies par plusieurs colonnes numériques ou booléennes",
       "type": "object",
       "required": [
         "type",
@@ -1509,7 +1526,7 @@
           "$ref": "#/$defs/groupBy"
         },
         "valuesCalc": {
-          "$ref": "#/$defs/valuesFields"
+          "$ref": "#/$defs/valuesCalcFields"
         },
         "divider": {
           "$ref": "#/$defs/divider"
@@ -1564,7 +1581,7 @@
           "layout": {
             "if": "parent.data.aggSortBy === 'value'",
             "getItems": {
-              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number,boolean",
               "itemKey": "data[\"key\"]",
               "itemTitle": "data[\"label\"]"
             }
@@ -1824,7 +1841,7 @@
     "multipleDataType": {
       "type": "object",
       "title": "Préparation des données",
-      "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux colonnes numériques sélectionnées.\n\n**Grouper les lignes, séries définies par une colonne de catégories** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes, séries définies par plusieurs colonnes numériques** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent à plusieurs colonnes numériques, agrégées indépendamment.\n\n**Grouper les lignes, abscisses définies par plusieurs colonnes** :\nles lignes sont groupées selon une colonne de catégories pour former les séries (affichées dans la légende). Les libellés sur l'axe des X correspondent à plusieurs colonnes numériques.",
+      "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux colonnes numériques sélectionnées.\n\n**Grouper les lignes, séries définies par une colonne de catégories** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes, séries définies par plusieurs colonnes numériques ou booléennes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent à plusieurs colonnes numériques ou booléennes, agrégées indépendamment.\n\n**Grouper les lignes, abscisses définies par plusieurs colonnes** :\nles lignes sont groupées selon une colonne de catégories pour former les séries (affichées dans la légende). Les libellés sur l'axe des X correspondent à plusieurs colonnes numériques.",
       "oneOf": [
         {
           "$ref": "#/$defs/rowsDataMultiple"
@@ -2093,7 +2110,7 @@
           "const": "aggsLabels"
         },
         "valuesFields": {
-          "$ref": "#/$defs/valuesFields"
+          "$ref": "#/$defs/valuesCalcFields"
         },
         "divider": {
           "$ref": "#/$defs/divider"
