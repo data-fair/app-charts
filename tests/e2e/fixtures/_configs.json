@@ -957,5 +957,94 @@
         }
       }
     }
+  },
+  "24-bar-bpe-group-count": {
+    "dataset": "bpe",
+    "comment": "bar aggsBased with a group line count divisor (capacite / nombre de lignes du groupe)",
+    "config": {
+      "title": "Capacité moyenne par équipement (par nombre de lieux)",
+      "xTitle": "Catégorie",
+      "yTitle": "Capacité moyenne",
+      "unit": "places",
+      "labelsMaxWidth": 40,
+      "legendPosition": "top",
+      "chart": {
+        "type": "bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "config": {
+          "type": "aggsBased",
+          "groupBy": {
+            "type": "value",
+            "field": "categorie",
+            "interval": ""
+          },
+          "size": 12,
+          "valueCalc": {
+            "type": "metric",
+            "field": "capacite",
+            "metric": "sum",
+            "dynamicMetric": false
+          },
+          "divider": {
+            "type": "groupCount"
+          },
+          "missingLabel": "",
+          "aggSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "color": {
+            "type": "theme",
+            "strValue": "secondary"
+          }
+        }
+      }
+    }
+  },
+  "25-multi-line-depl-total-count": {
+    "dataset": "depl",
+    "comment": "multi-line rowsBased with a total line count divisor (totalCount of /lines)",
+    "config": {
+      "title": "Déplacements par ligne du jeu de données",
+      "xTitle": "Période",
+      "yTitle": "Déplacements",
+      "unit": "dépl.",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "multi-line",
+        "tension": 1,
+        "stacked": false,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "yAxisStartsZero": false,
+        "hidePoints": false,
+        "config": {
+          "type": "rowsBased",
+          "labelsField": "time_period",
+          "valuesFields": [
+            "voit",
+            "velo"
+          ],
+          "size": 200,
+          "rowSortBy": "label",
+          "sortOrder": "asc",
+          "dynamicSort": false,
+          "divider": {
+            "type": "totalCount"
+          },
+          "colorOrder": {
+            "type": "palette",
+            "name": "Set1",
+            "offset": 0,
+            "seriesOrder": [
+              "voit",
+              "velo"
+            ]
+          }
+        }
+      }
+    }
   }
 }

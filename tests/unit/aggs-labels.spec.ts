@@ -90,3 +90,18 @@ test('missing global divider hides every value', () => {
   const data = transformAggsLabels(ctx)
   expect(data.datasets[0].data).toEqual([undefined, undefined])
 })
+
+test('total line count divider divides every value by the global count resolved in useChartData', () => {
+  // totalCount (et le repli du groupCount en aggsLabels) : la division utilise
+  // une valeur globale, indépendamment de la source passée par le transform
+  const ctx = baseCtx({
+    chart: { type: 'pie', config: { type: 'aggsLabels', valuesFields: ['surface', 'population'] } },
+    getValue: (v) => (v == null ? undefined : v / 4),
+    metrics: [
+      { field: 'surface', metric: 10 },
+      { field: 'population', metric: 20 }
+    ]
+  })
+  const data = transformAggsLabels(ctx)
+  expect(data.datasets[0].data).toEqual([2.5, 5])
+})

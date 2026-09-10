@@ -177,3 +177,37 @@ test('pie Autre bucket divides the ratio of totals when a column divider is set'
   // parts : 75 → 100/2 = 50 ; 77 → 30/3 = 10 ; Autre → (90+10)/(9+1) = 10
   expect(data.datasets[0].data).toEqual([50, 10, 10])
 })
+
+// ── Diviseur « nombre total de lignes » (résolu globalement dans useChartData,
+//    repli du groupCount en rowsBased) ─────────────────────────────────────────
+
+test('total line count divider divides every row by the same global count', () => {
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 10 } },
+    divider: { type: 'totalCount' },
+    getValue: (v) => (v == null ? undefined : v / 10),
+    results: [
+      { dep: '75', count: 100 },
+      { dep: '77', count: 30 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.datasets[0].data).toEqual([10, 3])
+})
+
+test('pie Autre bucket still divides by the global line count when totalCount is set', () => {
+  const ctx = baseCtx({
+    chart: { type: 'pie', display: 'values', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 2 } },
+    divider: { type: 'totalCount' },
+    getValue: (v) => (v == null ? undefined : v / 10),
+    results: [
+      { dep: '75', count: 100 },
+      { dep: '77', count: 30 },
+      { dep: '78', count: 90 },
+      { dep: '79', count: 10 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  // parts : 10 ; 3 ; Autre → (90+10)/10 = 10 (diviseur global, la source est ignorée)
+  expect(data.datasets[0].data).toEqual([10, 3, 10])
+})

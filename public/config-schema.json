@@ -39,6 +39,9 @@
           "discriminator": {
             "propertyName": "type"
           },
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
             {
               "title": "Courbe",
@@ -600,6 +603,9 @@
       "discriminator": {
         "propertyName": "type"
       },
+      "oneOfLayout": {
+        "emptyData": true
+      },
       "oneOf": [
         {
           "title": "Thème",
@@ -780,6 +786,9 @@
       "default": {
         "type": "count"
       },
+      "oneOfLayout": {
+        "emptyData": true
+      },
       "oneOf": [
         {
           "title": "Nombre de lignes",
@@ -859,6 +868,9 @@
       "discriminator": {
         "propertyName": "type"
       },
+      "oneOfLayout": {
+        "emptyData": true
+      },
       "default": {
         "type": "none"
       },
@@ -872,6 +884,32 @@
           "properties": {
             "type": {
               "const": "none"
+            }
+          }
+        },
+        {
+          "title": "Nombre de lignes du groupe",
+          "description": "Divise chaque valeur par le nombre de lignes de son groupe (ex : une somme rapportée au nombre de lignes de la catégorie). Sur les graphiques qui lisent les lignes une par une ou qui comparent des valeurs globales, le nombre total de lignes est utilisé.",
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "groupCount"
+            }
+          }
+        },
+        {
+          "title": "Nombre total de lignes",
+          "description": "Divise toutes les valeurs par le nombre total de lignes du jeu de données (filtres appliqués).",
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "totalCount"
             }
           }
         },

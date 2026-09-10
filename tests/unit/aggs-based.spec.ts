@@ -181,3 +181,47 @@ test('pie Autre bucket uses the ratio of totals when a column divider is set', (
   // parts : A → 50 ; B → 10 ; Autre → (90+10)/(9+1) = 10
   expect(data.datasets[0].data).toEqual([50, 10, 10])
 })
+
+// ── Diviseur « nombre de lignes du groupe » (total du bucket) ────────────────
+
+test('groupCount divider divides the metric by the group line count and hides groups without lines', () => {
+  const divider = { type: 'groupCount' } as const
+  const ctx = baseCtx({
+    chart: {
+      type: 'bar',
+      config: { type: 'aggsBased', groupBy: { type: 'value', field: 'region' }, size: 10, valueCalc: { type: 'metric', field: 'capacite', metric: 'sum' } }
+    },
+    divider,
+    getValue: dividerGetValue(divider),
+    aggs: [
+      { value: 'A', total: 10, metric: 100 },
+      { value: 'B', total: 5, metric: 30 },
+      { value: 'C', metric: 50 }, // pas de total → valeur masquée
+      { value: 'D', total: 0, metric: 40 } // total nul → valeur masquée
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets[0].data).toEqual([10, 6, undefined, undefined])
+})
+
+test('pie Autre bucket uses the ratio of line counts when a groupCount divider is set', () => {
+  const divider = { type: 'groupCount' } as const
+  const ctx = baseCtx({
+    chart: {
+      type: 'pie',
+      display: 'values',
+      config: { type: 'aggsBased', groupBy: { type: 'value', field: 'region' }, size: 2, valueCalc: { type: 'metric', field: 'capacite', metric: 'sum' } }
+    },
+    divider,
+    getValue: dividerGetValue(divider),
+    aggs: [
+      { value: 'A', total: 2, metric: 100 },
+      { value: 'B', total: 3, metric: 30 },
+      { value: 'C', total: 9, metric: 90 },
+      { value: 'D', total: 1, metric: 10 }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  // parts : A → 100/2 = 50 ; B → 30/3 = 10 ; Autre → (90+10)/(9+1) = 10
+  expect(data.datasets[0].data).toEqual([50, 10, 10])
+})

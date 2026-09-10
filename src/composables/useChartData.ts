@@ -33,6 +33,7 @@ export interface ValuesAggResponse {
 }
 
 export interface LinesResponse {
+  totalCount?: number
   results: DatasetLine[]
 }
 
@@ -67,42 +68,6 @@ export function useChartData () {
   }), 500)
 
   // ──────────────────────────────────────────────────────────────────
-  // Multiplicateur global (changement d'unité) et diviseur du chart
-  // L'ancien format « divider » numérique global (avant la refonte) est
-  // interprété en repli comme un multiplicateur 1/N (v/N ≡ v × (1/N)).
-  // ──────────────────────────────────────────────────────────────────
-  const divisor = computed<DividerConfig>(() => normalizeDivider(chart.value?.config?.divider))
-  const multiplier = computed(() => {
-    const m = config.value?.multiplier
-    if (typeof m === 'number' && Number.isFinite(m)) return m
-    const legacy = (config.value as { divider?: unknown } | undefined)?.divider
-    if (typeof legacy === 'number' && Number.isFinite(legacy) && legacy !== 0) return 1 / legacy
-    return 1
-  })
-
-  // Applique multiplicateur et diviseur. `source` porte la valeur de division :
-  // ligne (/lines), item d'agrégat (/values_agg) ou nombre déjà agrégé
-  // (/metric_agg global). Sans diviseur exploitable, la valeur est masquée.
-  const getValue = (value: number | null | undefined, source?: unknown) => {
-    if (value == null) return undefined
-    if (divisor.value.type === 'column') {
-      const d = extractDividerValue(source, divisor.value)
-      if (d === undefined || d === 0) return undefined
-      const v = (value * multiplier.value) / d
-      return Number.isFinite(v) ? v : undefined
-    }
-    const v = value * multiplier.value
-    return Number.isFinite(v) ? v : undefined
-  }
-
-  // Colonne de division absente du schéma (config obsolète) → avertissement
-  watch(divisor, (d) => {
-    if (d.type === 'column' && !fields.value[d.field!]) {
-      sendUiNotif({ type: 'error', msg: `Le diviseur est configuré sur la colonne « ${d.field} », absente du jeu de données.` })
-    }
-  }, { immediate: true })
-
-  // ──────────────────────────────────────────────────────────────────
   // Reactive mode selector
   // ──────────────────────────────────────────────────────────────────
   const mode = computed(() => {
@@ -114,6 +79,88 @@ export function useChartData () {
   const isAggsBased = computed(() => mode.value === 'aggsBased')
   const isAggsBasedLabels = computed(() => mode.value === 'aggsBasedLabels')
   const isAggsLabels = computed(() => mode.value === 'aggsLabels')
+
+  // ──────────────────────────────────────────────────────────────────
+  // Multiplicateur global (changement d'unité) et diviseur du chart
+  // L'ancien format « divider » numérique global (avant la refonte) est
+  // interprété en repli comme un multiplicateur 1/N (v/N ≡ v × (1/N)).
+  // ──────────────────────────────────────────────────────────────────
+  const divisor = computed<DividerConfig>(() => {
+    const d = normalizeDivider(chart.value?.config?.divider)
+    // sans groupes (lecture ligne par ligne, métriques globales), le
+    // « nombre de lignes du groupe » n'existe pas : repli sur le total
+    if (d.type === 'groupCount' && (isRowsBased.value || isAggsLabels.value)) {
+      return { type: 'totalCount' }
+    }
+    return d
+  })
+  const multiplier = computed(() => {
+    const m = config.value?.multiplier
+    if (typeof m === 'number' && Number.isFinite(m)) return m
+    const legacy = (config.value as { divider?: unknown } | undefined)?.divider
+    if (typeof legacy === 'number' && Number.isFinite(legacy) && legacy !== 0) return 1 / legacy
+    return 1
+  })
+
+  // ──────────────────────────────────────────────────────────────────
+  // Nombre total de lignes (diviseur totalCount) :
+  // - rowsBased : totalCount renvoyé par /lines (aucun appel)
+  // - modes agrégats : /metric_agg?metric=count sur le champ de regroupement,
+  //   même filtres (baseParams) que le graphique
+  // ──────────────────────────────────────────────────────────────────
+  const globalCount = ref<number>()
+  watchEffect(async () => {
+    globalCount.value = undefined
+    if (isRowsBased.value || !datasetUrl.value) return
+    if (divisor.value.type !== 'totalCount') return
+    const c = chart.value?.config
+    const field = isAggsBased.value
+      ? c?.groupBy?.field
+      : isAggsBasedLabels.value
+        ? c?.valuesLabel
+        : c?.valuesFields?.[0]
+    if (!field) return
+    try {
+      globalCount.value = (await ofetch<MetricAggResponse>(`${datasetUrl.value}/metric_agg`, {
+        params: { ...baseParams.value, field, metric: 'count', finalizedAt: finalizedAt.value }
+      })).metric
+    } catch (e) {
+      sendUiNotif({ type: 'error', msg: getErrorMsg(e as Error), error: e })
+    }
+  })
+
+  // Nombre total de lignes du dataset filtré (diviseur totalCount) :
+  // - rowsBased : totalCount renvoyé par /lines
+  // - modes agrégats : /metric_agg?metric=count (watchEffect globalCount)
+  function getTotalCount (): number | undefined {
+    if (isRowsBased.value) return linesRaw.value?.totalCount
+    return globalCount.value
+  }
+
+  // Applique multiplicateur et diviseur. `source` porte la valeur de division :
+  // ligne (/lines), item d'agrégat (/values_agg) ou nombre déjà agrégé
+  // (/metric_agg global). Sans diviseur exploitable, la valeur est masquée.
+  const getValue = (value: number | null | undefined, source?: unknown) => {
+    if (value == null) return undefined
+    const type = divisor.value.type
+    if (type === 'none') {
+      const v = value * multiplier.value
+      return Number.isFinite(v) ? v : undefined
+    }
+    const d = type === 'totalCount'
+      ? getTotalCount()
+      : extractDividerValue(source, divisor.value)
+    if (d === undefined || d === 0) return undefined
+    const v = (value * multiplier.value) / d
+    return Number.isFinite(v) ? v : undefined
+  }
+
+  // Colonne de division absente du schéma (config obsolète) → avertissement
+  watch(divisor, (d) => {
+    if (d.type === 'column' && !fields.value[d.field!]) {
+      sendUiNotif({ type: 'error', msg: `Le diviseur est configuré sur la colonne « ${d.field} », absente du jeu de données.` })
+    }
+  }, { immediate: true })
 
   // ──────────────────────────────────────────────────────────────────
   // /values_agg  (aggsBased + aggsBasedLabels)

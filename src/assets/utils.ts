@@ -61,7 +61,7 @@ export function normalizeFilters (filters: Filter[]) {
 // ──────────────────────────────────────────────────────────────────
 
 export interface DividerConfig {
-  type: 'none' | 'column'
+  type: 'none' | 'column' | 'groupCount' | 'totalCount'
   /** Colonne du dataset portant les valeurs de division (type "column") */
   field?: string
   /** Agrégat appliqué à la colonne pour chaque groupe (type "column") */
@@ -71,7 +71,8 @@ export interface DividerConfig {
 /**
  * Normalise la configuration du diviseur d'un graphique.
  * Tout format inattendu (absent, incomplet, ancien nombre global géré par le
- * multiplicateur) est interprété comme « pas de diviseur ».
+ * multiplicateur) est interprété comme « pas de diviseur ». Les résidus de
+ * propriétés d'une ancienne branche du formulaire sont ignorés.
  */
 export function normalizeDivider (raw: unknown): DividerConfig {
   if (!raw || typeof raw !== 'object') return { type: 'none' }
@@ -79,32 +80,43 @@ export function normalizeDivider (raw: unknown): DividerConfig {
   if (r.type === 'column' && typeof r.field === 'string' && r.field) {
     return { type: 'column', field: r.field, metric: typeof r.metric === 'string' && r.metric ? r.metric : 'sum' }
   }
+  if (r.type === 'groupCount' || r.type === 'totalCount') return { type: r.type }
   return { type: 'none' }
 }
 
 /**
  * Extrait la valeur de division d'une source :
  * - item d'agrégat (/values_agg) : métrique additionnelle `<field>_<metric>`
+ *   pour une colonne, nombre de lignes du groupe (`total`) pour un groupCount
  * - ligne du dataset (/lines) : propriété brute `<field>`
- * - nombre déjà agrégé (/metric_agg global) : utilisé directement
+ * - nombre déjà agrégé (/metric_agg global ou totalCount de /lines) :
+ *   utilisé directement
  */
 export function extractDividerValue (source: unknown, divider: DividerConfig): number | undefined {
-  if (divider.type !== 'column') return undefined
+  if (divider.type === 'none') return undefined
   if (typeof source === 'number') return Number.isFinite(source) ? source : undefined
   if (!source || typeof source !== 'object') return undefined
   const s = source as Record<string, unknown>
-  const raw = s[`${divider.field}_${divider.metric}`] ?? s[divider.field!]
+  let raw: unknown
+  if (divider.type === 'groupCount') {
+    raw = s.total
+  } else if (divider.type === 'column') {
+    raw = s[`${divider.field}_${divider.metric}`] ?? s[divider.field!]
+  } else {
+    return undefined
+  }
   const value = typeof raw === 'string' ? Number(raw) : raw
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined
 }
 
 /**
- * Une source est « divisible » quand le diviseur n'est pas de type colonne ou
- * quand il porte une valeur exploitable (numérique non nulle). Dans le cas
- * contraire la valeur du graphique est masquée.
+ * Une source est « divisible » quand le diviseur ne se lit pas source par
+ * source (totalCount : valeur globale, gérée dans getValue) ou quand il porte
+ * une valeur exploitable (numérique non nulle). Dans le cas contraire la
+ * valeur du graphique est masquée.
  */
 export function hasUsableDivider (source: unknown, divider: DividerConfig): boolean {
-  if (divider.type !== 'column') return true
+  if (divider.type === 'none' || divider.type === 'totalCount') return true
   const d = extractDividerValue(source, divider)
   return d !== undefined && d !== 0
 }

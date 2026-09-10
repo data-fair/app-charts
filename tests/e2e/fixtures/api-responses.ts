@@ -92,6 +92,15 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: 'Médiathèque', metric: 4100 } // pas de diviseur exploitable → point masqué
     ]
   },
+  // bar with a group line count divisor (capacite / nombre de lignes du groupe)
+  bar_bpe_group_count: {
+    aggs: [
+      { value: 'Cinéma', total: 8, metric: 12400 },
+      { value: 'Théâtre', total: 4, metric: 8120 },
+      { value: 'Musée', total: 0, metric: 6230 }, // total nul → point masqué
+      { value: 'Médiathèque', metric: 4100 } // pas de total → point masqué
+    ]
+  },
   // bar loyers dep
   bar_loyers_dep: {
     aggs: [
@@ -166,9 +175,11 @@ export const valuesLabelsFixture = {
 }
 
 // ──────────────────────────────────────────────────────────────────
-// /lines  (rowsBased)
+// /lines  (rowsBased) — totalCount = nombre total de lignes du dataset
+// filtré, utilisé par le diviseur « nombre total de lignes »
 // ──────────────────────────────────────────────────────────────────
 export const linesFixtureAlimRegion = {
+  totalCount: 5,
   results: [
     { reg_name: 'Île-de-France', evaluation_globale: 'A - Conforme', _i: 1 },
     { reg_name: 'Île-de-France', evaluation_globale: 'B - Non conformité mineure', _i: 1 },
@@ -179,6 +190,7 @@ export const linesFixtureAlimRegion = {
 }
 
 export const linesFixtureLoyersIntervalles = {
+  totalCount: 3,
   results: [
     { libgeo: 'Paris', loypredm2: 28.5, lwripm2: 5.2, upripm2: 2.1 },
     { libgeo: 'Lyon', loypredm2: 16.2, lwripm2: 3.4, upripm2: 1.5 },
@@ -187,6 +199,7 @@ export const linesFixtureLoyersIntervalles = {
 }
 
 export const linesFixtureDeplacements = {
+  totalCount: 3,
   results: [
     { time_period: '2019', voit: 21000, velo: 1200 },
     { time_period: '2020', voit: 18500, velo: 1800 },

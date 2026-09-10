@@ -88,6 +88,10 @@ test('normalizeDivider accepts column configs and falls back to none', () => {
   expect(normalizeDivider({ type: 'column', field: 'pop', metric: 'avg' })).toEqual({ type: 'column', field: 'pop', metric: 'avg' })
   expect(normalizeDivider({ type: 'column' })).toEqual({ type: 'none' }) // incomplet
   expect(normalizeDivider({ type: 'column', field: '', metric: 'sum' })).toEqual({ type: 'none' })
+  expect(normalizeDivider({ type: 'groupCount' })).toEqual({ type: 'groupCount' })
+  expect(normalizeDivider({ type: 'totalCount' })).toEqual({ type: 'totalCount' })
+  expect(normalizeDivider({ type: 'totalCount', field: 'pop' })).toEqual({ type: 'totalCount' }) // résidu d'ancienne branche ignoré
+  expect(normalizeDivider({ type: 'count' })).toEqual({ type: 'none' }) // type inconnu
 })
 
 test('extractDividerValue reads rows, agg items and pre-aggregated numbers', () => {
@@ -103,10 +107,29 @@ test('extractDividerValue reads rows, agg items and pre-aggregated numbers', () 
   expect(extractDividerValue({ pop_sum: 42 }, { type: 'none' })).toBeUndefined()
 })
 
+test('extractDividerValue reads the group line count and pre-aggregated totals', () => {
+  const groupCount = { type: 'groupCount' } as const
+  expect(extractDividerValue({ total: 7 }, groupCount)).toBe(7) // item d'agrégat : nombre de lignes du groupe
+  expect(extractDividerValue({ total: '7' }, groupCount)).toBe(7)
+  expect(extractDividerValue({}, groupCount)).toBeUndefined() // ligne rowsBased : pas de total propre
+  expect(extractDividerValue(120, groupCount)).toBe(120) // bucket « Autre » : total déjà sommé
+  const totalCount = { type: 'totalCount' } as const
+  expect(extractDividerValue(120, totalCount)).toBe(120) // valeur globale déjà extraite
+  expect(extractDividerValue({ total: 7 }, totalCount)).toBeUndefined() // totalCount ne se lit pas source par source
+})
+
 test('hasUsableDivider only gates column dividers', () => {
   const divider = { type: 'column', field: 'pop', metric: 'sum' } as const
   expect(hasUsableDivider({ pop_sum: 0 }, divider)).toBe(false)
   expect(hasUsableDivider({}, divider)).toBe(false)
   expect(hasUsableDivider({ pop_sum: 3 }, divider)).toBe(true)
   expect(hasUsableDivider({}, { type: 'none' })).toBe(true)
+})
+
+test('hasUsableDivider gates groupCount dividers, not totalCount', () => {
+  const groupCount = { type: 'groupCount' } as const
+  expect(hasUsableDivider({ total: 0 }, groupCount)).toBe(false)
+  expect(hasUsableDivider({}, groupCount)).toBe(false)
+  expect(hasUsableDivider({ total: 3 }, groupCount)).toBe(true)
+  expect(hasUsableDivider({}, { type: 'totalCount' })).toBe(true) // gating global, dans getValue
 })
