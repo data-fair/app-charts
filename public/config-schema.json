@@ -76,6 +76,9 @@
                   "type": "object",
                   "title": "Préparation des données",
                   "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une, couleur unique** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données et représentées avec une couleur unique.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.",
+                  "oneOfLayout": {
+                    "emptyData": true
+                  },
                   "oneOf": [
                     {
                       "$ref": "#/$defs/rowsDataSingle"
@@ -112,6 +115,9 @@
                   "type": "object",
                   "title": "Préparation des données",
                   "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une, couleur unique** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données et représentées avec une couleur unique.\n\n**Lire les lignes une par une, plusieurs couleurs** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.",
+                  "oneOfLayout": {
+                    "emptyData": true
+                  },
                   "oneOf": [
                     {
                       "$ref": "#/$defs/rowsDataSingle"
@@ -283,6 +289,9 @@
                   "type": "object",
                   "title": "Préparation des données",
                   "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données.\n\n**Grouper les lignes** :\nles lignes sont groupées selon un critère. Les valeurs affichées sont obtenues par calcul (nombre de lignes, somme, moyenne, etc.) pour chaque groupe.\n\n**Sommes calculées sur plusieurs colonnes** :\nles valeurs affichées sont obtenues en faisant la somme de plusieurs colonnes numériques ou booléennes sur l'ensemble du jeu de données. Chaque colonne devient une part du graphique.",
+                  "oneOfLayout": {
+                    "emptyData": true
+                  },
                   "oneOf": [
                     {
                       "$ref": "#/$defs/rowsCategories"
@@ -523,7 +532,7 @@
     "labelsValues": {
       "type": "array",
       "title": "Colonnes de libellés",
-      "description": "Choisissez les colonnes de libellés à présenter dans le graphique.",
+      "description": "Choisissez les colonnes de valeurs à agréger pour former les libellés de l'axe des X. Les colonnes numériques ou booléennes sont acceptées (booléen : somme = nombre de « oui », moyenne = proportion de « oui »).",
       "items": {
         "type": "string"
       },
@@ -822,7 +831,8 @@
         }
       ],
       "oneOfLayout": {
-        "label": "Grouper par"
+        "label": "Grouper par",
+        "emptyData": true
       }
     },
     "valueCalc": {
@@ -1150,6 +1160,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -1278,6 +1291,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -1423,6 +1439,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -1596,6 +1615,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -1755,6 +1777,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -1841,7 +1866,10 @@
     "multipleDataType": {
       "type": "object",
       "title": "Préparation des données",
-      "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux colonnes numériques sélectionnées.\n\n**Grouper les lignes, séries définies par une colonne de catégories** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes, séries définies par plusieurs colonnes numériques ou booléennes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent à plusieurs colonnes numériques ou booléennes, agrégées indépendamment.\n\n**Grouper les lignes, abscisses définies par plusieurs colonnes** :\nles lignes sont groupées selon une colonne de catégories pour former les séries (affichées dans la légende). Les libellés sur l'axe des X correspondent à plusieurs colonnes numériques.",
+      "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux colonnes numériques sélectionnées.\n\n**Grouper les lignes, séries définies par une colonne de catégories** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent aux valeurs d'une colonne de catégories.\n\n**Grouper les lignes, séries définies par plusieurs colonnes numériques ou booléennes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent à plusieurs colonnes numériques ou booléennes, agrégées indépendamment.\n\n**Grouper les lignes, abscisses définies par plusieurs colonnes** :\nles lignes sont groupées selon une colonne de catégories pour former les séries (affichées dans la légende). Les libellés sur l'axe des X correspondent à plusieurs colonnes numériques ou booléennes.",
+      "oneOfLayout": {
+        "emptyData": true
+      },
       "oneOf": [
         {
           "$ref": "#/$defs/rowsDataMultiple"
@@ -1890,6 +1918,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -2011,6 +2042,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -2123,6 +2157,9 @@
         "colorOrder": {
           "type": "object",
           "title": "Couleurs et ordre",
+          "oneOfLayout": {
+            "emptyData": true
+          },
           "oneOf": [
         {
           "title": "Palette précalculée",
@@ -2222,6 +2259,9 @@
         "type": "object",
         "default": {
           "type": "in"
+        },
+        "oneOfLayout": {
+          "emptyData": true
         },
         "oneOf": [
           {
