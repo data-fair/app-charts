@@ -97,6 +97,38 @@ test('column divider divides each serie by its own extra metric', () => {
   expect(data.datasets[1].data).toEqual([undefined, undefined])
 })
 
+// ── Colonnes booléennes en abscisses (mode aggsBasedLabels) ─────────────────
+
+test('boolean labelsValues are aggregated via metric and <field>_<metric>', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      config: {
+        type: 'aggsBasedLabels',
+        valuesLabel: 'reg',
+        labelsValues: ['indic_capa', 'indic_nbsalles', 'irisee'],
+        metric: 'sum',
+        size: 10
+      }
+    },
+    fields: {
+      indic_capa: { label: 'Capacité' },
+      indic_nbsalles: { label: 'Salles' },
+      irisee: { label: 'IRISée' }
+    },
+    aggs: [
+      { value: 'Île-de-France', metric: 1234, indic_nbsalles_sum: 456, irisee_sum: 789 },
+      { value: 'PACA', metric: 987, indic_nbsalles_sum: 321, irisee_sum: 654 }
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  expect(data.labels).toEqual([['Capacité'], ['Salles'], ['IRISée']])
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Île-de-France', 'PACA'])
+  // 1er champ booléen lu dans serie.metric, les suivants dans `<field>_sum`
+  expect(data.datasets[0].data).toEqual([1234, 456, 789])
+  expect(data.datasets[1].data).toEqual([987, 321, 654])
+})
+
 // ── Libellés des valeurs booléennes (config.booleanLabels) ──────────────────
 
 test('boolean valuesLabel values are replaced by the configured labels', () => {

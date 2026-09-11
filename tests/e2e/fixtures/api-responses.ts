@@ -189,6 +189,17 @@ export const valuesAggLabelsFixture = {
   ]
 }
 
+// /values_agg for aggsBasedLabels on boolean columns (mode « abscisses
+// définies par plusieurs colonnes ») : metric = sum du 1er champ booléen,
+// `<field>_sum` pour les suivants (nombre de « oui »).
+export const valuesAggLabelsBooleansFixture = {
+  aggs: [
+    { value: 'Île-de-France', metric: 1234, indic_nbsalles_sum: 456, irisee_sum: 789 },
+    { value: 'PACA', metric: 987, indic_nbsalles_sum: 321, irisee_sum: 654 },
+    { value: 'Bretagne', metric: 876, indic_nbsalles_sum: 234, irisee_sum: 543 }
+  ]
+}
+
 // ──────────────────────────────────────────────────────────────────
 // /values-labels/<field>
 // ──────────────────────────────────────────────────────────────────

@@ -1198,5 +1198,44 @@
         }
       }
     }
+  },
+  "30-multi-bar-bpe-booleans-labels": {
+    "dataset": "bpe",
+    "comment": "multi-bar aggsBasedLabels, abscisses définies par plusieurs colonnes booléennes, séries par région",
+    "config": {
+      "title": "Indicateurs BPE par région",
+      "xTitle": "Indicateur",
+      "yTitle": "Nombre d'équipements",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "bottom",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": true,
+        "percentage": false,
+        "disableDynamicStack": false,
+        "config": {
+          "type": "aggsBasedLabels",
+          "labelsValues": [
+            "indic_capa",
+            "indic_nbsalles",
+            "irisee"
+          ],
+          "valuesLabel": "reg",
+          "metric": "sum",
+          "dynamicMetric": false,
+          "size": 10,
+          "missingLabel": "",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      }
+    }
   }
 }

@@ -13,6 +13,10 @@ export interface MockMap {
   valuesLabels?: any
   lines?: any
   metrics?: Record<string, { metric: number }> // per-field /metric_agg responses
+  // Query params of every /values_agg call, pushed by the handler. A spec can
+  // pass its own array (created before setupChartTest) and assert on it — the
+  // test body runs after waitForChart, too late for a waitForRequest.
+  valuesAggRequests?: URLSearchParams[]
   // Query params of every /metric_agg call, pushed by the handler. A spec can
   // pass its own array (created before setupChartTest) and assert on it — the
   // test body runs after waitForChart, too late for a waitForRequest.
@@ -40,6 +44,7 @@ export async function mockDataFairApi (page: Page, datasetId: string, mocks: Moc
 
     // /values_agg
     if (path.endsWith('/values_agg')) {
+      mocks.valuesAggRequests?.push(params)
       if (mocks.valuesAgg) {
         assertNestedAggsRequested(mocks.valuesAgg, params)
         return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mocks.valuesAgg) })
