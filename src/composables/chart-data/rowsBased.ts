@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, getValueLabel, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, getValueLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -35,7 +35,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     results.sort((a, b) => {
       const labelA = getValueLabel(a[labelsField], fields[labelsField], config.booleanLabels)
       const labelB = getValueLabel(b[labelsField], fields[labelsField], config.booleanLabels)
-      return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
+      return sortOrder === 'desc' ? compareLabels(labelB, labelA) : compareLabels(labelA, labelB)
     })
   }
 

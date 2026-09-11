@@ -120,6 +120,46 @@ test('date groupBy formats labels through formatDateLabel', () => {
   expect(data.labels).toEqual([['mars 2024'], ['avr. 2024']])
 })
 
+test('numeric interval labels are sorted by numeric value, not lexicographically', () => {
+  const chart = {
+    type: 'line',
+    config: { type: 'aggsBased', groupBy: { type: 'number', field: 'loypredm2', interval: 2 }, size: 20, aggSortBy: 'label', sortOrder: 'asc' }
+  }
+  const aggs = [
+    { value: '100', total: 1 },
+    { value: '102', total: 2 },
+    { value: '180', total: 3 },
+    { value: '28', total: 4 },
+    { value: '30', total: 5 },
+    { value: '98', total: 6 }
+  ]
+  const data = transformAggsBased(baseCtx({ chart, aggs }))
+  expect(data.labels.map((l: string[]) => l[0])).toEqual(['28', '30', '98', '100', '102', '180'])
+  expect(data.datasets[0].data).toEqual([4, 5, 6, 1, 2, 3])
+})
+
+test('numeric exact values are sorted by numeric value and desc order is honored', () => {
+  const chart = {
+    type: 'bar',
+    config: { type: 'aggsBased', groupBy: { type: 'value', field: 'weight' }, size: 10, aggSortBy: 'label', sortOrder: 'asc' }
+  }
+  const aggs = [
+    { value: '10', total: 1 },
+    { value: '8', total: 2 },
+    { value: '9', total: 3 }
+  ]
+  const data = transformAggsBased(baseCtx({ chart, aggs }))
+  expect(data.labels.map((l: string[]) => l[0])).toEqual(['8', '9', '10'])
+  expect(data.datasets[0].data).toEqual([2, 3, 1])
+
+  const desc = transformAggsBased(baseCtx({
+    chart: { ...chart, config: { ...chart.config, sortOrder: 'desc' } },
+    aggs
+  }))
+  expect(desc.labels.map((l: string[]) => l[0])).toEqual(['10', '9', '8'])
+  expect(desc.datasets[0].data).toEqual([1, 3, 2])
+})
+
 // ── Diviseur « colonne » (agrégat par groupe, clé <champ>_<métrique>) ────────
 
 function dividerGetValue (divider: DividerConfig) {

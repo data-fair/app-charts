@@ -132,6 +132,22 @@ test('sortBy label orders results through localized comparison', () => {
   expect(data.labels).toEqual([['77'], ['75']])
 })
 
+test('sortBy label orders numeric labels by value, not lexicographically', () => {
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'rowsBased', labelsField: 'surface', valuesField: 'count', size: 10 } },
+    sortBy: 'label',
+    sortOrder: 'asc',
+    results: [
+      { surface: '10', count: 1 },
+      { surface: '8', count: 2 },
+      { surface: '9', count: 3 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.labels).toEqual([['8'], ['9'], ['10']])
+  expect(data.datasets[0].data).toEqual([2, 3, 1])
+})
+
 // ── Diviseur « colonne » (valeur brute de la ligne) ──────────────────────────
 
 function dividerGetValue (divider: DividerConfig) {

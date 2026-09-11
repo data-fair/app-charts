@@ -48,6 +48,19 @@ export function getValueLabel (raw: unknown, field: any, booleanLabels?: Boolean
   return String(raw)
 }
 
+/**
+ * Comparaison de libellés pour le tri « par libellé » : quand les deux
+ * libellés sont numériques (tranches d'intervalle, valeurs exactes d'une
+ * colonne numérique), comparer les valeurs numériques ; sinon collation
+ * locale naturelle (nombres inclus dans une chaîne).
+ */
+export function compareLabels (labelA: string, labelB: string): number {
+  const numA = labelA.trim() === '' ? Number.NaN : Number(labelA)
+  const numB = labelB.trim() === '' ? Number.NaN : Number(labelB)
+  if (Number.isFinite(numA) && Number.isFinite(numB)) return numA - numB
+  return labelA.localeCompare(labelB, 'fr', { numeric: true })
+}
+
 export function getOrderedLabels (labels: string[], colorOrder: AnyChartConfig['colorOrder']): string[] {
   if (!colorOrder) return labels
   if (colorOrder.type === 'palette' && colorOrder.seriesOrder?.length) {

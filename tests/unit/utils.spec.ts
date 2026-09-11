@@ -8,6 +8,7 @@ import {
   getColors,
   getOrderedLabels,
   getValueLabel,
+  compareLabels,
   normalizeDivider,
   extractDividerValue,
   hasUsableDivider,
@@ -172,6 +173,17 @@ test('getValueLabel keeps x-labels priority and tolerates a missing config', () 
   expect(getValueLabel(true, undefined)).toBe('true')
   expect(getValueLabel(false, undefined)).toBe('false')
   expect(getValueLabel('Aix', undefined)).toBe('Aix')
+})
+
+test('compareLabels orders numeric labels by value and text naturally', () => {
+  // tranches numériques : ordre numérique et non lexicographique
+  expect(['100', '102', '180', '28', '30', '98'].sort(compareLabels)).toEqual(['28', '30', '98', '100', '102', '180'])
+  // décimales hétérogènes
+  expect(['1.5', '1.25', '1.10'].sort(compareLabels)).toEqual(['1.10', '1.25', '1.5'])
+  // nombres inclus dans une chaîne : collation naturelle
+  expect(['10 m', '2 m', '1 m'].sort(compareLabels)).toEqual(['1 m', '2 m', '10 m'])
+  // libellés texte : collation locale
+  expect(['Oui', 'Non'].sort(compareLabels)).toEqual(['Non', 'Oui'])
 })
 
 test('chartValueLabelDisplay hides empty values and auto-hides overlapping labels otherwise', () => {

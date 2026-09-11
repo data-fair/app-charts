@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, getValueLabel, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, getValueLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedContext {
@@ -36,7 +36,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
     aggs = [...aggs].sort((a, b) => {
       const labelA = getValueLabel(a.value, fields[groupByField], config.booleanLabels)
       const labelB = getValueLabel(b.value, fields[groupByField], config.booleanLabels)
-      return sortOrder === 'desc' ? labelB.localeCompare(labelA, 'fr') : labelA.localeCompare(labelB, 'fr')
+      return sortOrder === 'desc' ? compareLabels(labelB, labelA) : compareLabels(labelA, labelB)
     })
   }
 
