@@ -31,8 +31,8 @@ export interface MockMap {
 function assertNestedAggsRequested (fixture: any, params: URLSearchParams) {
   const hasNestedAggs = Array.isArray(fixture?.aggs) &&
     fixture.aggs.some((a: any) => Array.isArray(a?.aggs) && a.aggs.length > 0)
-  if (hasNestedAggs && !params.get('field')?.includes(';')) {
-    throw new Error('fixture with nested aggs served but the /values_agg request has no second aggregation dimension (expected field=<groupBy>;<groupsField>) — check the groupsField query params in useChartData')
+  if (hasNestedAggs && !params.get('field')?.includes(',')) {
+    throw new Error('fixture with nested aggs served but the /values_agg request has no second aggregation dimension (expected field=<groupBy>,<groupsField>) — check the groupsField query params in useChartData')
   }
 }
 

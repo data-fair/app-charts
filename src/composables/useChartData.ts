@@ -196,11 +196,11 @@ export function useChartData () {
       // bucket des valeurs manquantes (libellé configuré)
       if (c.missingLabel) query.missing = c.missingLabel
       // sous-séries par groupsField : 2ᵉ dimension d'agrégation, convention
-      // data-fair des params parallèles `;` (field=a;b, agg_size=n;12, sort=x;-metric)
+      // data-fair des params parallèles `,` (field=a,b, agg_size=n,12, sort=x,-metric)
       if (c.groupsField) {
-        query.field = [query.field, c.groupsField].join(';')
-        query.agg_size = [query.agg_size, '12'].join(';')
-        if (query.sort) query.sort = [query.sort, '-' + (c.valueCalc?.type || 'metric')].join(';')
+        query.field = [query.field, c.groupsField].join(',')
+        query.agg_size = [query.agg_size, '12'].join(',')
+        if (query.sort) query.sort = [query.sort, '-' + (c.valueCalc?.type || 'metric')].join(',')
       }
       // le diviseur est agrégé dans le même values_agg que la valeur du graphique
       if (divisor.value.type === 'column') {
