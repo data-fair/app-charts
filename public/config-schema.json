@@ -16,11 +16,6 @@
         },
         "staticFilters": {
           "$ref": "#/$defs/filters"
-        },
-        "qsFilter": {
-          "type": "string",
-          "default": "",
-          "layout": "none"
         }
       }
     },
@@ -1184,7 +1179,7 @@
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.categoriesField",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
@@ -1228,7 +1223,7 @@
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.categoriesField",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.categoriesField}&agg_size=12&size=0",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
@@ -1463,7 +1458,7 @@
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.groupsField",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
@@ -1507,7 +1502,7 @@
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.groupsField",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupsField}&agg_size=12&size=0&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
@@ -1801,7 +1796,7 @@
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
@@ -1845,7 +1840,7 @@
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.valuesLabel}&agg_size=12&size=0",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
@@ -1942,7 +1937,7 @@
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.labelsField",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
@@ -1986,7 +1981,7 @@
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.labelsField",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0&qs=${rootData.qsFilter}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.labelsField}&agg_size=12&size=0",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
@@ -2066,7 +2061,7 @@
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data[\"value\"]",
                       "itemValue": "data[\"value\"]",
                       "itemsResults": "data[\"aggs\"].map(a => ({ value: a.value + '' }))"
@@ -2110,7 +2105,7 @@
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
-                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&qs=${rootData.qsFilter}&missing=${rootData.chart.config.missingLabel}",
+                      "url": "${rootData.datasets[0].href}/values_agg?field=${rootData.chart.config.groupBy.field}&interval=${rootData.chart.config.groupBy.interval}&agg_size=12&size=0&missing=${rootData.chart.config.missingLabel}",
                       "itemKey": "data['key']",
                       "itemTitle": "data['key']",
                       "itemsResults": "data['aggs'].map(a => ({ key: a.value + '' }))"
@@ -2287,7 +2282,7 @@
                 },
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?q={q}&q_mode=complete&size=100&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2314,7 +2309,7 @@
                 "title": "Valeur min",
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=asc&${parent.data.field}_gte={q}&stringify=true",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?sort=asc&${parent.data.field?.key || ''}_gte={q}&stringify=true&size=20",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2325,7 +2320,7 @@
                 "title": "Valeur max",
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?sort=desc&${parent.data.field}_lte={q}&stringify=true",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?sort=desc&${parent.data.field?.key || ''}_lte={q}&stringify=true&size=20",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2356,11 +2351,67 @@
                 },
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field}?q={q}&q_mode=complete&size=100&stringify=true",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?q={q}&q_mode=complete&size=100&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
                 }
+              }
+            }
+          },
+          {
+            "title": "Commence par",
+            "required": [
+              "type",
+              "field",
+              "value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "starts"
+              },
+              "field": {
+                "$ref": "#/$defs/filterField"
+              },
+              "value": {
+                "type": "string",
+                "title": "Valeur",
+                "layout": {
+                  "if": "parent.data.field"
+                }
+              }
+            }
+          },
+          {
+            "title": "Exclure les valeurs vides ou non définies",
+            "required": [
+              "type",
+              "field"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "exists"
+              },
+              "field": {
+                "$ref": "#/$defs/filterField"
+              }
+            }
+          },
+          {
+            "title": "Restreindre aux valeurs vides ou non définies",
+            "required": [
+              "type",
+              "field"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "notExists"
+              },
+              "field": {
+                "$ref": "#/$defs/filterField"
               }
             }
           }
@@ -2368,7 +2419,7 @@
       }
     },
     "filterField": {
-      "type": "string",
+      "type": "object",
       "title": "Colonne de filtre",
       "layout": {
         "getItems": {
@@ -2376,6 +2427,10 @@
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
+      },
+      "properties": {
+        "key": { "type": "string" },
+        "label": { "type": "string" }
       }
     },
     "colorPalette": {

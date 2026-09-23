@@ -5,7 +5,7 @@ import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-glob
 import { useConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
 import { useFetch } from '@data-fair/lib-vue/fetch.js'
 import { useUiNotif, getErrorMsg } from '@data-fair/lib-vue/ui-notif.js'
-import { filters2qs } from '@data-fair/lib-utils/filters'
+import { filters2params, type Filter } from '@data-fair/lib-utils/filters'
 import { ofetch } from 'ofetch'
 import { normalizeFilters, normalizeDivider, extractDividerValue, type DividerConfig } from '@/assets/utils'
 import { useConfig } from '@/composables/config'
@@ -60,11 +60,13 @@ export function useChartData () {
   }, { immediate: true })
 
   const baseParams = useDebounce(computed(() => {
-    const params: Record<string, string> = { ...conceptFilters }
-    const qs = config.value.staticFilters?.length
-      ? filters2qs(normalizeFilters(config.value.staticFilters as any) as any).split(' AND ')
-      : []
-    if (qs.length) params.qs = qs.join(' AND ')
+    // filtres prédéfinis en paramètres REST suffixés (_in, _nin, _gte...), jamais en `qs`
+    const params: Record<string, string> = {
+      ...conceptFilters,
+      ...(config.value.staticFilters?.length
+        ? filters2params(normalizeFilters(config.value.staticFilters as any) as Filter[])
+        : {})
+    }
     return params
   }), 500)
 
