@@ -2,7 +2,7 @@
 
 `app-charts` is a **DataFair visualization plugin** that renders charts (line, bar, multi-line, multi-bar, pie, radar, paired-histogram) from DataFair datasets. Published on npm as `@data-fair/app-charts` and served via jsDelivr CDN.
 
-The app follows the `skill-apps` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown, lib-vuetify 2.x, VJSF 3 schema, ports via `df-dev-env`, Playwright `unit`/`e2e` projects).
+The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown, lib-vuetify 2.x, VJSF 3 schema, ports via `df-dev-env`, Playwright `unit`/`e2e` projects).
 
 ## Tech Stack
 
