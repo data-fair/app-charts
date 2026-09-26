@@ -1172,10 +1172,12 @@
                   "title": "Ordre des séries",
                   "items": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "layout": "none"
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.categoriesField)?.['x-labels']?.[data] || data",
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.categoriesField",
                     "getItems": {
@@ -1220,6 +1222,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.categoriesField)?.['x-labels']?.[data.key] || data.key",
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.categoriesField",
                     "getItems": {
@@ -1451,10 +1454,12 @@
                   "title": "Ordre des séries",
                   "items": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "layout": "none"
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.groupsField)?.['x-labels']?.[data] || data",
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.groupsField",
                     "getItems": {
@@ -1499,6 +1504,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.groupsField)?.['x-labels']?.[data.key] || data.key",
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.groupsField",
                     "getItems": {
@@ -1789,10 +1795,12 @@
                   "title": "Ordre des séries",
                   "items": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "layout": "none"
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.valuesLabel)?.['x-labels']?.[data] || data",
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
@@ -1837,6 +1845,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.valuesLabel)?.['x-labels']?.[data.key] || data.key",
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.valuesLabel",
                     "getItems": {
@@ -1930,10 +1939,12 @@
                   "title": "Ordre des séries",
                   "items": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "layout": "none"
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.labelsField)?.['x-labels']?.[data] || data",
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.labelsField",
                     "getItems": {
@@ -1978,6 +1989,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.labelsField)?.['x-labels']?.[data.key] || data.key",
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.labelsField",
                     "getItems": {
@@ -2054,10 +2066,12 @@
                   "title": "Ordre des séries",
                   "items": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "layout": "none"
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.groupBy?.field)?.['x-labels']?.[data] || data",
                     "listActions": ["sort"],
                     "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
@@ -2102,6 +2116,7 @@
                   },
                   "layout": {
                     "comp": "list",
+                    "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === rootData.chart?.config?.groupBy?.field)?.['x-labels']?.[data.key] || data.key",
                     "listActions": ["edit", "sort"],
                     "if": "rootData.chart.config.groupBy?.field",
                     "getItems": {
