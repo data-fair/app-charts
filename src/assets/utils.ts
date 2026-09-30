@@ -1,7 +1,7 @@
 import chroma from 'chroma-js'
 import dayjs from 'dayjs'
 import type { AnyChartConfig } from '@/types'
-import type { Filter } from '@data-fair/lib-utils/filters'
+import { filters2params, type Filter } from '@data-fair/lib-utils/filters/index.js'
 import type { AggItem } from '@/composables/useChartData'
 
 export function formatDateLabel (value: string, interval: string): string {
@@ -98,6 +98,14 @@ export function normalizeFilters (filters: Filter[]) {
     }
     return f
   })
+}
+
+/**
+ * Filtres statiques sérialisés en paramètres REST (`_in`, `_gte`...), pour les
+ * URLs `getItems` du config-schema (listes de valeurs et cardinalité contextuelle).
+ */
+export function staticFiltersParams (filters?: Filter[]): string {
+  return new URLSearchParams(filters2params(normalizeFilters(filters as Filter[]) as Filter[])).toString()
 }
 
 // ──────────────────────────────────────────────────────────────────

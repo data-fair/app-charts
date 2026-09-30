@@ -32,7 +32,7 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │   ├── main.ts                     # Bootstrap: global.scss + main.css, createSession (siteInfo: !window.__PUBLIC_SITE_INFO),
 │   │                               #   createI18n (percent formats), createVuetify, plugins, createConfig. vIframeOptions at module level.
 │   ├── App.vue                     # Root: v-empty-state on config error, renders Chart + <DfUiNotif />,
-│   │                               #   staticFilters -> qsFilter sync (draft), triggerCapture on error
+│   │                               #   staticFilters -> staticFiltersParams sync (draft), triggerCapture on error
 │   ├── shims.d.ts                  # Module declarations for untyped packages
 │   ├── types.d.ts                  # AnyChart/AnyChartConfig/AnyConfig + Window globals (APPLICATION, vIframeOptions,
 │   │                               #   __PUBLIC_SITE_INFO, triggerCapture)
@@ -50,7 +50,7 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │   │   │                         #   component, role="img" + aria-label on the canvas wrapper (RGAA 1.1)
 │   │   └── Actions.vue           # Metric selector, sort controls, stack toggle
 │   ├── assets/
-│   │   └── utils.ts              # getSortStr, getColors, getOrderedLabels, normalizeFilters, splitString, fillMissingDateAggs
+│   │   └── utils.ts              # getSortStr, getColors, getOrderedLabels, normalizeFilters, staticFiltersParams, splitString, fillMissingDateAggs
 │   ├── config/
 │   │   ├── schema.ts             # One-line re-export of ../../public/config-schema.json (with { type: 'json' })
 │   │   ├── index.ts              # Re-exports generated types from ./.type/index.js
@@ -99,7 +99,7 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 
 `useConfig()` injects the `ConfigState` object. `error` is a computed ref returning a string or `null`; `App.vue` renders a `v-empty-state` when `error` is truthy.
 
-The plugin also listens for `message` events with `type: 'set-config'` to update the configuration reactively (full config, nested path updates, etc.). `notifyConfigChange(field, value)` is also exposed for posting updates from the app to DataFair (e.g. syncing `staticFilters` → `qsFilter` in draft mode).
+The plugin also listens for `message` events with `type: 'set-config'` to update the configuration reactively (full config, nested path updates, etc.). `notifyConfigChange(field, value)` is also exposed for posting updates from the app to DataFair (e.g. syncing `staticFilters` → `staticFiltersParams` in draft mode).
 
 ### Dynamic Theme + Iframe
 `main.ts` awaits `createSession({ directoryUrl: '/simple-directory', siteInfo: !window.__PUBLIC_SITE_INFO })` and passes `vuetifySessionOptions(session)` to Vuetify. This pulls site colors and the 4 themes (default/dark/hc/hc-dark) from DataFair dynamically. Styles: `import '@data-fair/lib-vuetify/style/global.scss'` (never `vuetify/styles`) in `main.ts`, and `styles: { configFile: settingsPath }` (from `@data-fair/lib-vuetify/vite.js`) in `vite.config.ts` — this is what applies the site font (`var(--d-body-font-family)`). Plain app CSS lives in `src/styles/main.css`.
@@ -137,7 +137,7 @@ Global Chart.js registration happens once in setup (`ChartJS.register(...)`). Us
 A `chartKey` computed forces component recreation only for structural changes that Chart.js cannot handle in-place (currently `horizontal` / `indexAxis`).
 
 ### App.vue
-Renders `Chart` (or `v-empty-state` on config error) and `<DfUiNotif />` for global notifications. Watches `staticFilters` to push computed `qsFilter` back to the parent via `postMessage` in draft mode (uses `notifyConfigChange` from `useConfig`). The `qsFilter` sync is a legacy pattern kept on purpose: the schema's `getItems` URLs consume `${rootData.qsFilter}` to filter the color/order selects by the static filters.
+Renders `Chart` (or `v-empty-state` on config error) and `<DfUiNotif />` for global notifications. Watches `staticFilters` to push `staticFiltersParams` (REST query params, serialized with `filters2params`, empty string when no filters) back to the parent via `postMessage` in draft mode (uses `notifyConfigChange` from `useConfig`). The schema's `getItems` URLs consume `${rootData.staticFiltersParams}`: the `values_agg` value lists (colors/order) are restricted to the values present under the static filters, and the `/schema?maxCardinality=12` column selectors let DataFair compute the contextual cardinality (data-fair #588).
 
 ### Actions.vue
 Dynamic controls for:
@@ -221,6 +221,7 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | 29 | `29-pie-bpe-booleans.spec.ts` | pie aggsLabels, **boolean columns** (`/metric_agg` metric=sum = nombre de oui, requêtes capturées par le mock) |
 | 30 | `30-multi-bar-bpe-booleans-labels.spec.ts` | multi-bar aggsBasedLabels, **abscisses définies par plusieurs colonnes booléennes** (`metric_field` + `extra_metrics` = `<field>_sum`, requête `/values_agg` capturée par le mock) |
 | — | `actions.spec.ts` | dynamicMetric, dynamicSort, stack toggle |
+| — | `static-filters-params.spec.ts` | App.vue sync `staticFilters` → `staticFiltersParams` pushed to the parent in draft mode (app mounted in an iframe, outgoing `set-config` messages captured; clearing, unchanged-value and non-draft/non-embedded guards) |
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |
 | — | `console-health.spec.ts` | zero `[intlify]` console warnings + `__PUBLIC_SITE_INFO` fast path |
 | — | `datalabels-overlap.spec.ts` | value labels of tiny stacked segments (`hideYAxis`) never overlap (`display: 'auto'`), canvas instrumented via `fillText`/`clearRect` |

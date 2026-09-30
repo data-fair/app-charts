@@ -4,9 +4,21 @@ import DfUiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { ofetch } from 'ofetch'
 import { watch } from 'vue'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
+import type { Filter } from '@data-fair/lib-utils/filters/index.js'
 import { useConfig } from './composables/config'
+import { staticFiltersParams } from './assets/utils'
 
-const { error } = useConfig()
+const { config, error, notifyConfigChange } = useConfig()
+
+// Sync staticFilters -> staticFiltersParams back to DataFair parent (draft mode only).
+// The config-schema getItems URLs consume it to filter the value lists and to trigger
+// the contextual cardinality of /schema?maxCardinality=12.
+watch(() => config.value?.staticFilters, (staticFilters) => {
+  if (window.parent === window || reactiveSearchParams.draft !== 'true') return
+  const params = staticFiltersParams(staticFilters as Filter[] | undefined)
+  if (params === (config.value?.staticFiltersParams ?? '')) return
+  notifyConfigChange('staticFiltersParams', params)
+}, { immediate: true, deep: true })
 
 // Report config errors to DataFair in draft mode
 if (reactiveSearchParams.draft === 'true') {

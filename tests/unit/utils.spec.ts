@@ -13,6 +13,7 @@ import {
   extractDividerValue,
   hasUsableDivider,
   normalizeFilters,
+  staticFiltersParams,
   splitString,
   chartValueLabelDisplay
 } from '../../src/assets/utils'
@@ -35,6 +36,30 @@ test('normalizeFilters maps string fields to { key } objects', () => {
   const normalized = normalizeFilters(filters as any) as any[]
   expect(normalized[0].field).toEqual({ key: 'region' })
   expect(normalized[1].field).toEqual({ key: 'surface' })
+})
+
+test('staticFiltersParams serializes filters as REST query params', () => {
+  const parse = (filters: any) => Object.fromEntries(new URLSearchParams(staticFiltersParams(filters)))
+
+  expect(staticFiltersParams(undefined)).toBe('')
+  expect(staticFiltersParams([])).toBe('')
+  expect(staticFiltersParams([{ type: 'in', field: { key: 'region' }, values: [] } as any])).toBe('')
+
+  expect(parse([{ type: 'in', field: { key: 'region' }, values: ['75', '92'] }]))
+    .toEqual({ region_in: '75,92' })
+  expect(parse([{ type: 'out', field: { key: 'region' }, values: ['75'] }]))
+    .toEqual({ region_nin: '75' })
+  expect(parse([{ type: 'interval', field: { key: 'surface' }, minValue: '10', maxValue: '20' }]))
+    .toEqual({ surface_gte: '10', surface_lte: '20' })
+  expect(parse([{ type: 'interval', field: { key: 'surface' }, minValue: '10' }]))
+    .toEqual({ surface_gte: '10' })
+  expect(parse([{ type: 'starts', field: { key: 'nom' }, value: 'Aix' }]))
+    .toEqual({ nom_starts: 'Aix' })
+  expect(parse([{ type: 'exists', field: { key: 'nom' } }])).toEqual({ nom_exists: ' ' })
+  expect(parse([{ type: 'notExists', field: { key: 'nom' } }])).toEqual({ nom_nexists: ' ' })
+
+  // champ legacy en chaîne et encodage des valeurs
+  expect(parse([{ type: 'in', field: 'nom', values: ['a&b'] }])).toEqual({ nom_in: 'a&b' })
 })
 
 test('getOrderedLabels reorders with palette seriesOrder and appends missing labels', () => {
