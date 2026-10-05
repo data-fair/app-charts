@@ -1,7 +1,12 @@
 // Transverse — actions UI: dynamicMetric selector, dynamicSort, stack toggle
 // Covers: Actions.vue is rendered for charts that have user-controllable options.
 // We test three configs: dynamicMetric (15), dynamicSort (11), and stack toggle (06).
-import { expect, setupChartTest } from '../helpers/test-fixture'
+import { test } from '@playwright/test'
+import { expect, setupChartTest, prepareChartPage } from '../helpers/test-fixture'
+import { mockDataFairApi } from '../helpers/mock-api'
+import { injectConfig, waitForChart } from '../helpers/inject-config'
+import { datasets, makeDatasetEntry } from '../fixtures/datasets'
+import { configs } from '../fixtures/configs'
 import { valuesAggFixtures } from '../fixtures/api-responses'
 
 // dynamicMetric + dynamicSort + sortField (3 selectors)
@@ -35,4 +40,24 @@ testBpe('multi-bar with disableDynamicStack=false renders a stack switch', async
   const actionsContainer = chartPage.locator('.actions-container')
   await expect(actionsContainer).toBeVisible()
   await expect(actionsContainer.locator('.v-switch')).toBeVisible()
+})
+
+// disableDynamicStack=true : la bascule est masquée, aucun conteneur d'actions
+// vide ne subsiste, et la config (stacked: true) fait loi sur un ?stacked=...
+// résiduel (URL partagée, ancienne session).
+test('disableDynamicStack hides the stack switch and clears a stale stacked param', async ({ page }) => {
+  await prepareChartPage(page)
+  await page.goto('/app/?stacked=false')
+  const entry = configs['06-multi-bar-bpe-secteur']
+  const dataset = datasets[entry.dataset]
+  await mockDataFairApi(page, dataset.id, { valuesAgg: valuesAggFixtures.multi_bar_bpe_secteur })
+  await injectConfig(page, {
+    ...entry.config,
+    chart: { ...entry.config.chart, disableDynamicStack: true },
+    datasets: [makeDatasetEntry(entry.dataset)]
+  })
+  await waitForChart(page)
+  await expect(page).toHaveURL(/stacked=true/)
+  await expect(page.locator('.v-switch')).toHaveCount(0)
+  await expect(page.locator('.actions-container')).toHaveCount(0)
 })

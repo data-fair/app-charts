@@ -174,6 +174,20 @@ export function hasUsableDivider (source: unknown, divider: DividerConfig): bool
 }
 
 /**
+ * Valeur à appliquer au paramètre d'URL `stacked` pour refléter la config.
+ * - bascule désactivée (`disableDynamicStack`) : la config fait loi, un
+ *   paramètre résiduel (URL partagée, session précédente) est corrigé/supprimé ;
+ * - bascule visible : un choix existant (URL/utilisateur) est conservé, sinon
+ *   la valeur par défaut de la config s'applique.
+ * `undefined` signifie « supprimer le paramètre ».
+ */
+export function stackedParam (stacked: boolean | undefined, disabled: boolean | undefined, current: string | undefined): string | undefined {
+  if (disabled) return stacked ? 'true' : undefined
+  if (stacked) return current || 'true'
+  return undefined
+}
+
+/**
  * Affichage d'un libellé de valeur sur une barre (chartjs-plugin-datalabels) :
  * - false pour une valeur absente ou nulle : pas de modèle vide, qui
  *   perturberait la détection de chevauchement des autres libellés

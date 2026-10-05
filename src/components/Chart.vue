@@ -33,7 +33,7 @@ const chartKey = computed(() => JSON.stringify({
 const showActions = computed(() =>
   !!dynamicMetric.value ||
   (!!chart.value?.config?.dynamicSort && chart.value?.type !== 'pie') ||
-  ['multi-bar', 'multi-line'].includes(chart.value?.type as string)
+  (['multi-bar', 'multi-line'].includes(chart.value?.type as string) && !chart.value?.disableDynamicStack)
 )
 
 const chartType = computed(() => chart.value?.type as string | undefined)

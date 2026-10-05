@@ -7,7 +7,7 @@ import { useFetch } from '@data-fair/lib-vue/fetch.js'
 import { useUiNotif, getErrorMsg } from '@data-fair/lib-vue/ui-notif.js'
 import { filters2params, type Filter } from '@data-fair/lib-utils/filters'
 import { ofetch } from 'ofetch'
-import { normalizeFilters, normalizeDivider, extractDividerValue, type DividerConfig } from '@/assets/utils'
+import { normalizeFilters, normalizeDivider, extractDividerValue, stackedParam, type DividerConfig } from '@/assets/utils'
 import { useConfig } from '@/composables/config'
 
 import transformRowsBased from './chart-data/rowsBased'
@@ -53,10 +53,13 @@ export function useChartData () {
   const { sendUiNotif } = useUiNotif()
   const conceptFilters = useConceptFilters(reactiveSearchParams, dataset.value?.id)
 
-  // Keep stacked search param in sync with chart default
-  watch(() => chart.value?.stacked, (stacked) => {
-    if (stacked) reactiveSearchParams.stacked = reactiveSearchParams.stacked || 'true'
-    else delete reactiveSearchParams.stacked
+  // Keep stacked search param in sync with chart default. Quand la bascule est
+  // désactivée (`disableDynamicStack`), la config fait loi et un paramètre
+  // résiduel est purgé : plus d'UI pour le corriger.
+  watch([() => chart.value?.stacked, () => chart.value?.disableDynamicStack], ([stacked, disabled]) => {
+    const next = stackedParam(stacked, disabled, reactiveSearchParams.stacked)
+    if (next === undefined) delete reactiveSearchParams.stacked
+    else reactiveSearchParams.stacked = next
   }, { immediate: true })
 
   const baseParams = useDebounce(computed(() => {

@@ -15,7 +15,8 @@ import {
   normalizeFilters,
   staticFiltersParams,
   splitString,
-  chartValueLabelDisplay
+  chartValueLabelDisplay,
+  stackedParam
 } from '../../src/assets/utils'
 
 // formatDateLabel formate via dayjs global : aligner la locale sur le comportement
@@ -26,6 +27,18 @@ test('splitString chunks long labels without breaking words', () => {
   expect(splitString(20, 'Court')).toEqual(['Court'])
   expect(splitString(10, 'un deux trois quatre')).toEqual(['un deux', 'trois', 'quatre'])
   expect(splitString(10, undefined as any)).toEqual([])
+})
+
+test('stackedParam lets the config win when the toggle is disabled', () => {
+  // bascule masquée : la config fait loi, paramètre résiduel corrigé/supprimé
+  expect(stackedParam(true, true, 'false')).toBe('true')
+  expect(stackedParam(true, true, undefined)).toBe('true')
+  expect(stackedParam(false, true, 'true')).toBeUndefined()
+  expect(stackedParam(undefined, true, 'true')).toBeUndefined()
+  // bascule visible : choix existant conservé, sinon défaut de la config
+  expect(stackedParam(true, false, 'false')).toBe('false')
+  expect(stackedParam(true, false, undefined)).toBe('true')
+  expect(stackedParam(false, false, 'true')).toBeUndefined()
 })
 
 test('normalizeFilters maps string fields to { key } objects', () => {
