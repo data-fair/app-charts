@@ -122,3 +122,18 @@ test('boolean columns aggregate their sum of true values as one pie part each', 
   expect(data.labels).toEqual([['Capacité'], ['Irisée']])
   expect(data.datasets[0].data).toEqual([1234, 789])
 })
+
+// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+
+test('valueLabels rename pie parts defined by value columns', () => {
+  const ctx = baseCtx({
+    chart: { type: 'pie', config: { type: 'aggsLabels', valuesFields: ['surface', 'population'] } },
+    config: { valueLabels: [{ value: 'surface', label: 'Surface totale' }] },
+    metrics: [
+      { field: 'surface', metric: 10 },
+      { field: 'population', metric: 20 }
+    ]
+  })
+  const data = transformAggsLabels(ctx)
+  expect(data.labels).toEqual([['Surface totale'], ['Population']])
+})

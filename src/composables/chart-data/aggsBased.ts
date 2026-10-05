@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, getValueLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedContext {
@@ -26,6 +26,9 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
 
   const fill = chart.area || (chart.type === 'multi-line' && ctx.stacked === 'true')
 
+  const valueLabel = createValueLabeler(config)
+  const customLabels = valueLabelsMap(config.valueLabels)
+
   let aggs = apiAggs
   const sortBy = rspSortBy || chart.config.aggSortBy
   const sortOrder = rspSortOrder || chart.config.sortOrder
@@ -34,8 +37,8 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
   } else if (sortBy === 'label') {
     const groupByField = chart.config.groupBy.field
     aggs = [...aggs].sort((a, b) => {
-      const labelA = getValueLabel(a.value, fields[groupByField], config.booleanLabels)
-      const labelB = getValueLabel(b.value, fields[groupByField], config.booleanLabels)
+      const labelA = valueLabel(a.value, fields[groupByField])
+      const labelB = valueLabel(b.value, fields[groupByField])
       return sortOrder === 'desc' ? compareLabels(labelB, labelA) : compareLabels(labelA, labelB)
     })
   }
@@ -46,7 +49,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
   const dateInterval = chart.config.groupBy?.interval || 'value'
   const labels = shouldFormatDateLabels
     ? rawLabels.map((val) => formatDateLabel(val, dateInterval))
-    : rawLabels.map((a) => getValueLabel(a, fields[chart.config.groupBy.field], config.booleanLabels))
+    : rawLabels.map((a) => valueLabel(a, fields[chart.config.groupBy.field]))
   let datasets: any[]
 
   if (chart.config.color) {
@@ -69,7 +72,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
       }
       const colors = getColors(series, chart.config.colorOrder)
       datasets = series.map((label) => ({
-        label: getValueLabel(label, fields[chart.config.groupsField], config.booleanLabels),
+        label: valueLabel(label, fields[chart.config.groupsField]),
         borderColor: colors[label],
         backgroundColor: colors[label],
         pointStyle: chart.hidePoints ? false : 'circle',
@@ -92,9 +95,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         const colors = getColors(valuesCalc, chart.config.colorOrder)
         const metricField = chart.config.valuesCalc?.[0]
         datasets = valuesCalc.map((field) => ({
-          label: chart.config.removeFromLabels
-            ? ((fields[field].label || fields[field].title || fields[field]['x-originalName'] || field) as string).replace(chart.config.removeFromLabels, '')
-            : (fields[field].label || fields[field].title || fields[field]['x-originalName'] || field) as string,
+          label: getFieldLabel(field, fields, customLabels, chart.config.removeFromLabels),
           borderColor: colors[field],
           backgroundColor: colors[field],
           pointStyle: chart.hidePoints ? false : 'circle',
@@ -113,7 +114,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
         const orderedLabels = shouldFormatDateLabels
           ? orderedRawLabels.map((val) => formatDateLabel(val, dateInterval))
-          : orderedRawLabels.map((l) => getValueLabel(l, fields[chart.config.groupBy.field], config.booleanLabels))
+          : orderedRawLabels.map((l) => valueLabel(l, fields[chart.config.groupBy.field]))
         const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]

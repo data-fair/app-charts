@@ -8,6 +8,9 @@ import {
   getColors,
   getOrderedLabels,
   getValueLabel,
+  createValueLabeler,
+  valueLabelsMap,
+  getFieldLabel,
   compareLabels,
   normalizeDivider,
   extractDividerValue,
@@ -211,6 +214,42 @@ test('getValueLabel keeps x-labels priority and tolerates a missing config', () 
   expect(getValueLabel(true, undefined)).toBe('true')
   expect(getValueLabel(false, undefined)).toBe('false')
   expect(getValueLabel('Aix', undefined)).toBe('Aix')
+})
+
+test('valueLabels override x-labels and ignore empty entries', () => {
+  const field = { 'x-labels': { Paris: 'Paris (75)' } }
+  const customLabels = valueLabelsMap([
+    { value: 'Paris', label: 'Paname' },
+    { value: 3, label: 'Trois' },
+    { value: '', label: 'ignoré' },
+    { value: 'vide', label: '' }
+  ])
+  expect(getValueLabel('Paris', field, undefined, customLabels)).toBe('Paname')
+  expect(getValueLabel(3, undefined, undefined, customLabels)).toBe('Trois')
+  expect(getValueLabel('3', undefined, undefined, customLabels)).toBe('Trois')
+  expect(getValueLabel('Lyon', field, undefined, customLabels)).toBe('Lyon')
+  expect(getValueLabel('vide', undefined, undefined, customLabels)).toBe('vide')
+})
+
+test('createValueLabeler applies valueLabels then falls back to x-labels and legacy booleanLabels', () => {
+  const valueLabel = createValueLabeler({
+    valueLabels: [{ value: 'Paris', label: 'Paname' }],
+    booleanLabels: { trueLabel: 'Oui', falseLabel: 'Non', numericBooleans: true }
+  })
+  expect(valueLabel('Paris', { 'x-labels': { Paris: 'Paris (75)' } })).toBe('Paname')
+  expect(valueLabel(true)).toBe('Oui')
+  expect(valueLabel(0)).toBe('Non')
+  expect(valueLabel(2)).toBe('2')
+  // sans config : valeur brute
+  expect(createValueLabeler(undefined)('75')).toBe('75')
+})
+
+test('getFieldLabel overrides a column label and applies removeFromLabels to the default only', () => {
+  const fields = { voit: { label: 'Voiture' }, capacite: { label: 'Capacité (nb)' } }
+  expect(getFieldLabel('voit', fields)).toBe('Voiture')
+  expect(getFieldLabel('capacite', fields, undefined, ' (nb)')).toBe('Capacité')
+  expect(getFieldLabel('voit', fields, { voit: 'Déplacements en voiture' }, 'Voiture')).toBe('Déplacements en voiture')
+  expect(getFieldLabel('inconnu', fields)).toBe('inconnu')
 })
 
 test('compareLabels orders numeric labels by value and text naturally', () => {

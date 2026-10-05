@@ -18,9 +18,10 @@ export function formatDateLabel (value: string, interval: string): string {
 }
 
 // ──────────────────────────────────────────────────────────────────
-// Libellés des valeurs booléennes (config.booleanLabels) — pure helpers
+// Surcharge des libellés (config.valueLabels) — pure helpers
 // ──────────────────────────────────────────────────────────────────
 
+/** Ancien format booléen (config.booleanLabels), conservé en repli des configs existantes */
 export interface BooleanLabels {
   trueLabel?: string
   falseLabel?: string
@@ -28,13 +29,32 @@ export interface BooleanLabels {
   numericBooleans?: boolean
 }
 
+/** Surcharge de libellé : `value` est une valeur brute de colonne ou une clé de colonne */
+export interface ValueLabel {
+  value: string | number
+  label: string
+}
+
+/** Table de correspondance valeur -> libellé (entrées sans valeur ou sans libellé ignorées) */
+export function valueLabelsMap (valueLabels?: ValueLabel[]): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const entry of valueLabels || []) {
+    if (entry?.value === undefined || entry?.value === null || entry.value === '' || !entry.label) continue
+    map[String(entry.value)] = entry.label
+  }
+  return map
+}
+
 /**
  * Libellé affiché pour une valeur brute de colonne :
- * 1. correspondance `x-labels` du schéma du dataset (comportement historique)
- * 2. libellés booléens configurés (true/false, et 0/1 si numericBooleans)
- * 3. valeur brute telle quelle
+ * 1. surcharge `valueLabels` de la config du graphique
+ * 2. correspondance `x-labels` du schéma du dataset (comportement historique)
+ * 3. libellés booléens de l'ancienne config `booleanLabels` (true/false, et 0/1 si numericBooleans)
+ * 4. valeur brute telle quelle
  */
-export function getValueLabel (raw: unknown, field: any, booleanLabels?: BooleanLabels): string {
+export function getValueLabel (raw: unknown, field: any, booleanLabels?: BooleanLabels, customLabels?: Record<string, string>): string {
+  const override = customLabels?.[String(raw)]
+  if (override) return override
   const xLabel = field?.['x-labels']?.[raw as string]
   if (xLabel) return xLabel
   if (booleanLabels) {
@@ -46,6 +66,22 @@ export function getValueLabel (raw: unknown, field: any, booleanLabels?: Boolean
     }
   }
   return String(raw)
+}
+
+/** Résolveur de libellés d'un graphique : `valueLabels`, puis x-labels, puis repli booléen legacy */
+export function createValueLabeler (config?: { valueLabels?: ValueLabel[]; booleanLabels?: BooleanLabels }) {
+  const customLabels = valueLabelsMap(config?.valueLabels)
+  return (raw: unknown, field?: any) => getValueLabel(raw, field, config?.booleanLabels, customLabels)
+}
+
+/**
+ * Libellé d'un axe ou d'une série défini par une colonne : surcharge `valueLabels`
+ * (clé = clé de colonne), sinon libellé du champ, puis `removeFromLabels` retiré.
+ */
+export function getFieldLabel (key: string, fields: Record<string, any>, customLabels?: Record<string, string>, removeFromLabels?: string): string {
+  if (customLabels?.[key]) return customLabels[key]
+  const label = (fields[key]?.label || fields[key]?.title || fields[key]?.['x-originalName'] || key) as string
+  return removeFromLabels ? label.replace(removeFromLabels, '') : label
 }
 
 /**

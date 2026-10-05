@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, getValueLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -25,6 +25,9 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   const fill = chart.area || (chart.type === 'multi-line' && ctx.stacked === 'true')
 
+  const valueLabel = createValueLabeler(config)
+  const customLabels = valueLabelsMap(config.valueLabels)
+
   // Don't mutate apiResults: copy before sorting
   const results = [...apiResults]
 
@@ -33,14 +36,14 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
   if (sortBy === 'label') {
     const labelsField = chart.config.labelsField!
     results.sort((a, b) => {
-      const labelA = getValueLabel(a[labelsField], fields[labelsField], config.booleanLabels)
-      const labelB = getValueLabel(b[labelsField], fields[labelsField], config.booleanLabels)
+      const labelA = valueLabel(a[labelsField], fields[labelsField])
+      const labelB = valueLabel(b[labelsField], fields[labelsField])
       return sortOrder === 'desc' ? compareLabels(labelB, labelA) : compareLabels(labelA, labelB)
     })
   }
 
   const categories = apiCategories
-  const labels = results.map((r) => getValueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!], config.booleanLabels)).slice(0, chart.config.size)
+  const labels = results.map((r) => valueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!])).slice(0, chart.config.size)
   let datasets: any[]
 
   if (chart.config.color) {
@@ -62,7 +65,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         const orderedValues = getOrderedLabels(categoryValues, chart.config.colorOrder)
         const sortedCategories = orderedValues.map((v) => categories.find((c) => (c.value + '') === v)!)
         datasets = sortedCategories.map(({ value, label }) => ({
-          label: label || getValueLabel(value, fields[chart.config.categoriesField!], config.booleanLabels),
+          label: customLabels[String(value)] || label || valueLabel(value, fields[chart.config.categoriesField!]),
           borderColor: colors[value],
           backgroundColor: colors[value],
           pointStyle: chart.hidePoints ? false : 'circle',
@@ -73,7 +76,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number, r))
 
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
-        const orderedLabels = orderedRawLabels.map((l) => getValueLabel(l, fields[chart.config.labelsField!], config.booleanLabels))
+        const orderedLabels = orderedRawLabels.map((l) => valueLabel(l, fields[chart.config.labelsField!]))
         const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
@@ -111,9 +114,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     } else {
       const valuesFields = getOrderedLabels(chart.config.valuesFields || [], chart.config.colorOrder)
       datasets = valuesFields.map((field) => ({
-        label: chart.config.removeFromLabels
-          ? ((fields[field].label || fields[field].title || fields[field]['x-originalName'] || field) as string).replace(chart.config.removeFromLabels, '')
-          : (fields[field].label || fields[field].title || fields[field]['x-originalName'] || field) as string,
+        label: getFieldLabel(field, fields, customLabels, chart.config.removeFromLabels),
         borderColor: colors[field],
         backgroundColor: colors[field],
         pointStyle: chart.hidePoints ? false : 'circle',

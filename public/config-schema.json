@@ -354,32 +354,40 @@
           "default": 30,
           "layout": "slider"
         },
-        "booleanLabels": {
-          "title": "Libellés des valeurs booléennes",
-          "type": "object",
-          "description": "Remplace les valeurs booléennes par des libellés lisibles dans les libellés d'axes et de légende du graphique.",
-          "properties": {
-            "trueLabel": {
-              "type": "string",
-              "title": "Libellé de la valeur vraie",
-              "default": "Oui"
-            },
-            "falseLabel": {
-              "type": "string",
-              "title": "Libellé de la valeur fausse",
-              "default": "Non"
-            },
-            "numericBooleans": {
-              "type": "boolean",
-              "title": "Traiter aussi les valeurs 0 et 1",
-              "description": "Remplace les libellés « 0 » et « 1 » par les libellés vrai/faux, pour les colonnes numériques utilisées comme booléens.",
-              "default": false
+        "valueLabels": {
+          "title": "Renommer des libellés",
+          "description": "Remplace des valeurs (libellés d'axes et de légende) ou des colonnes de valeurs par un libellé personnalisé dans le graphique. La correspondance se fait sur la valeur brute ou la clé de colonne.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "value",
+              "label"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "string",
+                "title": "Valeur ou colonne à renommer"
+              },
+              "label": {
+                "type": "string",
+                "title": "Libellé affiché"
+              }
             }
           },
-          "default": {
-            "trueLabel": "Oui",
-            "falseLabel": "Non",
-            "numericBooleans": false
+          "layout": {
+            "comp": "list",
+            "itemTitle": "data.label ? data.label + ' (' + data.value + ')' : data.value",
+            "listActions": [
+              "add",
+              "edit",
+              "delete",
+              "sort"
+            ],
+            "messages": {
+              "addItem": "Ajouter un libellé"
+            }
           }
         },
         "unit": {

@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, getValueLabel } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedLabelsContext {
@@ -19,13 +19,15 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
 
   const fill = chart.area || (chart.type === 'multi-line' && stacked === 'true')
 
+  const valueLabel = createValueLabeler(config)
+  const customLabels = valueLabelsMap(config.valueLabels)
+
   const labels = chart.config.labelsValues
-    .map((l: string) => fields[l]?.label || fields[l]?.title || fields[l]?.['x-originalName'] || l)
-    .map((l: string) => chart.config.removeFromLabels ? l.replace(chart.config.removeFromLabels, '') : l)
+    .map((l: string) => getFieldLabel(l, fields, customLabels, chart.config.removeFromLabels))
 
   let series = aggs.slice(0, chart.config.size)
   series.forEach((s) => {
-    (s as any).label = getValueLabel(s.value, fields[chart.config.valuesLabel], config.booleanLabels)
+    (s as any).label = valueLabel(s.value, fields[chart.config.valuesLabel])
   })
 
   const seriesValues = series.map((s) => s.value + '')

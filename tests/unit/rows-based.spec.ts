@@ -243,3 +243,40 @@ test('boolean row values are replaced by the configured labels', () => {
   expect(data.labels).toEqual([['Oui'], ['Non']])
   expect(data.datasets[0].data).toEqual([10, 20])
 })
+
+// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+
+test('valueLabels rename row axis labels', () => {
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 10 } },
+    config: { valueLabels: [{ value: '75', label: 'Paris' }] },
+    results: [
+      { dep: '75', count: 1 },
+      { dep: '77', count: 2 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.labels).toEqual([['Paris'], ['77']])
+})
+
+test('valueLabels rename category series before the API label', () => {
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'rowsBasedCategories', labelsField: 'dep', valuesField: 'count', categoriesField: 'type', size: 10 } },
+    config: { valueLabels: [{ value: 'A', label: 'Alpha' }] },
+    results: [{ dep: '75', type: 'A', count: 1 }],
+    categories: [{ value: 'A', label: 'Catégorie A' }]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.datasets[0].label).toBe('Alpha')
+})
+
+test('valueLabels rename value column series', () => {
+  const ctx = baseCtx({
+    chart: { type: 'multi-line', config: { type: 'rowsBased', labelsField: 'dep', valuesFields: ['count', 'count2'], size: 10 } },
+    config: { valueLabels: [{ value: 'count', label: 'Déplacements' }] },
+    fields: { count: { label: 'Nombre' }, count2: { label: 'Autre' } },
+    results: [{ dep: '75', count: 1, count2: 2 }]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Déplacements', 'Autre'])
+})

@@ -356,3 +356,49 @@ test('aggsBasedCategories maps boolean avg metrics (proportion de oui)', () => {
   expect(data.datasets[0].data).toEqual([0.75])
   expect(data.datasets[1].data).toEqual([0.5])
 })
+
+// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+
+test('valueLabels rename group axis labels, sorted by the new label', () => {
+  const ctx = baseCtx({
+    chart: { type: 'bar', config: { type: 'aggsBased', groupBy: { type: 'value', field: 'dep' }, size: 10, aggSortBy: 'label', sortOrder: 'asc' } },
+    config: { valueLabels: [{ value: '77', label: 'Aisne' }, { value: '75', label: 'Ze Paris' }] },
+    aggs: [
+      { value: '75', total: 5 },
+      { value: '77', total: 7 }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.labels).toEqual([['Aisne'], ['Ze Paris']])
+  expect(data.datasets[0].data).toEqual([7, 5])
+})
+
+test('valueLabels rename groupsField series', () => {
+  const ctx = baseCtx({
+    chart: { type: 'multi-bar', config: { type: 'aggsBased', groupBy: { type: 'value', field: 'region' }, groupsField: 'type', size: 10 } },
+    config: { valueLabels: [{ value: 'H', label: 'Hôpital' }] },
+    aggs: [
+      { value: 'A', total: 6, aggs: [{ value: 'H', total: 4 }, { value: 'F', total: 2 }] }
+    ]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Hôpital', 'F'])
+})
+
+test('valueLabels rename valuesCalc column series', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      config: { type: 'aggsBasedCategories', groupBy: { type: 'value', field: 'region' }, valuesCalc: ['indic_capa', 'irisee'], metric: 'sum', size: 10 }
+    },
+    config: { valueLabels: [{ value: 'indic_capa', label: 'Capacité (booléen)' }] },
+    fields: {
+      region: { label: 'Région' },
+      indic_capa: { label: 'Concerné par la capacité' },
+      irisee: { label: 'Irisation de la commune' }
+    },
+    aggs: [{ value: 'A', metric: 4, indic_capa_sum: 4, irisee_sum: 1 }]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Capacité (booléen)', 'Irisation de la commune'])
+})

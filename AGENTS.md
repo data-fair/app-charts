@@ -126,6 +126,8 @@ The 4 loaders in `composables/chart-data/` are **pure functions** (no `ofetch`, 
 
 They take a context object containing the API responses, the chart/config/theme/fields refs and the reactive search params. They do not call Vue composables — they are pure transformations of API responses into Chart.js data. They are unit-tested in `tests/unit/`.
 
+Label overrides (`config.valueLabels`) are resolved in `assets/utils.ts`: `createValueLabeler(config)` for raw field values (priority `valueLabels` > dataset `x-labels` > legacy `booleanLabels` > raw value) and `getFieldLabel(key, fields, customLabels, removeFromLabels)` for series/axes defined by value columns. `valueLabels` replaces the former `booleanLabels` (removed from the schema, still honored at runtime as a fallback for existing configs).
+
 > Keep the runtime imports of these pure modules **relative** (`'../../assets/utils'`): Playwright's unit project runs them in Node without tsconfig path resolution. Type-only `@/` imports are fine (erased at transpile).
 
 ### useChartOptions
@@ -215,7 +217,7 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | 23 | `23-multi-bar-bpe-percentage.spec.ts` | multi-bar aggsBased groupsField, stacked + **percentage** mode |
 | 24 | `24-bar-bpe-group-count.spec.ts` | bar aggsBased, **divider** groupCount (bucket `total` of the same values_agg, no extra call) |
 | 25 | `25-multi-line-depl-total-count.spec.ts` | multi-line rowsBased, **divider** totalCount (totalCount of /lines, no extra call) |
-| 26 | `26-boolean-labels.spec.ts` | bar aggsBased grouped by a boolean field, **booleanLabels** oui/non |
+| 26 | `26-boolean-labels.spec.ts` | bar aggsBased grouped by a boolean field, **legacy `booleanLabels`** oui/non (runtime fallback of `valueLabels`) |
 | 27 | `27-bar-bpe-total-count.spec.ts` | bar aggsBased, **divider** totalCount in aggregate mode (global `/metric_agg` with **metric=value_count**, request captured by the mock) |
 | 28 | `28-multi-bar-bpe-booleans.spec.ts` | multi-bar aggsBasedCategories stacked, **boolean series** (`valuesCalc` booléens, metric sum, réponse `<field>_sum`) |
 | 29 | `29-pie-bpe-booleans.spec.ts` | pie aggsLabels, **boolean columns** (`/metric_agg` metric=sum = nombre de oui, requêtes capturées par le mock) |

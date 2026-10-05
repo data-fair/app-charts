@@ -146,3 +146,27 @@ test('boolean valuesLabel values are replaced by the configured labels', () => {
   const data = transformAggsBasedLabels(ctx)
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Oui', 'Non'])
 })
+
+// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+
+test('valueLabels rename valuesLabel series and labelsValues columns', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'radar',
+      config: { type: 'aggsBasedLabels', valuesLabel: 'category', labelsValues: ['surface', 'population'], size: 10 }
+    },
+    config: {
+      valueLabels: [
+        { value: 'H', label: 'Hôpital' },
+        { value: 'surface', label: 'Surface totale' }
+      ]
+    },
+    aggs: [
+      { value: 'H', metric: 30, population_sum: 12 },
+      { value: 'F', metric: 40, population_sum: 14 }
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  expect(data.labels).toEqual([['Surface totale'], ['Population']])
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['Hôpital', 'F'])
+})
