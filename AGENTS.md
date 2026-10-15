@@ -40,6 +40,7 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │   │   ├── config.ts               # createConfig plugin + useConfig inject helper (typed ConfigState)
 │   │   ├── useChartData.ts         # Hub: debounced baseParams, reactive useFetch calls, error handling via useUiNotif, dispatches to pure transform functions
 │   │   ├── useChartOptions.ts      # Chart.js options builder: session locale + n()/percent formats, triggerCapture via animation.onComplete
+│   │   ├── useChartSelection.ts    # Sélection `_s_` : cible (champ d'abscisse), valeurs sélectionnées, onClick (émission filtre + marqueur)
 │   │   └── chart-data/           # Pure transform functions: API responses -> Chart.js data
 │   │       ├── rowsBased.ts
 │   │       ├── aggsBased.ts
@@ -50,7 +51,8 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │   │   │                         #   component, role="img" + aria-label on the canvas wrapper (RGAA 1.1)
 │   │   └── Actions.vue           # Metric selector, sort controls, stack toggle
 │   ├── assets/
-│   │   └── utils.ts              # getSortStr, getColors, getOrderedLabels, normalizeFilters, staticFiltersParams, splitString, fillMissingDateAggs
+│   │   ├── utils.ts              # getSortStr, getColors, getOrderedLabels, normalizeFilters, staticFiltersParams, splitString, fillMissingDateAggs
+│   │   └── selection.ts          # Helpers purs `_s_` : clés de filtre, valeurs désignées, bascule, mise en évidence (applySelectionHighlight)
 │   ├── config/
 │   │   ├── schema.ts             # One-line re-export of ../../public/config-schema.json (with { type: 'json' })
 │   │   ├── index.ts              # Re-exports generated types from ./.type/index.js
@@ -58,8 +60,9 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │   └── styles/
 │       └── main.css              # Plain app CSS (html/body overflow, .application.embed)
 ├── tests/
-│   ├── unit/                     # Playwright unit project (Node): pure transforms + utils
+│   ├── unit/                     # Playwright unit project (Node): pure transforms + utils + selection
 │   │   ├── utils.spec.ts
+│   │   ├── selection.spec.ts
 │   │   ├── rows-based.spec.ts
 │   │   ├── aggs-based.spec.ts
 │   │   ├── aggs-based-labels.spec.ts
@@ -77,7 +80,7 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │       │   │                     #   /simple-directory (_public.js as JS setting __PUBLIC_SITE_INFO, _public, _theme.css)
 │       │   ├── assertions.ts     # expectChartVisible, ...
 │       │   └── test-fixture.ts   # setupChartTest(configName, mocks) -> test with a chartPage fixture (origin-agnostic APPLICATION stub)
-│       └── specs/                # 34 spec files (30 per config + 4 transverse)
+│       └── specs/                # 35 spec files (30 per config + 5 transverse)
 ├── vite.config.ts                # loadEnv(APP_PORT), hmr aligned, vueI18n({}), settingsPath, server.warmup
 └── package.json
 ```
@@ -115,14 +118,27 @@ Composable that calls `useConfig()` internally. It:
 - Builds a debounced `baseParams` (merges concept filters + static filters).
 - Sets up 3 reactive `useFetch` calls: `/values_agg` (aggsBased + aggsBasedLabels), `/lines` (rowsBased), `/values-labels/<categoriesField>` (rowsBased with categories). For `aggsLabels` (N parallel `/metric_agg` calls), it uses a `watchEffect` of `ofetch` calls since `useFetch` only supports one URL per call.
 - Watches each `useFetch` `error` and dispatches a global notif via `useUiNotif().sendUiNotif`.
-- Returns a reactive `data` computed that dispatches the API responses to a pure transform function based on the chart mode.
+- Returns a reactive `data` computed that dispatches the API responses to a pure transform function based on the chart mode, then applies `applySelectionHighlight` (sélection `_s_` reçue). It also returns `selection` (see below).
+
+### Sélection inter-app (`_s_`)
+
+Convention : un filtre `_c_<conceptId>_<op>` / `_d_<datasetId>_<fieldKey>_<op>` accompagné d'un marqueur `_s_<clé sans opérateur>` est une **sélection**, jamais une restriction. Voir `references/filters-url-convention.md` du skill `data-fair-app`.
+
+- **Réception** : `useConceptFilters` (lib-vue ≥ 1.32.0) écarte déjà les clés marquées de `baseParams` — une sélection reçue ne restreint donc pas les requêtes. Le graphique la **met en évidence** : `applySelectionHighlight` (`assets/selection.ts`) estompe (alpha 0.25) les éléments dont la valeur d'abscisse n'est pas sélectionnée — points pour les courbes/radars, fond pour barres et parts. Sans effet tant qu'aucun élément affiché n'est sélectionné. Deux pièges Chart.js traités là : on renvoie **toujours un tableau par élément** (sélection ou non), car repasser une option de tableau à scalaire n'est pas réévalué par élément (barres qui restent estompées) ; et les courbes réécrivent `pointBackgroundColor` à chaque fois, `vue-chartjs` ne retirant jamais une clé absente via `Object.assign`. `useChartOptions` pose `animations: { colors: false }` pour que le changement soit immédiat (sinon Chart.js interpole les couleurs sur 1 s).
+- **Émission** : le clic sur une barre / part / point (`options.onClick`, branché dans `Chart.vue` depuis `useChartSelection`) écrit le filtre + son marqueur (`app_<window.APPLICATION.id>`) dans `reactiveSearchParams`. **Sélection unique** (`_eq`) : cliquer une autre entité remplace, re-cliquer l'entité sélectionnée efface (une sélection `_in` reçue est ramenée à la valeur cliquée). Le parent (dashboard, portail) choisit la propagation (sélection / filtre / rien).
+- **Cible** : la valeur d'abscisse seulement — `chart.config.labelsField` (rowsBased) ou `chart.config.groupBy.field` (aggsBased), sauf `groupBy.type === 'date'` (libellé = bucket). Forme concept si le champ porte `x-concept.id`, sinon dataset-scopée. `aggsBasedLabels` / `aggsLabels` (abscisse = colonnes) n'émettent rien.
+- **Valeurs brutes** : les transforms renvoient `rawLabels`, aligné sur `labels` (valeur brute par index, `null` pour la part « Autre » d'un camembert), ce qui résout l'entité cliquée sans dépendre du libellé affiché.
+- **Réglage** : `config.selection` (défaut `false`) **active** l'émission au clic ; la mise en évidence d'une sélection reçue reste active dans tous les cas.
+
+### useChartSelection
+`composables/useChartSelection.ts` : résout la cible (`fieldKey` + `conceptId` + `datasetId`), lit les valeurs d'abscisse sélectionnées (`findSelectionFilters`) et expose `onClick`. La logique testable (clés, valeurs, bascule, highlight) vit dans `assets/selection.ts` (helpers purs, unit-testés).
 
 ### Pure transform functions
 The 4 loaders in `composables/chart-data/` are **pure functions** (no `ofetch`, no `useFetch`):
-- `transformRowsBased(ctx) -> { labels, datasets }`
-- `transformAggsBased(ctx) -> { labels, datasets }`
-- `transformAggsBasedLabels(ctx) -> { labels, datasets }`
-- `transformAggsLabels(ctx) -> { labels, datasets }`
+- `transformRowsBased(ctx) -> { labels, datasets, rawLabels }`
+- `transformAggsBased(ctx) -> { labels, datasets, rawLabels }`
+- `transformAggsBasedLabels(ctx) -> { labels, datasets, rawLabels: null }`
+- `transformAggsLabels(ctx) -> { labels, datasets, rawLabels: null }`
 
 They take a context object containing the API responses, the chart/config/theme/fields refs and the reactive search params. They do not call Vue composables — they are pure transformations of API responses into Chart.js data. They are unit-tested in `tests/unit/`.
 
@@ -131,10 +147,10 @@ Label overrides (`config.valueLabels`) are resolved in `assets/utils.ts`: `creat
 > Keep the runtime imports of these pure modules **relative** (`'../../assets/utils'`): Playwright's unit project runs them in Node without tsconfig path resolution. Type-only `@/` imports are fine (erased at transpile).
 
 ### useChartOptions
-`composables/useChartOptions.ts` exposes a single `options` computed that builds the full Chart.js options object from `chart`, `config`, the session locale and `n()` formatters. When running under the capture service (`window.triggerCapture` present) it adds `animation.onComplete` to trigger the screenshot once rendering is done. Kept separate from `Chart.vue` so the component remains a thin orchestrator.
+`composables/useChartOptions.ts` exposes a single `options` computed that builds the full Chart.js options object from `chart`, `config`, the session locale and `n()` formatters. It disables the color animation (`animations: { colors: false }`) so the `_s_` highlight switches instantly, and exposes `options.onClick` from `useChartSelection` via `Chart.vue`. When running under the capture service (`window.triggerCapture` present) it adds `animation.onComplete` to trigger the screenshot once rendering is done. Kept separate from `Chart.vue` so the component remains a thin orchestrator.
 
 ### Chart.vue
-Global Chart.js registration happens once in setup (`ChartJS.register(...)`). Uses a reactive `options` from `useChartOptions` and reactive `data` from `useChartData`. Conditionally renders `<Line>`, `<Bar>`, `<Pie>` or `<Radar>` from `vue-chartjs`. The canvas wrapper carries `role="img"` + `aria-label` (config title, else the chart type label) as the accessible alternative (RGAA 1.1).
+Global Chart.js registration happens once in setup (`ChartJS.register(...)`). Uses a reactive `options` from `useChartOptions` and reactive `data` from `useChartData`. Merges `selection.onClick` (sélection `_s_`) into the options passed to each vue-chartjs component. Conditionally renders `<Line>`, `<Bar>`, `<Pie>` or `<Radar>` from `vue-chartjs`. The canvas wrapper carries `role="img"` + `aria-label` (config title, else the chart type label) as the accessible alternative (RGAA 1.1).
 
 A `chartKey` computed forces component recreation only for structural changes that Chart.js cannot handle in-place (currently `horizontal` / `indexAxis`).
 
@@ -156,6 +172,8 @@ Dynamic controls for:
 | `aggsBasedCategories` | `aggsBased.ts` | Like `aggsBased` but iterates over `valuesCalc` fields as categories. |
 | `aggsBasedLabels` | `aggsBasedLabels.ts` | Fetches `/values_agg` where aggregation field = labels and metric fields = values. |
 | `aggsLabels` | `aggsLabels.ts` | Fetches multiple `/metric_agg` calls for simple metric-per-field charts. |
+
+Chaque transform renvoie aussi `rawLabels` (valeur brute d'abscisse par index, alignée sur `labels`, `null` pour la part « Autre » camembert) : c'est ce que consomme la sélection `_s_`. `aggsBasedLabels` / `aggsLabels` renvoient `null` (abscisse = colonnes, aucune entité).
 
 ## Development Workflow
 
@@ -183,7 +201,7 @@ When modifying `public/config-schema.json`, always run `npm run build-types` to 
 
 Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 
-- **`unit`** (`tests/unit/`): pure functions only — the 4 chart-data transforms and `assets/utils.ts`. Run with `npm run test-unit`; no server, no port.
+- **`unit`** (`tests/unit/`): pure functions only — the 4 chart-data transforms, `assets/utils.ts` and `assets/selection.ts`. Run with `npm run test-unit`; no server, no port.
 - **`e2e`** (`tests/e2e/`): full app boot against Vite (webServer conditional on project, `APP_PORT=E2E_PORT`, `PUBLIC_URL=` emptied, `DATA_FAIR_TEST=true`). `E2E_PORT` comes from `.env`, so multiple apps can run side by side. `reuseExistingServer: true` locally.
 
 ### e2e specs
@@ -227,6 +245,7 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |
 | — | `console-health.spec.ts` | zero `[intlify]` console warnings + `__PUBLIC_SITE_INFO` fast path |
 | — | `datalabels-overlap.spec.ts` | value labels of tiny stacked segments (`hideYAxis`) never overlap (`display: 'auto'`), canvas instrumented via `fillText`/`clearRect` |
+| — | `selection.spec.ts` | sélection `_s_` (option `selection`, opt-in) : un filtre marqué reçu n'est **pas** transmis aux requêtes API (requêtes `/values_agg` capturées) et **estompe** les entités non désignées (dernière frame lue via `clearRect`/`fillStyle`) ; clic sur une barre → filtre `_eq` + marqueur `_s_...=app_<id>`, re-clic → suppression ; cliquer une autre barre **remplace** (valeur unique) ; sans l'option, aucun clic n'émet ; **désélection sur barre à couleur scalaire** → plus aucune couleur estompée (régression du cache d'options Chart.js) |
 
 **Datasets used** (from the Koumoul open data catalog):
 - **Alim'confiance** (`a4jz4xdfoymfiquex913bfgp`) — Sanitary inspections

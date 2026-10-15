@@ -21,8 +21,11 @@ ChartJS.register(Title, Tooltip, Legend,
   ChartDataLabels, OutLabels)
 
 const { config, chart, dynamicMetric } = useConfig()
-const { data } = useChartData()
+const { data, selection } = useChartData()
 const { options } = useChartOptions()
+
+// sélection inter-app (`_s_`) : le clic émet un filtre marqué dans l'URL
+const chartOptions = computed(() => ({ ...options.value, onClick: selection.onClick }))
 
 // Force chart recreation only for structural changes that Chart.js can't handle in-place:
 // - horizontal: switches indexAxis (Chart.js can't swap axes live)
@@ -65,13 +68,13 @@ const ariaLabel = computed(() => config.value?.title || chartTypeLabels[chartTyp
       <Line
         v-if="['line', 'multi-line'].includes(chartType as string)"
         :key="chartKey"
-        :options="options"
+        :options="chartOptions"
         :data="data"
       />
       <Bar
         v-else-if="['bar', 'multi-bar', 'paired-histogram'].includes(chartType as string)"
         :key="chartKey"
-        :options="options"
+        :options="chartOptions"
         :data="data"
       />
       <div
@@ -82,12 +85,12 @@ const ariaLabel = computed(() => config.value?.title || chartTypeLabels[chartTyp
       >
         <Pie
           v-if="chartType === 'pie'"
-          :options="options"
+          :options="chartOptions"
           :data="data"
         />
         <Radar
           v-else-if="chartType === 'radar'"
-          :options="options"
+          :options="chartOptions"
           :data="data"
         />
       </div>

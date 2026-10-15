@@ -39,6 +39,8 @@ export default function transformAggsLabels (ctx: AggsLabelsContext) {
 
   return {
     labels: labels.map((l: string) => splitString(config.labelsMaxWidth ?? 20, l + '')),
-    datasets
+    datasets,
+    // l'abscisse est une colonne, pas une valeur : aucune entité à sélectionner
+    rawLabels: null
   }
 }

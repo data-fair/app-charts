@@ -27,6 +27,9 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       maintainAspectRatio: false,
       responsive: true,
       locale: lang.value,
+      // la mise en évidence d'une sélection (`_s_`) change les couleurs par
+      // élément : sans cette coupure Chart.js les interpole sur 1 s
+      animations: { colors: false },
       font: {
         family: chartFontFamily.value
       },

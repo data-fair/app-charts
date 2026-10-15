@@ -346,6 +346,12 @@
           "title": "Désactiver l'infobulle",
           "default": false
         },
+        "selection": {
+          "type": "boolean",
+          "title": "Activer la sélection au clic",
+          "description": "Un clic sur une barre, une part ou un point émet une sélection partagée (paramètre _s_) vers les autres visualisations de la page. Désactivé par défaut : une sélection reçue est toujours mise en évidence.",
+          "default": false
+        },
         "labelsMaxWidth": {
           "type": "integer",
           "title": "Longueur maximum des libellés",

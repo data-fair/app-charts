@@ -38,6 +38,7 @@ test('total aggregation maps agg values to labels and data', () => {
   const data = transformAggsBased(ctx)
   expect(data.labels).toEqual([['A'], ['B']])
   expect(data.datasets[0].data).toEqual([5, 7])
+  expect(data.rawLabels).toEqual(['A', 'B'])
 })
 
 test('valueCalc of type metric reads a.metric instead of a.total', () => {
@@ -94,6 +95,7 @@ test('pie buckets aggs beyond size into an Autre label', () => {
   const data = transformAggsBased(ctx)
   expect(data.labels.map((l: string[]) => l[0])).toEqual(['A', 'B', 'Autre'])
   expect(data.datasets[0].data).toEqual([1, 2, 4])
+  expect(data.rawLabels).toEqual(['A', 'B', null])
 })
 
 test('display percentages computes the share of each value', () => {

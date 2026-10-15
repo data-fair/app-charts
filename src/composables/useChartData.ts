@@ -8,6 +8,8 @@ import { useUiNotif, getErrorMsg } from '@data-fair/lib-vue/ui-notif.js'
 import { filters2params, type Filter } from '@data-fair/lib-utils/filters'
 import { ofetch } from 'ofetch'
 import { normalizeFilters, normalizeDivider, extractDividerValue, stackedParam, type DividerConfig } from '@/assets/utils'
+import { applySelectionHighlight } from '@/assets/selection'
+import { useChartSelection } from '@/composables/useChartSelection'
 import { useConfig } from '@/composables/config'
 
 import transformRowsBased from './chart-data/rowsBased'
@@ -334,7 +336,7 @@ export function useChartData () {
   // ──────────────────────────────────────────────────────────────────
   // Reactive transform: API responses -> Chart.js data
   // ──────────────────────────────────────────────────────────────────
-  const data = computed<{ labels: any; datasets: any[] } | null>(() => {
+  const rawData = computed<{ labels: any, datasets: any[], rawLabels?: (string | null)[] | null } | null>(() => {
     if (!mode.value || !chart.value || !config.value) return null
     const sortBy = reactiveSearchParams['sort-by']
     const sortOrder = reactiveSearchParams['sort-order']
@@ -406,8 +408,18 @@ export function useChartData () {
     return null
   })
 
+  // Sélection `_s_` : le clic émet filtre + marqueur, une sélection reçue est
+  // mise en évidence (les clés marquées ne restreignent pas les requêtes, cf.
+  // getConceptFilters de lib-vue qui les écarte).
+  const selection = useChartSelection(() => rawData.value?.rawLabels)
+  const lineBased = ['line', 'multi-line', 'radar'].includes(chart.value?.type as string)
+  const data = computed(() => (rawData.value
+    ? applySelectionHighlight(rawData.value, selection.selectedValues(), lineBased)
+    : null))
+
   return {
-    data
+    data,
+    selection
   }
 }
 

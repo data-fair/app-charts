@@ -45,6 +45,8 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
 
   const limitedAggs = aggs.slice(0, chart.config.size)
   const rawLabels = limitedAggs.map((a) => (a.value as any) + '')
+  // valeurs brutes d'abscisse, alignées sur `labels` : les entités sélectionnables
+  let selectionValues: (string | null)[] = [...rawLabels]
   const shouldFormatDateLabels = chart.config.groupBy?.type === 'date'
   const dateInterval = chart.config.groupBy?.interval || 'value'
   const labels = shouldFormatDateLabels
@@ -115,6 +117,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         const orderedLabels = shouldFormatDateLabels
           ? orderedRawLabels.map((val) => formatDateLabel(val, dateInterval))
           : orderedRawLabels.map((l) => valueLabel(l, fields[chart.config.groupBy.field]))
+        selectionValues = [...orderedRawLabels]
         const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
@@ -123,6 +126,8 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         if (chart.type === 'pie' && apiAggs.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
+          // la part « Autre » n'est pas une entité sélectionnable
+          selectionValues.push(null)
           // part « Autre » : ratio des totaux — un agrégat sans valeur ou sans
           // diviseur exploitable est exclu du bucket (valeur masquée)
           const isMetric = chart.config.valueCalc && chart.config.valueCalc.type === 'metric'
@@ -160,6 +165,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
 
   return {
     labels: labels.map((l) => splitString(config.labelsMaxWidth ?? 20, l + '')),
-    datasets
+    datasets,
+    rawLabels: selectionValues
   }
 }

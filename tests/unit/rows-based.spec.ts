@@ -70,6 +70,20 @@ test('pie buckets rows beyond size into an Autre label', () => {
   expect(data.datasets[0].labels).toEqual(['75', '77', 'Autre'])
 })
 
+test('rawLabels expose the raw abscissa values aligned with labels, null for the Autre bucket', () => {
+  const ctx = baseCtx({
+    chart: { type: 'pie', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 2, colorOrder: { type: 'manual', entries: [{ key: '77' }, { key: '75' }] } } },
+    results: [
+      { dep: '75', count: 1 },
+      { dep: '77', count: 2 },
+      { dep: '78', count: 4 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.labels.map((l: string[]) => l[0])).toEqual(['77', '75', 'Autre'])
+  expect(data.rawLabels).toEqual(['77', '75', null])
+})
+
 test('theme color is resolved to a single dataset', () => {
   const ctx = baseCtx({
     chart: {

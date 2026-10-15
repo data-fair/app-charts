@@ -44,6 +44,9 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   const categories = apiCategories
   const labels = results.map((r) => valueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!])).slice(0, chart.config.size)
+  // valeurs brutes d'abscisse, alignées sur `labels` : les entités sélectionnables
+  const rawLabels = results.slice(0, chart.config.size).map((r) => r[chart.config.labelsField!] as string)
+  let selectionValues: (string | null)[] = [...rawLabels]
   let datasets: any[]
 
   if (chart.config.color) {
@@ -56,7 +59,6 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
       fill
     }]
   } else {
-    const rawLabels = results.slice(0, chart.config.size).map((r) => r[chart.config.labelsField!] as string)
     const colors = getColors(categories?.map((c) => c.value) || (chart.config.valuesField && rawLabels) || chart.config.valuesFields || [], chart.config.colorOrder)
 
     if (chart.config.valuesField) {
@@ -77,6 +79,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
         const orderedLabels = orderedRawLabels.map((l) => valueLabel(l, fields[chart.config.labelsField!]))
+        selectionValues = [...orderedRawLabels]
         const orderedData = orderedRawLabels.map((l) => {
           const index = rawLabels.indexOf(l)
           return dataValues[index]
@@ -85,6 +88,8 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         if (chart.type === 'pie' && results.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
+          // la part « Autre » n'est pas une entité sélectionnable
+          selectionValues.push(null)
           // part « Autre » : ratio des totaux — une ligne sans valeur ou sans
           // diviseur exploitable est exclue du bucket (valeur masquée)
           const others = results.slice(chart.config.size).filter((r) =>
@@ -136,6 +141,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   return {
     labels: labels.map((l) => splitString(config.labelsMaxWidth ?? 20, l + '')),
-    datasets
+    datasets,
+    rawLabels: selectionValues
   }
 }
