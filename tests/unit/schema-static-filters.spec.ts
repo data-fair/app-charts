@@ -26,3 +26,10 @@ test('staticFiltersParams is a hidden root property', () => {
   const props = (schema as any).allOf?.[0]?.properties
   expect(props?.staticFiltersParams).toMatchObject({ type: 'string', layout: 'none' })
 })
+
+// La colonne d'un filtre est une simple clé de champ : c'est la forme historique de
+// toutes les configs existantes (et celle qu'écrit le formulaire). Une forme objet
+// `{ key, label }` rend ces configs invalides, donc rouges et non enregistrables.
+test('a filter field is a plain field key', () => {
+  expect((schema as any).$defs?.filterField).toMatchObject({ type: 'string' })
+})

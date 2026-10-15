@@ -2310,7 +2310,7 @@
                 },
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?q={q}&q_mode=complete&size=100&stringify=true",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || parent.data.field || ''}?q={q}&q_mode=complete&size=100&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2337,7 +2337,7 @@
                 "title": "Valeur min",
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?sort=asc&${parent.data.field?.key || ''}_gte={q}&stringify=true&size=20",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || parent.data.field || ''}?sort=asc&${parent.data.field?.key || parent.data.field || ''}_gte={q}&stringify=true&size=20",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2348,7 +2348,7 @@
                 "title": "Valeur max",
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?sort=desc&${parent.data.field?.key || ''}_lte={q}&stringify=true&size=20",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || parent.data.field || ''}?sort=desc&${parent.data.field?.key || parent.data.field || ''}_lte={q}&stringify=true&size=20",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2379,7 +2379,7 @@
                 },
                 "layout": {
                   "getItems": {
-                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || ''}?q={q}&q_mode=complete&size=100&stringify=true",
+                    "url": "${rootData.datasets[0].href}/values-labels/${parent.data.field?.key || parent.data.field || ''}?q={q}&q_mode=complete&size=100&stringify=true",
                     "itemKey": "data[\"value\"]",
                     "itemTitle": "data[\"label\"]"
                   }
@@ -2447,7 +2447,7 @@
       }
     },
     "filterField": {
-      "type": "object",
+      "type": "string",
       "title": "Colonne de filtre",
       "layout": {
         "getItems": {
@@ -2455,10 +2455,6 @@
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
-      },
-      "properties": {
-        "key": { "type": "string" },
-        "label": { "type": "string" }
       }
     },
     "colorPalette": {
