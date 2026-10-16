@@ -1,14 +1,14 @@
-// Convention de sélection inter-app (`_s_`) : un clic sur une entité d'un
-// graphique émet un filtre `_c_`/`_d_` + son marqueur `_s_`, et une sélection
-// reçue est mise en évidence. Voir le skill `data-fair-app`,
-// `references/filters-url-convention.md` § « Mode sélection `_s_` ».
+// Convention de sélection inter-app : un clic sur une entité d'un graphique
+// émet une clé `_c_`/`_d_` seule ; une clé qui vise le champ d'abscisse (le champ
+// de sélection déclaré ici) est mise en évidence, jamais restreinte. Voir le
+// skill `data-fair-app`, `references/filters-url-convention.md` § « Sélection ».
 //
 // Helpers purs (sans Vue), unit-testés.
 import chroma from 'chroma-js'
-import { parseSelectionValues, type SelectionFilter } from '@data-fair/lib-vue/selection-filters.js'
+import { parseSelectionValues, type SelectionTarget, type TargetFilter } from '@data-fair/lib-vue/selection.js'
 
 /** Entité sélectionnable d'un graphique : les valeurs de son champ d'abscisse. */
-export interface SelectionTarget {
+export interface ChartSelectionTarget extends SelectionTarget {
   /** Champ du dataset portant les valeurs d'abscisse. */
   fieldKey: string
   /** Concept du vocabulaire standard porté par ce champ, si présent. */
@@ -17,29 +17,47 @@ export interface SelectionTarget {
 }
 
 /**
+ * Champ dont les valeurs servent d'abscisse (et donc d'entités sélectionnables),
+ * ou `null` quand l'abscisse n'est pas une valeur de champ (colonnes en libellé,
+ * buckets de date) : rien à sélectionner alors.
+ */
+export function resolveSelectionTarget (
+  chart: { config?: any } | null | undefined,
+  dataset: { id?: string } | null | undefined,
+  fields: Record<string, any> | null | undefined
+): ChartSelectionTarget | null {
+  const config = chart?.config
+  const mode = (config?.type || '').replace('Categories', '')
+  let field: any
+  if (mode === 'rowsBased') field = config.labelsField
+  // groupBy date : le libellé est un bucket agrégé, pas la date d'une ligne
+  else if (mode === 'aggsBased' && config.groupBy?.type !== 'date') field = config.groupBy?.field
+
+  const fieldKey = (typeof field === 'string' ? field : field?.key) as string | undefined
+  const datasetId = dataset?.id
+  if (!fieldKey || !datasetId) return null
+  return { fieldKey, conceptId: fields?.[fieldKey]?.['x-concept']?.id, datasetId }
+}
+
+/**
  * Clé du filtre de sélection : une valeur unique (`eq`), forme concept
  * (portable entre datasets) quand le champ en porte un, sinon forme
  * dataset-scopée. Une seule clé, comme le veut la convention.
  */
-export function selectionFilterKey (target: SelectionTarget): string {
+export function selectionFilterKey (target: ChartSelectionTarget): string {
   return target.conceptId
     ? `_c_${target.conceptId}_eq`
     : `_d_${target.datasetId}_${target.fieldKey}_eq`
 }
 
 /**
- * Valeurs d'abscisse désignées par les filtres marqués d'une sélection, dans
- * l'ordre de l'URL. Seuls `eq`/`in` désignent des entités.
+ * Valeurs d'abscisse désignées par les filtres de la cible, dans l'ordre de
+ * l'URL. Seuls `eq`/`in` désignent des entités.
  */
-export function selectionValuesForTarget (filters: SelectionFilter[], target: SelectionTarget): string[] {
+export function selectionValues (filters: TargetFilter[]): string[] {
   const values: string[] = []
   for (const f of filters) {
     if (f.operator !== 'eq' && f.operator !== 'in') continue
-    // le concept est portable : un `_c_` émis par une app sur un autre dataset
-    // désigne le même champ conceptuel ici
-    const matches = (!!target.conceptId && f.conceptId === target.conceptId) ||
-      (f.datasetId === target.datasetId && f.fieldKey === target.fieldKey)
-    if (!matches) continue
     values.push(...(f.operator === 'in' ? parseSelectionValues(f.value) : [f.value]))
   }
   return values

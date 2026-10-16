@@ -349,7 +349,7 @@
         "selection": {
           "type": "boolean",
           "title": "Activer la sélection au clic",
-          "description": "Un clic sur une barre, une part ou un point émet une sélection partagée (paramètre _s_) vers les autres visualisations de la page. Désactivé par défaut : une sélection reçue est toujours mise en évidence.",
+          "description": "Un clic sur une barre, une part ou un point émet une sélection (clé _c_/_d_ de son champ d'abscisse) vers les autres visualisations de la page. Désactivé par défaut : une sélection reçue est toujours mise en évidence.",
           "default": false
         },
         "labelsMaxWidth": {

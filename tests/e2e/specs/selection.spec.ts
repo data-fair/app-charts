@@ -1,7 +1,8 @@
-// Sélection inter-app (`_s_`) : un filtre marqué reçu n'est jamais une
-// restriction (getConceptFilters l'écarte des requêtes), et un clic sur une
-// entité émet le filtre + son marqueur dans l'URL (convention
-// data-fair-app/references/filters-url-convention.md § « Mode sélection `_s_` »).
+// Sélection inter-app : une clé `_c_`/`_d_` visant le champ d'abscisse (le champ
+// de sélection déclaré) n'est jamais une restriction (la visu l'écarte de ses
+// requêtes), et un clic sur une entité émet cette seule clé dans l'URL — sans
+// marqueur (convention data-fair-app/references/filters-url-convention.md
+// § « Sélection »).
 import { test, expect, type Page } from '@playwright/test'
 import { prepareChartPage } from '../helpers/test-fixture'
 import { injectConfig, waitForChart } from '../helpers/inject-config'
@@ -13,7 +14,8 @@ import { valuesAggFixtures } from '../fixtures/api-responses'
 const BPE = datasets.bpe.id
 // le champ d'abscisse `type` de la BPE ne porte pas de concept : forme dataset-scopée
 const FILTER_KEY = `_d_${BPE}_type_eq`
-const MARKER_KEY = `_s_${BPE}_type`
+// une sélection ne pose plus de marqueur : plus aucune clé `_s_` nulle part
+const noMarkerKeys = (params: URLSearchParams) => [...params.keys()].filter((k) => k.startsWith('_s_'))
 const BANDS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
 
 function fullConfig (name: ConfigName, extra: Record<string, unknown> = {}) {
@@ -79,24 +81,24 @@ async function clickBarChanging (page: Page, fractions: number[], previous: stri
   return null
 }
 
-test('a marked (`_s_`) selection never restricts the chart API requests', async ({ page }) => {
+test('a selection on the abscissa field never restricts the chart API requests', async ({ page }) => {
   const requests: URLSearchParams[] = []
   await boot(
     page,
     { valuesAgg: valuesAggFixtures.bar_bpe_salles, valuesAggRequests: requests },
-    `?${FILTER_KEY}=${encodeURIComponent('Cinéma')}&${MARKER_KEY}=page_x`
+    `?${FILTER_KEY}=${encodeURIComponent('Cinéma')}`
   )
   expect(requests.length).toBeGreaterThan(0)
   for (const params of requests) {
     expect(params.get('type_eq')).toBeNull()
     expect(params.get('type_in')).toBeNull()
-    expect([...params.keys()].filter((k) => k.startsWith('_s_') || k.startsWith('_d_'))).toEqual([])
+    expect([...params.keys()].filter((k) => k.startsWith('_d_'))).toEqual([])
   }
 })
 
 test('a received selection fades the entities it does not designate', async ({ page }) => {
   await setupFillCapture(page)
-  await boot(page, { valuesAgg: valuesAggFixtures.bar_bpe_salles }, `?${FILTER_KEY}=${encodeURIComponent('Cinéma')}&${MARKER_KEY}=page_x`)
+  await boot(page, { valuesAgg: valuesAggFixtures.bar_bpe_salles }, `?${FILTER_KEY}=${encodeURIComponent('Cinéma')}`)
   await page.waitForTimeout(1000)
   const fills = await page.evaluate(() => (window as unknown as { __frames: string[][] }).__frames.flat())
   // applySelectionHighlight estompe les barres non sélectionnées (alpha 0.25)
@@ -106,21 +108,23 @@ test('a received selection fades the entities it does not designate', async ({ p
 test('the option is opt-in: without it a click emits nothing', async ({ page }) => {
   await boot(page, { valuesAgg: valuesAggFixtures.bar_bpe_salles })
   expect(await clickBarChanging(page, BANDS, null)).toBeNull()
-  expect(new URL(page.url()).searchParams.get(MARKER_KEY)).toBeNull()
+  const params = new URL(page.url()).searchParams
+  expect(params.get(FILTER_KEY)).toBeNull()
+  expect(noMarkerKeys(params)).toEqual([])
 })
 
-test('clicking a bar emits the selection, clicking again clears it', async ({ page }) => {
+test('clicking a bar emits the selection key alone, clicking again clears it', async ({ page }) => {
   await boot(page, { valuesAgg: valuesAggFixtures.bar_bpe_salles }, '', { selection: true })
 
   const first = await clickBarChanging(page, BANDS, null)
   expect(first, 'aucune barre touchée').not.toBeNull()
   const params = new URL(page.url()).searchParams
   expect(params.get(FILTER_KEY)).toBe(first!.value)
-  expect(params.get(MARKER_KEY)?.startsWith('app_')).toBe(true)
+  expect(noMarkerKeys(params)).toEqual([])
 
   const again = await clickBarChanging(page, [first!.fx], first!.value)
   expect(again?.value).toBeNull()
-  expect(new URL(page.url()).searchParams.get(MARKER_KEY)).toBeNull()
+  expect(new URL(page.url()).searchParams.get(FILTER_KEY)).toBeNull()
 })
 
 test('clicking another bar replaces the selection (single eq value)', async ({ page }) => {

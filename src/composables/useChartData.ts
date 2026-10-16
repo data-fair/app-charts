@@ -2,13 +2,14 @@ import { computed, ref, watch, watchEffect } from 'vue'
 import { useDebounce } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
-import { useConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
+import { getConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
+import { targetExcludeKeys } from '@data-fair/lib-vue/selection.js'
 import { useFetch } from '@data-fair/lib-vue/fetch.js'
 import { useUiNotif, getErrorMsg } from '@data-fair/lib-vue/ui-notif.js'
 import { filters2params, type Filter } from '@data-fair/lib-utils/filters'
 import { ofetch } from 'ofetch'
 import { normalizeFilters, normalizeDivider, extractDividerValue, stackedParam, type DividerConfig } from '@/assets/utils'
-import { applySelectionHighlight } from '@/assets/selection'
+import { applySelectionHighlight, resolveSelectionTarget } from '@/assets/selection'
 import { useChartSelection } from '@/composables/useChartSelection'
 import { useConfig } from '@/composables/config'
 
@@ -53,7 +54,17 @@ export function useChartData () {
   const { config, dataset, chart, datasetUrl, finalizedAt, fields } = useConfig()
   const theme = useTheme()
   const { sendUiNotif } = useUiNotif()
-  const conceptFilters = useConceptFilters(reactiveSearchParams, dataset.value?.id)
+
+  // Le champ de sélection déclaré (abscisse) n'est jamais une restriction : ses
+  // clés `_c_`/`_d_` sont retirées des requêtes API par la visu elle-même.
+  const selectionTarget = computed(() => resolveSelectionTarget(chart.value, dataset.value, fields.value))
+  const conceptFilters = computed(() => {
+    const input = { ...reactiveSearchParams }
+    if (selectionTarget.value) {
+      for (const key of targetExcludeKeys(reactiveSearchParams, selectionTarget.value)) delete input[key]
+    }
+    return getConceptFilters(input, dataset.value?.id)
+  })
 
   // Keep stacked search param in sync with chart default. Quand la bascule est
   // désactivée (`disableDynamicStack`), la config fait loi et un paramètre
@@ -67,7 +78,7 @@ export function useChartData () {
   const baseParams = useDebounce(computed(() => {
     // filtres prédéfinis en paramètres REST suffixés (_in, _nin, _gte...), jamais en `qs`
     const params: Record<string, string> = {
-      ...conceptFilters,
+      ...conceptFilters.value,
       ...(config.value.staticFilters?.length
         ? filters2params(normalizeFilters(config.value.staticFilters as any) as Filter[])
         : {})
@@ -408,9 +419,9 @@ export function useChartData () {
     return null
   })
 
-  // Sélection `_s_` : le clic émet filtre + marqueur, une sélection reçue est
-  // mise en évidence (les clés marquées ne restreignent pas les requêtes, cf.
-  // getConceptFilters de lib-vue qui les écarte).
+  // Sélection inter-app : le clic émet une clé seule, une sélection reçue est
+  // mise en évidence (les clés visant le champ d'abscisse ne restreignent pas les
+  // requêtes, cf. `conceptFilters` ci-dessus).
   const selection = useChartSelection(() => rawData.value?.rawLabels)
   const lineBased = ['line', 'multi-line', 'radar'].includes(chart.value?.type as string)
   const data = computed(() => (rawData.value

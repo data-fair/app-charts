@@ -24,7 +24,7 @@ const { config, chart, dynamicMetric } = useConfig()
 const { data, selection } = useChartData()
 const { options } = useChartOptions()
 
-// sélection inter-app (`_s_`) : le clic émet un filtre marqué dans l'URL
+// sélection inter-app : le clic émet la clé de son champ d'abscisse dans l'URL
 const chartOptions = computed(() => ({ ...options.value, onClick: selection.onClick }))
 
 // Force chart recreation only for structural changes that Chart.js can't handle in-place:
