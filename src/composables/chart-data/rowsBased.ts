@@ -25,7 +25,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   const fill = chart.area || (chart.type === 'multi-line' && ctx.stacked === 'true')
 
-  const valueLabel = createValueLabeler(config)
+  const valueLabel = createValueLabeler(config, chart.config.removeFromLabels)
   const customLabels = valueLabelsMap(config.valueLabels)
 
   // Don't mutate apiResults: copy before sorting

@@ -26,7 +26,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
 
   const fill = chart.area || (chart.type === 'multi-line' && ctx.stacked === 'true')
 
-  const valueLabel = createValueLabeler(config)
+  const valueLabel = createValueLabeler(config, chart.config.removeFromLabels)
   const customLabels = valueLabelsMap(config.valueLabels)
 
   let aggs = apiAggs

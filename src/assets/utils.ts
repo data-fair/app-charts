@@ -46,32 +46,43 @@ export function valueLabelsMap (valueLabels?: ValueLabel[]): Record<string, stri
 }
 
 /**
+ * Retire `removeFromLabels` d'un libellé affiché (première occurrence) et nettoie
+ * les espaces résiduels : la valeur du dataset peut contenir un espace de plus
+ * que le texte saisi dans le formulaire.
+ */
+export function stripLabel (label: string, removeFromLabels?: string): string {
+  return removeFromLabels ? label.replace(removeFromLabels, '').trim() : label
+}
+
+/**
  * Libellé affiché pour une valeur brute de colonne :
- * 1. surcharge `valueLabels` de la config du graphique
+ * 1. surcharge `valueLabels` de la config du graphique (jamais retouchée par `removeFromLabels`)
  * 2. correspondance `x-labels` du schéma du dataset (comportement historique)
  * 3. libellés booléens de l'ancienne config `booleanLabels` (true/false, et 0/1 si numericBooleans)
  * 4. valeur brute telle quelle
+ * `removeFromLabels` est ensuite retiré des cas 2 à 4.
  */
-export function getValueLabel (raw: unknown, field: any, booleanLabels?: BooleanLabels, customLabels?: Record<string, string>): string {
+export function getValueLabel (raw: unknown, field: any, booleanLabels?: BooleanLabels, customLabels?: Record<string, string>, removeFromLabels?: string): string {
   const override = customLabels?.[String(raw)]
   if (override) return override
+  const strip = (label: string) => stripLabel(label, removeFromLabels)
   const xLabel = field?.['x-labels']?.[raw as string]
-  if (xLabel) return xLabel
+  if (xLabel) return strip(xLabel)
   if (booleanLabels) {
-    if (raw === true || raw === 'true') return booleanLabels.trueLabel || String(raw)
-    if (raw === false || raw === 'false') return booleanLabels.falseLabel || String(raw)
+    if (raw === true || raw === 'true') return strip(booleanLabels.trueLabel || String(raw))
+    if (raw === false || raw === 'false') return strip(booleanLabels.falseLabel || String(raw))
     if (booleanLabels.numericBooleans) {
-      if (raw === 1 || raw === '1') return booleanLabels.trueLabel || String(raw)
-      if (raw === 0 || raw === '0') return booleanLabels.falseLabel || String(raw)
+      if (raw === 1 || raw === '1') return strip(booleanLabels.trueLabel || String(raw))
+      if (raw === 0 || raw === '0') return strip(booleanLabels.falseLabel || String(raw))
     }
   }
-  return String(raw)
+  return strip(String(raw))
 }
 
 /** Résolveur de libellés d'un graphique : `valueLabels`, puis x-labels, puis repli booléen legacy */
-export function createValueLabeler (config?: { valueLabels?: ValueLabel[]; booleanLabels?: BooleanLabels }) {
+export function createValueLabeler (config?: { valueLabels?: ValueLabel[]; booleanLabels?: BooleanLabels }, removeFromLabels?: string) {
   const customLabels = valueLabelsMap(config?.valueLabels)
-  return (raw: unknown, field?: any) => getValueLabel(raw, field, config?.booleanLabels, customLabels)
+  return (raw: unknown, field?: any) => getValueLabel(raw, field, config?.booleanLabels, customLabels, removeFromLabels)
 }
 
 /**
@@ -81,7 +92,7 @@ export function createValueLabeler (config?: { valueLabels?: ValueLabel[]; boole
 export function getFieldLabel (key: string, fields: Record<string, any>, customLabels?: Record<string, string>, removeFromLabels?: string): string {
   if (customLabels?.[key]) return customLabels[key]
   const label = (fields[key]?.label || fields[key]?.title || fields[key]?.['x-originalName'] || key) as string
-  return removeFromLabels ? label.replace(removeFromLabels, '') : label
+  return stripLabel(label, removeFromLabels)
 }
 
 /**

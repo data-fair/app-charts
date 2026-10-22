@@ -387,6 +387,28 @@ test('valueLabels rename groupsField series', () => {
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Hôpital', 'F'])
 })
 
+test('removeFromLabels shortens the group axis labels (reported on aggsBasedCategories)', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      config: {
+        type: 'aggsBasedCategories',
+        groupBy: { type: 'value', field: 'indicateurs' },
+        valuesCalc: ['2020', '2022'],
+        removeFromLabels: "Quantités totales d'émissions de :",
+        metric: 'sum',
+        size: 10
+      }
+    },
+    fields: { indicateurs: { label: 'Indicateurs' }, 2020: { label: '2020' }, 2022: { label: '2022' } },
+    aggs: [{ value: "Quantités totales d'émissions de :  Ammoniac", metric: 4, '2020_sum': 4, '2022_sum': 1 }]
+  })
+  const data = transformAggsBased(ctx)
+  // les valeurs contiennent deux espaces après ':' : les espaces résiduels sont nettoyés
+  expect(data.labels).toEqual([['Ammoniac']])
+  expect(data.rawLabels).toEqual(["Quantités totales d'émissions de :  Ammoniac"])
+})
+
 test('valueLabels rename valuesCalc column series', () => {
   const ctx = baseCtx({
     chart: {

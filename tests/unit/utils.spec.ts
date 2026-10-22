@@ -244,6 +244,18 @@ test('createValueLabeler applies valueLabels then falls back to x-labels and leg
   expect(createValueLabeler(undefined)('75')).toBe('75')
 })
 
+test('removeFromLabels shortens value labels (axis and legend) and trims the remainder', () => {
+  const prefix = "Quantités totales d'émissions de :"
+  // la valeur du dataset contient un espace de plus que le texte saisi
+  expect(getValueLabel("Quantités totales d'émissions de :  Ammoniac", undefined, undefined, undefined, prefix)).toBe('Ammoniac')
+  expect(getValueLabel('Paris', { 'x-labels': { Paris: 'Ville de Paris' } }, undefined, undefined, 'Ville de ')).toBe('Paris')
+  // un libellé renommé via valueLabels n'est pas retouché
+  expect(getValueLabel('Paris', undefined, undefined, { Paris: 'Ville de Paris' }, 'Ville de ')).toBe('Ville de Paris')
+  // et le résolveur le propage
+  expect(createValueLabeler({}, 'Voiture ')('Voiture électrique')).toBe('électrique')
+  expect(createValueLabeler(undefined, 'Voiture ')('Vélo')).toBe('Vélo')
+})
+
 test('getFieldLabel overrides a column label and applies removeFromLabels to the default only', () => {
   const fields = { voit: { label: 'Voiture' }, capacite: { label: 'Capacité (nb)' } }
   expect(getFieldLabel('voit', fields)).toBe('Voiture')
