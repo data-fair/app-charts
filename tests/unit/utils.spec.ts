@@ -63,6 +63,10 @@ test('staticFiltersParams serializes filters as REST query params', () => {
 
   expect(parse([{ type: 'in', field: { key: 'region' }, values: ['75', '92'] }]))
     .toEqual({ region_in: '75,92' })
+  // une valeur contenant une virgule (ou un guillemet) est sérialisée en JSON
+  // par lib-utils : l'API relit alors tout le paramètre en JSON
+  expect(parse([{ type: 'in', field: { key: 'indicateurs' }, values: ['51', '52', '51, 52'] }]))
+    .toEqual({ indicateurs_in: '"51","52","51, 52"' })
   expect(parse([{ type: 'out', field: { key: 'region' }, values: ['75'] }]))
     .toEqual({ region_nin: '75' })
   expect(parse([{ type: 'interval', field: { key: 'surface' }, minValue: '10', maxValue: '20' }]))
