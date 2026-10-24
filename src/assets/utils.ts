@@ -306,3 +306,26 @@ export function fillMissingDateAggs (aggs: AggItem[], interval: string, sortOrde
 
   return result
 }
+
+/**
+ * Valeurs intermédiaires absentes entre des libellés d'axe numériques (ex. une
+ * année sans ligne). Le pas est le plus petit écart constaté : avec un seul écart
+ * (deux libellés) il n'y a rien à déduire. Renvoie [] dès qu'un libellé n'est pas
+ * numérique ou que le remplissage dépasserait `max`.
+ */
+export function missingNumericLabels (values: unknown[], max = 500): number[] {
+  const nums = values.map(v => typeof v === 'number' ? v : typeof v === 'string' && v.trim() !== '' ? Number(v) : Number.NaN)
+  if (!nums.length || !nums.every(Number.isFinite)) return []
+  const sorted = [...new Set(nums)].sort((a, b) => a - b)
+  if (sorted.length < 2) return []
+  let step = Infinity
+  for (let i = 1; i < sorted.length; i++) step = Math.min(step, sorted[i] - sorted[i - 1])
+  const missing: number[] = []
+  for (let i = 0; i < sorted.length - 1; i++) {
+    for (let v = sorted[i] + step; v < sorted[i + 1]; v += step) {
+      missing.push(v)
+      if (missing.length > max) return []
+    }
+  }
+  return missing
+}

@@ -5,6 +5,7 @@ import { test, expect } from '@playwright/test'
 import {
   formatDateLabel,
   fillMissingDateAggs,
+  missingNumericLabels,
   getColors,
   getOrderedLabels,
   getValueLabel,
@@ -125,6 +126,21 @@ test('fillMissingDateAggs fills gaps and reverses on desc order', () => {
 
   const desc = fillMissingDateAggs(aggs, 'day', 'desc')
   expect(desc.map((a: any) => a.value)).toEqual(['2024-01-03', '2024-01-02', '2024-01-01'])
+})
+
+test('missingNumericLabels fills intermediate numeric labels only', () => {
+  expect(missingNumericLabels([2018, 2019, 2021])).toEqual([2020])
+  expect(missingNumericLabels(['2019', '2020', '2023'])).toEqual([2021, 2022])
+  expect(missingNumericLabels([1, 2, 4])).toEqual([3])
+  // doublons (rowsBasedCategories) tolérés
+  expect(missingNumericLabels([2018, 2019, 2019, 2021])).toEqual([2020])
+  // libellés non numériques ou pas assez de points : aucun remplissage
+  expect(missingNumericLabels(['Paris', 'Lyon'])).toEqual([])
+  expect(missingNumericLabels([2019])).toEqual([])
+  expect(missingNumericLabels([null, 2019, 2021])).toEqual([])
+  expect(missingNumericLabels(['2019-01-01', '2021-01-01'])).toEqual([])
+  // garde-fou : pas de remplissage démesuré
+  expect(missingNumericLabels([0, 1000000])).toEqual([])
 })
 
 test('normalizeDivider accepts column configs and falls back to none', () => {

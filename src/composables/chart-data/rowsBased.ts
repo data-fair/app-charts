@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, missingNumericLabels, type DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -33,6 +33,14 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   const sortBy = rspSortBy || chart.config.rowSortBy
   const sortOrder = rspSortOrder || chart.config.sortOrder
+  // Abscisses numériques manquantes (ex. une année sans ligne) : lignes
+  // synthétiques sans valeur, donc aucun point ni zéro sur la courbe.
+  const fillGaps = !!chart.config.fillMissingLabels && sortBy === 'label' && chart.type !== 'pie'
+  if (fillGaps) {
+    const labelsField = chart.config.labelsField!
+    const missing = missingNumericLabels(results.map((r) => r[labelsField]))
+    results.push(...missing.map((value) => ({ [labelsField]: value })))
+  }
   if (sortBy === 'label') {
     const labelsField = chart.config.labelsField!
     results.sort((a, b) => {
@@ -42,10 +50,13 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     })
   }
 
+  // avec remplissage, les lignes ajoutées ne doivent pas évincer les vraies
+  // (la limite `size` est déjà appliquée par l'appel /lines)
+  const maxLabels = fillGaps ? results.length : chart.config.size
   const categories = apiCategories
-  const labels = results.map((r) => valueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!])).slice(0, chart.config.size)
+  const labels = results.map((r) => valueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!])).slice(0, maxLabels)
   // valeurs brutes d'abscisse, alignées sur `labels` : les entités sélectionnables
-  const rawLabels = results.slice(0, chart.config.size).map((r) => r[chart.config.labelsField!] as string)
+  const rawLabels = results.slice(0, maxLabels).map((r) => r[chart.config.labelsField!] as string)
   let selectionValues: (string | null)[] = [...rawLabels]
   let datasets: any[]
 
@@ -75,7 +86,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
           data: results.map((r) => (r[chart.config.categoriesField!] === value && getValue(r[chart.config.valuesField!] as number, r)) || undefined)
         }))
       } else {
-        const dataValues = results.slice(0, chart.config.size).map((r) => getValue(r[chart.config.valuesField!] as number, r))
+        const dataValues = results.slice(0, maxLabels).map((r) => getValue(r[chart.config.valuesField!] as number, r))
 
         const orderedRawLabels = getOrderedLabels(rawLabels, chart.config.colorOrder)
         const orderedLabels = orderedRawLabels.map((l) => valueLabel(l, fields[chart.config.labelsField!]))
@@ -137,6 +148,12 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   if (chart.type === 'paired-histogram') {
     datasets[0].data = (datasets[0].data as (number | undefined)[]).map((d) => -(d ?? 0))
+  }
+
+  // une abscisse sans données ne coupe pas la courbe : le trait relie les
+  // points de part et d'autre
+  if (fillGaps && ['line', 'multi-line'].includes(chart.type)) {
+    datasets.forEach((d: any) => { d.spanGaps = true })
   }
 
   return {

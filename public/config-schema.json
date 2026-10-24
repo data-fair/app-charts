@@ -589,6 +589,15 @@
         }
       ]
     },
+    "fillMissingLabels": {
+      "type": "boolean",
+      "title": "Afficher les abscisses sans données",
+      "description": "Ajoute les abscisses numériques intermédiaires absentes (ex. une année sans ligne). Aucun point ni valeur 0 : la courbe relie les points de part et d'autre.",
+      "default": false,
+      "layout": {
+        "if": "parent.data.rowSortBy === 'label'"
+      }
+    },
     "aggSort": {
       "type": "string",
       "title": "Trier par",
@@ -1064,6 +1073,9 @@
         "rowSortBy": {
           "$ref": "#/$defs/rowSort"
         },
+        "fillMissingLabels": {
+          "$ref": "#/$defs/fillMissingLabels"
+        },
         "sortOrder": {
           "$ref": "#/$defs/sortOrder"
         },
@@ -1164,6 +1176,9 @@
         },
         "rowSortBy": {
           "$ref": "#/$defs/rowSort"
+        },
+        "fillMissingLabels": {
+          "$ref": "#/$defs/fillMissingLabels"
         },
         "sortOrder": {
           "$ref": "#/$defs/sortOrder"
@@ -1298,6 +1313,9 @@
         },
         "rowSortBy": {
           "$ref": "#/$defs/rowSort"
+        },
+        "fillMissingLabels": {
+          "$ref": "#/$defs/fillMissingLabels"
         },
         "sortOrder": {
           "$ref": "#/$defs/sortOrder"

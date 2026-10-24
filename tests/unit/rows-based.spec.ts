@@ -132,6 +132,45 @@ test('categories produce one dataset per category value', () => {
   expect(data.datasets[1].data).toEqual([undefined, 2, undefined])
 })
 
+test('fillMissingLabels inserts the missing numeric label with no point and spans the line', () => {
+  const ctx = baseCtx({
+    chart: { type: 'line', config: { type: 'rowsBased', labelsField: 'annee', valuesField: 'count', size: 10, fillMissingLabels: true } },
+    sortBy: 'label',
+    sortOrder: 'asc',
+    results: [
+      { annee: '2018', count: 5 },
+      { annee: '2019', count: 10 },
+      { annee: '2021', count: 30 }
+    ]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.labels).toEqual([['2018'], ['2019'], ['2020'], ['2021']])
+  expect(data.rawLabels).toEqual(['2018', '2019', 2020, '2021'])
+  expect(data.datasets[0].data).toEqual([5, 10, undefined, 30])
+  expect(data.datasets[0].spanGaps).toBe(true)
+})
+
+test('without fillMissingLabels or without label sort, rows are untouched', () => {
+  const results = [
+    { annee: '2018', count: 5 },
+    { annee: '2019', count: 10 },
+    { annee: '2021', count: 30 }
+  ]
+  const off = transformRowsBased(baseCtx({
+    chart: { type: 'line', config: { type: 'rowsBased', labelsField: 'annee', valuesField: 'count', size: 10 } },
+    sortBy: 'label',
+    results
+  }))
+  expect(off.labels).toEqual([['2018'], ['2019'], ['2021']])
+  expect(off.datasets[0].spanGaps).toBeUndefined()
+
+  const notSorted = transformRowsBased(baseCtx({
+    chart: { type: 'line', config: { type: 'rowsBased', labelsField: 'annee', valuesField: 'count', size: 10, fillMissingLabels: true } },
+    results
+  }))
+  expect(notSorted.labels).toEqual([['2018'], ['2019'], ['2021']])
+})
+
 test('sortBy label orders results through localized comparison', () => {
   const ctx = baseCtx({
     chart: { type: 'line', config: { type: 'rowsBased', labelsField: 'dep', valuesField: 'count', size: 10 } },

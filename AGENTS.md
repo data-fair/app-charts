@@ -167,7 +167,7 @@ Dynamic controls for:
 
 | Mode | File | Description |
 |------|------|-------------|
-| `rowsBased` | `rowsBased.ts` | Fetches `/lines`, maps rows to labels/datasets. Supports categories, pie "Autre" bucket, paired-histogram sign flip. |
+| `rowsBased` | `rowsBased.ts` | Fetches `/lines`, maps rows to labels/datasets. Supports categories, pie "Autre" bucket, paired-histogram sign flip. Option `fillMissingLabels` (tri par libellé) : ajoute les abscisses numériques manquantes (ex. une année sans ligne) sans point ni 0, `spanGaps` sur les courbes. |
 | `aggsBased` | `aggsBased.ts` | Fetches `/values_agg` with `groupBy`. Supports groups, extra metrics, percentages. |
 | `aggsBasedCategories` | `aggsBased.ts` | Like `aggsBased` but iterates over `valuesCalc` fields as categories. |
 | `aggsBasedLabels` | `aggsBasedLabels.ts` | Fetches `/values_agg` where aggregation field = labels and metric fields = values. |
