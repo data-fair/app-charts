@@ -29,8 +29,11 @@ const chartOptions = computed(() => ({ ...options.value, onClick: selection.onCl
 
 // Force chart recreation only for structural changes that Chart.js can't handle in-place:
 // - horizontal: switches indexAxis (Chart.js can't swap axes live)
+// - seriesStyles: datasets switching their type/axis keep a stale controller,
+//   and adding a secondary scale may not be picked up on update
 const chartKey = computed(() => JSON.stringify({
-  horizontal: chart.value!.horizontal
+  horizontal: chart.value!.horizontal,
+  seriesStyles: chart.value!.seriesStyles
 }))
 
 const showActions = computed(() =>
@@ -46,6 +49,7 @@ const chartTypeLabels: Record<string, string> = {
   bar: 'Histogramme',
   'multi-line': 'Plusieurs courbes',
   'multi-bar': 'Histogramme multivalué',
+  combo: 'Graphique mixte',
   radar: 'Radar',
   pie: 'Camembert',
   'paired-histogram': 'Paire d\'histogrammes'
@@ -72,7 +76,7 @@ const ariaLabel = computed(() => config.value?.title || chartTypeLabels[chartTyp
         :data="data"
       />
       <Bar
-        v-else-if="['bar', 'multi-bar', 'paired-histogram'].includes(chartType as string)"
+        v-else-if="['bar', 'multi-bar', 'paired-histogram', 'combo'].includes(chartType as string)"
         :key="chartKey"
         :options="chartOptions"
         :data="data"

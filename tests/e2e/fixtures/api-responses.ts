@@ -175,6 +175,15 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: 'PACA', metric: 987, indic_capa_sum: 987, indic_nbsalles_sum: 321, irisee_sum: 654 },
       { value: 'Bretagne', metric: 876, indic_capa_sum: 876, indic_nbsalles_sum: 234, irisee_sum: 543 }
     ]
+  },
+  // objectifs issus des données : la cible est agrégée avec sa propre métrique
+  // (`<champ>_avg`), la 3e série n'a pas d'objectif renseigné
+  objectifs_bpe: {
+    aggs: [
+      { value: 'Île-de-France', metric: 124, capacite_avg: 124, nbsalles_avg: 2, objectif_2030_avg: 150 },
+      { value: 'PACA', metric: 98, capacite_avg: 98, nbsalles_avg: 1, objectif_2030_avg: 120 },
+      { value: 'Bretagne', metric: 87, capacite_avg: 87, nbsalles_avg: 1 }
+    ]
   }
 }
 

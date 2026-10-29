@@ -5,7 +5,7 @@ import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-glob
 import { useSession } from '@data-fair/lib-vue/session.js'
 import type { TooltipItem } from 'chart.js'
 import { useConfig } from '@/composables/config'
-import { chartValueLabelDisplay } from '@/assets/utils'
+import { chartValueLabelDisplay, needsSecondaryAxis, LINE_DASH_PATTERNS } from '@/assets/utils'
 
 export function useChartOptions (): { options: ComputedRef<any> } {
   const { config, chart } = useConfig()
@@ -49,7 +49,9 @@ export function useChartOptions (): { options: ComputedRef<any> } {
             title: (items: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>[]) => items[0].label,
             label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
               const value = n((c.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r, 'decimal')
-              const suffix = c.percentage ? ' %' : (config.value.unit ? ' ' + config.value.unit : '')
+              // unité de l'axe de la série (axe de droite de la config)
+              const unit = (context.dataset as { yAxisID?: string }).yAxisID === 'y1' ? c.secondaryAxis?.unit : config.value.unit
+              const suffix = c.percentage ? ' %' : (unit ? ' ' + unit : '')
               return (context.dataset.label ? context.dataset.label + ' : ' : '') + value + suffix
             }
           }
@@ -87,6 +89,18 @@ export function useChartOptions (): { options: ComputedRef<any> } {
         opts.scales!.y!.ticks = { callback: (v: number) => n(v, 'decimal') + ' ' + config.value.unit }
       }
     }
+    // axe de droite du type « Graphique mixte » : séries rattachées à droite,
+    // avec leur propre titre et unité
+    if (needsSecondaryAxis(c)) {
+      const axis = c.secondaryAxis || {}
+      opts.scales!.y1 = {
+        position: 'right',
+        beginAtZero: c.yAxisStartsZero,
+        grid: { drawOnChartArea: false },
+        ...(axis.title?.length ? { title: { text: axis.title, display: true, font: { weight: 'bold' } } } : {}),
+        ...(axis.unit?.length ? { ticks: { callback: (v: number) => n(v, 'decimal') + ' ' + axis.unit } } : {})
+      }
+    }
     if (c.hideYAxis) {
       opts.scales![c.horizontal ? 'y' : 'x']!.grid = { display: false }
       opts.scales![c.horizontal ? 'x' : 'y']!.display = false
@@ -108,6 +122,9 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       opts.layout = { padding: c.horizontal ? { right: 64 } : { top: 24 } }
     } else {
       ;(opts.plugins as Record<string, unknown>).datalabels = { display: false }
+      // outlabels ne sert qu'au camembert : sans ce garde-fou il tente de
+      // dessiner des étiquettes sur les barres (positions NaN, travail inutile)
+      ;(opts.plugins as Record<string, unknown>).outlabels = { display: false }
     }
 
     if (c.type === 'pie') {
@@ -166,13 +183,9 @@ export function useChartOptions (): { options: ComputedRef<any> } {
 
     // motif de trait des courbes (line, multi-line, radar) : Chart.js applique
     // elements.line aux LineElement de tous ces types, légende comprise
-    const lineDashPatterns: Record<string, number[]> = {
-      dashed: [6, 6],
-      dotted: [2, 3]
-    }
     const lineElement: Record<string, unknown> = {}
     if (c.tension != null) lineElement.tension = c.tension / 10
-    if (c.lineDash && lineDashPatterns[c.lineDash]) lineElement.borderDash = lineDashPatterns[c.lineDash]
+    if (c.lineDash && LINE_DASH_PATTERNS[c.lineDash]) lineElement.borderDash = LINE_DASH_PATTERNS[c.lineDash]
     if (Object.keys(lineElement).length) {
       ;(opts as Record<string, unknown>).elements = { line: lineElement }
     }

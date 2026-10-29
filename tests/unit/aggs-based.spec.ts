@@ -339,6 +339,32 @@ test('aggsBasedCategories maps boolean sum metrics from <field>_<metric> keys', 
   expect(data.datasets[1].data).toEqual([1, 3])
 })
 
+test('combo sets each dataset type, dash and yAxisID from seriesStyles', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'combo',
+      seriesStyles: [
+        { key: 'capacite', type: 'bar', axis: 'right' },
+        { key: 'nbsalles', type: 'line', lineDash: 'dotted' }
+      ],
+      config: {
+        type: 'aggsBasedCategories',
+        groupBy: { type: 'value', field: 'region' },
+        valuesCalc: ['capacite', 'nbsalles'],
+        metric: 'avg',
+        size: 10
+      }
+    },
+    fields: { region: { label: 'Région' }, capacite: { label: 'Capacité' }, nbsalles: { label: 'Salles' } },
+    aggs: [{ value: 'A', metric: 124, capacite_avg: 124, nbsalles_avg: 2 }]
+  })
+  const data = transformAggsBased(ctx)
+  expect(data.datasets.map((d: any) => [d.label, d.type, d.yAxisID, d.borderDash])).toEqual([
+    ['Capacité', 'bar', 'y1', undefined],
+    ['Salles', 'line', 'y', [2, 3]]
+  ])
+})
+
 test('aggsBasedCategories maps boolean avg metrics (proportion de oui)', () => {
   const ctx = baseCtx({
     chart: {

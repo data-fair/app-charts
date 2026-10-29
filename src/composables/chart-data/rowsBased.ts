@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, missingNumericLabels, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, missingNumericLabels, comboSeriesStyle, type DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
 
 export interface RowsBasedContext {
@@ -131,6 +131,7 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
       const valuesFields = getOrderedLabels(chart.config.valuesFields || [], chart.config.colorOrder)
       datasets = valuesFields.map((field) => ({
         label: getFieldLabel(field, fields, customLabels, chart.config.removeFromLabels),
+        ...comboSeriesStyle(chart, field),
         borderColor: colors[field],
         backgroundColor: colors[field],
         pointStyle: chart.hidePoints ? false : 'circle',

@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, type DividerConfig } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, comboSeriesStyle, type DividerConfig } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedContext {
@@ -98,6 +98,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         const metricField = chart.config.valuesCalc?.[0]
         datasets = valuesCalc.map((field) => ({
           label: getFieldLabel(field, fields, customLabels, chart.config.removeFromLabels),
+          ...comboSeriesStyle(chart, field),
           borderColor: colors[field],
           backgroundColor: colors[field],
           pointStyle: chart.hidePoints ? false : 'circle',

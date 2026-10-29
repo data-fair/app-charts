@@ -241,6 +241,8 @@ export function useChartData () {
       c.labelsValues?.length > 1
         ? c.labelsValues.slice(1).map((v: string) => v + ':' + c.metric).join(',')
         : undefined,
+      // objectifs issus des données : moyenne des lignes de la série
+      (c.objectifFields || []).map((v: string) => v + ':avg').join(',') || undefined,
       divisor.value.type === 'column' ? `${divisor.value.field}:${divisor.value.metric}` : undefined
     )
     if (extra) labelsQuery.extra_metrics = extra
@@ -399,6 +401,7 @@ export function useChartData () {
         getValue,
         stacked: reactiveSearchParams.stacked,
         metric: reactiveSearchParams.metric,
+        theme: { colors: theme.current.value.colors as unknown as Record<string, string> },
         aggs: aggsRaw.value.aggs
       })
     }
@@ -423,7 +426,7 @@ export function useChartData () {
   // mise en évidence (les clés visant le champ d'abscisse ne restreignent pas les
   // requêtes, cf. `conceptFilters` ci-dessus).
   const selection = useChartSelection(() => rawData.value?.rawLabels)
-  const lineBased = ['line', 'multi-line', 'radar'].includes(chart.value?.type as string)
+  const lineBased = ['line', 'multi-line', 'combo', 'radar'].includes(chart.value?.type as string)
   const data = computed(() => (rawData.value
     ? applySelectionHighlight(rawData.value, selection.selectedValues(), lineBased)
     : null))

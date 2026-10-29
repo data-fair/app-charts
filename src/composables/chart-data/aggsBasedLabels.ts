@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, CARTESIAN_TYPES, LINE_DASH_PATTERNS } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedLabelsContext {
@@ -10,6 +10,8 @@ export interface AggsBasedLabelsContext {
   metric: string | undefined
   getValue: (value: number | null | undefined, source?: unknown) => number | undefined
   stacked: string | undefined
+  // current value of theme.current ref (InternalThemeDefinition)
+  theme: { colors: Record<string, string> }
   // API responses
   aggs: AggItem[]
 }
@@ -35,7 +37,7 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
   series = orderedValues.map((v) => series.find((s) => (s.value + '') === v)!)
 
   const colors = getColors(series.map((s) => s.value as string), chart.config.colorOrder)
-  const datasets = series.map((serie) => ({
+  const datasets: any[] = series.map((serie) => ({
     label: (serie as any).label as string,
     borderColor: colors[serie.value as string],
     backgroundColor: colors[serie.value as string],
@@ -51,6 +53,33 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
     for (const i in datasets[0].data as number[]) {
       const sum = datasets.reduce((acc: number, d) => acc + ((d.data as number[])[i] || 0), 0)
       if (sum) datasets.forEach((d) => { (d.data as number[])[i] *= 100 / sum })
+    }
+  }
+
+  // Objectifs issus des données : une ligne en tirets par colonne d'objectif et
+  // par série. La cible est constante sur l'axe du temps (moyenne des lignes de
+  // la série, cf. `extra_metrics` = `<champ>:avg`) et suit le multiplicateur du
+  // graphique, comme les valeurs. Ajoutée après les pourcentages pour ne pas
+  // être normalisée. Ignorée pour les types sans axe cartésien (radar).
+  const objectifFields: string[] = chart.config.objectifFields || []
+  if (objectifFields.length && CARTESIAN_TYPES.includes(chart.type)) {
+    const color = ctx.theme?.colors?.error || '#D32F2F'
+    for (const serie of series) {
+      for (const field of objectifFields) {
+        const value = getValue((serie as any)[field + '_avg'], serie)
+        if (value === undefined) continue
+        const label = getFieldLabel(field, fields, customLabels, chart.config.removeFromLabels)
+        datasets.push({
+          type: 'line',
+          label: series.length > 1 ? label + ' – ' + (serie as any).label : label,
+          borderColor: color,
+          backgroundColor: color,
+          borderDash: LINE_DASH_PATTERNS.dashed,
+          pointStyle: false,
+          fill: false,
+          data: chart.config.labelsValues.map(() => value)
+        })
+      }
     }
   }
 

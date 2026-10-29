@@ -333,3 +333,38 @@ test('valueLabels rename value column series', () => {
   const data = transformRowsBased(ctx)
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Déplacements', 'Autre'])
 })
+
+// ── Type « Graphique mixte » (type de tracé et axe par colonne) ────────
+
+test('combo sets each dataset type, dash and yAxisID from seriesStyles', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'combo',
+      seriesStyles: [
+        { key: 'pop', type: 'bar', axis: 'right' },
+        { key: 'taux', type: 'line', lineDash: 'dashed' }
+      ],
+      config: {
+        type: 'rowsBased',
+        labelsField: 'dep',
+        valuesFields: ['pop', 'taux'],
+        size: 10
+      }
+    },
+    results: [{ dep: '75', pop: 2, taux: 12.5 }]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.datasets.map((d: any) => [d.label, d.type, d.yAxisID, d.borderDash])).toEqual([
+    ['pop', 'bar', 'y1', undefined],
+    ['taux', 'line', 'y', [6, 6]]
+  ])
+})
+
+test('other chart types keep Chart.js defaults for dataset type and axis', () => {
+  const ctx = baseCtx({
+    chart: { type: 'multi-line', config: { type: 'rowsBased', labelsField: 'dep', valuesFields: ['pop', 'taux'], size: 10 } },
+    results: [{ dep: '75', pop: 2, taux: 12.5 }]
+  })
+  const data = transformRowsBased(ctx)
+  expect(data.datasets.map((d: any) => [d.type, d.yAxisID])).toEqual([[undefined, undefined], [undefined, undefined]])
+})

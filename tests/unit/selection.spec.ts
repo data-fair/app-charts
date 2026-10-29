@@ -100,6 +100,23 @@ test('applySelectionHighlight fades line points, not the line color', () => {
   expect(out.datasets[0].backgroundColor).toBe('#222222')
 })
 
+// graphique mixte (Graphique mixte) : chaque dataset suit son propre type
+test('applySelectionHighlight follows each dataset type in a mixed chart', () => {
+  const data = {
+    labels: [['A'], ['B']],
+    rawLabels: ['A', 'B'],
+    datasets: [
+      { type: 'line', backgroundColor: '#222222', data: [1, 2] },
+      { type: 'bar', backgroundColor: '#333333', data: [3, 4] }
+    ]
+  }
+  const out = applySelectionHighlight(data, ['A'], true)
+  expect(out.datasets[0].pointBackgroundColor[0]).toBe('#222222')
+  expect(out.datasets[0].pointBackgroundColor[1]).toContain('rgba(')
+  expect(out.datasets[1].backgroundColor[0]).toBe('#333333')
+  expect(out.datasets[1].backgroundColor[1]).toContain('rgba(')
+})
+
 // les datasets multi-bar portent aussi un pointStyle : c'est le type de graphique qui décide
 test('applySelectionHighlight fades multi-bar backgrounds despite their pointStyle', () => {
   const data = { labels: [['A'], ['B']], rawLabels: ['A', 'B'], datasets: [{ pointStyle: 'circle', backgroundColor: '#333333', data: [1, 2] }] }

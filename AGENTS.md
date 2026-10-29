@@ -1,6 +1,6 @@
 # Agent Guide – @data-fair/app-charts
 
-`app-charts` is a **DataFair visualization plugin** that renders charts (line, bar, multi-line, multi-bar, pie, radar, paired-histogram) from DataFair datasets. Published on npm as `@data-fair/app-charts` and served via jsDelivr CDN.
+`app-charts` is a **DataFair visualization plugin** that renders charts (line, bar, multi-line, multi-bar, combo, pie, radar, paired-histogram) from DataFair datasets. Published on npm as `@data-fair/app-charts` and served via jsDelivr CDN.
 
 The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolldown, lib-vuetify 2.x, VJSF 3 schema, ports via `df-dev-env`, Playwright `unit`/`e2e` projects).
 
@@ -80,7 +80,7 @@ The app follows the `data-fair-app` standards (Vue 3.5+, Vuetify 4, Vite 8/rolld
 │       │   │                     #   /simple-directory (_public.js as JS setting __PUBLIC_SITE_INFO, _public, _theme.css)
 │       │   ├── assertions.ts     # expectChartVisible, ...
 │       │   └── test-fixture.ts   # setupChartTest(configName, mocks) -> test with a chartPage fixture (origin-agnostic APPLICATION stub)
-│       └── specs/                # 35 spec files (30 per config + 5 transverse)
+│       └── specs/                # 37 spec files (32 per config + 5 transverse)
 ├── vite.config.ts                # loadEnv(APP_PORT), hmr aligned, vueI18n({}), settingsPath, server.warmup
 └── package.json
 ```
@@ -147,12 +147,18 @@ Label overrides (`config.valueLabels`) are resolved in `assets/utils.ts`: `creat
 > Keep the runtime imports of these pure modules **relative** (`'../../assets/utils'`): Playwright's unit project runs them in Node without tsconfig path resolution. Type-only `@/` imports are fine (erased at transpile).
 
 ### useChartOptions
-`composables/useChartOptions.ts` exposes a single `options` computed that builds the full Chart.js options object from `chart`, `config`, the session locale and `n()` formatters. It disables the color animation (`animations: { colors: false }`) so the selection highlight switches instantly, and exposes `options.onClick` from `useChartSelection` via `Chart.vue`. When running under the capture service (`window.triggerCapture` present) it adds `animation.onComplete` to trigger the screenshot once rendering is done. Kept separate from `Chart.vue` so the component remains a thin orchestrator.
+`composables/useChartOptions.ts` exposes a single `options` computed that builds the full Chart.js options object from `chart`, `config`, the session locale and `n()` formatters. It disables the color animation (`animations: { colors: false }`) so the selection highlight switches instantly, and exposes `options.onClick` from `useChartSelection` via `Chart.vue`. It also builds the `y1` scale (séries de droite du type `combo`) et les options d'axes/unités. When running under the capture service (`window.triggerCapture` present) it adds `animation.onComplete` to trigger the screenshot once rendering is done. Kept separate from `Chart.vue` so the component remains a thin orchestrator.
 
 ### Chart.vue
 Global Chart.js registration happens once in setup (`ChartJS.register(...)`). Uses a reactive `options` from `useChartOptions` and reactive `data` from `useChartData`. Merges `selection.onClick` (sélection) into the options passed to each vue-chartjs component. Conditionally renders `<Line>`, `<Bar>`, `<Pie>` or `<Radar>` from `vue-chartjs`. The canvas wrapper carries `role="img"` + `aria-label` (config title, else the chart type label) as the accessible alternative (RGAA 1.1).
 
-A `chartKey` computed forces component recreation only for structural changes that Chart.js cannot handle in-place (currently `horizontal` / `indexAxis`).
+A `chartKey` computed forces component recreation only for structural changes that Chart.js cannot handle in-place (`horizontal` / `indexAxis`, and `seriesStyles`, whose datasets switch their Chart.js type or axis and which may add a secondary scale).
+
+### Graphique mixte (combo)
+Type de visualisation `combo` : séries définies par des colonnes (`rowsDataMultiple` ou `aggsDataMultipleCategories`), rendues via `<Bar>` avec un `type` par dataset (graphique mixte Chart.js). `seriesStyles` (au niveau du graphique, pas dans `config`) fixe pour chaque colonne son `type` (`line`/`bar`), son `lineDash` (plein/tirets/pointillés) et son `axis` (`left`/`right`, l'axe droit posant `yAxisID: 'y1'`) ; une colonne non listée est une courbe pleine à gauche. `comboSeriesStyle` (`assets/utils.ts`) pose ces options dans les transforms ; hors `combo`, il ne renvoie rien et Chart.js garde ses défauts. L'infobulle prend l'unité de l'axe de la série (`chart.secondaryAxis.unit`). Limites : une seule agrégation pour toutes les séries, `multiplier` global, pas d'empilement ni d'axe horizontal double.
+
+### Objectifs issus des données (`objectifFields`)
+Dans le mode « abscisses = colonnes » (`aggsDataMultipleLabels`, types courbes/barres) : `objectifFields` liste des colonnes de cibles (ex. `objectif_2030`). `useChartData` les demande avec une métrique dédiée (`<champ>:avg`) dans les `extra_metrics` de `/values_agg` ; `aggsBasedLabels.ts` ajoute alors, **par série et par objectif renseigné**, un dataset `type: 'line'`, `borderDash`, `pointStyle: false`, `fill: false`, de valeur constante sur les abscisses, sur la même échelle et avec le même multiplicateur que la série (`<champ>_avg`, `null` ignoré). Ajouté après la normalisation en pourcentages (objectif non normalisé) et ignoré pour le radar. Libellé = libellé de la colonne (renommable par `valueLabels`), suffixé du nom de la série quand le graphique en contient plusieurs. Couleur = couleur d'erreur du thème. Les cibles annuelles (une valeur par année) et les cibles sur plusieurs axes restent hors périmètre.
 
 ### App.vue
 Renders `Chart` (or `v-empty-state` on config error) and `<DfUiNotif />` for global notifications. Watches `staticFilters` to push `staticFiltersParams` (REST query params, serialized with `filters2params`, empty string when no filters) back to the parent via `postMessage` in draft mode (uses `notifyConfigChange` from `useConfig`). The schema's `getItems` URLs consume `${rootData.staticFiltersParams}`: the `values_agg` value lists (colors/order) are restricted to the values present under the static filters, and the `/schema?maxCardinality=12` column selectors let DataFair compute the contextual cardinality (data-fair #588).
@@ -240,6 +246,8 @@ Two Playwright projects in `playwright.config.ts` (`testMatch: *.spec.ts`):
 | 28 | `28-multi-bar-bpe-booleans.spec.ts` | multi-bar aggsBasedCategories stacked, **boolean series** (`valuesCalc` booléens, metric sum, réponse `<field>_sum`) |
 | 29 | `29-pie-bpe-booleans.spec.ts` | pie aggsLabels, **boolean columns** (`/metric_agg` metric=sum = nombre de oui, requêtes capturées par le mock) |
 | 30 | `30-multi-bar-bpe-booleans-labels.spec.ts` | multi-bar aggsBasedLabels, **abscisses définies par plusieurs colonnes booléennes** (`metric_field` + `extra_metrics` = `<field>_sum`, requête `/values_agg` capturée par le mock) |
+| 31 | `31-combo-loyers-axes.spec.ts` | **combo** rowsBased, une courbe + une colonne en histogramme, **axe secondaire** `y1` (titres des deux axes vérifiés au rendu canvas) |
+| 32 | `32-objectifs-donnees.spec.ts` | **objectifs issus des données** (`objectifFields`) en barres + lignes en tirets : `extra_metrics` = `<champ>:avg`, légende « Objectif 2030 » par série renseignée |
 | — | `actions.spec.ts` | dynamicMetric, dynamicSort, stack toggle |
 | — | `static-filters-params.spec.ts` | App.vue sync `staticFilters` → `staticFiltersParams` pushed to the parent in draft mode (app mounted in an iframe, outgoing `set-config` messages captured; clearing, unchanged-value and non-draft/non-embedded guards) |
 | — | `iframe-compat.spec.ts` | `window.vIframeOptions.reactiveParams` exposed at module level |

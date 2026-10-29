@@ -101,7 +101,8 @@ function firstColor (i: number, ...candidates: unknown[]): unknown {
  * hors du top N du graphique). Le transform n'est pas muté.
  *
  * `lineBased` (courbes/radars) estompe les points, la ligne garde sa couleur ;
- * les autres graphiques sont estompés sur le fond.
+ * les autres graphiques sont estompés sur le fond (dans un graphique mixte,
+ * chaque dataset suit son propre type).
  *
  * `vue-chartjs` met à jour les datasets par `Object.assign` (il ne retire jamais
  * une clé absente du dataset de base) et Chart.js met en cache les options
@@ -119,7 +120,9 @@ export function applySelectionHighlight (data: any, selectedValues: string[], li
   const style = (color: unknown, i: number) => (active && !isSelected(i) ? faded(color) : color)
 
   const datasets = data.datasets.map((dataset: any) => {
-    if (lineBased) {
+    // « Graphique mixte » : les séries en barres restent estompées sur le
+    // fond, seules les courbes voient leurs points estompés
+    if (lineBased && dataset.type !== 'bar') {
       const base = rawLabels.map((_, i) => firstColor(i, dataset.pointBackgroundColor, dataset.borderColor, dataset.backgroundColor))
       return { ...dataset, pointBackgroundColor: base.map((color, i) => style(color, i)) }
     }

@@ -212,6 +212,66 @@
               }
             },
             {
+              "title": "Graphique mixte",
+              "additionalProperties": false,
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "const": "combo"
+                },
+                "tension": {
+                  "$ref": "#/$defs/tension"
+                },
+                "hidePoints": {
+                  "type": "boolean",
+                  "title": "Cacher les points"
+                },
+                "yAxisStartsZero": {
+                  "type": "boolean",
+                  "title": "Commencer à partir de 0 pour l'axe des ordonnées"
+                },
+                "seriesStyles": {
+                  "$ref": "#/$defs/seriesStyles"
+                },
+                "secondaryAxis": {
+                  "type": "object",
+                  "title": "Axe de droite",
+                  "description": "Titre et unité de l'axe de droite, utilisé par les séries en style « axe droit ».",
+                  "layout": {
+                    "if": "rootData.chart.seriesStyles?.filter(s => s.axis === 'right')?.length"
+                  },
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "title": "Titre de l'axe"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "title": "Unité"
+                    }
+                  }
+                },
+                "config": {
+                  "type": "object",
+                  "title": "Préparation des données",
+                  "description": "Choisissez la manière de traiter les données.\n\n**Lire les lignes une par une** :\nles valeurs sont lues directement depuis chaque ligne du jeu de données. Les différentes séries (affichées dans la légende) correspondent aux colonnes numériques sélectionnées.\n\n**Grouper les lignes, séries définies par plusieurs colonnes numériques ou booléennes** :\nles lignes sont groupées selon un critère pour former les libellés sur l'axe des X. Les différentes séries (affichées dans la légende) correspondent à plusieurs colonnes numériques ou booléennes, agrégées indépendamment.",
+                  "oneOfLayout": {
+                    "emptyData": true
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/rowsDataMultiple"
+                    },
+                    {
+                      "$ref": "#/$defs/aggsDataMultipleCategories"
+                    }
+                  ]
+                }
+              }
+            },
+            {
               "title": "Radar",
               "additionalProperties": false,
               "required": [
@@ -1769,6 +1829,21 @@
         "valuesLabel": {
           "$ref": "#/$defs/valuesLabel"
         },
+        "objectifFields": {
+          "type": "array",
+          "title": "Colonnes d'objectif",
+          "description": "Colonnes de valeurs cibles (ex. objectif 2030). Chaque objectif renseigné est tracé en ligne pointillée sur la même échelle que sa série ; les valeurs vides sont ignorées.",
+          "items": {
+            "type": "string"
+          },
+          "layout": {
+            "getItems": {
+              "url": "${rootData.datasets[0].href}/schema?calculated=false&type=integer,number",
+              "itemKey": "data[\"key\"]",
+              "itemTitle": "data[\"label\"]"
+            }
+          }
+        },
         "divider": {
           "$ref": "#/$defs/divider"
         },
@@ -2479,6 +2554,97 @@
           "itemKey": "data[\"key\"]",
           "itemTitle": "data[\"label\"]"
         }
+      }
+    },
+    "seriesStyles": {
+      "type": "array",
+      "title": "Styles des séries",
+      "description": "Type de tracé, motif de trait et axe de chaque colonne. Une colonne non listée est affichée en courbe pleine sur l'axe de gauche.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Colonne",
+            "layout": {
+              "getItems": {
+                "url": "${rootData.datasets[0].href}/schema?calculated=false",
+                "itemKey": "data[\"key\"]",
+                "itemTitle": "data[\"label\"]",
+                "itemsResults": "data.filter(f => (rootData.chart.config.valuesFields || rootData.chart.config.valuesCalc || []).includes(f.key))"
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "title": "Tracé",
+            "default": "line",
+            "oneOf": [
+              {
+                "const": "line",
+                "title": "Courbe"
+              },
+              {
+                "const": "bar",
+                "title": "Histogramme"
+              }
+            ]
+          },
+          "lineDash": {
+            "type": "string",
+            "title": "Motif de trait",
+            "default": "solid",
+            "layout": {
+              "if": "parent.data.type !== 'bar'"
+            },
+            "oneOf": [
+              {
+                "const": "solid",
+                "title": "Trait plein"
+              },
+              {
+                "const": "dashed",
+                "title": "Tirets"
+              },
+              {
+                "const": "dotted",
+                "title": "Pointillés"
+              }
+            ]
+          },
+          "axis": {
+            "type": "string",
+            "title": "Axe",
+            "default": "left",
+            "oneOf": [
+              {
+                "const": "left",
+                "title": "Gauche"
+              },
+              {
+                "const": "right",
+                "title": "Droite"
+              }
+            ]
+          }
+        }
+      },
+      "layout": {
+        "comp": "list",
+        "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === data.key)?.label || data.key",
+        "listActions": [
+          "add",
+          "edit",
+          "delete"
+        ],
+        "messages": {
+          "addItem": "Ajouter une colonne"
+        },
+        "if": "rootData.chart.config.valuesFields?.length || rootData.chart.config.valuesCalc?.length"
       }
     },
     "colorPalette": {

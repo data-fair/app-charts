@@ -245,6 +245,40 @@ export function chartValueLabelDisplay (value: unknown): false | 'auto' {
   return value === null || value === undefined || value === 0 ? false : 'auto'
 }
 
+/** Motifs de trait partagés par les options globales et les séries du type « Graphique mixte ». */
+export const LINE_DASH_PATTERNS: Record<string, number[]> = {
+  dashed: [6, 6],
+  dotted: [2, 3]
+}
+
+/**
+ * Type de tracé, motif de trait et axe d'une série du graphique « Graphique
+ * mixte » (entrée de `seriesStyles` ; défaut : courbe pleine à gauche).
+ * Vide pour les autres types : Chart.js garde alors le type de base et l'axe `y`.
+ */
+export function comboSeriesStyle (chart: any, field: string): Record<string, unknown> {
+  if (chart.type !== 'combo') return {}
+  const style = (chart.seriesStyles || []).find((s: { key?: string }) => s.key === field) || {}
+  const dash = LINE_DASH_PATTERNS[style.lineDash as string]
+  return {
+    type: style.type === 'bar' ? 'bar' : 'line',
+    yAxisID: style.axis === 'right' ? 'y1' : 'y',
+    ...(dash ? { borderDash: dash } : {})
+  }
+}
+
+/** Une série est-elle rattachée à l'axe de droite ? Seul le type `combo` le permet. */
+function hasRightSeries (chart: any): boolean {
+  return (chart?.seriesStyles || []).some((s: { axis?: string }) => s.axis === 'right')
+}
+
+export const CARTESIAN_TYPES = ['line', 'bar', 'multi-line', 'multi-bar', 'combo', 'paired-histogram']
+
+/** L'axe de droite n'est nécessaire qu'avec une série qui le porte. */
+export function needsSecondaryAxis (chart: any): boolean {
+  return hasRightSeries(chart)
+}
+
 // taken from https://stackoverflow.com/questions/64254355/cut-string-into-chunks-without-breaking-words-based-on-max-length
 export function splitString (n: number, str: string) {
   const arr = str?.split(' ') ?? []

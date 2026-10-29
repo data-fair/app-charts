@@ -20,7 +20,9 @@ import {
   staticFiltersParams,
   splitString,
   chartValueLabelDisplay,
-  stackedParam
+  stackedParam,
+  comboSeriesStyle,
+  needsSecondaryAxis
 } from '../../src/assets/utils'
 
 // formatDateLabel formate via dayjs global : aligner la locale sur le comportement
@@ -302,4 +304,31 @@ test('chartValueLabelDisplay hides empty values and auto-hides overlapping label
   expect(chartValueLabelDisplay(1)).toBe('auto')
   expect(chartValueLabelDisplay(0.5)).toBe('auto')
   expect(chartValueLabelDisplay(-3)).toBe('auto')
+})
+
+// ── Type « Graphique mixte » : styles par série ───────────────────────
+
+test('comboSeriesStyle reads type, dash and axis per column, with line/left/solid defaults', () => {
+  const chart = {
+    type: 'combo',
+    seriesStyles: [
+      { key: 'mesure', type: 'bar', axis: 'right' },
+      { key: 'objectif', type: 'line', lineDash: 'dotted' }
+    ]
+  }
+  expect(comboSeriesStyle(chart, 'mesure')).toEqual({ type: 'bar', yAxisID: 'y1' })
+  expect(comboSeriesStyle(chart, 'objectif')).toEqual({ type: 'line', yAxisID: 'y', borderDash: [2, 3] })
+  // colonne non listée : courbe pleine à gauche
+  expect(comboSeriesStyle(chart, 'autre')).toEqual({ type: 'line', yAxisID: 'y' })
+  // hors combo, aucun style : Chart.js garde ses défauts
+  expect(comboSeriesStyle({ type: 'multi-line', seriesStyles: [{ key: 'mesure', type: 'bar' }] }, 'mesure')).toEqual({})
+})
+
+// ── Axe de droite (type Graphique mixte) ────────────────────────────────────
+
+test('needsSecondaryAxis only counts series attached to the right axis', () => {
+  expect(needsSecondaryAxis({ seriesStyles: [{ key: 'a', axis: 'right' }] })).toBe(true)
+  expect(needsSecondaryAxis({ seriesStyles: [{ key: 'a', axis: 'left' }] })).toBe(false)
+  expect(needsSecondaryAxis({ type: 'multi-line' })).toBe(false)
+  expect(needsSecondaryAxis({})).toBe(false)
 })

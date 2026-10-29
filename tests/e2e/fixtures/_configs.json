@@ -1237,5 +1237,109 @@
         }
       }
     }
+  },
+  "31-combo-loyers-axes": {
+    "dataset": "loyers",
+    "comment": "combo rowsBased, une colonne en histogramme sur l'axe de droite",
+    "config": {
+      "title": "Loyer prédit et intervalle de confiance",
+      "xTitle": "Commune",
+      "yTitle": "Loyer (€/m²)",
+      "unit": "€/m²",
+      "labelsMaxWidth": 30,
+      "legendPosition": "top",
+      "chart": {
+        "type": "combo",
+        "tension": 1,
+        "hidePoints": false,
+        "yAxisStartsZero": false,
+        "seriesStyles": [
+          {
+            "key": "loypredm2",
+            "type": "line",
+            "lineDash": "solid",
+            "axis": "left"
+          },
+          {
+            "key": "lwripm2",
+            "type": "bar",
+            "lineDash": "solid",
+            "axis": "right"
+          }
+        ],
+        "config": {
+          "type": "rowsBased",
+          "labelsField": "libgeo",
+          "valuesFields": [
+            "loypredm2",
+            "lwripm2"
+          ],
+          "size": 20,
+          "rowSortBy": "value",
+          "sortOrder": "desc",
+          "dynamicSort": false,
+          "colorOrder": {
+            "type": "palette",
+            "name": "Dark2",
+            "offset": 0,
+            "seriesOrder": [
+              "loypredm2",
+              "lwripm2"
+            ]
+          }
+        },
+        "secondaryAxis": {
+          "title": "Intervalle (€/m²)",
+          "unit": "€/m²"
+        }
+      }
+    }
+  },
+  "32-objectifs-donnees": {
+    "dataset": "bpe",
+    "comment": "objectifs issus des données (objectifFields) en barres + ligne en tirets",
+    "config": {
+      "title": "Équipements et objectif",
+      "xTitle": "Indicateur",
+      "yTitle": "Moyenne",
+      "unit": "",
+      "labelsMaxWidth": 30,
+      "legendPosition": "bottom",
+      "chart": {
+        "type": "multi-bar",
+        "horizontal": false,
+        "hideYAxis": false,
+        "yAxisStartsZero": true,
+        "stacked": false,
+        "percentage": false,
+        "disableDynamicStack": true,
+        "config": {
+          "type": "aggsBasedLabels",
+          "labelsValues": [
+            "capacite",
+            "nbsalles"
+          ],
+          "valuesLabel": "reg",
+          "objectifFields": [
+            "objectif_2030"
+          ],
+          "metric": "avg",
+          "dynamicMetric": false,
+          "size": 3,
+          "missingLabel": "",
+          "colorOrder": {
+            "type": "palette",
+            "name": "Accent",
+            "offset": 0
+          }
+        }
+      },
+      "valueLabels": [
+        {
+          "value": "objectif_2030",
+          "label": "Objectif 2030"
+        }
+      ]
+    }
   }
 }

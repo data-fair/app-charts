@@ -15,6 +15,7 @@ function baseCtx (overrides: Partial<AggsBasedLabelsContext> & { chart: any }): 
     metric: 'sum',
     getValue: (v) => (v == null ? undefined : v),
     stacked: undefined,
+    theme: { colors: { error: '#FF0000' } },
     aggs: [],
     ...overrides
   }
@@ -145,6 +146,85 @@ test('boolean valuesLabel values are replaced by the configured labels', () => {
   })
   const data = transformAggsBasedLabels(ctx)
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Oui', 'Non'])
+})
+
+// ── Objectifs issus des données (objectifFields) ────────────────────────────
+
+test('objectifFields add a dashed constant line per series, on the labels axis', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      config: {
+        type: 'aggsBasedLabels',
+        valuesLabel: 'reg',
+        labelsValues: ['surface', 'population'],
+        objectifFields: ['objectif_2030'],
+        size: 10
+      }
+    },
+    fields: { objectif_2030: { label: 'Objectif 2030' } },
+    aggs: [
+      { value: 'A', metric: 30, population_sum: 12, objectif_2030_avg: 60 },
+      { value: 'B', metric: 40, population_sum: 14 } // objectif non renseigné
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  // 2 séries + 1 objectif (B n'en a pas)
+  expect(data.datasets).toHaveLength(3)
+  const target = data.datasets[2]
+  expect(target).toMatchObject({
+    type: 'line',
+    label: 'Objectif 2030 – A',
+    pointStyle: false,
+    fill: false,
+    borderColor: '#FF0000'
+  })
+  expect(target.borderDash).toEqual([6, 6])
+  expect(target.data).toEqual([60, 60])
+})
+
+test('a single series keeps the objective label unsuffixed', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-line',
+      config: { type: 'aggsBasedLabels', valuesLabel: 'reg', labelsValues: ['surface'], objectifFields: ['objectif_2030'], size: 10 }
+    },
+    fields: { objectif_2030: { label: 'Objectif 2030' } },
+    aggs: [{ value: 'A', metric: 30, objectif_2030_avg: 60 }]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  expect(data.datasets.map((d: any) => d.label)).toEqual(['A', 'Objectif 2030'])
+})
+
+test('objectives are not normalised by percentage and are ignored on radial charts', () => {
+  const base = {
+    fields: { objectif_2030: { label: 'Objectif 2030' } },
+    aggs: [
+      { value: 'A', metric: 1, objectif_2030_avg: 60 },
+      { value: 'B', metric: 1 }
+    ]
+  }
+  const percent = transformAggsBasedLabels(baseCtx({
+    chart: {
+      type: 'multi-bar',
+      percentage: true,
+      config: { type: 'aggsBasedLabels', valuesLabel: 'reg', labelsValues: ['surface'], objectifFields: ['objectif_2030'], size: 10 }
+    },
+    ...base
+  }))
+  // séries normalisées à 50/50, objectif intact
+  expect(percent.datasets[0].data).toEqual([50])
+  expect(percent.datasets[1].data).toEqual([50])
+  expect(percent.datasets[2].data).toEqual([60])
+
+  const radar = transformAggsBasedLabels(baseCtx({
+    chart: {
+      type: 'radar',
+      config: { type: 'aggsBasedLabels', valuesLabel: 'reg', labelsValues: ['surface'], objectifFields: ['objectif_2030'], size: 10 }
+    },
+    ...base
+  }))
+  expect(radar.datasets).toHaveLength(2)
 })
 
 // ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
