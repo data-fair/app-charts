@@ -267,6 +267,25 @@ export function comboSeriesStyle (chart: any, field: string): Record<string, unk
   }
 }
 
+/**
+ * Couleur d'un objectif : palette dédiée à fort contraste de teinte et de
+ * luminosité (rouge, bleu, violet), stable d'un graphique à l'autre. Volontairement
+ * indépendante des couleurs sémantiques du thème (erreur/avertissement sont deux
+ * rouges-orangés proches) et des palettes de séries.
+ */
+export function objectifColor (index: number): string {
+  const colors = ['#E53935', '#1E88E5', '#8E24AA']
+  return colors[index % colors.length]
+}
+
+/**
+ * Forme du témoin de légende : un trait pour une courbe non remplie (les tirets
+ * restent lisibles), un rectangle plein pour une aire ou des barres.
+ */
+export function legendPointStyle (dataset: { fill?: boolean } | undefined, metaType: string | undefined): 'line' | 'rect' {
+  return metaType === 'line' && !dataset?.fill ? 'line' : 'rect'
+}
+
 /** Une série est-elle rattachée à l'axe de droite ? Seul le type `combo` le permet. */
 function hasRightSeries (chart: any): boolean {
   return (chart?.seriesStyles || []).some((s: { axis?: string }) => s.axis === 'right')

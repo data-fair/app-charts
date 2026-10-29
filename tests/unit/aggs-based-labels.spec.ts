@@ -15,7 +15,6 @@ function baseCtx (overrides: Partial<AggsBasedLabelsContext> & { chart: any }): 
     metric: 'sum',
     getValue: (v) => (v == null ? undefined : v),
     stacked: undefined,
-    theme: { colors: { error: '#FF0000' } },
     aggs: [],
     ...overrides
   }
@@ -177,10 +176,38 @@ test('objectifFields add a dashed constant line per series, on the labels axis',
     label: 'Objectif 2030 – A',
     pointStyle: false,
     fill: false,
-    borderColor: '#FF0000'
+    borderColor: '#E53935'
   })
   expect(target.borderDash).toEqual([6, 6])
   expect(target.data).toEqual([60, 60])
+  // groupe d'empilement propre : la cible n'est jamais cumulée avec les séries
+  expect(target.stack).toBe('objectif-0-0')
+})
+
+test('several objectives get distinct colours and stack groups', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-line',
+      config: {
+        type: 'aggsBasedLabels',
+        valuesLabel: 'reg',
+        labelsValues: ['surface'],
+        objectifFields: ['objectif_2030', 'objectif_2050'],
+        size: 10
+      }
+    },
+    fields: { objectif_2030: { label: 'Objectif 2030' }, objectif_2050: { label: 'Objectif 2050' } },
+    aggs: [
+      { value: 'A', metric: 30, objectif_2030_avg: 60, objectif_2050_avg: 20 },
+      { value: 'B', metric: 40, objectif_2030_avg: 60, objectif_2050_avg: 20 }
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  const targets = data.datasets.slice(2)
+  expect(targets).toHaveLength(4)
+  // couleur par objectif (stable pour les deux séries), groupe de stack unique
+  expect(targets.map((d: any) => d.borderColor)).toEqual(['#E53935', '#1E88E5', '#E53935', '#1E88E5'])
+  expect(new Set(targets.map((d: any) => d.stack)).size).toBe(4)
 })
 
 test('a single series keeps the objective label unsuffixed', () => {

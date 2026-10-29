@@ -3,9 +3,10 @@ import { useI18n } from 'vue-i18n'
 import chroma from 'chroma-js'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { useSession } from '@data-fair/lib-vue/session.js'
+import { defaults } from 'chart.js'
 import type { TooltipItem } from 'chart.js'
 import { useConfig } from '@/composables/config'
-import { chartValueLabelDisplay, needsSecondaryAxis, LINE_DASH_PATTERNS } from '@/assets/utils'
+import { chartValueLabelDisplay, needsSecondaryAxis, legendPointStyle, LINE_DASH_PATTERNS } from '@/assets/utils'
 
 export function useChartOptions (): { options: ComputedRef<any> } {
   const { config, chart } = useConfig()
@@ -37,7 +38,24 @@ export function useChartOptions (): { options: ComputedRef<any> } {
         legend: {
           display: c.type !== 'pie' && !!c.config.colorOrder &&
           !(c.config.groupBy?.type === 'value' && c.config.groupBy.field === c.config.groupsField),
-          position: config.value.legendPosition || 'top'
+          position: config.value.legendPosition || 'top',
+          labels: {
+            // témoin en trait pour une courbe (les tirets restent lisibles), en
+            // rectangle plein pour une aire ou des barres
+            usePointStyle: true,
+            pointStyleWidth: 40,
+            generateLabels: (chart: any) => (defaults.plugins.legend.labels.generateLabels as (c: any) => any[])(chart)
+              .map((item: { datasetIndex: number }) => {
+                const dataset = chart.data.datasets[item.datasetIndex]
+                const pointStyle = legendPointStyle(dataset, chart.getDatasetMeta(item.datasetIndex)?.type)
+                return {
+                  ...item,
+                  pointStyle,
+                  // le témoin en trait reprend le motif et l'épaisseur de la série
+                  ...(pointStyle === 'line' ? { lineDash: dataset.borderDash, lineWidth: 3 } : {})
+                }
+              })
+          }
         },
         title: {
           display: !!config.value.title,

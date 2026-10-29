@@ -22,6 +22,8 @@ import {
   chartValueLabelDisplay,
   stackedParam,
   comboSeriesStyle,
+  legendPointStyle,
+  objectifColor,
   needsSecondaryAxis
 } from '../../src/assets/utils'
 
@@ -331,4 +333,25 @@ test('needsSecondaryAxis only counts series attached to the right axis', () => {
   expect(needsSecondaryAxis({ seriesStyles: [{ key: 'a', axis: 'left' }] })).toBe(false)
   expect(needsSecondaryAxis({ type: 'multi-line' })).toBe(false)
   expect(needsSecondaryAxis({})).toBe(false)
+})
+
+// ── Objectifs : couleur et témoin de légende ────────────────────────────────
+
+test('objectifColor gives high-contrast, stable colours per objective', () => {
+  expect(objectifColor(0)).toBe('#E53935')
+  expect(objectifColor(1)).toBe('#1E88E5')
+  expect(objectifColor(2)).toBe('#8E24AA')
+  // au-delà de 3 objectifs, la palette reprend
+  expect(objectifColor(3)).toBe('#E53935')
+})
+
+test('legendPointStyle draws a line for a curve, a rectangle for an area or bars', () => {
+  expect(legendPointStyle({ fill: false }, 'line')).toBe('line')
+  expect(legendPointStyle({}, 'line')).toBe('line')
+  // aire remplie (aires empilées, `area`)
+  expect(legendPointStyle({ fill: true }, 'line')).toBe('rect')
+  // barres, radar, camembert
+  expect(legendPointStyle({}, 'bar')).toBe('rect')
+  expect(legendPointStyle({ fill: true }, 'radar')).toBe('rect')
+  expect(legendPointStyle(undefined, undefined)).toBe('rect')
 })

@@ -401,7 +401,6 @@ export function useChartData () {
         getValue,
         stacked: reactiveSearchParams.stacked,
         metric: reactiveSearchParams.metric,
-        theme: { colors: theme.current.value.colors as unknown as Record<string, string> },
         aggs: aggsRaw.value.aggs
       })
     }

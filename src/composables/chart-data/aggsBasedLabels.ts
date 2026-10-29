@@ -1,4 +1,4 @@
-import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, CARTESIAN_TYPES, LINE_DASH_PATTERNS } from '../../assets/utils'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, objectifColor, CARTESIAN_TYPES, LINE_DASH_PATTERNS } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
 
 export interface AggsBasedLabelsContext {
@@ -10,8 +10,6 @@ export interface AggsBasedLabelsContext {
   metric: string | undefined
   getValue: (value: number | null | undefined, source?: unknown) => number | undefined
   stacked: string | undefined
-  // current value of theme.current ref (InternalThemeDefinition)
-  theme: { colors: Record<string, string> }
   // API responses
   aggs: AggItem[]
 }
@@ -60,14 +58,15 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
   // par série. La cible est constante sur l'axe du temps (moyenne des lignes de
   // la série, cf. `extra_metrics` = `<champ>:avg`) et suit le multiplicateur du
   // graphique, comme les valeurs. Ajoutée après les pourcentages pour ne pas
-  // être normalisée. Ignorée pour les types sans axe cartésien (radar).
+  // être normalisée, avec son propre groupe d'empilement pour ne jamais être
+  // cumulée avec les séries. Ignorée pour les types sans axe cartésien (radar).
   const objectifFields: string[] = chart.config.objectifFields || []
   if (objectifFields.length && CARTESIAN_TYPES.includes(chart.type)) {
-    const color = ctx.theme?.colors?.error || '#D32F2F'
-    for (const serie of series) {
-      for (const field of objectifFields) {
+    series.forEach((serie, serieIndex) => {
+      objectifFields.forEach((field, fieldIndex) => {
         const value = getValue((serie as any)[field + '_avg'], serie)
-        if (value === undefined) continue
+        if (value === undefined) return
+        const color = objectifColor(fieldIndex)
         const label = getFieldLabel(field, fields, customLabels, chart.config.removeFromLabels)
         datasets.push({
           type: 'line',
@@ -77,10 +76,11 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
           borderDash: LINE_DASH_PATTERNS.dashed,
           pointStyle: false,
           fill: false,
+          stack: 'objectif-' + fieldIndex + '-' + serieIndex,
           data: chart.config.labelsValues.map(() => value)
         })
-      }
-    }
+      })
+    })
   }
 
   return {
