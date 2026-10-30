@@ -37,3 +37,21 @@ test('no [intlify] console warnings while rendering percentages, and __PUBLIC_SI
   const intlify = warnings.filter((w) => w.includes('[intlify]'))
   expect(intlify).toEqual([])
 })
+
+// 3. l'état vide (config incomplète) monte son icône au démarrage : les icônes
+//    Vuetify sont en mdi-svg, un nom `mdi-*` serait posé comme path SVG et
+//    produirait une erreur DOM `<path> attribute d`.
+test('the empty state renders its MDI icon without DOM attribute errors', async ({ page }) => {
+  const errors: string[] = []
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') errors.push(msg.text())
+  })
+
+  await prepareChartPage(page)
+  await page.goto('/app/')
+  await injectConfig(page, { chart: { type: 'line' } })
+
+  await expect(page.locator('.v-empty-state')).toBeVisible()
+  expect(await page.locator('.v-empty-state svg path').count()).toBeGreaterThan(0)
+  expect(errors.filter((e) => e.includes('attribute d'))).toEqual([])
+})

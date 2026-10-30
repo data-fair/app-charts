@@ -2,6 +2,7 @@
 import Chart from './components/Chart.vue'
 import DfUiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { ofetch } from 'ofetch'
+import { mdiChartBar } from '@mdi/js'
 import { watch } from 'vue'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import type { Filter } from '@data-fair/lib-utils/filters/index.js'
@@ -42,7 +43,7 @@ watch(error, (message) => {
     v-else
     :title="error"
     headline="Configuration incomplète"
-    icon="mdi-chart-bar"
+    :icon="mdiChartBar"
   />
   <DfUiNotif />
 </template>
