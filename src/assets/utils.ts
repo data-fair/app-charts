@@ -253,16 +253,20 @@ export const LINE_DASH_PATTERNS: Record<string, number[]> = {
 
 /**
  * Type de tracé, motif de trait et axe d'une série du graphique « Graphique
- * mixte » (entrée de `seriesStyles` ; défaut : courbe pleine à gauche).
+ * mixte » : les colonnes de `axes.right.fields` sur l'axe de droite, toutes les
+ * autres sur l'axe de gauche (défaut : histogrammes à gauche, courbes à droite).
  * Vide pour les autres types : Chart.js garde alors le type de base et l'axe `y`.
  */
 export function comboSeriesStyle (chart: any, field: string): Record<string, unknown> {
   if (chart.type !== 'combo') return {}
-  const style = (chart.seriesStyles || []).find((s: { key?: string }) => s.key === field) || {}
-  const dash = LINE_DASH_PATTERNS[style.lineDash as string]
+  const right = chart.axes?.right
+  const isRight = (right?.fields || []).includes(field)
+  const group = (isRight ? right : chart.axes?.left) || {}
+  const type = group.type || (isRight ? 'line' : 'bar')
+  const dash = type === 'line' && LINE_DASH_PATTERNS[group.lineDash as string]
   return {
-    type: style.type === 'bar' ? 'bar' : 'line',
-    yAxisID: style.axis === 'right' ? 'y1' : 'y',
+    type,
+    yAxisID: isRight ? 'y1' : 'y',
     ...(dash ? { borderDash: dash } : {})
   }
 }
@@ -288,7 +292,7 @@ export function legendPointStyle (dataset: { fill?: boolean } | undefined, metaT
 
 /** Une série est-elle rattachée à l'axe de droite ? Seul le type `combo` le permet. */
 function hasRightSeries (chart: any): boolean {
-  return (chart?.seriesStyles || []).some((s: { axis?: string }) => s.axis === 'right')
+  return !!chart?.axes?.right?.fields?.length
 }
 
 export const CARTESIAN_TYPES = ['line', 'bar', 'multi-line', 'multi-bar', 'combo', 'paired-histogram']

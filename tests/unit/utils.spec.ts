@@ -308,29 +308,32 @@ test('chartValueLabelDisplay hides empty values and auto-hides overlapping label
   expect(chartValueLabelDisplay(-3)).toBe('auto')
 })
 
-// ── Type « Graphique mixte » : styles par série ───────────────────────
+// ── Type « Graphique mixte » : style par axe ───────────────────────
 
-test('comboSeriesStyle reads type, dash and axis per column, with line/left/solid defaults', () => {
+test('comboSeriesStyle assigns columns to the right axis and reads one style per axis', () => {
   const chart = {
     type: 'combo',
-    seriesStyles: [
-      { key: 'mesure', type: 'bar', axis: 'right' },
-      { key: 'objectif', type: 'line', lineDash: 'dotted' }
-    ]
+    axes: {
+      left: { type: 'line', lineDash: 'dotted' },
+      right: { fields: ['mesure'], type: 'bar' }
+    }
   }
   expect(comboSeriesStyle(chart, 'mesure')).toEqual({ type: 'bar', yAxisID: 'y1' })
   expect(comboSeriesStyle(chart, 'objectif')).toEqual({ type: 'line', yAxisID: 'y', borderDash: [2, 3] })
-  // colonne non listée : courbe pleine à gauche
-  expect(comboSeriesStyle(chart, 'autre')).toEqual({ type: 'line', yAxisID: 'y' })
+  // colonne non citée à droite : axe de gauche, style de gauche
+  expect(comboSeriesStyle({ type: 'combo' }, 'autre')).toEqual({ type: 'bar', yAxisID: 'y' })
+  // axe de droite sans motif : courbe pleine à droite
+  expect(comboSeriesStyle({ type: 'combo', axes: { right: { fields: ['mesure'] } } }, 'mesure')).toEqual({ type: 'line', yAxisID: 'y1' })
   // hors combo, aucun style : Chart.js garde ses défauts
-  expect(comboSeriesStyle({ type: 'multi-line', seriesStyles: [{ key: 'mesure', type: 'bar' }] }, 'mesure')).toEqual({})
+  expect(comboSeriesStyle({ type: 'multi-line', axes: { right: { fields: ['mesure'] } } }, 'mesure')).toEqual({})
 })
 
 // ── Axe de droite (type Graphique mixte) ────────────────────────────────────
 
-test('needsSecondaryAxis only counts series attached to the right axis', () => {
-  expect(needsSecondaryAxis({ seriesStyles: [{ key: 'a', axis: 'right' }] })).toBe(true)
-  expect(needsSecondaryAxis({ seriesStyles: [{ key: 'a', axis: 'left' }] })).toBe(false)
+test('needsSecondaryAxis only counts columns placed on the right axis', () => {
+  expect(needsSecondaryAxis({ axes: { right: { fields: ['a'] } } })).toBe(true)
+  expect(needsSecondaryAxis({ axes: { right: { fields: [], type: 'line' } } })).toBe(false)
+  expect(needsSecondaryAxis({ axes: { left: { type: 'bar' } } })).toBe(false)
   expect(needsSecondaryAxis({ type: 'multi-line' })).toBe(false)
   expect(needsSecondaryAxis({})).toBe(false)
 })

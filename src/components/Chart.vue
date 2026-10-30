@@ -29,11 +29,11 @@ const chartOptions = computed(() => ({ ...options.value, onClick: selection.onCl
 
 // Force chart recreation only for structural changes that Chart.js can't handle in-place:
 // - horizontal: switches indexAxis (Chart.js can't swap axes live)
-// - seriesStyles: datasets switching their type/axis keep a stale controller,
+// - axes: datasets switching their type/axis keep a stale controller,
 //   and adding a secondary scale may not be picked up on update
 const chartKey = computed(() => JSON.stringify({
   horizontal: chart.value!.horizontal,
-  seriesStyles: chart.value!.seriesStyles
+  axes: chart.value!.axes
 }))
 
 const showActions = computed(() =>

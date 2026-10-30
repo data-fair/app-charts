@@ -334,16 +334,16 @@ test('valueLabels rename value column series', () => {
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Déplacements', 'Autre'])
 })
 
-// ── Type « Graphique mixte » (type de tracé et axe par colonne) ────────
+// ── Type « Graphique mixte » (style par axe, colonnes de droite) ───────
 
-test('combo sets each dataset type, dash and yAxisID from seriesStyles', () => {
+test('combo sets each dataset type, dash and yAxisID from the axes config', () => {
   const ctx = baseCtx({
     chart: {
       type: 'combo',
-      seriesStyles: [
-        { key: 'pop', type: 'bar', axis: 'right' },
-        { key: 'taux', type: 'line', lineDash: 'dashed' }
-      ],
+      axes: {
+        left: { type: 'line', lineDash: 'dashed' },
+        right: { fields: ['pop'], type: 'bar' }
+      },
       config: {
         type: 'rowsBased',
         labelsField: 'dep',

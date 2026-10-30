@@ -339,14 +339,14 @@ test('aggsBasedCategories maps boolean sum metrics from <field>_<metric> keys', 
   expect(data.datasets[1].data).toEqual([1, 3])
 })
 
-test('combo sets each dataset type, dash and yAxisID from seriesStyles', () => {
+test('combo sets each dataset type, dash and yAxisID from the axes config', () => {
   const ctx = baseCtx({
     chart: {
       type: 'combo',
-      seriesStyles: [
-        { key: 'capacite', type: 'bar', axis: 'right' },
-        { key: 'nbsalles', type: 'line', lineDash: 'dotted' }
-      ],
+      axes: {
+        left: { type: 'line', lineDash: 'dotted' },
+        right: { fields: ['capacite'], type: 'bar' }
+      },
       config: {
         type: 'aggsBasedCategories',
         groupBy: { type: 'value', field: 'region' },

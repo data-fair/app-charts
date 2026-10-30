@@ -45,12 +45,14 @@ export function useChartOptions (): { options: ComputedRef<any> } {
             usePointStyle: true,
             pointStyleWidth: 40,
             generateLabels: (chart: any) => (defaults.plugins.legend.labels.generateLabels as (c: any) => any[])(chart)
-              .map((item: { datasetIndex: number }) => {
+              .map((item: { datasetIndex: number, text: string }) => {
                 const dataset = chart.data.datasets[item.datasetIndex]
                 const pointStyle = legendPointStyle(dataset, chart.getDatasetMeta(item.datasetIndex)?.type)
                 return {
                   ...item,
                   pointStyle,
+                  // rattache explicitement la série à l'axe de droite de ses graduations
+                  ...(dataset.yAxisID === 'y1' ? { text: item.text + ' (axe droit)' } : {}),
                   // le témoin en trait reprend le motif et l'épaisseur de la série
                   ...(pointStyle === 'line' ? { lineDash: dataset.borderDash, lineWidth: 3 } : {})
                 }
@@ -68,7 +70,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
             label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
               const value = n((c.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r, 'decimal')
               // unité de l'axe de la série (axe de droite de la config)
-              const unit = (context.dataset as { yAxisID?: string }).yAxisID === 'y1' ? c.secondaryAxis?.unit : config.value.unit
+              const unit = (context.dataset as { yAxisID?: string }).yAxisID === 'y1' ? c.axes?.right?.unit : config.value.unit
               const suffix = c.percentage ? ' %' : (unit ? ' ' + unit : '')
               return (context.dataset.label ? context.dataset.label + ' : ' : '') + value + suffix
             }
@@ -110,7 +112,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
     // axe de droite du type « Graphique mixte » : séries rattachées à droite,
     // avec leur propre titre et unité
     if (needsSecondaryAxis(c)) {
-      const axis = c.secondaryAxis || {}
+      const axis = c.axes?.right || {}
       opts.scales!.y1 = {
         position: 'right',
         beginAtZero: c.yAxisStartsZero,

@@ -1253,20 +1253,6 @@
         "tension": 1,
         "hidePoints": false,
         "yAxisStartsZero": false,
-        "seriesStyles": [
-          {
-            "key": "loypredm2",
-            "type": "line",
-            "lineDash": "solid",
-            "axis": "left"
-          },
-          {
-            "key": "lwripm2",
-            "type": "bar",
-            "lineDash": "solid",
-            "axis": "right"
-          }
-        ],
         "config": {
           "type": "rowsBased",
           "labelsField": "libgeo",
@@ -1288,9 +1274,20 @@
             ]
           }
         },
-        "secondaryAxis": {
-          "title": "Intervalle (€/m²)",
-          "unit": "€/m²"
+        "axes": {
+          "left": {
+            "type": "line",
+            "lineDash": "solid"
+          },
+          "right": {
+            "fields": [
+              "lwripm2"
+            ],
+            "type": "bar",
+            "lineDash": "solid",
+            "title": "Intervalle (€/m²)",
+            "unit": "€/m²"
+          }
         }
       }
     }

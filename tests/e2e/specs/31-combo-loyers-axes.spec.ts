@@ -33,4 +33,9 @@ test('renders a curve and a histogram, with a titled secondary axis on the right
   expect(rightTitle).toBeTruthy()
   expect(leftTitle!.x).toBeLessThan(leftTitle!.canvasWidth / 2)
   expect(rightTitle!.x).toBeGreaterThan(rightTitle!.canvasWidth / 2)
+
+  // la série de l'axe droit est rattachée explicitement à ses graduations
+  // (la légende est redessinée à chaque frame : on dédoublonne)
+  const rightLegend = [...new Set(texts.filter((t) => t.text.endsWith('(axe droit)')).map((t) => t.text))]
+  expect(rightLegend).toEqual(['Borne basse intervalle de prédiction (axe droit)'])
 })

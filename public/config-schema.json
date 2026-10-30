@@ -232,27 +232,6 @@
                   "type": "boolean",
                   "title": "Commencer à partir de 0 pour l'axe des ordonnées"
                 },
-                "seriesStyles": {
-                  "$ref": "#/$defs/seriesStyles"
-                },
-                "secondaryAxis": {
-                  "type": "object",
-                  "title": "Axe de droite",
-                  "description": "Titre et unité de l'axe de droite, utilisé par les séries en style « axe droit ».",
-                  "layout": {
-                    "if": "rootData.chart.seriesStyles?.filter(s => s.axis === 'right')?.length"
-                  },
-                  "properties": {
-                    "title": {
-                      "type": "string",
-                      "title": "Titre de l'axe"
-                    },
-                    "unit": {
-                      "type": "string",
-                      "title": "Unité"
-                    }
-                  }
-                },
                 "config": {
                   "type": "object",
                   "title": "Préparation des données",
@@ -268,6 +247,9 @@
                       "$ref": "#/$defs/aggsDataMultipleCategories"
                     }
                   ]
+                },
+                "axes": {
+                  "$ref": "#/$defs/comboAxes"
                 }
               }
             },
@@ -2556,95 +2538,122 @@
         }
       }
     },
-    "seriesStyles": {
-      "type": "array",
-      "title": "Styles des séries",
-      "description": "Type de tracé, motif de trait et axe de chaque colonne. Une colonne non listée est affichée en courbe pleine sur l'axe de gauche.",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "key"
-        ],
-        "properties": {
-          "key": {
-            "type": "string",
-            "title": "Colonne",
-            "layout": {
-              "getItems": {
-                "url": "${rootData.datasets[0].href}/schema?calculated=false",
-                "itemKey": "data[\"key\"]",
-                "itemTitle": "data[\"label\"]",
-                "itemsResults": "data.filter(f => (rootData.chart.config.valuesFields || rootData.chart.config.valuesCalc || []).includes(f.key))"
-              }
-            }
-          },
-          "type": {
-            "type": "string",
-            "title": "Tracé",
-            "default": "line",
-            "oneOf": [
-              {
-                "const": "line",
-                "title": "Courbe"
-              },
-              {
-                "const": "bar",
-                "title": "Histogramme"
-              }
-            ]
-          },
-          "lineDash": {
-            "type": "string",
-            "title": "Motif de trait",
-            "default": "solid",
-            "layout": {
-              "if": "parent.data.type !== 'bar'"
+    "comboAxes": {
+      "type": "object",
+      "title": "Axes",
+      "properties": {
+        "left": {
+          "type": "object",
+          "title": "Axe de gauche",
+          "description": "Colonnes de valeurs qui ne sont pas placées sur l'axe de droite.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "Tracé",
+              "default": "bar",
+              "oneOf": [
+                {
+                  "const": "bar",
+                  "title": "Histogramme"
+                },
+                {
+                  "const": "line",
+                  "title": "Courbe"
+                }
+              ]
             },
-            "oneOf": [
-              {
-                "const": "solid",
-                "title": "Trait plein"
+            "lineDash": {
+              "type": "string",
+              "title": "Motif de trait",
+              "default": "solid",
+              "layout": {
+                "if": "parent.data.type !== 'bar'"
               },
-              {
-                "const": "dashed",
-                "title": "Tirets"
+              "oneOf": [
+                {
+                  "const": "solid",
+                  "title": "Trait plein"
+                },
+                {
+                  "const": "dashed",
+                  "title": "Tirets"
+                },
+                {
+                  "const": "dotted",
+                  "title": "Pointillés"
+                }
+              ]
+            }
+          }
+        },
+        "right": {
+          "type": "object",
+          "title": "Axe de droite",
+          "description": "Colonnes tracées sur un second axe, à droite, avec leur propre unité. Laisser les colonnes vides pour un seul axe.",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "title": "Colonnes de l'axe de droite",
+              "items": {
+                "type": "string"
               },
-              {
-                "const": "dotted",
-                "title": "Pointillés"
+              "layout": {
+                "if": "rootData.chart.config?.valuesFields?.length || rootData.chart.config?.valuesCalc?.length",
+                "getItems": {
+                  "url": "${rootData.datasets[0].href}/schema?calculated=false",
+                  "itemKey": "data[\"key\"]",
+                  "itemTitle": "data[\"label\"]",
+                  "itemsResults": "data.filter(f => (rootData.chart.config?.valuesFields || rootData.chart.config?.valuesCalc || []).includes(f.key))"
+                }
               }
-            ]
-          },
-          "axis": {
-            "type": "string",
-            "title": "Axe",
-            "default": "left",
-            "oneOf": [
-              {
-                "const": "left",
-                "title": "Gauche"
+            },
+            "type": {
+              "type": "string",
+              "title": "Tracé",
+              "default": "line",
+              "oneOf": [
+                {
+                  "const": "bar",
+                  "title": "Histogramme"
+                },
+                {
+                  "const": "line",
+                  "title": "Courbe"
+                }
+              ]
+            },
+            "lineDash": {
+              "type": "string",
+              "title": "Motif de trait",
+              "default": "solid",
+              "layout": {
+                "if": "parent.data.type !== 'bar'"
               },
-              {
-                "const": "right",
-                "title": "Droite"
-              }
-            ]
+              "oneOf": [
+                {
+                  "const": "solid",
+                  "title": "Trait plein"
+                },
+                {
+                  "const": "dashed",
+                  "title": "Tirets"
+                },
+                {
+                  "const": "dotted",
+                  "title": "Pointillés"
+                }
+              ]
+            },
+            "title": {
+              "type": "string",
+              "title": "Titre de l'axe"
+            },
+            "unit": {
+              "type": "string",
+              "title": "Unité"
+            }
           }
         }
-      },
-      "layout": {
-        "comp": "list",
-        "itemTitle": "rootData.datasets?.[0]?.schema?.find(f => f.key === data.key)?.label || data.key",
-        "listActions": [
-          "add",
-          "edit",
-          "delete"
-        ],
-        "messages": {
-          "addItem": "Ajouter une colonne"
-        },
-        "if": "rootData.chart.config.valuesFields?.length || rootData.chart.config.valuesCalc?.length"
       }
     },
     "colorPalette": {
