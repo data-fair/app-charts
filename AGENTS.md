@@ -179,7 +179,7 @@ Dynamic controls for:
 | `rowsBased` | `rowsBased.ts` | Fetches `/lines`, maps rows to labels/datasets. Supports categories, pie "Autre" bucket, paired-histogram sign flip. Option `fillMissingLabels` (tri par libellé) : ajoute les abscisses numériques manquantes (ex. une année sans ligne) sans point ni 0, `spanGaps` sur les courbes. |
 | `aggsBased` | `aggsBased.ts` | Fetches `/values_agg` with `groupBy`. Supports groups, extra metrics, percentages. |
 | `aggsBasedCategories` | `aggsBased.ts` | Like `aggsBased` but iterates over `valuesCalc` fields as categories. |
-| `aggsBasedLabels` | `aggsBasedLabels.ts` | Fetches `/values_agg` where aggregation field = labels and metric fields = values. |
+| `aggsBasedLabels` | `aggsBasedLabels.ts` | Fetches `/values_agg` where aggregation field = labels and metric fields = values. Chaque colonne est aussi demandée en `value_count` : une colonne sans aucune valeur (count 0, ex. une année non renseignée) produit un trou et non un 0 (que `sum` renvoie à tort). |
 | `aggsLabels` | `aggsLabels.ts` | Fetches multiple `/metric_agg` calls for simple metric-per-field charts. |
 
 Chaque transform renvoie aussi `rawLabels` (valeur brute d'abscisse par index, alignée sur `labels`, `null` pour la part « Autre » camembert) : c'est ce que consomme la sélection. `aggsBasedLabels` / `aggsLabels` renvoient `null` (abscisse = colonnes, aucune entité).

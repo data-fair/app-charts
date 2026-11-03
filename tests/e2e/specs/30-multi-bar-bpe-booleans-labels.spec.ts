@@ -31,7 +31,10 @@ test('aggregates each boolean label field with metric=sum', async ({ chartPage }
   expect(params?.get('metric')).toBe('sum')
   expect(params?.get('metric_field')).toBe('indic_capa')
   expect((params?.get('extra_metrics') || '').split(',').sort()).toEqual([
+    'indic_capa:value_count',
     'indic_nbsalles:sum',
-    'irisee:sum'
+    'indic_nbsalles:value_count',
+    'irisee:sum',
+    'irisee:value_count'
   ])
 })

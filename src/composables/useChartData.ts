@@ -227,20 +227,25 @@ export function useChartData () {
       return query
     }
     // aggsBasedLabels
+    const labelsValues: string[] = c.labelsValues || []
+    const metric = reactiveSearchParams.metric || c.metric
     const labelsQuery: Record<string, any> = {
       ...baseParams.value,
       size: 0,
       field: c.valuesLabel,
       sort: c.valuesLabel,
       agg_size: c.size,
-      metric: reactiveSearchParams.metric || c.metric,
-      metric_field: c.labelsValues?.[0],
+      metric,
+      metric_field: labelsValues[0],
       finalizedAt: finalizedAt.value
     }
     const extra = mergeExtraMetrics(
-      c.labelsValues?.length > 1
-        ? c.labelsValues.slice(1).map((v: string) => v + ':' + c.metric).join(',')
+      labelsValues.length > 1
+        ? labelsValues.slice(1).map((v: string) => v + ':' + metric).join(',')
         : undefined,
+      // une colonne sans aucune valeur renvoie 0 avec sum : son décompte de
+      // valeurs permet de la distinguer d'un vrai 0 (cf. aggsBasedLabels)
+      labelsValues.map((v: string) => v + ':value_count').join(','),
       // objectifs issus des données : moyenne des lignes de la série
       (c.objectifFields || []).map((v: string) => v + ':avg').join(',') || undefined,
       divisor.value.type === 'column' ? `${divisor.value.field}:${divisor.value.metric}` : undefined

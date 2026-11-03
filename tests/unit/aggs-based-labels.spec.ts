@@ -39,6 +39,42 @@ test('one dataset per aggregation, labels from labelsValues fields', () => {
   expect(data.datasets[1].data).toEqual([40, 14])
 })
 
+test('a labelsValues column with no value (value_count = 0) is a gap, not a zero', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-line',
+      config: { type: 'aggsBasedLabels', valuesLabel: 'indicateur', labelsValues: ['y2023', 'y2024'], size: 10 }
+    },
+    aggs: [
+      // y2023 vide pour A, y2024 vrai 0 (3 valeurs) pour A
+      { value: 'A', metric: 0, y2023_value_count: 0, y2024_sum: 0, y2024_value_count: 3 },
+      // y2023 renseignée, y2024 vide pour B
+      { value: 'B', metric: 12, y2023_value_count: 1, y2024_sum: 0, y2024_value_count: 0 }
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  expect(data.datasets[0].data).toEqual([undefined, 0])
+  expect(data.datasets[1].data).toEqual([12, undefined])
+})
+
+test('percentage mode keeps missing values missing (no NaN)', () => {
+  const ctx = baseCtx({
+    chart: {
+      type: 'multi-bar',
+      percentage: true,
+      config: { type: 'aggsBasedLabels', valuesLabel: 'reg', labelsValues: ['y2023', 'y2024'], size: 10 }
+    },
+    aggs: [
+      { value: 'A', metric: 1, y2023_value_count: 1, y2024_sum: 2, y2024_value_count: 1 },
+      { value: 'B', metric: 3, y2023_value_count: 1, y2024_sum: 0, y2024_value_count: 0 }
+    ]
+  })
+  const data = transformAggsBasedLabels(ctx)
+  // y2023 : normalisé 25/75 ; y2024 : B absent, A reste à 100
+  expect(data.datasets[0].data).toEqual([25, 100])
+  expect(data.datasets[1].data).toEqual([75, undefined])
+})
+
 test('labelsValues are mapped through field labels and removeFromLabels', () => {
   const ctx = baseCtx({
     chart: {

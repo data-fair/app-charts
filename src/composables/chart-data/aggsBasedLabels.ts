@@ -42,15 +42,19 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
     pointStyle: chart.hidePoints ? false : 'circle',
     fill,
     data: chart.config.labelsValues.map((l: string, li: number) =>
-      // le diviseur est lu sur la série (agrégat du valuesLabel) : clé <champ>_<métrique>
-      getValue(!li ? serie.metric : (serie as any)[l + '_' + (ctx.metric || chart.config.metric)], serie)
+      // colonne sans aucune valeur (value_count = 0) : sum renvoie 0, on préfère un trou
+      (serie as any)[l + '_value_count'] === 0
+        ? undefined
+        // le diviseur est lu sur la série (agrégat du valuesLabel) : clé <champ>_<métrique>
+        : getValue(!li ? serie.metric : (serie as any)[l + '_' + (ctx.metric || chart.config.metric)], serie)
     )
   }))
 
   if (chart.percentage) {
     for (const i in datasets[0].data as number[]) {
       const sum = datasets.reduce((acc: number, d) => acc + ((d.data as number[])[i] || 0), 0)
-      if (sum) datasets.forEach((d) => { (d.data as number[])[i] *= 100 / sum })
+      // une valeur absente reste absente (pas de NaN) quand d'autres séries sont renseignées
+      if (sum) datasets.forEach((d) => { if ((d.data as number[])[i] != null) (d.data as number[])[i] *= 100 / sum })
     }
   }
 
