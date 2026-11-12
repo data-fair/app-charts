@@ -27,8 +27,8 @@ import {
   needsSecondaryAxis
 } from '../../src/assets/utils'
 
-// formatDateLabel formate via dayjs global : aligner la locale sur le comportement
-// de l'app (createLocaleDayjs(session.lang) en fr)
+// formatDateLabel formats via the global dayjs: align the locale with the app
+// behavior (createLocaleDayjs(session.lang) in fr)
 dayjs.locale('fr')
 
 test('splitString chunks long labels without breaking words', () => {
@@ -38,12 +38,12 @@ test('splitString chunks long labels without breaking words', () => {
 })
 
 test('stackedParam lets the config win when the toggle is disabled', () => {
-  // bascule masquée : la config fait loi, paramètre résiduel corrigé/supprimé
+  // hidden toggle: the config rules, leftover parameter corrected/removed
   expect(stackedParam(true, true, 'false')).toBe('true')
   expect(stackedParam(true, true, undefined)).toBe('true')
   expect(stackedParam(false, true, 'true')).toBeUndefined()
   expect(stackedParam(undefined, true, 'true')).toBeUndefined()
-  // bascule visible : choix existant conservé, sinon défaut de la config
+  // visible toggle: existing choice kept, otherwise the config default
   expect(stackedParam(true, false, 'false')).toBe('false')
   expect(stackedParam(true, false, undefined)).toBe('true')
   expect(stackedParam(false, false, 'true')).toBeUndefined()
@@ -68,8 +68,8 @@ test('staticFiltersParams serializes filters as REST query params', () => {
 
   expect(parse([{ type: 'in', field: { key: 'region' }, values: ['75', '92'] }]))
     .toEqual({ region_in: '75,92' })
-  // une valeur contenant une virgule (ou un guillemet) est sérialisée en JSON
-  // par lib-utils : l'API relit alors tout le paramètre en JSON
+  // a value containing a comma (or a quote) is serialized as JSON
+  // by lib-utils: the API then reads the whole parameter as JSON
   expect(parse([{ type: 'in', field: { key: 'indicateurs' }, values: ['51', '52', '51, 52'] }]))
     .toEqual({ indicateurs_in: '"51","52","51, 52"' })
   expect(parse([{ type: 'out', field: { key: 'region' }, values: ['75'] }]))
@@ -83,7 +83,7 @@ test('staticFiltersParams serializes filters as REST query params', () => {
   expect(parse([{ type: 'exists', field: { key: 'nom' } }])).toEqual({ nom_exists: ' ' })
   expect(parse([{ type: 'notExists', field: { key: 'nom' } }])).toEqual({ nom_nexists: ' ' })
 
-  // champ legacy en chaîne et encodage des valeurs
+  // legacy string field and value encoding
   expect(parse([{ type: 'in', field: 'nom', values: ['a&b'] }])).toEqual({ nom_in: 'a&b' })
 })
 
@@ -136,54 +136,54 @@ test('missingNumericLabels fills intermediate numeric labels only', () => {
   expect(missingNumericLabels([2018, 2019, 2021])).toEqual([2020])
   expect(missingNumericLabels(['2019', '2020', '2023'])).toEqual([2021, 2022])
   expect(missingNumericLabels([1, 2, 4])).toEqual([3])
-  // doublons (rowsBasedCategories) tolérés
+  // duplicates (rowsBasedCategories) tolerated
   expect(missingNumericLabels([2018, 2019, 2019, 2021])).toEqual([2020])
-  // libellés non numériques ou pas assez de points : aucun remplissage
+  // non-numeric labels or not enough points: no filling
   expect(missingNumericLabels(['Paris', 'Lyon'])).toEqual([])
   expect(missingNumericLabels([2019])).toEqual([])
   expect(missingNumericLabels([null, 2019, 2021])).toEqual([])
   expect(missingNumericLabels(['2019-01-01', '2021-01-01'])).toEqual([])
-  // garde-fou : pas de remplissage démesuré
+  // guard: no oversized filling
   expect(missingNumericLabels([0, 1000000])).toEqual([])
 })
 
 test('normalizeDivider accepts column configs and falls back to none', () => {
   expect(normalizeDivider(undefined)).toEqual({ type: 'none' })
   expect(normalizeDivider(null)).toEqual({ type: 'none' })
-  expect(normalizeDivider(12)).toEqual({ type: 'none' }) // ancien format nombre global : géré par le multiplicateur
+  expect(normalizeDivider(12)).toEqual({ type: 'none' }) // legacy global number format: handled by the multiplier
   expect(normalizeDivider({ type: 'none' })).toEqual({ type: 'none' })
   expect(normalizeDivider({ type: 'column', field: 'pop' })).toEqual({ type: 'column', field: 'pop', metric: 'sum' })
   expect(normalizeDivider({ type: 'column', field: 'pop', metric: 'avg' })).toEqual({ type: 'column', field: 'pop', metric: 'avg' })
-  expect(normalizeDivider({ type: 'column' })).toEqual({ type: 'none' }) // incomplet
+  expect(normalizeDivider({ type: 'column' })).toEqual({ type: 'none' }) // incomplete
   expect(normalizeDivider({ type: 'column', field: '', metric: 'sum' })).toEqual({ type: 'none' })
   expect(normalizeDivider({ type: 'groupCount' })).toEqual({ type: 'groupCount' })
   expect(normalizeDivider({ type: 'totalCount' })).toEqual({ type: 'totalCount' })
-  expect(normalizeDivider({ type: 'totalCount', field: 'pop' })).toEqual({ type: 'totalCount' }) // résidu d'ancienne branche ignoré
-  expect(normalizeDivider({ type: 'count' })).toEqual({ type: 'none' }) // type inconnu
+  expect(normalizeDivider({ type: 'totalCount', field: 'pop' })).toEqual({ type: 'totalCount' }) // leftover from a former branch ignored
+  expect(normalizeDivider({ type: 'count' })).toEqual({ type: 'none' }) // unknown type
 })
 
 test('extractDividerValue reads rows, agg items and pre-aggregated numbers', () => {
   const divider = { type: 'column', field: 'pop', metric: 'sum' } as const
-  expect(extractDividerValue({ pop: 42 }, divider)).toBe(42) // ligne : valeur brute de la colonne
-  expect(extractDividerValue({ pop_sum: 42 }, divider)).toBe(42) // item d'agrégat : métrique additionnelle
+  expect(extractDividerValue({ pop: 42 }, divider)).toBe(42) // row: raw column value
+  expect(extractDividerValue({ pop_sum: 42 }, divider)).toBe(42) // aggregate item: additional metric
   expect(extractDividerValue({ pop_sum: '42' }, divider)).toBe(42)
   expect(extractDividerValue({ pop_sum: Number.NaN }, divider)).toBeUndefined()
   expect(extractDividerValue({}, divider)).toBeUndefined()
   expect(extractDividerValue(undefined, divider)).toBeUndefined()
-  expect(extractDividerValue(120, divider)).toBe(120) // agrégat global déjà extrait
+  expect(extractDividerValue(120, divider)).toBe(120) // global aggregate already extracted
   expect(extractDividerValue(Number.NaN, divider)).toBeUndefined()
   expect(extractDividerValue({ pop_sum: 42 }, { type: 'none' })).toBeUndefined()
 })
 
 test('extractDividerValue reads the group line count and pre-aggregated totals', () => {
   const groupCount = { type: 'groupCount' } as const
-  expect(extractDividerValue({ total: 7 }, groupCount)).toBe(7) // item d'agrégat : nombre de lignes du groupe
+  expect(extractDividerValue({ total: 7 }, groupCount)).toBe(7) // aggregate item: number of rows in the group
   expect(extractDividerValue({ total: '7' }, groupCount)).toBe(7)
-  expect(extractDividerValue({}, groupCount)).toBeUndefined() // ligne rowsBased : pas de total propre
-  expect(extractDividerValue(120, groupCount)).toBe(120) // bucket « Autre » : total déjà sommé
+  expect(extractDividerValue({}, groupCount)).toBeUndefined() // rowsBased row: no own total
+  expect(extractDividerValue(120, groupCount)).toBe(120) // « Autre » bucket: total already summed
   const totalCount = { type: 'totalCount' } as const
-  expect(extractDividerValue(120, totalCount)).toBe(120) // valeur globale déjà extraite
-  expect(extractDividerValue({ total: 7 }, totalCount)).toBeUndefined() // totalCount ne se lit pas source par source
+  expect(extractDividerValue(120, totalCount)).toBe(120) // global value already extracted
+  expect(extractDividerValue({ total: 7 }, totalCount)).toBeUndefined() // totalCount is not read source by source
 })
 
 test('hasUsableDivider only gates column dividers', () => {
@@ -199,7 +199,7 @@ test('hasUsableDivider gates groupCount dividers, not totalCount', () => {
   expect(hasUsableDivider({ total: 0 }, groupCount)).toBe(false)
   expect(hasUsableDivider({}, groupCount)).toBe(false)
   expect(hasUsableDivider({ total: 3 }, groupCount)).toBe(true)
-  expect(hasUsableDivider({}, { type: 'totalCount' })).toBe(true) // gating global, dans getValue
+  expect(hasUsableDivider({}, { type: 'totalCount' })).toBe(true) // global gating, in getValue
 })
 
 test('getValueLabel applies boolean labels to true/false values', () => {
@@ -208,10 +208,10 @@ test('getValueLabel applies boolean labels to true/false values', () => {
   expect(getValueLabel(false, undefined, labels)).toBe('Non')
   expect(getValueLabel('true', undefined, labels)).toBe('Oui')
   expect(getValueLabel('false', undefined, labels)).toBe('Non')
-  // valeurs non booléennes intactes
+  // non-boolean values untouched
   expect(getValueLabel('Paris', undefined, labels)).toBe('Paris')
   expect(getValueLabel(3, undefined, labels)).toBe('3')
-  // 0/1 non remplacés sans l'option numérique
+  // 0/1 not replaced without the numeric option
   expect(getValueLabel(0, undefined, labels)).toBe('0')
   expect(getValueLabel(1, undefined, labels)).toBe('1')
   expect(getValueLabel('0', undefined, labels)).toBe('0')
@@ -224,7 +224,7 @@ test('getValueLabel applies numeric booleans only when opted in', () => {
   expect(getValueLabel(1, undefined, labels)).toBe('Oui')
   expect(getValueLabel('0', undefined, labels)).toBe('Non')
   expect(getValueLabel('1', undefined, labels)).toBe('Oui')
-  // autres valeurs numériques intactes
+  // other numeric values untouched
   expect(getValueLabel(2, undefined, labels)).toBe('2')
   expect(getValueLabel('10', undefined, labels)).toBe('10')
 })
@@ -234,7 +234,7 @@ test('getValueLabel keeps x-labels priority and tolerates a missing config', () 
   expect(getValueLabel('Paris', field)).toBe('Paris (75)')
   expect(getValueLabel(true, field)).toBe('Oui')
   expect(getValueLabel(false, field)).toBe('Non')
-  // comportement historique sans config : valeurs brutes
+  // historical behavior without config: raw values
   expect(getValueLabel(true, undefined)).toBe('true')
   expect(getValueLabel(false, undefined)).toBe('false')
   expect(getValueLabel('Aix', undefined)).toBe('Aix')
@@ -264,18 +264,18 @@ test('createValueLabeler applies valueLabels then falls back to x-labels and leg
   expect(valueLabel(true)).toBe('Oui')
   expect(valueLabel(0)).toBe('Non')
   expect(valueLabel(2)).toBe('2')
-  // sans config : valeur brute
+  // without config: raw value
   expect(createValueLabeler(undefined)('75')).toBe('75')
 })
 
 test('removeFromLabels shortens value labels (axis and legend) and trims the remainder', () => {
   const prefix = "Quantités totales d'émissions de :"
-  // la valeur du dataset contient un espace de plus que le texte saisi
+  // the dataset value contains one more space than the typed text
   expect(getValueLabel("Quantités totales d'émissions de :  Ammoniac", undefined, undefined, undefined, prefix)).toBe('Ammoniac')
   expect(getValueLabel('Paris', { 'x-labels': { Paris: 'Ville de Paris' } }, undefined, undefined, 'Ville de ')).toBe('Paris')
-  // un libellé renommé via valueLabels n'est pas retouché
+  // a label renamed via valueLabels is not altered
   expect(getValueLabel('Paris', undefined, undefined, { Paris: 'Ville de Paris' }, 'Ville de ')).toBe('Ville de Paris')
-  // et le résolveur le propage
+  // and the resolver propagates it
   expect(createValueLabeler({}, 'Voiture ')('Voiture électrique')).toBe('électrique')
   expect(createValueLabeler(undefined, 'Voiture ')('Vélo')).toBe('Vélo')
 })
@@ -289,13 +289,13 @@ test('getFieldLabel overrides a column label and applies removeFromLabels to the
 })
 
 test('compareLabels orders numeric labels by value and text naturally', () => {
-  // tranches numériques : ordre numérique et non lexicographique
+  // numeric ranges: numeric order, not lexicographic
   expect(['100', '102', '180', '28', '30', '98'].sort(compareLabels)).toEqual(['28', '30', '98', '100', '102', '180'])
-  // décimales hétérogènes
+  // heterogeneous decimals
   expect(['1.5', '1.25', '1.10'].sort(compareLabels)).toEqual(['1.10', '1.25', '1.5'])
-  // nombres inclus dans une chaîne : collation naturelle
+  // numbers inside a string: natural collation
   expect(['10 m', '2 m', '1 m'].sort(compareLabels)).toEqual(['1 m', '2 m', '10 m'])
-  // libellés texte : collation locale
+  // text labels: locale collation
   expect(['Oui', 'Non'].sort(compareLabels)).toEqual(['Non', 'Oui'])
 })
 
@@ -308,7 +308,7 @@ test('chartValueLabelDisplay hides empty values and auto-hides overlapping label
   expect(chartValueLabelDisplay(-3)).toBe('auto')
 })
 
-// ── Type « Graphique mixte » : style par axe ───────────────────────
+// ── « Graphique mixte » type: style per axis ───────────────────────
 
 test('comboSeriesStyle assigns columns to the right axis and reads one style per axis', () => {
   const chart = {
@@ -320,15 +320,15 @@ test('comboSeriesStyle assigns columns to the right axis and reads one style per
   }
   expect(comboSeriesStyle(chart, 'mesure')).toEqual({ type: 'bar', yAxisID: 'y1' })
   expect(comboSeriesStyle(chart, 'objectif')).toEqual({ type: 'line', yAxisID: 'y', borderDash: [2, 3] })
-  // colonne non citée à droite : axe de gauche, style de gauche
+  // column not listed on the right: left axis, left style
   expect(comboSeriesStyle({ type: 'combo' }, 'autre')).toEqual({ type: 'bar', yAxisID: 'y' })
-  // axe de droite sans motif : courbe pleine à droite
+  // right axis without dash pattern: solid line on the right
   expect(comboSeriesStyle({ type: 'combo', axes: { right: { fields: ['mesure'] } } }, 'mesure')).toEqual({ type: 'line', yAxisID: 'y1' })
-  // hors combo, aucun style : Chart.js garde ses défauts
+  // outside combo, no style: Chart.js keeps its defaults
   expect(comboSeriesStyle({ type: 'multi-line', axes: { right: { fields: ['mesure'] } } }, 'mesure')).toEqual({})
 })
 
-// ── Axe de droite (type Graphique mixte) ────────────────────────────────────
+// ── Right axis (Graphique mixte type) ───────────────────────────────────────
 
 test('needsSecondaryAxis only counts columns placed on the right axis', () => {
   expect(needsSecondaryAxis({ axes: { right: { fields: ['a'] } } })).toBe(true)
@@ -338,22 +338,22 @@ test('needsSecondaryAxis only counts columns placed on the right axis', () => {
   expect(needsSecondaryAxis({})).toBe(false)
 })
 
-// ── Objectifs : couleur et témoin de légende ────────────────────────────────
+// ── Targets: color and legend marker ────────────────────────────────────────
 
 test('objectifColor gives high-contrast, stable colours per objective', () => {
   expect(objectifColor(0)).toBe('#E53935')
   expect(objectifColor(1)).toBe('#1E88E5')
   expect(objectifColor(2)).toBe('#8E24AA')
-  // au-delà de 3 objectifs, la palette reprend
+  // beyond 3 targets, the palette starts over
   expect(objectifColor(3)).toBe('#E53935')
 })
 
 test('legendPointStyle draws a line for a curve, a rectangle for an area or bars', () => {
   expect(legendPointStyle({ fill: false }, 'line')).toBe('line')
   expect(legendPointStyle({}, 'line')).toBe('line')
-  // aire remplie (aires empilées, `area`)
+  // filled area (stacked areas, `area`)
   expect(legendPointStyle({ fill: true }, 'line')).toBe('rect')
-  // barres, radar, camembert
+  // bars, radar, pie
   expect(legendPointStyle({}, 'bar')).toBe('rect')
   expect(legendPointStyle({ fill: true }, 'radar')).toBe('rect')
   expect(legendPointStyle(undefined, undefined)).toBe('rect')

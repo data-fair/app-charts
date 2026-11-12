@@ -1,20 +1,21 @@
-// Transverse — libellés de valeurs des barres (hideYAxis) : un libellé centré
-// dans un segment empilé trop petit pour le contenir ne doit pas chevaucher
-// celui d'un segment voisin (display: 'auto' de chartjs-plugin-datalabels).
-// Le rendu canvas est observé en instrumentant clearRect (une frame de dessin
-// par clear) et fillText (position, police et métriques de chaque texte) :
-// les boîtes des libellés gras numériques de la dernière frame sont ensuite
-// comparées deux à deux.
-import { test, expect, type Page } from '@playwright/test'
+// Transverse — bar value labels (hideYAxis): a label centered
+// in a stacked segment too small to contain it must not overlap
+// the one of a neighboring segment (display: 'auto' of chartjs-plugin-datalabels).
+// The canvas render is observed by instrumenting clearRect (one draw frame
+// per clear) and fillText (position, font and metrics of each text):
+// the boxes of the bold numeric labels of the last frame are then
+// compared pairwise.
+import type { Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 import { prepareChartPage } from '../helpers/test-fixture'
 import { mockDataFairApi } from '../helpers/mock-api'
 import { injectConfig, waitForChart } from '../helpers/inject-config'
 import { datasets, makeDatasetEntry } from '../fixtures/datasets'
 import { configs } from '../fixtures/configs'
 
-// Deux régions empilées public/privé/associatif/autre : les trois derniers
-// segments ont une valeur minuscule, leurs libellés centrés se chevauchent
-// sans masquage automatique.
+// Two stacked regions public/private/associative/other: the last three
+// segments have a tiny value, their centered labels overlap
+// without automatic hiding.
 const stackedWithTinySegments = {
   aggs: [
     {
@@ -65,7 +66,7 @@ function setupCanvasTextCapture (page: Page) {
       if (frame) {
         const metrics = this.measureText(text)
         const transform = this.getTransform()
-        // coordonnées canvas réelles : le plugin translate le contexte avant fillText
+        // real canvas coordinates: the plugin translates the context before fillText
         frame.push({
           text: String(text),
           x: transform.a * x + transform.c * y + transform.e,
@@ -98,14 +99,14 @@ test('value labels of tiny stacked segments do not overlap', async ({ page }) =>
     datasets: [makeDatasetEntry(entry.dataset)]
   })
   await waitForChart(page)
-  // laisser l'animation se terminer : la dernière frame capturée est stable
+  // let the animation finish: the last captured frame is stable
   await page.waitForTimeout(2000)
 
   const result = await page.evaluate(() => {
     const w = window as unknown as { __textFrames: CapturedText[][] }
     const frame = w.__textFrames[w.__textFrames.length - 1] ?? []
-    // libellés de valeurs : seuls textes gras chiffrés (les titres d'axes et la
-    // légende ne sont pas gras, le titre du graphique n'est pas chiffré)
+    // value labels: only bold numeric texts (axis titles and the
+    // legend are not bold, the chart title is not numeric)
     const boxes = frame
       .filter(t => /bold/.test(t.font) && /\d/.test(t.text))
       .map(t => {

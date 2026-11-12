@@ -42,9 +42,9 @@ testBpe('multi-bar with disableDynamicStack=false renders a stack switch', async
   await expect(actionsContainer.locator('.v-switch')).toBeVisible()
 })
 
-// disableDynamicStack=true : la bascule est masquée, aucun conteneur d'actions
-// vide ne subsiste, et la config (stacked: true) fait loi sur un ?stacked=...
-// résiduel (URL partagée, ancienne session).
+// disableDynamicStack=true: the toggle is hidden, no empty actions container
+// remains, and the config (stacked: true) overrides a leftover ?stacked=...
+// (shared URL, former session).
 test('disableDynamicStack hides the stack switch and clears a stale stacked param', async ({ page }) => {
   await prepareChartPage(page)
   await page.goto('/app/?stacked=false')

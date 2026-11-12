@@ -1,5 +1,6 @@
-import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, comboSeriesStyle, type DividerConfig } from '../../assets/utils'
+import type { DividerConfig } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
+import { getColors, getOrderedLabels, splitString, formatDateLabel, fillMissingDateAggs, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, comboSeriesStyle } from '../../assets/utils'
 
 export interface AggsBasedContext {
   config: any
@@ -8,7 +9,7 @@ export interface AggsBasedContext {
   finalizedAt: string | undefined
   baseParams: Record<string, string>
   getValue: (value: number | null | undefined, source?: unknown) => number | undefined
-  // diviseur normalisé (chart.config.divider) — agrégat par libellé, lu dans le même values_agg
+  // normalized divider (chart.config.divider) — aggregate per label, read in the same values_agg
   divider: DividerConfig
   stacked: string | undefined
   metric: string | undefined
@@ -45,7 +46,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
 
   const limitedAggs = aggs.slice(0, chart.config.size)
   const rawLabels = limitedAggs.map((a) => (a.value as any) + '')
-  // valeurs brutes d'abscisse, alignées sur `labels` : les entités sélectionnables
+  // raw x-axis values, aligned with `labels`: the selectable entities
   let selectionValues: (string | null)[] = [...rawLabels]
   const shouldFormatDateLabels = chart.config.groupBy?.type === 'date'
   const dateInterval = chart.config.groupBy?.interval || 'value'
@@ -81,7 +82,7 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         fill,
         data: limitedAggs.map((a) => {
           const val = (a.aggs || []).find((ag) => (ag.value + '') === label)
-          // le diviseur est lu sur l'agrégat du libellé (a) : même diviseur pour toutes les séries
+          // the divider is read on the label aggregate (a): same divider for all series
           return val ? getValue(chart.config.valueCalc && chart.config.valueCalc.type === 'metric' ? val.metric : val.total, a) : undefined
         })
       }))
@@ -127,10 +128,10 @@ export default function transformAggsBased (ctx: AggsBasedContext) {
         if (chart.type === 'pie' && apiAggs.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          // la part « Autre » n'est pas une entité sélectionnable
+          // the « Autre » slice is not a selectable entity
           selectionValues.push(null)
-          // part « Autre » : ratio des totaux — un agrégat sans valeur ou sans
-          // diviseur exploitable est exclu du bucket (valeur masquée)
+          // « Autre » slice: ratio of totals — an aggregate without value or without
+          // usable divider is excluded from the bucket (value hidden)
           const isMetric = chart.config.valueCalc && chart.config.valueCalc.type === 'metric'
           const others = apiAggs.slice(chart.config.size).filter((a) =>
             (isMetric ? a.metric : a.total) != null && hasUsableDivider(a, ctx.divider)

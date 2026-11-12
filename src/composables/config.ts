@@ -1,6 +1,7 @@
-import { inject, computed, ref, type App, type Ref } from 'vue'
+import type { App, Ref } from 'vue'
 import type { Dataset, Field } from '@data-fair/lib-common-types/application/index.js'
 import type { AnyChart, AnyChartConfig, AnyConfig } from '@/types'
+import { inject, computed, ref } from 'vue'
 
 export interface ConfigState {
   config: Ref<AnyConfig>

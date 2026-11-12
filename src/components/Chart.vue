@@ -24,7 +24,7 @@ const { config, chart, dynamicMetric } = useConfig()
 const { data, selection } = useChartData()
 const { options } = useChartOptions()
 
-// sélection inter-app : le clic émet la clé de son champ d'abscisse dans l'URL
+// inter-app selection: a click emits the key of its x-axis field in the URL
 const chartOptions = computed(() => ({ ...options.value, onClick: selection.onClick }))
 
 // Force chart recreation only for structural changes that Chart.js can't handle in-place:
@@ -55,8 +55,8 @@ const chartTypeLabels: Record<string, string> = {
   'paired-histogram': 'Paire d\'histogrammes'
 }
 
-// alternative textuelle du canvas (RGAA 1.1) : titre de la configuration, sinon
-// le libellé du type de graphique
+// text alternative of the canvas (RGAA 1.1): configuration title, otherwise
+// the chart type label
 const ariaLabel = computed(() => config.value?.title || chartTypeLabels[chartType.value || ''] || 'Graphique')
 </script>
 

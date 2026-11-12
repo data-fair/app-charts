@@ -1,8 +1,9 @@
+import type { AnyChartConfig } from '@/types'
+import type { Filter } from '@data-fair/lib-utils/filters/index.js'
+import type { AggItem } from '@/composables/useChartData'
 import chroma from 'chroma-js'
 import dayjs from 'dayjs'
-import type { AnyChartConfig } from '@/types'
-import { filters2params, type Filter } from '@data-fair/lib-utils/filters/index.js'
-import type { AggItem } from '@/composables/useChartData'
+import { filters2params } from '@data-fair/lib-utils/filters/index.js'
 
 export function formatDateLabel (value: string, interval: string): string {
   const d = dayjs(value)
@@ -18,24 +19,24 @@ export function formatDateLabel (value: string, interval: string): string {
 }
 
 // ──────────────────────────────────────────────────────────────────
-// Surcharge des libellés (config.valueLabels) — pure helpers
+// Label overrides (config.valueLabels) — pure helpers
 // ──────────────────────────────────────────────────────────────────
 
-/** Ancien format booléen (config.booleanLabels), conservé en repli des configs existantes */
+/** Legacy boolean format (config.booleanLabels), kept as a fallback for existing configs */
 export interface BooleanLabels {
   trueLabel?: string
   falseLabel?: string
-  /** Remplacer aussi les libellés « 0 » et « 1 » (colonnes numériques utilisées comme booléens) */
+  /** Also replace the « 0 » and « 1 » labels (numeric columns used as booleans) */
   numericBooleans?: boolean
 }
 
-/** Surcharge de libellé : `value` est une valeur brute de colonne ou une clé de colonne */
+/** Label override: `value` is a raw column value or a column key */
 export interface ValueLabel {
   value: string | number
   label: string
 }
 
-/** Table de correspondance valeur -> libellé (entrées sans valeur ou sans libellé ignorées) */
+/** Value -> label lookup table (entries without value or label are ignored) */
 export function valueLabelsMap (valueLabels?: ValueLabel[]): Record<string, string> {
   const map: Record<string, string> = {}
   for (const entry of valueLabels || []) {
@@ -46,21 +47,21 @@ export function valueLabelsMap (valueLabels?: ValueLabel[]): Record<string, stri
 }
 
 /**
- * Retire `removeFromLabels` d'un libellé affiché (première occurrence) et nettoie
- * les espaces résiduels : la valeur du dataset peut contenir un espace de plus
- * que le texte saisi dans le formulaire.
+ * Removes `removeFromLabels` from a displayed label (first occurrence) and cleans
+ * leftover spaces: the dataset value may contain one more space
+ * than the text typed in the form.
  */
 export function stripLabel (label: string, removeFromLabels?: string): string {
   return removeFromLabels ? label.replace(removeFromLabels, '').trim() : label
 }
 
 /**
- * Libellé affiché pour une valeur brute de colonne :
- * 1. surcharge `valueLabels` de la config du graphique (jamais retouchée par `removeFromLabels`)
- * 2. correspondance `x-labels` du schéma du dataset (comportement historique)
- * 3. libellés booléens de l'ancienne config `booleanLabels` (true/false, et 0/1 si numericBooleans)
- * 4. valeur brute telle quelle
- * `removeFromLabels` est ensuite retiré des cas 2 à 4.
+ * Displayed label for a raw column value:
+ * 1. `valueLabels` override from the chart config (never altered by `removeFromLabels`)
+ * 2. `x-labels` mapping from the dataset schema (historical behavior)
+ * 3. boolean labels from the legacy `booleanLabels` config (true/false, and 0/1 if numericBooleans)
+ * 4. raw value as is
+ * `removeFromLabels` is then removed in cases 2 to 4.
  */
 export function getValueLabel (raw: unknown, field: any, booleanLabels?: BooleanLabels, customLabels?: Record<string, string>, removeFromLabels?: string): string {
   const override = customLabels?.[String(raw)]
@@ -79,15 +80,15 @@ export function getValueLabel (raw: unknown, field: any, booleanLabels?: Boolean
   return strip(String(raw))
 }
 
-/** Résolveur de libellés d'un graphique : `valueLabels`, puis x-labels, puis repli booléen legacy */
+/** Label resolver of a chart: `valueLabels`, then x-labels, then legacy boolean fallback */
 export function createValueLabeler (config?: { valueLabels?: ValueLabel[]; booleanLabels?: BooleanLabels }, removeFromLabels?: string) {
   const customLabels = valueLabelsMap(config?.valueLabels)
   return (raw: unknown, field?: any) => getValueLabel(raw, field, config?.booleanLabels, customLabels, removeFromLabels)
 }
 
 /**
- * Libellé d'un axe ou d'une série défini par une colonne : surcharge `valueLabels`
- * (clé = clé de colonne), sinon libellé du champ, puis `removeFromLabels` retiré.
+ * Label of an axis or series defined by a column: `valueLabels` override
+ * (key = column key), otherwise the field label, then `removeFromLabels` removed.
  */
 export function getFieldLabel (key: string, fields: Record<string, any>, customLabels?: Record<string, string>, removeFromLabels?: string): string {
   if (customLabels?.[key]) return customLabels[key]
@@ -96,10 +97,10 @@ export function getFieldLabel (key: string, fields: Record<string, any>, customL
 }
 
 /**
- * Comparaison de libellés pour le tri « par libellé » : quand les deux
- * libellés sont numériques (tranches d'intervalle, valeurs exactes d'une
- * colonne numérique), comparer les valeurs numériques ; sinon collation
- * locale naturelle (nombres inclus dans une chaîne).
+ * Label comparison for the « by label » sort: when both
+ * labels are numeric (interval ranges, exact values of a
+ * numeric column), compare the numeric values; otherwise natural
+ * locale collation (numbers included in a string).
  */
 export function compareLabels (labelA: string, labelB: string): number {
   const numA = labelA.trim() === '' ? Number.NaN : Number(labelA)
@@ -148,30 +149,30 @@ export function normalizeFilters (filters: Filter[]) {
 }
 
 /**
- * Filtres statiques sérialisés en paramètres REST (`_in`, `_gte`...), pour les
- * URLs `getItems` du config-schema (listes de valeurs et cardinalité contextuelle).
+ * Static filters serialized as REST parameters (`_in`, `_gte`...), for the
+ * `getItems` URLs of the config-schema (value lists and contextual cardinality).
  */
 export function staticFiltersParams (filters?: Filter[]): string {
   return new URLSearchParams(filters2params(normalizeFilters(filters as Filter[]) as Filter[])).toString()
 }
 
 // ──────────────────────────────────────────────────────────────────
-// Diviseur (chart.config.divider) — pure helpers, unit-tested
+// Divider (chart.config.divider) — pure helpers, unit-tested
 // ──────────────────────────────────────────────────────────────────
 
 export interface DividerConfig {
   type: 'none' | 'column' | 'groupCount' | 'totalCount'
-  /** Colonne du dataset portant les valeurs de division (type "column") */
+  /** Dataset column holding the division values (type "column") */
   field?: string
-  /** Agrégat appliqué à la colonne pour chaque groupe (type "column") */
+  /** Aggregate applied to the column for each group (type "column") */
   metric?: string
 }
 
 /**
- * Normalise la configuration du diviseur d'un graphique.
- * Tout format inattendu (absent, incomplet, ancien nombre global géré par le
- * multiplicateur) est interprété comme « pas de diviseur ». Les résidus de
- * propriétés d'une ancienne branche du formulaire sont ignorés.
+ * Normalizes the divider configuration of a chart.
+ * Any unexpected format (missing, incomplete, legacy global number handled by the
+ * multiplier) is interpreted as « no divider ». Leftover properties
+ * from a former form branch are ignored.
  */
 export function normalizeDivider (raw: unknown): DividerConfig {
   if (!raw || typeof raw !== 'object') return { type: 'none' }
@@ -184,12 +185,12 @@ export function normalizeDivider (raw: unknown): DividerConfig {
 }
 
 /**
- * Extrait la valeur de division d'une source :
- * - item d'agrégat (/values_agg) : métrique additionnelle `<field>_<metric>`
- *   pour une colonne, nombre de lignes du groupe (`total`) pour un groupCount
- * - ligne du dataset (/lines) : propriété brute `<field>`
- * - nombre déjà agrégé (/metric_agg global ou totalCount de /lines) :
- *   utilisé directement
+ * Extracts the division value from a source:
+ * - aggregate item (/values_agg): additional metric `<field>_<metric>`
+ *   for a column, number of rows in the group (`total`) for a groupCount
+ * - dataset row (/lines): raw property `<field>`
+ * - already aggregated number (global /metric_agg or totalCount of /lines):
+ *   used directly
  */
 export function extractDividerValue (source: unknown, divider: DividerConfig): number | undefined {
   if (divider.type === 'none') return undefined
@@ -209,10 +210,10 @@ export function extractDividerValue (source: unknown, divider: DividerConfig): n
 }
 
 /**
- * Une source est « divisible » quand le diviseur ne se lit pas source par
- * source (totalCount : valeur globale, gérée dans getValue) ou quand il porte
- * une valeur exploitable (numérique non nulle). Dans le cas contraire la
- * valeur du graphique est masquée.
+ * A source is « divisible » when the divider is not read source by
+ * source (totalCount: global value, handled in getValue) or when it carries
+ * a usable value (numeric, non-zero). Otherwise the
+ * chart value is hidden.
  */
 export function hasUsableDivider (source: unknown, divider: DividerConfig): boolean {
   if (divider.type === 'none' || divider.type === 'totalCount') return true
@@ -221,12 +222,12 @@ export function hasUsableDivider (source: unknown, divider: DividerConfig): bool
 }
 
 /**
- * Valeur à appliquer au paramètre d'URL `stacked` pour refléter la config.
- * - bascule désactivée (`disableDynamicStack`) : la config fait loi, un
- *   paramètre résiduel (URL partagée, session précédente) est corrigé/supprimé ;
- * - bascule visible : un choix existant (URL/utilisateur) est conservé, sinon
- *   la valeur par défaut de la config s'applique.
- * `undefined` signifie « supprimer le paramètre ».
+ * Value to apply to the `stacked` URL parameter to reflect the config.
+ * - toggle disabled (`disableDynamicStack`): the config rules, a
+ *   leftover parameter (shared URL, previous session) is corrected/removed;
+ * - toggle visible: an existing choice (URL/user) is kept, otherwise
+ *   the config default applies.
+ * `undefined` means « remove the parameter ».
  */
 export function stackedParam (stacked: boolean | undefined, disabled: boolean | undefined, current: string | undefined): string | undefined {
   if (disabled) return stacked ? 'true' : undefined
@@ -235,27 +236,27 @@ export function stackedParam (stacked: boolean | undefined, disabled: boolean | 
 }
 
 /**
- * Affichage d'un libellé de valeur sur une barre (chartjs-plugin-datalabels) :
- * - false pour une valeur absente ou nulle : pas de modèle vide, qui
- *   perturberait la détection de chevauchement des autres libellés
- * - 'auto' sinon : le plugin masque le libellé s'il en chevauche un autre
- *   (petits segments empilés, barres fines), la valeur reste dans l'infobulle
+ * Display of a value label on a bar (chartjs-plugin-datalabels):
+ * - false for a missing or zero value: no empty template, which
+ *   would disturb the overlap detection of the other labels
+ * - 'auto' otherwise: the plugin hides the label if it overlaps another one
+ *   (small stacked segments, thin bars), the value stays in the tooltip
  */
 export function chartValueLabelDisplay (value: unknown): false | 'auto' {
   return value === null || value === undefined || value === 0 ? false : 'auto'
 }
 
-/** Motifs de trait partagés par les options globales et les séries du type « Graphique mixte ». */
+/** Dash patterns shared by the global options and the series of the « Graphique mixte » type. */
 export const LINE_DASH_PATTERNS: Record<string, number[]> = {
   dashed: [6, 6],
   dotted: [2, 3]
 }
 
 /**
- * Type de tracé, motif de trait et axe d'une série du graphique « Graphique
- * mixte » : les colonnes de `axes.right.fields` sur l'axe de droite, toutes les
- * autres sur l'axe de gauche (défaut : histogrammes à gauche, courbes à droite).
- * Vide pour les autres types : Chart.js garde alors le type de base et l'axe `y`.
+ * Plot type, dash pattern and axis of a series of the « Graphique
+ * mixte » chart: the columns of `axes.right.fields` on the right axis, all the
+ * others on the left axis (default: bars on the left, lines on the right).
+ * Empty for other types: Chart.js then keeps the base type and the `y` axis.
  */
 export function comboSeriesStyle (chart: any, field: string): Record<string, unknown> {
   if (chart.type !== 'combo') return {}
@@ -272,10 +273,10 @@ export function comboSeriesStyle (chart: any, field: string): Record<string, unk
 }
 
 /**
- * Couleur d'un objectif : palette dédiée à fort contraste de teinte et de
- * luminosité (rouge, bleu, violet), stable d'un graphique à l'autre. Volontairement
- * indépendante des couleurs sémantiques du thème (erreur/avertissement sont deux
- * rouges-orangés proches) et des palettes de séries.
+ * Color of a target: dedicated palette with strong hue and
+ * lightness contrast (red, blue, purple), stable from one chart to another. Deliberately
+ * independent of the theme's semantic colors (error/warning are two close
+ * orange-reds) and of the series palettes.
  */
 export function objectifColor (index: number): string {
   const colors = ['#E53935', '#1E88E5', '#8E24AA']
@@ -283,21 +284,21 @@ export function objectifColor (index: number): string {
 }
 
 /**
- * Forme du témoin de légende : un trait pour une courbe non remplie (les tirets
- * restent lisibles), un rectangle plein pour une aire ou des barres.
+ * Shape of the legend marker: a stroke for an unfilled line (dashes
+ * stay readable), a filled rectangle for an area or bars.
  */
 export function legendPointStyle (dataset: { fill?: boolean } | undefined, metaType: string | undefined): 'line' | 'rect' {
   return metaType === 'line' && !dataset?.fill ? 'line' : 'rect'
 }
 
-/** Une série est-elle rattachée à l'axe de droite ? Seul le type `combo` le permet. */
+/** Is a series attached to the right axis? Only the `combo` type allows it. */
 function hasRightSeries (chart: any): boolean {
   return !!chart?.axes?.right?.fields?.length
 }
 
 export const CARTESIAN_TYPES = ['line', 'bar', 'multi-line', 'multi-bar', 'combo', 'paired-histogram']
 
-/** L'axe de droite n'est nécessaire qu'avec une série qui le porte. */
+/** The right axis is only needed with a series that uses it. */
 export function needsSecondaryAxis (chart: any): boolean {
   return hasRightSeries(chart)
 }
@@ -365,10 +366,10 @@ export function fillMissingDateAggs (aggs: AggItem[], interval: string, sortOrde
 }
 
 /**
- * Valeurs intermédiaires absentes entre des libellés d'axe numériques (ex. une
- * année sans ligne). Le pas est le plus petit écart constaté : avec un seul écart
- * (deux libellés) il n'y a rien à déduire. Renvoie [] dès qu'un libellé n'est pas
- * numérique ou que le remplissage dépasserait `max`.
+ * Missing intermediate values between numeric axis labels (e.g. a
+ * year without rows). The step is the smallest observed gap: with a single gap
+ * (two labels) there is nothing to infer. Returns [] as soon as a label is not
+ * numeric or the filling would exceed `max`.
  */
 export function missingNumericLabels (values: unknown[], max = 500): number[] {
   const nums = values.map(v => typeof v === 'number' ? v : typeof v === 'string' && v.trim() !== '' ? Number(v) : Number.NaN)

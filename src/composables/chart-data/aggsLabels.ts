@@ -8,7 +8,7 @@ export interface AggsLabelsContext {
   baseParams: Record<string, string>
   metric: string | undefined
   getValue: (value: number | null | undefined, source?: unknown) => number | undefined
-  // diviseur « colonne » agrégé globalement via /metric_agg (même diviseur pour toutes les parts)
+  // « column » divider aggregated globally via /metric_agg (same divider for all slices)
   dividerMetric: number | undefined
   // API responses
   metrics: Array<{ field: string; metric: number }>
@@ -40,7 +40,7 @@ export default function transformAggsLabels (ctx: AggsLabelsContext) {
   return {
     labels: labels.map((l: string) => splitString(config.labelsMaxWidth ?? 20, l + '')),
     datasets,
-    // l'abscisse est une colonne, pas une valeur : aucune entité à sélectionner
+    // the x-axis is a column, not a value: no entity to select
     rawLabels: null
   }
 }

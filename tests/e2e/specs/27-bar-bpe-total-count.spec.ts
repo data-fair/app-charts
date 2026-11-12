@@ -3,9 +3,9 @@
 // (the global count resolved with /metric_agg). The endpoint has no `count`
 // metric: the request must use `metric=value_count` (regression — `count`
 // silently breaks the divisor).
+import type { MockMap } from '../helpers/mock-api'
 import { expect, setupChartTest } from '../helpers/test-fixture'
 import { valuesAggFixtures } from '../fixtures/api-responses'
-import type { MockMap } from '../helpers/mock-api'
 
 const metricAggRequests: URLSearchParams[] = []
 const mocks: MockMap = {

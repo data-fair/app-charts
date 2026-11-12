@@ -1,5 +1,6 @@
-import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, missingNumericLabels, comboSeriesStyle, type DividerConfig } from '../../assets/utils'
+import type { DividerConfig } from '../../assets/utils'
 import type { DatasetLine, ValuesLabelsItem } from '@/composables/useChartData'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, compareLabels, extractDividerValue, hasUsableDivider, missingNumericLabels, comboSeriesStyle } from '../../assets/utils'
 
 export interface RowsBasedContext {
   config: any
@@ -8,7 +9,7 @@ export interface RowsBasedContext {
   finalizedAt: string | undefined
   baseParams: Record<string, string>
   getValue: (value: number | null | undefined, source?: unknown) => number | undefined
-  // diviseur normalisé (chart.config.divider) — lecture ligne par ligne : valeur brute de la colonne
+  // normalized divider (chart.config.divider) — row-by-row reading: raw column value
   divider: DividerConfig
   stacked: string | undefined
   // current value of theme.current ref (InternalThemeDefinition)
@@ -33,8 +34,8 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
 
   const sortBy = rspSortBy || chart.config.rowSortBy
   const sortOrder = rspSortOrder || chart.config.sortOrder
-  // Abscisses numériques manquantes (ex. une année sans ligne) : lignes
-  // synthétiques sans valeur, donc aucun point ni zéro sur la courbe.
+  // Missing numeric x-axis values (e.g. a year without rows): synthetic
+  // rows without value, hence no point and no zero on the line.
   const fillGaps = !!chart.config.fillMissingLabels && sortBy === 'label' && chart.type !== 'pie'
   if (fillGaps) {
     const labelsField = chart.config.labelsField!
@@ -50,12 +51,12 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     })
   }
 
-  // avec remplissage, les lignes ajoutées ne doivent pas évincer les vraies
-  // (la limite `size` est déjà appliquée par l'appel /lines)
+  // with filling, the added rows must not evict the real ones
+  // (the `size` limit is already applied by the /lines call)
   const maxLabels = fillGaps ? results.length : chart.config.size
   const categories = apiCategories
   const labels = results.map((r) => valueLabel(r[chart.config.labelsField!], fields[chart.config.labelsField!])).slice(0, maxLabels)
-  // valeurs brutes d'abscisse, alignées sur `labels` : les entités sélectionnables
+  // raw x-axis values, aligned with `labels`: the selectable entities
   const rawLabels = results.slice(0, maxLabels).map((r) => r[chart.config.labelsField!] as string)
   let selectionValues: (string | null)[] = [...rawLabels]
   let datasets: any[]
@@ -99,10 +100,10 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
         if (chart.type === 'pie' && results.length > chart.config.size) {
           orderedRawLabels.push('Autre')
           orderedLabels.push('Autre')
-          // la part « Autre » n'est pas une entité sélectionnable
+          // the « Autre » slice is not a selectable entity
           selectionValues.push(null)
-          // part « Autre » : ratio des totaux — une ligne sans valeur ou sans
-          // diviseur exploitable est exclue du bucket (valeur masquée)
+          // « Autre » slice: ratio of totals — a row without value or without
+          // usable divider is excluded from the bucket (value hidden)
           const others = results.slice(chart.config.size).filter((r) =>
             r[chart.config.valuesField!] != null && hasUsableDivider(r, ctx.divider)
           )
@@ -151,8 +152,8 @@ export default function transformRowsBased (ctx: RowsBasedContext) {
     datasets[0].data = (datasets[0].data as (number | undefined)[]).map((d) => -(d ?? 0))
   }
 
-  // une abscisse sans données ne coupe pas la courbe : le trait relie les
-  // points de part et d'autre
+  // an x-axis value without data does not break the line: the stroke links the
+  // points on either side
   if (fillGaps && ['line', 'multi-line'].includes(chart.type)) {
     datasets.forEach((d: any) => { d.spanGaps = true })
   }

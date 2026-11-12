@@ -1,8 +1,8 @@
-// Unit tests — cohérence du config-schema : les URLs getItems qui listent des valeurs
-// (values_agg) ou des colonnes à cardinalité réduite (/schema?maxCardinality) doivent
-// relayer les filtres statiques via ${rootData.staticFiltersParams}. Ce champ caché est
-// alimenté en draft par App.vue (filters2params) et permet à DataFair de recalculer la
-// cardinalité dans le contexte des filtres et de restreindre les listes de valeurs.
+// Unit tests — config-schema consistency: getItems URLs listing values
+// (values_agg) or low-cardinality columns (/schema?maxCardinality) must
+// relay the static filters via ${rootData.staticFiltersParams}. This hidden field is
+// fed in draft by App.vue (filters2params) and lets DataFair recompute the
+// cardinality in the context of the filters and restrict the value lists.
 import { test, expect } from '@playwright/test'
 import schema from '../../public/config-schema.json' with { type: 'json' }
 
@@ -27,9 +27,9 @@ test('staticFiltersParams is a hidden root property', () => {
   expect(props?.staticFiltersParams).toMatchObject({ type: 'string', layout: 'none' })
 })
 
-// La colonne d'un filtre est une simple clé de champ : c'est la forme historique de
-// toutes les configs existantes (et celle qu'écrit le formulaire). Une forme objet
-// `{ key, label }` rend ces configs invalides, donc rouges et non enregistrables.
+// The column of a filter is a plain field key: this is the historical form of
+// all existing configs (and the one the form writes). An object form
+// `{ key, label }` makes these configs invalid, hence red and not savable.
 test('a filter field is a plain field key', () => {
   expect((schema as any).$defs?.filterField).toMatchObject({ type: 'string' })
 })

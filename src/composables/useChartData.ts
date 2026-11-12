@@ -1,3 +1,5 @@
+import type { Filter } from '@data-fair/lib-utils/filters'
+import type { DividerConfig } from '@/assets/utils'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { useDebounce } from '@vueuse/core'
 import { useTheme } from 'vuetify'
@@ -6,13 +8,12 @@ import { getConceptFilters } from '@data-fair/lib-vue/concept-filters.js'
 import { targetExcludeKeys } from '@data-fair/lib-vue/selection.js'
 import { useFetch } from '@data-fair/lib-vue/fetch.js'
 import { useUiNotif, getErrorMsg } from '@data-fair/lib-vue/ui-notif.js'
-import { filters2params, type Filter } from '@data-fair/lib-utils/filters'
+import { filters2params } from '@data-fair/lib-utils/filters'
 import { ofetch } from 'ofetch'
-import { normalizeFilters, normalizeDivider, extractDividerValue, stackedParam, type DividerConfig } from '@/assets/utils'
+import { normalizeFilters, normalizeDivider, extractDividerValue, stackedParam } from '@/assets/utils'
 import { applySelectionHighlight, resolveSelectionTarget } from '@/assets/selection'
 import { useChartSelection } from '@/composables/useChartSelection'
 import { useConfig } from '@/composables/config'
-
 import transformRowsBased from './chart-data/rowsBased'
 import transformAggsBased from './chart-data/aggsBased'
 import transformAggsBasedLabels from './chart-data/aggsBasedLabels'
@@ -23,12 +24,12 @@ export interface DatasetLine {
 }
 
 export interface AggItem {
-  // les champs booléens renvoient leurs valeurs telles quelles (true/false)
+  // boolean fields return their values as is (true/false)
   value: string | number | boolean
   total?: number
   metric?: number
   aggs?: AggItem[]
-  // champs métriques additionnels renvoyés par l'API (`<field>_<metric>: number`)
+  // additional metric fields returned by the API (`<field>_<metric>: number`)
   [key: string]: unknown
 }
 
@@ -55,8 +56,8 @@ export function useChartData () {
   const theme = useTheme()
   const { sendUiNotif } = useUiNotif()
 
-  // Le champ de sélection déclaré (abscisse) n'est jamais une restriction : ses
-  // clés `_c_`/`_d_` sont retirées des requêtes API par la visu elle-même.
+  // The declared selection field (x-axis) is never a restriction: its
+  // `_c_`/`_d_` keys are removed from API requests by the visualization itself.
   const selectionTarget = computed(() => resolveSelectionTarget(chart.value, dataset.value, fields.value))
   const conceptFilters = computed(() => {
     const input = { ...reactiveSearchParams }
@@ -66,9 +67,9 @@ export function useChartData () {
     return getConceptFilters(input, dataset.value?.id)
   })
 
-  // Keep stacked search param in sync with chart default. Quand la bascule est
-  // désactivée (`disableDynamicStack`), la config fait loi et un paramètre
-  // résiduel est purgé : plus d'UI pour le corriger.
+  // Keep stacked search param in sync with chart default. When the toggle is
+  // disabled (`disableDynamicStack`), the config rules and a leftover
+  // parameter is purged: there is no UI left to correct it.
   watch([() => chart.value?.stacked, () => chart.value?.disableDynamicStack], ([stacked, disabled]) => {
     const next = stackedParam(stacked, disabled, reactiveSearchParams.stacked)
     if (next === undefined) delete reactiveSearchParams.stacked
@@ -76,7 +77,7 @@ export function useChartData () {
   }, { immediate: true })
 
   const baseParams = useDebounce(computed(() => {
-    // filtres prédéfinis en paramètres REST suffixés (_in, _nin, _gte...), jamais en `qs`
+    // predefined filters as suffixed REST parameters (_in, _nin, _gte...), never as `qs`
     const params: Record<string, string> = {
       ...conceptFilters.value,
       ...(config.value.staticFilters?.length
@@ -100,14 +101,14 @@ export function useChartData () {
   const isAggsLabels = computed(() => mode.value === 'aggsLabels')
 
   // ──────────────────────────────────────────────────────────────────
-  // Multiplicateur global (changement d'unité) et diviseur du chart
-  // L'ancien format « divider » numérique global (avant la refonte) est
-  // interprété en repli comme un multiplicateur 1/N (v/N ≡ v × (1/N)).
+  // Global multiplier (unit change) and chart divider
+  // The legacy global numeric « divider » format (before the redesign) is
+  // interpreted as a fallback as a 1/N multiplier (v/N ≡ v × (1/N)).
   // ──────────────────────────────────────────────────────────────────
   const divisor = computed<DividerConfig>(() => {
     const d = normalizeDivider(chart.value?.config?.divider)
-    // sans groupes (lecture ligne par ligne, métriques globales), le
-    // « nombre de lignes du groupe » n'existe pas : repli sur le total
+    // without groups (row-by-row reading, global metrics), the
+    // « number of rows in the group » does not exist: fall back to the total
     if (d.type === 'groupCount' && (isRowsBased.value || isAggsLabels.value)) {
       return { type: 'totalCount' }
     }
@@ -122,10 +123,10 @@ export function useChartData () {
   })
 
   // ──────────────────────────────────────────────────────────────────
-  // Nombre total de lignes (diviseur totalCount) :
-  // - rowsBased : totalCount renvoyé par /lines (aucun appel)
-  // - modes agrégats : /metric_agg?metric=value_count sur le champ de
-  //   regroupement, même filtres (baseParams) que le graphique
+  // Total number of rows (totalCount divider):
+  // - rowsBased: totalCount returned by /lines (no call)
+  // - aggregate modes: /metric_agg?metric=value_count on the
+  //   grouping field, same filters (baseParams) as the chart
   // ──────────────────────────────────────────────────────────────────
   const globalCount = ref<number>()
   watchEffect(async () => {
@@ -148,17 +149,17 @@ export function useChartData () {
     }
   })
 
-  // Nombre total de lignes du dataset filtré (diviseur totalCount) :
-  // - rowsBased : totalCount renvoyé par /lines
-  // - modes agrégats : /metric_agg?metric=value_count (watchEffect globalCount)
+  // Total number of rows of the filtered dataset (totalCount divider):
+  // - rowsBased: totalCount returned by /lines
+  // - aggregate modes: /metric_agg?metric=value_count (watchEffect globalCount)
   function getTotalCount (): number | undefined {
     if (isRowsBased.value) return linesRaw.value?.totalCount
     return globalCount.value
   }
 
-  // Applique multiplicateur et diviseur. `source` porte la valeur de division :
-  // ligne (/lines), item d'agrégat (/values_agg) ou nombre déjà agrégé
-  // (/metric_agg global). Sans diviseur exploitable, la valeur est masquée.
+  // Applies multiplier and divider. `source` carries the division value:
+  // row (/lines), aggregate item (/values_agg) or already aggregated number
+  // (global /metric_agg). Without a usable divider, the value is hidden.
   const getValue = (value: number | null | undefined, source?: unknown) => {
     if (value == null) return undefined
     const type = divisor.value.type
@@ -174,7 +175,7 @@ export function useChartData () {
     return Number.isFinite(v) ? v : undefined
   }
 
-  // Colonne de division absente du schéma (config obsolète) → avertissement
+  // Division column missing from the schema (obsolete config) → warning
   watch(divisor, (d) => {
     if (d.type === 'column' && !fields.value[d.field!]) {
       sendUiNotif({ type: 'error', msg: `Le diviseur est configuré sur la colonne « ${d.field} », absente du jeu de données.` })
@@ -211,16 +212,16 @@ export function useChartData () {
         finalizedAt: finalizedAt.value,
         ...aggExtraMetrics(c, sortBy)
       }
-      // bucket des valeurs manquantes (libellé configuré)
+      // missing values bucket (configured label)
       if (c.missingLabel) query.missing = c.missingLabel
-      // sous-séries par groupsField : 2ᵉ dimension d'agrégation, convention
-      // data-fair des params parallèles `,` (field=a,b, agg_size=n,12, sort=x,-metric)
+      // sub-series by groupsField: 2nd aggregation dimension, data-fair convention
+      // of parallel `,` params (field=a,b, agg_size=n,12, sort=x,-metric)
       if (c.groupsField) {
         query.field = [query.field, c.groupsField].join(',')
         query.agg_size = [query.agg_size, '12'].join(',')
         if (query.sort) query.sort = [query.sort, '-' + (c.valueCalc?.type || 'metric')].join(',')
       }
-      // le diviseur est agrégé dans le même values_agg que la valeur du graphique
+      // the divider is aggregated in the same values_agg as the chart value
       if (divisor.value.type === 'column') {
         query.extra_metrics = mergeExtraMetrics(query.extra_metrics, `${divisor.value.field}:${divisor.value.metric}`)
       }
@@ -243,10 +244,10 @@ export function useChartData () {
       labelsValues.length > 1
         ? labelsValues.slice(1).map((v: string) => v + ':' + metric).join(',')
         : undefined,
-      // une colonne sans aucune valeur renvoie 0 avec sum : son décompte de
-      // valeurs permet de la distinguer d'un vrai 0 (cf. aggsBasedLabels)
+      // a column without any value returns 0 with sum: its count of
+      // values distinguishes it from a real 0 (see aggsBasedLabels)
       labelsValues.map((v: string) => v + ':value_count').join(','),
-      // objectifs issus des données : moyenne des lignes de la série
+      // targets from the data: average of the series rows
       (c.objectifFields || []).map((v: string) => v + ':avg').join(',') || undefined,
       divisor.value.type === 'column' ? `${divisor.value.field}:${divisor.value.metric}` : undefined
     )
@@ -278,7 +279,7 @@ export function useChartData () {
     const c = chart.value!.config
     const select = [c.labelsField!].concat(c.valuesField || c.valuesFields || [])
     if (c.categoriesField) select.push(c.categoriesField)
-    // lecture ligne par ligne : la colonne de division est lue sur chaque ligne
+    // row-by-row reading: the division column is read on each row
     if (divisor.value.type === 'column' && !select.includes(divisor.value.field!)) select.push(divisor.value.field!)
     return {
       ...baseParams.value,
@@ -297,7 +298,7 @@ export function useChartData () {
   // through the explicit dependencies.
   // ──────────────────────────────────────────────────────────────────
   const aggsLabelsMetrics = ref<Array<{ field: string; metric: number }>>([])
-  // diviseur « colonne » agrégé globalement (un seul /metric_agg, même filtres)
+  // « column » divider aggregated globally (a single /metric_agg, same filters)
   const divisorMetric = ref<number>()
   watchEffect(async () => {
     if (!isAggsLabels.value || !datasetUrl.value) {
@@ -426,9 +427,9 @@ export function useChartData () {
     return null
   })
 
-  // Sélection inter-app : le clic émet une clé seule, une sélection reçue est
-  // mise en évidence (les clés visant le champ d'abscisse ne restreignent pas les
-  // requêtes, cf. `conceptFilters` ci-dessus).
+  // Inter-app selection: a click emits a lone key, a received selection is
+  // highlighted (keys targeting the x-axis field do not restrict the
+  // requests, see `conceptFilters` above).
   const selection = useChartSelection(() => rawData.value?.rawLabels)
   const lineBased = ['line', 'multi-line', 'combo', 'radar'].includes(chart.value?.type as string)
   const data = computed(() => (rawData.value
@@ -462,7 +463,7 @@ function buildSort (c: any, sortBy: string | undefined): string | undefined {
 function aggExtraMetrics (c: any, sortBy: string | undefined) {
   if (c.valueCalc?.type === 'metric' || c.valuesCalc) {
     const out: Record<string, string> = {}
-    // agrégat demandé (sum/avg/min/max) : défaut API = sum, à transmettre explicitement
+    // requested aggregate (sum/avg/min/max): API default = sum, to be sent explicitly
     out.metric = reactiveSearchParams.metric || c.metric || c.valueCalc?.metric
     const sortField = sortBy === 'value' ? (reactiveSearchParams['sort-field'] || c.sortField) : undefined
     out.metric_field = sortField || c.valuesCalc?.[0] || c.valueCalc?.field
@@ -477,7 +478,7 @@ function aggExtraMetrics (c: any, sortBy: string | undefined) {
   return {}
 }
 
-/** Fusionne plusieurs listes `champ:métrique` en dédupliquant les entrées. */
+/** Merges several `field:metric` lists, deduplicating entries. */
 function mergeExtraMetrics (...lists: Array<string | undefined>): string | undefined {
   const entries = lists.filter(Boolean).flatMap((l) => (l as string).split(',')).filter(Boolean)
   return entries.length ? [...new Set(entries)].join(',') : undefined

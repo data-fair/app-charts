@@ -89,20 +89,20 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: 'Cinéma', metric: 12400, nblieux_sum: 8 },
       { value: 'Théâtre', metric: 8120, nblieux_sum: 4 },
       { value: 'Musée', metric: 6230, nblieux_sum: 5 },
-      { value: 'Médiathèque', metric: 4100 } // pas de diviseur exploitable → point masqué
+      { value: 'Médiathèque', metric: 4100 } // no usable divider → hidden point
     ]
   },
-  // bar with a group line count divisor (capacite / nombre de lignes du groupe)
+  // bar with a group line count divisor (capacite / number of rows in the group)
   bar_bpe_group_count: {
     aggs: [
       { value: 'Cinéma', total: 8, metric: 12400 },
       { value: 'Théâtre', total: 4, metric: 8120 },
-      { value: 'Musée', total: 0, metric: 6230 }, // total nul → point masqué
-      { value: 'Médiathèque', metric: 4100 } // pas de total → point masqué
+      { value: 'Musée', total: 0, metric: 6230 }, // zero total → hidden point
+      { value: 'Médiathèque', metric: 4100 } // no total → hidden point
     ]
   },
-  // bar with a total line count divisor (capacite / nombre total de lignes,
-  // résolu via /metric_agg?metric=value_count sur le champ de regroupement)
+  // bar with a total line count divisor (capacite / total number of rows,
+  // resolved via /metric_agg?metric=value_count on the grouping field)
   bar_bpe_total_count: {
     aggs: [
       { value: 'Cinéma', metric: 12400 },
@@ -167,8 +167,8 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: false, total: 3230 }
     ]
   },
-  // multi-bar aggsBasedCategories on boolean columns (sum = nombre de oui,
-  // renvoyé par l'API sous la convention `<field>_sum`)
+  // multi-bar aggsBasedCategories on boolean columns (sum = number of « oui »,
+  // returned by the API under the `<field>_sum` convention)
   multi_bar_bpe_booleans: {
     aggs: [
       { value: 'Île-de-France', metric: 1234, indic_capa_sum: 1234, indic_nbsalles_sum: 456, irisee_sum: 789 },
@@ -176,8 +176,8 @@ export const valuesAggFixtures: Record<string, any> = {
       { value: 'Bretagne', metric: 876, indic_capa_sum: 876, indic_nbsalles_sum: 234, irisee_sum: 543 }
     ]
   },
-  // objectifs issus des données : la cible est agrégée avec sa propre métrique
-  // (`<champ>_avg`), la 3e série n'a pas d'objectif renseigné
+  // targets from the data: the target is aggregated with its own metric
+  // (`<field>_avg`), the 3rd series has no target set
   objectifs_bpe: {
     aggs: [
       { value: 'Île-de-France', metric: 124, capacite_avg: 124, nbsalles_avg: 2, objectif_2030_avg: 150 },
@@ -198,9 +198,9 @@ export const valuesAggLabelsFixture = {
   ]
 }
 
-// /values_agg for aggsBasedLabels on boolean columns (mode « abscisses
-// définies par plusieurs colonnes ») : metric = sum du 1er champ booléen,
-// `<field>_sum` pour les suivants (nombre de « oui »).
+// /values_agg for aggsBasedLabels on boolean columns (« abscisses
+// définies par plusieurs colonnes » mode): metric = sum of the 1st boolean field,
+// `<field>_sum` for the following ones (number of « oui »).
 export const valuesAggLabelsBooleansFixture = {
   aggs: [
     { value: 'Île-de-France', metric: 1234, indic_nbsalles_sum: 456, irisee_sum: 789 },
@@ -221,8 +221,8 @@ export const valuesLabelsFixture = {
 }
 
 // ──────────────────────────────────────────────────────────────────
-// /lines  (rowsBased) — totalCount = nombre total de lignes du dataset
-// filtré, utilisé par le diviseur « nombre total de lignes »
+// /lines  (rowsBased) — totalCount = total number of rows of the filtered
+// dataset, used by the « total number of rows » divider
 // ──────────────────────────────────────────────────────────────────
 export const linesFixtureAlimRegion = {
   totalCount: 5,
@@ -260,7 +260,7 @@ export const metricAggFixtures: Record<string, { metric: number }> = {
   loypredm2: { metric: 18.4 },
   lwripm2: { metric: 4.1 },
   upripm2: { metric: 1.7 },
-  // colonnes booléennes (sum = nombre de « oui »)
+  // boolean columns (sum = number of « oui »)
   indic_capa: { metric: 1234 },
   indic_nbsalles: { metric: 456 },
   irisee: { metric: 789 }

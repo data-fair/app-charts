@@ -1,18 +1,19 @@
-import { computed, type ComputedRef } from 'vue'
+import type { ComputedRef } from 'vue'
+import type { TooltipItem } from 'chart.js'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import chroma from 'chroma-js'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { useSession } from '@data-fair/lib-vue/session.js'
 import { defaults } from 'chart.js'
-import type { TooltipItem } from 'chart.js'
 import { useConfig } from '@/composables/config'
 import { chartValueLabelDisplay, needsSecondaryAxis, legendPointStyle, LINE_DASH_PATTERNS } from '@/assets/utils'
 
 export function useChartOptions (): { options: ComputedRef<any> } {
   const { config, chart } = useConfig()
   const { lang } = useSession()
-  // portée globale : les numberFormats (percent) de createI18n — l'app n'a pas de
-  // bloc <i18n> local, mais on l'explicite pour figer le contrat
+  // global scope: the numberFormats (percent) of createI18n — the app has no
+  // local <i18n> block, but it is made explicit to pin the contract
   const { n } = useI18n({ useScope: 'global' })
 
   const chartFontFamily = computed(() => {
@@ -28,8 +29,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       maintainAspectRatio: false,
       responsive: true,
       locale: lang.value,
-      // la mise en évidence d'une sélection change les couleurs par
-      // élément : sans cette coupure Chart.js les interpole sur 1 s
+      // highlighting a selection changes the per-element colors:
+      // without this cut Chart.js interpolates them over 1 s
       animations: { colors: false },
       font: {
         family: chartFontFamily.value
@@ -40,8 +41,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
           !(c.config.groupBy?.type === 'value' && c.config.groupBy.field === c.config.groupsField),
           position: config.value.legendPosition || 'top',
           labels: {
-            // témoin en trait pour une courbe (les tirets restent lisibles), en
-            // rectangle plein pour une aire ou des barres
+            // stroke marker for a line (dashes stay readable), filled
+            // rectangle for an area or bars
             usePointStyle: true,
             pointStyleWidth: 40,
             generateLabels: (chart: any) => (defaults.plugins.legend.labels.generateLabels as (c: any) => any[])(chart)
@@ -51,9 +52,9 @@ export function useChartOptions (): { options: ComputedRef<any> } {
                 return {
                   ...item,
                   pointStyle,
-                  // rattache explicitement la série à l'axe de droite de ses graduations
+                  // explicitly attaches the series to the right axis of its ticks
                   ...(dataset.yAxisID === 'y1' ? { text: item.text + ' (axe droit)' } : {}),
-                  // le témoin en trait reprend le motif et l'épaisseur de la série
+                  // the stroke marker reuses the dash pattern and width of the series
                   ...(pointStyle === 'line' ? { lineDash: dataset.borderDash, lineWidth: 3 } : {})
                 }
               })
@@ -69,7 +70,7 @@ export function useChartOptions (): { options: ComputedRef<any> } {
             title: (items: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>[]) => items[0].label,
             label: (context: TooltipItem<'line' | 'bar' | 'pie' | 'radar'>) => {
               const value = n((c.horizontal ? context.parsed.x : context.parsed.y) || (context.parsed as unknown as { r: number }).r, 'decimal')
-              // unité de l'axe de la série (axe de droite de la config)
+              // unit of the series axis (right axis of the config)
               const unit = (context.dataset as { yAxisID?: string }).yAxisID === 'y1' ? c.axes?.right?.unit : config.value.unit
               const suffix = c.percentage ? ' %' : (unit ? ' ' + unit : '')
               return (context.dataset.label ? context.dataset.label + ' : ' : '') + value + suffix
@@ -109,8 +110,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
         opts.scales!.y!.ticks = { callback: (v: number) => n(v, 'decimal') + ' ' + config.value.unit }
       }
     }
-    // axe de droite du type « Graphique mixte » : séries rattachées à droite,
-    // avec leur propre titre et unité
+    // right axis of the « Graphique mixte » type: series attached to the right,
+    // with their own title and unit
     if (needsSecondaryAxis(c)) {
       const axis = c.axes?.right || {}
       opts.scales!.y1 = {
@@ -142,8 +143,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       opts.layout = { padding: c.horizontal ? { right: 64 } : { top: 24 } }
     } else {
       ;(opts.plugins as Record<string, unknown>).datalabels = { display: false }
-      // outlabels ne sert qu'au camembert : sans ce garde-fou il tente de
-      // dessiner des étiquettes sur les barres (positions NaN, travail inutile)
+      // outlabels is only for the pie chart: without this guard it tries to
+      // draw labels on the bars (NaN positions, useless work)
       ;(opts.plugins as Record<string, unknown>).outlabels = { display: false }
     }
 
@@ -201,8 +202,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       }
     }
 
-    // motif de trait des courbes (line, multi-line, radar) : Chart.js applique
-    // elements.line aux LineElement de tous ces types, légende comprise
+    // dash pattern of lines (line, multi-line, radar): Chart.js applies
+    // elements.line to the LineElement of all these types, legend included
     const lineElement: Record<string, unknown> = {}
     if (c.tension != null) lineElement.tension = c.tension / 10
     if (c.lineDash && LINE_DASH_PATTERNS[c.lineDash]) lineElement.borderDash = LINE_DASH_PATTERNS[c.lineDash]
@@ -242,8 +243,8 @@ export function useChartOptions (): { options: ComputedRef<any> } {
       } else delete opts.scales
     }
 
-    // service de capture de DataFair : signaler que le graphique est réellement
-    // rendu (fin de l'animation de rendu Chart.js). meta df:capture-delay = repli.
+    // DataFair capture service: signal that the chart is actually
+    // rendered (end of the Chart.js render animation). meta df:capture-delay = fallback.
     if (window.triggerCapture) {
       opts.animation = {
         onComplete: () => { window.triggerCapture?.(false) }

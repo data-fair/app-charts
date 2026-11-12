@@ -1,12 +1,14 @@
 // Unit tests — aggsBased transform (pure API response -> Chart.js data)
+import type { AggsBasedContext } from '../../src/composables/chart-data/aggsBased'
+import type { DividerConfig } from '../../src/assets/utils'
 import dayjs from 'dayjs'
 import 'dayjs/locale/fr.js'
 import { test, expect } from '@playwright/test'
-import transformAggsBased, { type AggsBasedContext } from '../../src/composables/chart-data/aggsBased'
-import { extractDividerValue, type DividerConfig } from '../../src/assets/utils'
+import transformAggsBased from '../../src/composables/chart-data/aggsBased'
+import { extractDividerValue } from '../../src/assets/utils'
 
-// formatDateLabel formate via dayjs global : aligner la locale sur le comportement
-// de l'app (createLocaleDayjs(session.lang) en fr)
+// formatDateLabel formats via the global dayjs: align the locale with the app
+// behavior (createLocaleDayjs(session.lang) in fr)
 dayjs.locale('fr')
 
 function baseCtx (overrides: Partial<AggsBasedContext> & { chart: any }): AggsBasedContext {
@@ -162,7 +164,7 @@ test('numeric exact values are sorted by numeric value and desc order is honored
   expect(desc.datasets[0].data).toEqual([1, 3, 2])
 })
 
-// ── Diviseur « colonne » (agrégat par groupe, clé <champ>_<métrique>) ────────
+// ── « Column » divider (aggregate per group, key <field>_<metric>) ───────────
 
 function dividerGetValue (divider: DividerConfig) {
   return (v: number | null | undefined, source?: unknown) => {
@@ -182,8 +184,8 @@ test('column divider divides by the group extra metric and hides groups without 
     aggs: [
       { value: 'A', total: 100, pop_sum: 2 },
       { value: 'B', total: 30, pop_sum: 3 },
-      { value: 'C', total: 50 }, // pas de diviseur exploitable → valeur masquée
-      { value: 'D', total: 40, pop_sum: 0 } // diviseur nul → valeur masquée
+      { value: 'C', total: 50 }, // no usable divider → hidden value
+      { value: 'D', total: 40, pop_sum: 0 } // zero divider → hidden value
     ]
   })
   const data = transformAggsBased(ctx)
@@ -220,11 +222,11 @@ test('pie Autre bucket uses the ratio of totals when a column divider is set', (
     ]
   })
   const data = transformAggsBased(ctx)
-  // parts : A → 50 ; B → 10 ; Autre → (90+10)/(9+1) = 10
+  // slices: A → 50; B → 10; Autre → (90+10)/(9+1) = 10
   expect(data.datasets[0].data).toEqual([50, 10, 10])
 })
 
-// ── Diviseur « nombre de lignes du groupe » (total du bucket) ────────────────
+// ── « Number of rows in the group » divider (bucket total) ───────────────────
 
 test('groupCount divider divides the metric by the group line count and hides groups without lines', () => {
   const divider = { type: 'groupCount' } as const
@@ -238,8 +240,8 @@ test('groupCount divider divides the metric by the group line count and hides gr
     aggs: [
       { value: 'A', total: 10, metric: 100 },
       { value: 'B', total: 5, metric: 30 },
-      { value: 'C', metric: 50 }, // pas de total → valeur masquée
-      { value: 'D', total: 0, metric: 40 } // total nul → valeur masquée
+      { value: 'C', metric: 50 }, // no total → hidden value
+      { value: 'D', total: 0, metric: 40 } // zero total → hidden value
     ]
   })
   const data = transformAggsBased(ctx)
@@ -264,11 +266,11 @@ test('pie Autre bucket uses the ratio of line counts when a groupCount divider i
     ]
   })
   const data = transformAggsBased(ctx)
-  // parts : A → 100/2 = 50 ; B → 30/3 = 10 ; Autre → (90+10)/(9+1) = 10
+  // slices: A → 100/2 = 50; B → 30/3 = 10; Autre → (90+10)/(9+1) = 10
   expect(data.datasets[0].data).toEqual([50, 10, 10])
 })
 
-// ── Libellés des valeurs booléennes (config.booleanLabels) ──────────────────
+// ── Labels of boolean values (config.booleanLabels) ─────────────────────────
 
 test('boolean group values are replaced by the configured labels and sorted by label', () => {
   const ctx = baseCtx({
@@ -280,7 +282,7 @@ test('boolean group values are replaced by the configured labels and sorted by l
     ]
   })
   const data = transformAggsBased(ctx)
-  // tri ascendant par libellé : « Non » avant « Oui »
+  // ascending sort by label: « Non » before « Oui »
   expect(data.labels).toEqual([['Non'], ['Oui']])
   expect(data.datasets[0].data).toEqual([7, 5])
 })
@@ -313,7 +315,7 @@ test('boolean series labels of a groupsField are replaced too', () => {
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Oui', 'Non'])
 })
 
-// ── Séries booléennes (aggsBasedCategories, clés <champ>_<métrique>) ─────────
+// ── Boolean series (aggsBasedCategories, keys <field>_<metric>) ──────────────
 
 test('aggsBasedCategories maps boolean sum metrics from <field>_<metric> keys', () => {
   const ctx = baseCtx({
@@ -333,8 +335,8 @@ test('aggsBasedCategories maps boolean sum metrics from <field>_<metric> keys', 
   })
   const data = transformAggsBased(ctx)
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Concerné par la capacité', 'Irisation de la commune'])
-  // la première colonne (metric_field) est lue dans a.metric, les suivantes
-  // dans les clés `<champ>_<métrique>` des extra_metrics
+  // the first column (metric_field) is read in a.metric, the next ones
+  // in the `<field>_<metric>` keys of extra_metrics
   expect(data.datasets[0].data).toEqual([4, 2])
   expect(data.datasets[1].data).toEqual([1, 3])
 })
@@ -365,7 +367,7 @@ test('combo sets each dataset type, dash and yAxisID from the axes config', () =
   ])
 })
 
-test('aggsBasedCategories maps boolean avg metrics (proportion de oui)', () => {
+test('aggsBasedCategories maps boolean avg metrics (share of oui)', () => {
   const ctx = baseCtx({
     chart: {
       type: 'multi-bar',
@@ -385,7 +387,7 @@ test('aggsBasedCategories maps boolean avg metrics (proportion de oui)', () => {
   expect(data.datasets[1].data).toEqual([0.5])
 })
 
-// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+// ── Label overrides (config.valueLabels) ────────────────────────────────────
 
 test('valueLabels rename group axis labels, sorted by the new label', () => {
   const ctx = baseCtx({
@@ -430,7 +432,7 @@ test('removeFromLabels shortens the group axis labels (reported on aggsBasedCate
     aggs: [{ value: "Quantités totales d'émissions de :  Ammoniac", metric: 4, '2020_sum': 4, '2022_sum': 1 }]
   })
   const data = transformAggsBased(ctx)
-  // les valeurs contiennent deux espaces après ':' : les espaces résiduels sont nettoyés
+  // the values contain two spaces after ':': leftover spaces are cleaned
   expect(data.labels).toEqual([['Ammoniac']])
   expect(data.rawLabels).toEqual(["Quantités totales d'émissions de :  Ammoniac"])
 })

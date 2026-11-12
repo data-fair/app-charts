@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import type { Filter } from '@data-fair/lib-utils/filters/index.js'
 import Chart from './components/Chart.vue'
 import DfUiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { ofetch } from 'ofetch'
 import { mdiChartBar } from '@mdi/js'
 import { watch } from 'vue'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
-import type { Filter } from '@data-fair/lib-utils/filters/index.js'
 import { useConfig } from './composables/config'
 import { staticFiltersParams } from './assets/utils'
 
@@ -28,8 +28,8 @@ if (reactiveSearchParams.draft === 'true') {
   }, { immediate: true })
 }
 
-// service de capture : sur erreur de configuration, rien d'autre ne signalera le
-// rendu (pas de chart) — capturer l'état d'erreur plutôt que d'attendre le timeout
+// capture service: on a configuration error, nothing else will signal the
+// render (no chart) — capture the error state instead of waiting for the timeout
 watch(error, (message) => {
   if (message && window.triggerCapture) window.triggerCapture(false)
 }, { immediate: true })

@@ -1,20 +1,23 @@
-// Sélection inter-app : une clé `_c_`/`_d_` visant le champ d'abscisse (le champ
-// de sélection déclaré) n'est jamais une restriction (la visu l'écarte de ses
-// requêtes), et un clic sur une entité émet cette seule clé dans l'URL — sans
-// marqueur (convention data-fair-app/references/filters-url-convention.md
+// Inter-app selection: a `_c_`/`_d_` key targeting the x-axis field (the declared
+// selection field) is never a restriction (the visualization drops it from its
+// requests), and a click on an entity emits only this key in the URL — without
+// marker (convention data-fair-app/references/filters-url-convention.md
 // § « Sélection »).
-import { test, expect, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import type { MockMap } from '../helpers/mock-api'
+import type { ConfigName } from '../fixtures/configs'
+import { test, expect } from '@playwright/test'
 import { prepareChartPage } from '../helpers/test-fixture'
 import { injectConfig, waitForChart } from '../helpers/inject-config'
-import { mockDataFairApi, type MockMap } from '../helpers/mock-api'
+import { mockDataFairApi } from '../helpers/mock-api'
 import { datasets, makeDatasetEntry } from '../fixtures/datasets'
-import { configs, type ConfigName } from '../fixtures/configs'
+import { configs } from '../fixtures/configs'
 import { valuesAggFixtures } from '../fixtures/api-responses'
 
 const BPE = datasets.bpe.id
-// le champ d'abscisse `type` de la BPE ne porte pas de concept : forme dataset-scopée
+// the BPE x-axis field `type` carries no concept: dataset-scoped form
 const FILTER_KEY = `_d_${BPE}_type_eq`
-// une sélection ne pose plus de marqueur : plus aucune clé `_s_` nulle part
+// a selection no longer sets a marker: no `_s_` key anywhere
 const noMarkerKeys = (params: URLSearchParams) => [...params.keys()].filter((k) => k.startsWith('_s_'))
 const BANDS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
 
@@ -32,8 +35,8 @@ async function boot (page: Page, mocks: MockMap, query = '', extra: Record<strin
 }
 
 /**
- * Enregistre, par frame de dessin du canvas principal (repérée par `clearRect`),
- * les couleurs assignées à `ctx.fillStyle`. `__fills` reste l'agrégat.
+ * Records, per draw frame of the main canvas (detected by `clearRect`),
+ * the colors assigned to `ctx.fillStyle`. `__fills` remains the aggregate.
  */
 function setupFillCapture (page: Page) {
   return page.addInitScript(() => {
@@ -65,9 +68,9 @@ function setupFillCapture (page: Page) {
 }
 
 /**
- * Clique les bandes dans l'ordre jusqu'à ce que la valeur du filtre de
- * sélection change par rapport à `previous` (valeur `null` = absente), et
- * renvoie la valeur obtenue. `null` si aucun clic n'a fait bouger la sélection.
+ * Clicks the bars in order until the value of the selection filter
+ * changes compared to `previous` (`null` value = missing), and
+ * returns the obtained value. `null` if no click moved the selection.
  */
 async function clickBarChanging (page: Page, fractions: number[], previous: string | null) {
   const box = await page.locator('canvas').first().boundingBox()
@@ -101,7 +104,7 @@ test('a received selection fades the entities it does not designate', async ({ p
   await boot(page, { valuesAgg: valuesAggFixtures.bar_bpe_salles }, `?${FILTER_KEY}=${encodeURIComponent('Cinéma')}`)
   await page.waitForTimeout(1000)
   const fills = await page.evaluate(() => (window as unknown as { __frames: string[][] }).__frames.flat())
-  // applySelectionHighlight estompe les barres non sélectionnées (alpha 0.25)
+  // applySelectionHighlight dims the unselected bars (alpha 0.25)
   expect(fills.some((v) => /^rgba\(\d+,\d+,\d+,0\.25\)$/.test(v))).toBe(true)
 })
 
@@ -137,9 +140,9 @@ test('clicking another bar replaces the selection (single eq value)', async ({ p
   expect(second!.value).not.toContain(',')
 })
 
-// chart.config.color : fond scalaire (chaîne). Chart.js ne réévalue pas les
-// options par élément quand une option repasse de tableau à chaîne, d'où un
-// type de fond maintenu en tableau (applySelectionHighlight).
+// chart.config.color: scalar background (string). Chart.js does not re-evaluate the
+// per-element options when an option goes back from array to string, hence a
+// background type kept as an array (applySelectionHighlight).
 test('deselecting restores the full opacity of a single-color bar chart', async ({ page }) => {
   await setupFillCapture(page)
   const entry = configs['10-bar-bpe-salles']
@@ -153,7 +156,7 @@ test('deselecting restores the full opacity of a single-color bar chart', async 
   expect((await clickBarChanging(page, [first!.fx], first!.value))?.value).toBeNull()
   await page.waitForTimeout(400)
 
-  // la dernière frame rendue ne doit plus contenir de couleur estompée
+  // the last rendered frame must no longer contain a dimmed color
   const last = await page.evaluate(() => (window as unknown as { __frames: string[][] }).__frames.at(-1) ?? [])
   expect(last.length).toBeGreaterThan(0)
   expect(last.some((v) => /^rgba\(51,102,204,0\.25\)$/.test(v))).toBe(false)

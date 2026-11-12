@@ -1,25 +1,26 @@
-// Convention de sélection inter-app : un clic sur une entité d'un graphique
-// émet une clé `_c_`/`_d_` seule ; une clé qui vise le champ d'abscisse (le champ
-// de sélection déclaré ici) est mise en évidence, jamais restreinte. Voir le
-// skill `data-fair-app`, `references/filters-url-convention.md` § « Sélection ».
+// Inter-app selection convention: a click on a chart entity emits a lone
+// `_c_`/`_d_` key; a key targeting the x-axis field (the selection field
+// declared here) is highlighted, never restricted. See the
+// `data-fair-app` skill, `references/filters-url-convention.md` § « Sélection ».
 //
-// Helpers purs (sans Vue), unit-testés.
+// Pure helpers (no Vue), unit-tested.
+import type { SelectionTarget, TargetFilter } from '@data-fair/lib-vue/selection.js'
 import chroma from 'chroma-js'
-import { parseSelectionValues, type SelectionTarget, type TargetFilter } from '@data-fair/lib-vue/selection.js'
+import { parseSelectionValues } from '@data-fair/lib-vue/selection.js'
 
-/** Entité sélectionnable d'un graphique : les valeurs de son champ d'abscisse. */
+/** Selectable entity of a chart: the values of its x-axis field. */
 export interface ChartSelectionTarget extends SelectionTarget {
-  /** Champ du dataset portant les valeurs d'abscisse. */
+  /** Dataset field holding the x-axis values. */
   fieldKey: string
-  /** Concept du vocabulaire standard porté par ce champ, si présent. */
+  /** Standard vocabulary concept carried by this field, if any. */
   conceptId?: string
   datasetId: string
 }
 
 /**
- * Champ dont les valeurs servent d'abscisse (et donc d'entités sélectionnables),
- * ou `null` quand l'abscisse n'est pas une valeur de champ (colonnes en libellé,
- * buckets de date) : rien à sélectionner alors.
+ * Field whose values are used as x-axis (and thus as selectable entities),
+ * or `null` when the x-axis is not a field value (columns as labels,
+ * date buckets): nothing to select then.
  */
 export function resolveSelectionTarget (
   chart: { config?: any } | null | undefined,
@@ -30,7 +31,7 @@ export function resolveSelectionTarget (
   const mode = (config?.type || '').replace('Categories', '')
   let field: any
   if (mode === 'rowsBased') field = config.labelsField
-  // groupBy date : le libellé est un bucket agrégé, pas la date d'une ligne
+  // date groupBy: the label is an aggregated bucket, not the date of a row
   else if (mode === 'aggsBased' && config.groupBy?.type !== 'date') field = config.groupBy?.field
 
   const fieldKey = (typeof field === 'string' ? field : field?.key) as string | undefined
@@ -40,9 +41,9 @@ export function resolveSelectionTarget (
 }
 
 /**
- * Clé du filtre de sélection : une valeur unique (`eq`), forme concept
- * (portable entre datasets) quand le champ en porte un, sinon forme
- * dataset-scopée. Une seule clé, comme le veut la convention.
+ * Key of the selection filter: a single value (`eq`), concept form
+ * (portable across datasets) when the field carries one, otherwise the
+ * dataset-scoped form. A single key, as the convention requires.
  */
 export function selectionFilterKey (target: ChartSelectionTarget): string {
   return target.conceptId
@@ -51,8 +52,8 @@ export function selectionFilterKey (target: ChartSelectionTarget): string {
 }
 
 /**
- * Valeurs d'abscisse désignées par les filtres de la cible, dans l'ordre de
- * l'URL. Seuls `eq`/`in` désignent des entités.
+ * X-axis values designated by the target's filters, in URL order.
+ * Only `eq`/`in` designate entities.
  */
 export function selectionValues (filters: TargetFilter[]): string[] {
   const values: string[] = []
@@ -64,9 +65,9 @@ export function selectionValues (filters: TargetFilter[]): string[] {
 }
 
 /**
- * Sélection unique : le clic remplace la sélection courante (même une sélection
- * multiple reçue `_in` — on la ramène à la valeur cliquée) ; re-clic sur la
- * valeur déjà seule sélectionnée → sélection vide.
+ * Single selection: a click replaces the current selection (even a multiple
+ * selection received as `_in` — it is reduced to the clicked value); clicking again
+ * the value that is already the only one selected → empty selection.
  */
 export function nextSelectionValue (current: string[], value: string): string[] {
   return current.length === 1 && current[0] === value ? [] : [value]
@@ -84,7 +85,7 @@ function faded (color: unknown): unknown {
   }
 }
 
-/** Couleur de base (chaîne) d'un dataset pour l'élément `i`, par ordre de préférence. */
+/** Base color (string) of a dataset for element `i`, by order of preference. */
 function firstColor (i: number, ...candidates: unknown[]): unknown {
   for (const c of candidates) {
     if (typeof c === 'string') return c
@@ -94,22 +95,22 @@ function firstColor (i: number, ...candidates: unknown[]): unknown {
 }
 
 /**
- * Mise en évidence d'une sélection reçue : les éléments dont la valeur
- * d'abscisse (`data.rawLabels`, aligné sur `data.labels`) n'est pas
- * sélectionnée sont estompés (alpha 0.25). Sans effet tant qu'aucun élément
- * affiché n'est sélectionné (sélection visant une autre colonne, ou une valeur
- * hors du top N du graphique). Le transform n'est pas muté.
+ * Highlighting of a received selection: elements whose x-axis value
+ * (`data.rawLabels`, aligned with `data.labels`) is not selected
+ * are dimmed (alpha 0.25). No effect as long as no displayed element
+ * is selected (selection targeting another column, or a value outside
+ * the chart's top N). The transform is not mutated.
  *
- * `lineBased` (courbes/radars) estompe les points, la ligne garde sa couleur ;
- * les autres graphiques sont estompés sur le fond (dans un graphique mixte,
- * chaque dataset suit son propre type).
+ * `lineBased` (lines/radars) dims the points, the line keeps its color;
+ * other charts are dimmed on the background (in a combo chart,
+ * each dataset follows its own type).
  *
- * `vue-chartjs` met à jour les datasets par `Object.assign` (il ne retire jamais
- * une clé absente du dataset de base) et Chart.js met en cache les options
- * résolues par élément tant qu'une option est scalaire : un `backgroundColor`
- * qui repasse de tableau à chaîne n'est pas réévalué (les barres restent
- * estompées). On garde donc un **type stable** en renvoyant toujours un tableau
- * par élément, sélection ou non. Idem pour `pointBackgroundColor` des courbes.
+ * `vue-chartjs` updates datasets via `Object.assign` (it never removes
+ * a key missing from the base dataset) and Chart.js caches the options
+ * resolved per element as long as an option is scalar: a `backgroundColor`
+ * going back from array to string is not re-evaluated (bars stay
+ * dimmed). So we keep a **stable type** by always returning one array entry
+ * per element, selected or not. Same for `pointBackgroundColor` of lines.
  */
 export function applySelectionHighlight (data: any, selectedValues: string[], lineBased = false): any {
   const rawLabels = data?.rawLabels as (string | null)[] | null | undefined
@@ -120,8 +121,8 @@ export function applySelectionHighlight (data: any, selectedValues: string[], li
   const style = (color: unknown, i: number) => (active && !isSelected(i) ? faded(color) : color)
 
   const datasets = data.datasets.map((dataset: any) => {
-    // « Graphique mixte » : les séries en barres restent estompées sur le
-    // fond, seules les courbes voient leurs points estompés
+    // « Graphique mixte »: bar series stay dimmed on the
+    // background, only lines get their points dimmed
     if (lineBased && dataset.type !== 'bar') {
       const base = rawLabels.map((_, i) => firstColor(i, dataset.pointBackgroundColor, dataset.borderColor, dataset.backgroundColor))
       return { ...dataset, pointBackgroundColor: base.map((color, i) => style(color, i)) }

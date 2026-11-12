@@ -3,11 +3,14 @@
 //   import { expect, setupChartTest } from '../helpers/test-fixture'
 //   const test = setupChartTest('01-pie-alim-secteur', { valuesAgg: fixture })
 //   test('renders', async ({ chartPage }) => { ... })
-import { test as base, expect as baseExpect, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import type { MockMap } from './mock-api'
+import type { ConfigName } from '../fixtures/configs'
+import { test as base, expect as baseExpect } from '@playwright/test'
 import { injectConfig, waitForChart } from './inject-config'
-import { mockDataFairApi, mockSimpleDirectory, type MockMap } from './mock-api'
+import { mockDataFairApi, mockSimpleDirectory } from './mock-api'
 import { datasets, makeDatasetEntry } from '../fixtures/datasets'
-import { configs, type ConfigName } from '../fixtures/configs'
+import { configs } from '../fixtures/configs'
 
 export const expect = baseExpect
 

@@ -1,6 +1,7 @@
 // Unit tests — aggsLabels transform (pure API response -> Chart.js data)
+import type { AggsLabelsContext } from '../../src/composables/chart-data/aggsLabels'
 import { test, expect } from '@playwright/test'
-import transformAggsLabels, { type AggsLabelsContext } from '../../src/composables/chart-data/aggsLabels'
+import transformAggsLabels from '../../src/composables/chart-data/aggsLabels'
 function baseCtx (overrides: Partial<AggsLabelsContext> & { chart: any }): AggsLabelsContext {
   return {
     config: {},
@@ -92,8 +93,8 @@ test('missing global divider hides every value', () => {
 })
 
 test('total line count divider divides every value by the global count resolved in useChartData', () => {
-  // totalCount (et le repli du groupCount en aggsLabels) : la division utilise
-  // une valeur globale, indépendamment de la source passée par le transform
+  // totalCount (and the groupCount fallback in aggsLabels): the division uses
+  // a global value, independent of the source passed by the transform
   const ctx = baseCtx({
     chart: { type: 'pie', config: { type: 'aggsLabels', valuesFields: ['surface', 'population'] } },
     getValue: (v) => (v == null ? undefined : v / 4),
@@ -123,7 +124,7 @@ test('boolean columns aggregate their sum of true values as one pie part each', 
   expect(data.datasets[0].data).toEqual([1234, 789])
 })
 
-// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+// ── Label overrides (config.valueLabels) ────────────────────────────────────
 
 test('valueLabels rename pie parts defined by value columns', () => {
   const ctx = baseCtx({

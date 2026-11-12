@@ -23,11 +23,11 @@ export interface MockMap {
   metricAggRequests?: URLSearchParams[]
 }
 
-// Un fixture à sous-agrégats (aggs imbriqués) ne peut être servi que si la
-// requête demande la 2ᵉ dimension (groupsField) via la convention data-fair
-// field=<groupBy>;<groupsField>. Sans ce garde-fou, une perte des query params
-// passe inaperçue : le mock servirait les sous-agrégats à une requête qui ne
-// les demande plus et l'API réelle renverrait des graphiques vides.
+// A fixture with sub-aggregations (nested aggs) can only be served if the
+// request asks for the 2nd dimension (groupsField) via the data-fair convention
+// field=<groupBy>;<groupsField>. Without this guard, losing the query params
+// goes unnoticed: the mock would serve sub-aggregations to a request that no
+// longer asks for them and the real API would return empty charts.
 function assertNestedAggsRequested (fixture: any, params: URLSearchParams) {
   const hasNestedAggs = Array.isArray(fixture?.aggs) &&
     fixture.aggs.some((a: any) => Array.isArray(a?.aggs) && a.aggs.length > 0)

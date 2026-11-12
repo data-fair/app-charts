@@ -1,9 +1,10 @@
-// Unit tests — émission et rendu d'une sélection inter-app : helpers purs de
-// src/assets/selection.ts (clés de filtre, valeurs désignées, bascule, mise en
-// évidence).
+// Unit tests — emitting and rendering an inter-app selection: pure helpers of
+// src/assets/selection.ts (filter keys, designated values, toggle,
+// highlighting).
+import type { ChartSelectionTarget } from '../../src/assets/selection'
 import { test, expect } from '@playwright/test'
 import { findTargetFilters } from '@data-fair/lib-vue/selection.js'
-import { selectionFilterKey, selectionValues, nextSelectionValue, resolveSelectionTarget, applySelectionHighlight, type ChartSelectionTarget } from '../../src/assets/selection'
+import { selectionFilterKey, selectionValues, nextSelectionValue, resolveSelectionTarget, applySelectionHighlight } from '../../src/assets/selection'
 
 const conceptTarget: ChartSelectionTarget = { fieldKey: 'dep', conceptId: 'codeDepartement', datasetId: 'ds1' }
 const plainTarget: ChartSelectionTarget = { fieldKey: 'categorie', datasetId: 'ds1' }
@@ -19,7 +20,7 @@ test('resolveSelectionTarget reads the abscissa field, or nothing when it is not
     .toEqual({ fieldKey: 'dep', conceptId: 'codeDepartement', datasetId: 'ds1' })
   expect(resolveSelectionTarget({ config: { type: 'aggsBased', groupBy: { field: { key: 'dep' } } } }, { id: 'ds1' }, fields))
     .toEqual({ fieldKey: 'dep', conceptId: 'codeDepartement', datasetId: 'ds1' })
-  // colonnes en libellé / bucket de date : aucune entité
+  // columns as labels / date bucket: no entity
   expect(resolveSelectionTarget({ config: { type: 'aggsBasedLabels' } }, { id: 'ds1' }, fields)).toBeNull()
   expect(resolveSelectionTarget({ config: { type: 'aggsBased', groupBy: { type: 'date', field: 'dep' } } }, { id: 'ds1' }, fields)).toBeNull()
   expect(resolveSelectionTarget({ config: { type: 'rowsBased', labelsField: 'dep' } }, null, fields)).toBeNull()
@@ -32,7 +33,7 @@ test('selectionValues reads the eq/in filters of the target only, concept then d
     _c_codeRegion_in: '11',
     _c_year_gte: '2020'
   }
-  // le concept est portable et le champ dataset-scopé du même graphique le suit ; la plage est écartée
+  // the concept is portable and the dataset-scoped field of the same chart follows it; the range is discarded
   expect(selectionValues(findTargetFilters(params, conceptTarget))).toEqual(['75', '92', '69'])
   expect(selectionValues(findTargetFilters(params, plainTarget))).toEqual([])
 })
@@ -50,21 +51,21 @@ test('a range on the target stays a selection (the visualization renders it if i
 test('nextSelectionValue replaces the selection and clears on the sole selected value', () => {
   expect(nextSelectionValue([], 'A')).toEqual(['A'])
   expect(nextSelectionValue(['A'], 'B')).toEqual(['B'])
-  // une sélection multiple reçue (`_in`) est ramenée à la valeur cliquée
+  // a received multiple selection (`_in`) is reduced to the clicked value
   expect(nextSelectionValue(['A', 'B'], 'A')).toEqual(['A'])
-  // re-clic sur la valeur déjà seule sélectionnée
+  // clicking again the value that is already the only one selected
   expect(nextSelectionValue(['A'], 'A')).toEqual([])
 })
 
 test('applySelectionHighlight keeps the background type stable (scalar base becomes a base array)', () => {
   const data = { labels: [['A'], ['B']], rawLabels: ['A', 'B'], datasets: [{ backgroundColor: '#111111', data: [1, 2] }] }
-  // aucune sélection : le fond est déjà un tableau de base — un type stable évite
-  // que Chart.js ne réévalue pas les options par élément en repassant à une chaîne
+  // no selection: the background is already a base array — a stable type prevents
+  // Chart.js from not re-evaluating the per-element options when going back to a string
   const none = applySelectionHighlight(data, [])
   expect(none).not.toBe(data)
   expect(none.datasets[0].backgroundColor).toEqual(['#111111', '#111111'])
   expect(applySelectionHighlight(data, ['Z']).datasets[0].backgroundColor).toEqual(['#111111', '#111111'])
-  // sans rawLabels, rien à faire
+  // without rawLabels, nothing to do
   const empty = { labels: [['A']], datasets: [] }
   expect(applySelectionHighlight(empty, ['A'])).toBe(empty)
 })
@@ -80,7 +81,7 @@ test('applySelectionHighlight fades the non-selected bars and keeps the selected
   const out = applySelectionHighlight(data, ['B'])
   expect(out.datasets[0].backgroundColor[1]).toBe('#111111')
   expect(out.datasets[0].backgroundColor[0]).toContain('rgba(')
-  // le transform n'est pas muté
+  // the transform is not mutated
   expect(data.datasets[0].backgroundColor).toBe('#111111')
 })
 
@@ -100,7 +101,7 @@ test('applySelectionHighlight fades line points, not the line color', () => {
   expect(out.datasets[0].backgroundColor).toBe('#222222')
 })
 
-// graphique mixte (Graphique mixte) : chaque dataset suit son propre type
+// mixed chart (Graphique mixte): each dataset follows its own type
 test('applySelectionHighlight follows each dataset type in a mixed chart', () => {
   const data = {
     labels: [['A'], ['B']],
@@ -117,7 +118,7 @@ test('applySelectionHighlight follows each dataset type in a mixed chart', () =>
   expect(out.datasets[1].backgroundColor[1]).toContain('rgba(')
 })
 
-// les datasets multi-bar portent aussi un pointStyle : c'est le type de graphique qui décide
+// multi-bar datasets also carry a pointStyle: the chart type decides
 test('applySelectionHighlight fades multi-bar backgrounds despite their pointStyle', () => {
   const data = { labels: [['A'], ['B']], rawLabels: ['A', 'B'], datasets: [{ pointStyle: 'circle', backgroundColor: '#333333', data: [1, 2] }] }
   const out = applySelectionHighlight(data, ['A'])
@@ -125,9 +126,9 @@ test('applySelectionHighlight fades multi-bar backgrounds despite their pointSty
   expect(out.datasets[0].backgroundColor[1]).toContain('rgba(')
 })
 
-// vue-chartjs ne retire jamais une clé absente du dataset de base : les courbes
-// doivent réécrire pointBackgroundColor même sans sélection, sinon l'estompage
-// reste collé après désélection
+// vue-chartjs never removes a key missing from the base dataset: lines
+// must rewrite pointBackgroundColor even without a selection, otherwise the dimming
+// sticks after deselection
 test('applySelectionHighlight resets the line points to their base color without a selection', () => {
   const data = { labels: [['A'], ['B']], rawLabels: ['A', 'B'], datasets: [{ pointStyle: 'circle', borderColor: '#222222', backgroundColor: '#222222', data: [1, 2] }] }
   const out = applySelectionHighlight(data, [], true)

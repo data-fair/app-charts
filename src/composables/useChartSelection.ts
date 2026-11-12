@@ -1,6 +1,6 @@
-// Glue réactive de la sélection inter-app : elle branche le clic d'un graphique
-// sur les helpers purs de `@/assets/selection` et sur l'URL.
-// Voir le skill `data-fair-app`, `references/filters-url-convention.md`.
+// Reactive glue of the inter-app selection: it wires a chart click
+// to the pure helpers of `@/assets/selection` and to the URL.
+// See the `data-fair-app` skill, `references/filters-url-convention.md`.
 import { computed } from 'vue'
 import reactiveSearchParams from '@data-fair/lib-vue/reactive-search-params-global.js'
 import { findTargetFilters } from '@data-fair/lib-vue/selection.js'
@@ -8,9 +8,9 @@ import { useConfig } from '@/composables/config'
 import { resolveSelectionTarget, selectionFilterKey, selectionValues, nextSelectionValue } from '@/assets/selection'
 
 export interface ChartSelection {
-  /** Valeurs d'abscisse actuellement sélectionnées (sélection reçue ou propre). */
+  /** Currently selected x-axis values (received or own selection). */
   selectedValues: () => string[]
-  /** Handler Chart.js `options.onClick`. */
+  /** Chart.js `options.onClick` handler. */
   onClick: (event: unknown, elements: Array<{ index: number }>) => void
 }
 
@@ -26,7 +26,7 @@ export function useChartSelection (rawLabels: () => (string | null)[] | null | u
     if (value == null || value === '') return
 
     const key = selectionFilterKey(target.value)
-    // purge d'une éventuelle sélection multiple (`_in`) du même champ
+    // purge any multiple selection (`_in`) on the same field
     delete reactiveSearchParams[key.replace(/_eq$/, '_in')]
     const next = nextSelectionValue(selectedValues.value, String(value))
     if (next.length) reactiveSearchParams[key] = next[0]

@@ -1,17 +1,17 @@
-// Unit tests — cohérence du config-schema : chaque oneOf « objet » (variantes
-// de type de graphique, de préparation des données, de groupe, de couleurs,
-// de filtres) doit déclarer oneOfLayout.emptyData = true.
+// Unit tests — config-schema consistency: every « object » oneOf (variants
+// of chart type, data preparation, group, colors,
+// filters) must declare oneOfLayout.emptyData = true.
 //
-// Sans ce flag, json-layout ne supprime pas les propriétés de la branche
-// précédente lors d'un changement de variante : les clés restantes violent le
-// additionalProperties: false de la nouvelle branche et le formulaire affiche
+// Without this flag, json-layout does not remove the properties of the previous
+// branch when switching variant: the remaining keys violate the
+// additionalProperties: false of the new branch and the form shows
 // « ne doit pas contenir de propriété additionnelle ».
 import { test, expect } from '@playwright/test'
 import schema from '../../public/config-schema.json' with { type: 'json' }
 
-// Un oneOf « objet » est un oneOf porté par un schéma objet (type: object ou
-// des properties). Les oneOf d'énumération (chaînes avec const) ne sont pas
-// concernés : leur valeur est remplacée, pas fusionnée.
+// An « object » oneOf is a oneOf carried by an object schema (type: object or
+// properties). Enumeration oneOfs (strings with const) are not
+// concerned: their value is replaced, not merged.
 function objectOneOfPaths (node: unknown, path: string): string[] {
   if (!node || typeof node !== 'object') return []
   if (Array.isArray(node)) return node.flatMap((item, i) => objectOneOfPaths(item, `${path}[${i}]`))

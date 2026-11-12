@@ -1,10 +1,10 @@
-// 30 — multi-bar bpe — aggsBasedLabels, abscisses définies par plusieurs
-// colonnes booléennes
-// Covers: mode « Grouper les lignes, abscisses définies par plusieurs
-// colonnes » (aggsBasedLabels) with boolean labelsValues: le 1er champ passe
-// par metric_field (réponse `metric`), les suivants par extra_metrics (réponse
-// `<field>_sum` = nombre de « oui »). Les séries restent une colonne de
-// catégories (valuesLabel = reg).
+// 30 — multi-bar bpe — aggsBasedLabels, x-axis defined by several
+// boolean columns
+// Covers: « Grouper les lignes, abscisses définies par plusieurs
+// colonnes » mode (aggsBasedLabels) with boolean labelsValues: the 1st field goes
+// through metric_field (`metric` response), the next ones through extra_metrics
+// (`<field>_sum` response = number of « oui »). Series remain a category
+// column (valuesLabel = reg).
 import { expect, setupChartTest } from '../helpers/test-fixture'
 import { valuesAggLabelsBooleansFixture } from '../fixtures/api-responses'
 

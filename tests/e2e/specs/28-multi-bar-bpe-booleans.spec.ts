@@ -1,7 +1,7 @@
-// 28 — multi-bar bpe — aggsBasedCategories sur colonnes booléennes
+// 28 — multi-bar bpe — aggsBasedCategories on boolean columns
 // Covers: multi-bar stacked, aggsBasedCategories mode with boolean valuesCalc
-// fields, metric=sum (nombre de « oui ») via /values_agg metric_field +
-// extra_metrics (convention de réponse `<field>_sum`).
+// fields, metric=sum (number of « oui ») via /values_agg metric_field +
+// extra_metrics (`<field>_sum` response convention).
 import { expect, setupChartTest } from '../helpers/test-fixture'
 import { valuesAggFixtures } from '../fixtures/api-responses'
 

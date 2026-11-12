@@ -12,10 +12,10 @@ declare global {
   interface Window {
     APPLICATION: Application & { href: string }
     vIframeOptions?: { reactiveParams: Record<string, string> }
-    // posé par _public.js, lu par la session à la place du fetch déprécié
+    // set by _public.js, read by the session instead of the deprecated fetch
     __PUBLIC_SITE_INFO?: FullSiteInfo
-    // installé par le service de capture de DataFair (puppeteer), avant le chargement
-    // de la page — sa présence signale un contexte de capture
+    // installed by the DataFair capture service (puppeteer), before the page
+    // loads — its presence signals a capture context
     triggerCapture?: (animationSupported?: boolean) => Promise<boolean>
   }
 }

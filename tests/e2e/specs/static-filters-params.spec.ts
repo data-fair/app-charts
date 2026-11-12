@@ -6,7 +6,8 @@
 //
 // The app is mounted inside an iframe: the existing e2e fixture loads /app/
 // top-level, where window.parent === window and the sync is a no-op by design.
-import { test, expect, type Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 import { prepareChartPage } from '../helpers/test-fixture'
 import { mockDataFairApi } from '../helpers/mock-api'
 import { datasets, makeDatasetEntry } from '../fixtures/datasets'

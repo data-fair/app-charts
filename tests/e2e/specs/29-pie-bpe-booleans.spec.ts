@@ -1,6 +1,6 @@
-// 29 — pie bpe — aggsLabels sur colonnes booléennes
+// 29 — pie bpe — aggsLabels on boolean columns
 // Covers: pie chart, aggsLabels mode (parallel /metric_agg calls) with boolean
-// valuesFields, metric=sum (nombre de « oui ») sur chaque colonne.
+// valuesFields, metric=sum (number of « oui ») on each column.
 import { expect, setupChartTest } from '../helpers/test-fixture'
 import { metricAggFixtures } from '../fixtures/api-responses'
 

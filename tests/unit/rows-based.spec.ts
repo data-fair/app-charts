@@ -1,7 +1,9 @@
 // Unit tests — rowsBased transform (pure API response -> Chart.js data)
+import type { RowsBasedContext } from '../../src/composables/chart-data/rowsBased'
+import type { DividerConfig } from '../../src/assets/utils'
 import { test, expect } from '@playwright/test'
-import transformRowsBased, { type RowsBasedContext } from '../../src/composables/chart-data/rowsBased'
-import { extractDividerValue, type DividerConfig } from '../../src/assets/utils'
+import transformRowsBased from '../../src/composables/chart-data/rowsBased'
+import { extractDividerValue } from '../../src/assets/utils'
 
 function baseCtx (overrides: Partial<RowsBasedContext> & { chart: any }): RowsBasedContext {
   return {
@@ -201,7 +203,7 @@ test('sortBy label orders numeric labels by value, not lexicographically', () =>
   expect(data.datasets[0].data).toEqual([2, 3, 1])
 })
 
-// ── Diviseur « colonne » (valeur brute de la ligne) ──────────────────────────
+// ── « Column » divider (raw value of the row) ────────────────────────────────
 
 function dividerGetValue (divider: DividerConfig) {
   return (v: number | null | undefined, source?: unknown) => {
@@ -221,8 +223,8 @@ test('column divider divides each row by its own raw column value and hides miss
     results: [
       { dep: '75', count: 100, pop: 2 },
       { dep: '77', count: 30, pop: 3 },
-      { dep: '78', count: 50 }, // pas de diviseur exploitable → valeur masquée
-      { dep: '79', count: 40, pop: 0 } // diviseur nul → valeur masquée
+      { dep: '78', count: 50 }, // no usable divider → hidden value
+      { dep: '79', count: 40, pop: 0 } // zero divider → hidden value
     ]
   })
   const data = transformRowsBased(ctx)
@@ -243,12 +245,12 @@ test('pie Autre bucket divides the ratio of totals when a column divider is set'
     ]
   })
   const data = transformRowsBased(ctx)
-  // parts : 75 → 100/2 = 50 ; 77 → 30/3 = 10 ; Autre → (90+10)/(9+1) = 10
+  // slices: 75 → 100/2 = 50; 77 → 30/3 = 10; Autre → (90+10)/(9+1) = 10
   expect(data.datasets[0].data).toEqual([50, 10, 10])
 })
 
-// ── Diviseur « nombre total de lignes » (résolu globalement dans useChartData,
-//    repli du groupCount en rowsBased) ─────────────────────────────────────────
+// ── « Total number of rows » divider (resolved globally in useChartData,
+//    groupCount fallback in rowsBased) ─────────────────────────────────────────
 
 test('total line count divider divides every row by the same global count', () => {
   const ctx = baseCtx({
@@ -277,11 +279,11 @@ test('pie Autre bucket still divides by the global line count when totalCount is
     ]
   })
   const data = transformRowsBased(ctx)
-  // parts : 10 ; 3 ; Autre → (90+10)/10 = 10 (diviseur global, la source est ignorée)
+  // slices: 10; 3; Autre → (90+10)/10 = 10 (global divider, the source is ignored)
   expect(data.datasets[0].data).toEqual([10, 3, 10])
 })
 
-// ── Libellés des valeurs booléennes (config.booleanLabels) ──────────────────
+// ── Labels of boolean values (config.booleanLabels) ─────────────────────────
 
 test('boolean row values are replaced by the configured labels', () => {
   const ctx = baseCtx({
@@ -297,7 +299,7 @@ test('boolean row values are replaced by the configured labels', () => {
   expect(data.datasets[0].data).toEqual([10, 20])
 })
 
-// ── Surcharge des libellés (config.valueLabels) ─────────────────────────────
+// ── Label overrides (config.valueLabels) ────────────────────────────────────
 
 test('valueLabels rename row axis labels', () => {
   const ctx = baseCtx({
@@ -334,7 +336,7 @@ test('valueLabels rename value column series', () => {
   expect(data.datasets.map((d: any) => d.label)).toEqual(['Déplacements', 'Autre'])
 })
 
-// ── Type « Graphique mixte » (style par axe, colonnes de droite) ───────
+// ── « Graphique mixte » type (style per axis, right-hand columns) ──────
 
 test('combo sets each dataset type, dash and yAxisID from the axes config', () => {
   const ctx = baseCtx({

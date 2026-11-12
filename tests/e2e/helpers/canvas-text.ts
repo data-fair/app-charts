@@ -1,6 +1,6 @@
-// Capture des textes dessinés sur les canvas (titres d'axes, libellés
-// d'annotations…) : les graphiques sont rendus en canvas, ces textes n'existent
-// nulle part dans le DOM. Doit être appelé avant page.goto().
+// Capture of the texts drawn on canvases (axis titles, annotation
+// labels…): charts are rendered on canvas, these texts exist
+// nowhere in the DOM. Must be called before page.goto().
 import type { Page } from '@playwright/test'
 
 export interface CapturedText {
@@ -16,7 +16,7 @@ export function setupCanvasTextCapture (page: Page) {
     const proto = CanvasRenderingContext2D.prototype
     const original = proto.fillText
     proto.fillText = function (text: string, x: number, y: number, maxWidth?: number) {
-      // les titres d'axes sont pivotés : les coordonnées brutes ne veulent rien dire
+      // axis titles are rotated: raw coordinates mean nothing
       const transform = this.getTransform()
       w.__texts.push({
         text: String(text),

@@ -1,5 +1,5 @@
-import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, objectifColor, CARTESIAN_TYPES, LINE_DASH_PATTERNS } from '../../assets/utils'
 import type { AggItem } from '@/composables/useChartData'
+import { getColors, getOrderedLabels, splitString, createValueLabeler, valueLabelsMap, getFieldLabel, objectifColor, CARTESIAN_TYPES, LINE_DASH_PATTERNS } from '../../assets/utils'
 
 export interface AggsBasedLabelsContext {
   config: any
@@ -42,10 +42,10 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
     pointStyle: chart.hidePoints ? false : 'circle',
     fill,
     data: chart.config.labelsValues.map((l: string, li: number) =>
-      // colonne sans aucune valeur (value_count = 0) : sum renvoie 0, on préfère un trou
+      // column without any value (value_count = 0): sum returns 0, a gap is preferred
       (serie as any)[l + '_value_count'] === 0
         ? undefined
-        // le diviseur est lu sur la série (agrégat du valuesLabel) : clé <champ>_<métrique>
+        // the divider is read on the series (valuesLabel aggregate): key <field>_<metric>
         : getValue(!li ? serie.metric : (serie as any)[l + '_' + (ctx.metric || chart.config.metric)], serie)
     )
   }))
@@ -53,17 +53,17 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
   if (chart.percentage) {
     for (const i in datasets[0].data as number[]) {
       const sum = datasets.reduce((acc: number, d) => acc + ((d.data as number[])[i] || 0), 0)
-      // une valeur absente reste absente (pas de NaN) quand d'autres séries sont renseignées
+      // a missing value stays missing (no NaN) when other series have values
       if (sum) datasets.forEach((d) => { if ((d.data as number[])[i] != null) (d.data as number[])[i] *= 100 / sum })
     }
   }
 
-  // Objectifs issus des données : une ligne en tirets par colonne d'objectif et
-  // par série. La cible est constante sur l'axe du temps (moyenne des lignes de
-  // la série, cf. `extra_metrics` = `<champ>:avg`) et suit le multiplicateur du
-  // graphique, comme les valeurs. Ajoutée après les pourcentages pour ne pas
-  // être normalisée, avec son propre groupe d'empilement pour ne jamais être
-  // cumulée avec les séries. Ignorée pour les types sans axe cartésien (radar).
+  // Targets from the data: one dashed line per target column and
+  // per series. The target is constant along the time axis (average of the
+  // series rows, see `extra_metrics` = `<field>:avg`) and follows the chart
+  // multiplier, like the values. Added after the percentages so it is not
+  // normalized, with its own stack group so it is never
+  // summed with the series. Ignored for types without a cartesian axis (radar).
   const objectifFields: string[] = chart.config.objectifFields || []
   if (objectifFields.length && CARTESIAN_TYPES.includes(chart.type)) {
     series.forEach((serie, serieIndex) => {
@@ -90,7 +90,7 @@ export default function transformAggsBasedLabels (ctx: AggsBasedLabelsContext) {
   return {
     labels: labels.map((l: string) => splitString(config.labelsMaxWidth ?? 20, l + '')),
     datasets,
-    // l'abscisse est une colonne, pas une valeur : aucune entité à sélectionner
+    // the x-axis is a column, not a value: no entity to select
     rawLabels: null
   }
 }

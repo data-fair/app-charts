@@ -1,9 +1,9 @@
 // Transverse — i18n runtime health + site info fast path
-// 1. zéro avertissement [intlify] pendant le rendu d'un chart avec pourcentages :
-//    distingue « la portée est correcte » de « le repli sauve les meubles »
-//    (cf. useChartOptions : useI18n({ useScope: 'global' }) pour les numberFormats).
-// 2. window.__PUBLIC_SITE_INFO est posé par le mock de _public.js : la session ne
-//    doit pas repasser par le chemin déprécié refreshSiteInfo.
+// 1. zero [intlify] warning while rendering a chart with percentages:
+//    tells « the scope is correct » from « the fallback saves the day »
+//    (see useChartOptions: useI18n({ useScope: 'global' }) for the numberFormats).
+// 2. window.__PUBLIC_SITE_INFO is set by the _public.js mock: the session must
+//    not go through the deprecated refreshSiteInfo path again.
 import { test, expect } from '@playwright/test'
 import { injectConfig, waitForChart } from '../helpers/inject-config'
 import { mockDataFairApi } from '../helpers/mock-api'
@@ -29,18 +29,18 @@ test('no [intlify] console warnings while rendering percentages, and __PUBLIC_SI
   await injectConfig(page, { ...entry.config, datasets: [makeDatasetEntry(entry.dataset)] })
   await waitForChart(page)
 
-  // _public.js a bien été servi en JS exécutable : la session lit le global sans fetch
+  // _public.js was indeed served as executable JS: the session reads the global without fetch
   const siteInfoSet = await page.evaluate(() => !!(window as any).__PUBLIC_SITE_INFO)
   expect(siteInfoSet).toBe(true)
 
-  // le pie 01 porte display: both -> outlabels + pourcentages formatés via n(v, 'percent')
+  // pie 01 has display: both -> outlabels + percentages formatted via n(v, 'percent')
   const intlify = warnings.filter((w) => w.includes('[intlify]'))
   expect(intlify).toEqual([])
 })
 
-// 3. l'état vide (config incomplète) monte son icône au démarrage : les icônes
-//    Vuetify sont en mdi-svg, un nom `mdi-*` serait posé comme path SVG et
-//    produirait une erreur DOM `<path> attribute d`.
+// 3. the empty state (incomplete config) mounts its icon at startup: Vuetify
+//    icons are mdi-svg, an `mdi-*` name would be set as an SVG path and
+//    produce a DOM error `<path> attribute d`.
 test('the empty state renders its MDI icon without DOM attribute errors', async ({ page }) => {
   const errors: string[] = []
   page.on('console', (msg) => {

@@ -21,17 +21,17 @@ import { createConfig } from '@/composables/config'
 ;(window as { vIframeOptions?: { reactiveParams: typeof reactiveSearchParams } }).vIframeOptions = { reactiveParams: reactiveSearchParams }
 
 async function init () {
-  // le <script> _public.js d'index.html pose window.__PUBLIC_SITE_INFO, lu sans
-  // requête ; siteInfo déclenche refreshSiteInfo (déprécié) et ne reste qu'en repli
+  // the _public.js <script> of index.html sets window.__PUBLIC_SITE_INFO, read without
+  // a request; siteInfo triggers refreshSiteInfo (deprecated) and is only a fallback
   const session = await createSession({
     directoryUrl: '/simple-directory',
     siteInfo: !window.__PUBLIC_SITE_INFO
   })
 
-  // options indépendantes de la locale : Intl en déduit séparateurs, marque décimale
-  // et espace avant le signe pourcent — même jeu enregistré pour toutes les langues
-  // de session (une locale non couverte retomberait sur les options 'en' avec ses
-  // séparateurs et un avertissement [intlify])
+  // locale-independent options: Intl derives separators, decimal mark
+  // and the space before the percent sign — same set registered for every session
+  // language (an uncovered locale would fall back to the 'en' options with their
+  // separators and an [intlify] warning)
   const numberFormats = {
     decimal: {},
     percent: { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }
