@@ -2400,7 +2400,7 @@
             }
           },
           {
-            "title": "Restreindre à un interval de valeurs",
+            "title": "Restreindre à un intervalle de valeurs",
             "required": [
               "type",
               "field"
